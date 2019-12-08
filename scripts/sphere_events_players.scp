@@ -1,0 +1,1019 @@
+[FUNCTION poisonarse]
+			SERV.NEWITEM i_poison_effect
+			NEW.more2 1
+			NEW.MORE 8
+			NEW.TAG.POISONTIMER 3
+			NEW.CONT <UID>
+			NEW.TRIGGER @EQUIP
+			NEW.TIMER 2
+return 1
+
+// [PLEVEL 1]
+// secpass
+
+[FUNCTION secpass]
+IF !(STRMATCH(<ACCOUNT.TAG0.SECPASS>,0))
+	SYSMESSAGE Voce ja possui um securepass.
+	RETURN 1
+ENDIF
+
+IF !(<eval (STRLEN(<ARGS>))> == 6
+	SYSMESSAGE Seu secure pass deve possuir 6 caracteres.
+ELSEIF
+	ACCOUNT.TAG.SECPASS <ARGS>
+	IF (<isnum <ACCOUNT.TAG.SECPASS>>)
+		SYSMESSAGE Seu securePass eh: <eval <account.TAG.SECPASS>>
+		SYSMESSAGE Anote ele em algum lugar, pois eh a melhor forma de garantir a seguranca de sua conta
+	ELSE
+		SYSMESSAGE Seu securePass eh: <account.TAG.SECPASS>
+		SYSMESSAGE Anote ele em algum lugar, pois eh a melhor forma de garantir a seguranca de sua conta
+	ENDIF
+ENDIF
+
+
+//[FUNCTION CHECKIPS]
+//FORCLIENTS 500
+//IF <ACCOUNT.LASTIP>==<SRC.ACCOUNT.LASTIP>
+//LOCAL.COUNT += 1
+//ENDIF
+//ENDFOR
+//IF <dLOCAL.COUNT> > 2
+//SRC.SYSMESSAGE Voce nao pode logar com mais de 2 accounts
+//SRC.SYSMESSAGE E sera disconectado
+//SRC.NEWITEM i_maxips_disc
+//SERV.LOG <SRC.NAME> DESCONECTADO POR MAX IPS
+//NEW.TIMER 3
+//NEW.EQUIP
+//ENDIF
+
+[ITEMDEF i_maxips_disc]
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@EQUIP
+	LINK=<SRC.UID>
+
+ON=@TIMER
+	CONT.DISCONNECT
+	SERV.LOG <CONT.NAME> DISCONNECTED por logar com mais de 2 contas
+	REMOVE
+	RETURN 1
+
+
+[FUNCTION HOUSECONTROL]
+FORCHARMEMORYTYPE 0100
+	IF <LINK.TYPE>==t_multi
+		LOCAL.HOUSES +=1
+	ENDIF
+ENDFOR
+IF !(<SRC.ACCOUNT.JAIL>)
+	IF <LOCAL.HOUSES> > 1
+		SRC.JAIL
+		SRC.NAME <SRC.NAME> [Mais de uma casa]
+		SRC.SYSMESSAGE Voce possui mais de uma casa. Envie um page aos gms para regularizar sua situacao.
+	ENDIF
+ENDIF
+
+//[FUNCTION UPDATEPVP]
+//IF (<TAG0.UPDATED1>==0)
+//TRY UID.<UID>.FINDLAYER.1.UNEQUIP
+//TRY UID.<UID>.FINDLAYER.2.UNEQUIP
+//TRY UID.<UID>.FINDLAYER.3.UNEQUIP
+//TRY UID.<UID>.FINDLAYER.4.UNEQUIP
+//TRY UID.<UID>.FINDLAYER.5.UNEQUIP
+//TRY UID.<UID>.FINDLAYER.6.UNEQUIP
+//TRY UID.<UID>.FINDLAYER.7.UNEQUIP
+//TRY UID.<UID>.FINDLAYER.8.UNEQUIP
+//TRY UID.<UID>.FINDLAYER.9.UNEQUIP
+//TRY UID.<UID>.FINDLAYER.10.UNEQUIP
+//TRY UID.<UID>.FINDLAYER.12.UNEQUIP
+//TRY UID.<UID>.FINDLAYER.13.UNEQUIP
+//TRY UID.<UID>.FINDLAYER.14.UNEQUIP
+//TRY UID.<UID>.FINDLAYER.17.UNEQUIP
+//TRY UID.<UID>.FINDLAYER.18.UNEQUIP
+//TRY UID.<UID>.FINDLAYER.19.UNEQUIP
+//TRY UID.<UID>.FINDLAYER.20.UNEQUIP
+//TRY UID.<UID>.FINDLAYER.22.UNEQUIP
+//TRY UID.<UID>.FINDLAYER.23.UNEQUIP
+//TRY UID.<UID>.FINDLAYER.24.UNEQUIP
+//MODDEX 0
+//MODINT 0
+//MODSTR 0
+//TAG.LOOPZ
+//TAG.UPDATED1 1
+////DIALOG d_rp_normal
+//ENDIF
+
+//[FUNCTION UPDATEPVPRANGE]
+//FORCHARS <ARGN1>
+//UPDATEPVP
+//ENDFOR
+
+[ITEMDEF i_disc_delay]
+NAME=Disconnect Delay
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@CREATE
+ATTR 014
+
+ON=@TIMER
+CONT.DISCONNECT
+REMOVE
+RETURN 0
+
+[FUNCTION f_house_warning]
+S Possui <ARGS> casas.
+SRC.MESSAGE Voce possui <ARGS> casas.
+SRC.SYSMESSAGE O Limite atual de casas por jogador eh de: 1 (uma) casa.
+SRC.SYSMESSAGE Envie um page para um staff para regularizar sua situacao.
+SRC.SYSMESSAGE A TFG Staff agradece.
+//SRC.STONE 1
+
+[ITEMDEF i_cs_control]
+NAME=CS Control
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@CREATE
+	ATTR 086
+
+ON=@TIMER
+	if (<tag0.detects> > 0)
+		tag0.detects -= 1
+		timer 120
+		return 1
+	endif
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////// EVENTS DE TODOS PLAYERS /////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+
+[EVENTS e_gerais]
+ON=@CallGuards
+	SERV.LOG <NAME> (<ACCOUNT>) called guards on <SRC.NAME> (<SRC.ACCOUNT>)
+
+on=@UserExWalkLimit
+	SERV.LOG <SRC.NAME> (<SRC.ACCOUNT.NAME>) com uso provavel de CS/FPS Patch!
+
+	if !(<src.findid.i_cs_control>)
+		serv.newitem i_cs_control
+		new.link <src>
+		new.cont <src>
+	endif
+
+
+IF !(<SRC.CTAG0.CSDELAY>)
+	src.findid.i_cs_control.tag0.detects += 1
+	src.findid.i_cs_control.timer 120
+	SRC.TIMERF 5, SRC.CTAG.CSDELAY
+
+	if <src.findid.i_cs_control.dtag0.detects> == 2
+		SRC.SMSG @26,,1 CS/FPS Patch detectado, desligue. Sua stamina foi zerada. Staff notificada.
+		SRC.CTAG0.CSDELAY += 1
+		SRC.STAM 0
+		SRC.TIMERF 5, SRC.CTAG.CSDELAY
+	elif <src.findid.i_cs_control.dtag0.detects> >= 3
+		SRC.SMSG @26,,1 CS/FPS Patch detectado novamente, desligue. Sua stamina e mana foram zeradas. Staff notificada.
+		SRC.CTAG0.CSDELAY += 1
+		src.mana 0
+		src.stam 0
+		SRC.TIMERF 5, SRC.CTAG.CSDELAY
+	elif <src.findid.i_cs_control.dtag0.detects> == 4
+		SRC.SMSG @26,,1 CS/FPS Patch detectado novamente, desligue. Mana e Stam zeradas e seus stats foram reduzidos por 15min. Staff notificada.
+		SRC.CTAG0.CSDELAY += 1
+		src.MODDEX -= 50
+		src.MODINT -= 50
+		src.MODSTR -= 50
+		src.mana 0
+		src.stam 0
+		SRC.TIMERF 5, SRC.CTAG.CSDELAY
+		src.timerf 900, src.MODDEX += 50
+		src.timerf 900, src.MODINT += 50
+		src.timerf 900, src.MODSTR += 50
+	elif <src.findid.i_cs_control.dtag0.detects> > 4
+		src.ctag0.CSDELAY += 1
+		src.SMSG @26,,1 CS/FPS Patch detectado novamente, desligue. Sua skill magery foi reduzida de forma nao temporaria.
+		if <src.magery> > 400
+			src.magery -= 400
+		else
+			src.magery = 0
+		endif
+		src.timerf 5, src.ctag.CSDELAY
+	endif
+	RETURN 0
+
+ON=@ItemPickUp_Ground
+
+if (<src.ctag0.pickground>)
+	src.smsg @,,1 Espere para pegar outro item. Nao tao rapido.
+	return 1
+endif
+
+src.ctag0.pickground 1
+if (<act.baseid> == i_gold)
+	src.timerf 2, src.ctag.pickground
+else
+	src.timerf 1, src.ctag.pickground
+endif
+if <act.region.isevent.r_house_private> && (<uid> != <uid.<act.region.uid>.more1>)
+	SERV.LOG <ACT.UID> <ACT.BASEID> <ACT.NAME>
+	SERV.WRITEFILE logs/ITEMCASA_account_<account>.LOG <SERV.RTIME>: <NAME> pegou <argn1> <ACT.NAME> (<ACT.UID>), com flags (<act.flags>) em <ACT.P>. Casa de <uid.<uid.<act.region.uid>.more1>.name> (<uid.<act.region.uid>.more1>) - GOLD: <gold>
+ENDIF
+
+
+ON=@CLICK
+if <src.isgm>
+	if <isempty <account.tag.global>>
+		message  @31,,1 (Conta nao vinculada)
+	else
+		message @91,,1 (Conta Global: <daccount.tag.global>)
+	endif
+endif
+
+ON=@ATTACK
+IF (<ISINSHIP>)
+	IF (<SRC.ISNPC>)
+		IF ((<ISINSHIP>) && !(<SRC.ISINSHIP>)) || (!(<ISINSHIP>) && (<SRC.ISINSHIP>))
+			RETURN 1
+		ENDIF
+	ENDIF
+ENDIF
+
+on=@itemdropon_ground
+IF <SRC.ACCOUNT.PLEVEL> > 1
+	IF !(<UID> == <ACT.TOPOBJ.UID>)
+		WRITEFILE logs/<ACCOUNT>.LOG <SERV.RTIME>: <ACCOUNT>  dropou em <P> <ACT.AMOUNT> <ACT.NAME> (<ACT.UID>)
+	ENDIF
+ENDIF
+
+IF !(<ISGM>)
+	if (<ACT.CAN>&CAN_I_BLOCK)
+		REF1=<UID>
+		REF2=<ACT.UID>
+		FORCLIENTS 15
+			IF !(<UID>==<REF1.UID>) && (<REGION.UID>==<REF1.REGION.UID>)  && !(<ISGM>) && !(<flags> & statf_hidden) && !(<flags> & statf_invisible)
+				REF2.CONT <REF1.FINDLAYER.21.UID>
+				REF2.UPDATEX
+				REF1.SYSMESSAGE @,,1 Itens que bloqueiam a passagem so podem ser colocados dentro de casas ou a 15 tiles de distancia de outros jogadores.
+				RETURN 1
+			ENDIF
+		ENDFOR
+	endif
+	return 0
+ENDIF
+
+On=@SpellFail
+LOCAL.CREATEOBJECT1 i_fx_glow_spike
+LOCAL.EFFECTCOLOR 4100
+LOCAL.EFFECTSPEED 15
+
+local.manause = <serv.spell.<dargn1>.manause>
+mana -= <eval <eval <local.manause> * 30> / 100>
+if (<mana> < 0)
+	mana = 0
+endif
+return 0
+
+On=@ITEMTARGON_ITEM
+// weight = 0 solves also
+// but more protection is nice.
+IF (<ACT.TYPE> == t_scissors) && ((STRMATCH(*_vip_*,<ARGO.BASEID>)) || (STRMATCH(*_paragon_*,<ARGO.BASEID>)) || (STRMATCH(*_hides_*,<ARGO.BASEID>)))
+	SYSMESSAGE <DEFMSG.itemuse_scissors_use>
+	RETURN 1
+elif (<ACT.CONT>)
+	if (<ACT.type> == t_scissors) || (<ACT.type> == t_sewing_kit)
+		if (<argo.type> == t_cloth_bolt)
+			if (<argo.cont>)
+				ADDITEMAMOUNT i_cloth, <eval <ARGO.AMOUNT> * 50>, <ARGO.CONT>
+				argo.remove
+			else
+				ADDITEMAMOUNT i_cloth, <eval <ARGO.AMOUNT> * 50>, <ARGO.P>
+				argo.remove
+			endif
+			return 1
+		endif
+	endif
+elif (<act.type> == t_weapon_fence) || (<act.type> == t_weapon_sword)
+	if (<argo.baseid> == i_tuna) || (<argo.baseid> == i_magical_fish) || (<argo.baseid> == i_golden_fish) || (<argo.baseid> == i_large_fish)
+		serv.newitem <argo.baseid>_cut_raw
+		new.amount <eval <argo.amount>*<argo.dtag.steaks>>
+		new.bounce
+		argo.remove
+		return 1
+	endif
+endif
+
+//ON=@CLICK
+//if <GUILD>
+//	if <GUILD.ALIGN>==1
+//		MESSAGE @0c1 [Order Guild]
+//	elif <GUILD.ALIGN>==2
+//		MESSAGE @026 [Chaos Guild]
+//	else
+//		MESSAGE [Neutral Guild]
+//	endif
+//endif
+
+ON=@HITTRY
+IF (<REGION.TAG0.PVM_ONLY>) && (<SRC.ISPLAYER>)
+	RETURN 1
+ENDIF
+
+IF (<SRC.NPC>==3) || (<SRC.NPC>==4) || (<SRC.NPC>==5) || (<SRC.NPC>==6) || (<SRC.NPC>==7)
+	RETURN 1
+ENDIF
+
+IF (<SRC.REGION.FLAGS>&region_flag_safe) || (<SRC.REGION.FLAGS>&region_flag_no_pvp) || (STRMATCH(*commerce room*,<src.region.name>))
+	RETURN 1
+ENDIF
+
+IF (<REGION.FLAGS>&region_flag_safe) || (<REGION.FLAGS>&region_flag_no_pvp) || (STRMATCH(*commerce room*,<region.name>))
+	RETURN 1
+ENDIF
+
+// evitar que players buguem
+// ao atacar pelas quinas
+IF !(<SRC.CANSEELOS <I.UID>>)
+	RETURN 1
+ENDIF
+
+ON=@HIT
+//LOCAL.ITEMDAMAGECHANCE=0 //calcular a chance da arma levar dano 0-100%
+
+IF (<WEAPON>)
+	local.armslore = <armslore> //0-100.0
+	local.hits <weapon.hits> //1-maxhits
+	local.maxhits <weapon.maxhits> //1-maxhits
+
+	IF (<WEAPON.VALUE> > 0)
+		local.quality <weapon.quality> //1-200
+	ELSE
+		local.quality 200
+	ENDIF
+
+	local.skillweapon <i.<SERV.SKILL.<EVAL <ACTION> & 0ff>.KEY>> //0-100.0
+
+	if <local.quality> == 0
+		local.quality 200
+	endif
+
+	if (<local.hits> > <local.maxhits>)
+		local.maxhits = <local.hits>
+	endif
+
+	float.armslorepeso <floatval ((<local.armslore>/100)*10) + 10>
+	float.hitspeso <floatval ((<local.hits>/<local.maxhits>)*5) + 5>
+
+	if (<isnum local.quality>)
+		float.qualitypeso <floatval ((<local.quality>/200)*15) + 15>
+	else
+		float.qualitypeso <floatval ((<dlocal.quality>/200)*15) + 15>
+	endif
+
+	float.skillweaponpeso <floatval ((<local.skillweapon>/100)*15) + 15>
+
+	local.ITEMDAMAGECHANCE = <feval <floatval (100 - (<float.qualitypeso> + <float.armslorepeso> + <float.skillweaponpeso> + <float.hitspeso>)) / 2>>
+ENDIF
+
+IF <SRC.FLAGS>&statf_hasshield
+	IF (<R1,150> < <SRC.PARRYING>/100)
+		SRC.EFFECT 3,i_fx_glow,20,25,1
+		SRC.SYSMESSAGE You parry the blow
+		SRC.SKILLGAIN 5 1
+		RETURN 1
+	ENDIF
+ENDIF
+
+IF (<WEAPON>)
+	IF (<WEAPON.TAG0.POISONLEVEL>)
+		IF !(<SRC.ISPLAYER>)
+			IF (<WEAPON.TAG0.POISONLEVEL> == 1)
+				local.POISONCHANCE = 4
+			ELIF  (<WEAPON.TAG0.POISONLEVEL> == 2)
+				local.POISONCHANCE = 6
+			ELIF (<WEAPON.TAG0.POISONLEVEL> == 3)
+				local.POISONCHANCE = 9
+			ELIF (<WEAPON.TAG0.POISONLEVEL> == 4)
+				local.POISONCHANCE = 16
+			ENDIF
+
+			IF (<f_get_real_skill <UID>,30> >= 1000)
+				local.POISONCHANCE <EVAL ((<local.POISONCHANCE> * 80) / 100)>
+			ENDIF
+
+			IF !(<R<LOCAL.POISONCHANCE>>)
+				LOCAL.DOPOISON 1
+			ENDIF
+		ELSE
+			IF (<WEAPON.TAG0.POISONLEVEL> == 1)
+				local.POISONCHANCE = 3
+			ELIF (<WEAPON.TAG0.POISONLEVEL> == 2)
+				local.POISONCHANCE = 5
+			ELIF (<WEAPON.TAG0.POISONLEVEL> == 3)
+				local.POISONCHANCE = 7
+			ELIF (<WEAPON.TAG0.POISONLEVEL> == 4)
+				local.POISONCHANCE = 9
+			ENDIF
+
+			LOCAL.FOUND 0
+			FORCONTID i_poison_buffer
+				IF (<LINK> == <SRC.UID>)
+					LOCAL.FOUND <UID>
+				ENDIF
+			ENDFOR
+
+			IF (<LOCAL.FOUND>)
+				REF1 <LOCAL.FOUND>
+			ELSE
+				SERV.NEWITEM i_poison_buffer
+				NEW.TIMER 60
+				NEW.LINK <SRC.UID>
+				EQUIP <NEW.UID>
+
+				REF1 <NEW.UID>
+			ENDIF
+
+			REF1.TIMER 60
+			REF1.TAG0.HITS += 1
+
+			SERV.LOG <NAME> batendo em <SRC.NAME> <dREF1.TAG0.HITS>.
+
+			IF (<REF1.TAG0.HITS> >= <LOCAL.POISONCHANCE>)
+				REF1.REMOVE
+				LOCAL.DOPOISON 1
+			ENDIF
+		ENDIF
+
+		IF  (<LOCAL.DOPOISON>)
+			SRC.FINDID.i_poison_effect.remove
+			SERV.NEWITEM i_poison_effect
+			NEW.more2 <WEAPON.TAG.POISONLEVEL>
+			NEW.MORE 8
+			NEW.TAG.POISONTIMER <WEAPON.TAG.POISONTIMER>
+			NEW.TAG.ATTACKER <UID>
+			NEW.CONT <SRC.UID>
+			NEW.TRIGGER @EQUIP
+			NEW.TIMER 2
+		ENDIF
+	ENDIF
+
+	//ARGN1=<R<WEAPON.DAM>>
+ELSE
+	LOCAL.DANOMAO <EVAL <STR>/50>
+	LOCAL.DANOMAO2 <EVAL <LOCAL.DANOMAO>+(<WRESTLING>/300)>
+	ARGN1=<R<DLOCAL.DANOMAO>,<DLOCAL.DANOMAO2>>
+ENDIF
+
+IF <WEAPON>
+	LOCAL.DIFF = <ARGN1>
+	ARGN1 += <eval <tactics>/200>
+	ARGN1 += <eval <anatomy>/200>
+	ARGN1 += <eval <str>/33>
+ENDIF
+
+IF <WEAPON.TYPE>=t_weapon_axe
+	ARGN1 += <eval (<dLOCAL.DIFF>*(<LUMBERJACKING>/50))/100>
+ENDIF
+
+IF <SRC.ISPLAYER>
+	ARGN1 -= <eval (<ARGN1> * <SRC.AR>)/200>
+ENDIF
+
+IF !(<SRC.ISPLAYER>) && (<uid.<local.arrow>.defname> == i_iron_arrow)
+	// put here the % increase
+ENDIF
+
+IF (<WEAPON.MOREY>)
+	ARGN1 += <EVAL <WEAPON.MOREY>/66>
+ENDIF
+
+// evitar que o sphere reduza o dano para armadura (ja foi reduzido)
+ARGN2 |= dam_god
+
+On=@GetHit
+IF (<REGION.TAG0.PVM_ONLY>) && (<SRC.ISPLAYER>)
+	RETURN 1
+ENDIF
+
+IF (<SRC.NPC> != brain_guard)
+	if (<ARGN2> == 146) && !(<CANSEELOS <SRC>>) //&& (<ISEVENT.r_house_private>)
+		ARGN2 |= 08000
+		RETURN 1
+	ENDIF
+
+	//if (<ctag0.resist_spell>)
+	//	argn1 -= <eval <eval <argn1> * <ctag0.resist_spell>> / 100>
+	//	ctag0.resist_spell =
+	//endif
+
+	IF (<CTAG0.GUARDSMUTE> == 1)
+	 CTAG.GUARDSMUTE
+	ENDIF
+
+	IF (!<SRC.ISPLAYER>)
+		LOCAL.ARMOR <AR>
+
+		IF !(STRCMPI(<FINDLAYER.layer_hand2.TAG0.LEVEL_ATTRIBUTE>, ARMOR))
+			LOCAL.ARMOR += <FINDLAYER.layer_hand2.TAG0.LEVEL_ATTRIBUTE_BONUS>
+		ENDIF
+
+		ARGN1 -= <eval (<ARGN1>*<LOCAL.ARMOR>)/225>
+		if (<tag0.survivorshield>) && (<argn1> > <hits>)
+			if (<hits> >= <eval <maxhits>/2>)
+				argn1 = <eval <hits>/2>
+				effect 1,i_gold,99,45
+				message @0803,,1 Survived!
+			endif
+		endif
+
+		IF (<ARGN2> & dam_physical) && (<TAG0.PVM_GET_HIT_DECREASE_PERCENTAGE>)
+			ARGN1 = <EVAL (<ARGN1> * (100 - <TAG.PVM_GET_HIT_DECREASE_PERCENTAGE>)) / 100>
+		ENDIF
+	ELIF (<ARGN2>==02) || (<ARGN2> == 2050) || (<ARGN2> == 1026)
+		argn2 |= 01
+	ELIF (<ARGN2> == 16) && ((<FLAGS> & statf_hidden) || (<FLAGS> & statf_invisible))
+		FLAGS = <FLAGS> & ~statf_hidden
+		FLAGS = <FLAGS> & ~statf_invisible
+		SYSMESSAGE @,,1 <DEFMSG.hiding_revealed>
+	ENDIF
+
+//	IF (<SRC.ISPLAYER>)
+//		SERV.LOG <SRC.NAME> => <NAME> D: <ARGN1> W: <SRC.WEAPON.NAME> A: <AR> MA: <MODAR>
+//	ENDIF
+ENDIF
+
+ON=@ItemStep
+	IF (<REGION.ISEVENT.r_house_private>)
+		IF (<ACT.CAN> & can_i_block) && (<EVAL ABS(<ACT.P.Z> - <P.Z>)> < 8)
+			RETURN 1
+		ENDIF
+	ENDIF
+
+ON=@ITEMCREATE
+if <account.plevel> > 1
+	serv.writefile logs/Itemcreatestaff.txt <name> <account> criou <argo.name> <UID> em <p>
+endif
+
+ON=@ITEMCLICK
+IF <ACT.TOPOBJ.BASEID>==c_h_new_vendor
+	IF <ACT.TYPE>==t_CONTAINER
+		RETURN 0
+	ENDIF
+	IF !(<ACT.PRICE>)
+		ACT.MESSAGE @0794 [SEM PRECO]
+	ELSE
+		ACT.MESSAGE @026 [Preco: <ACT.PRICE>gp]
+	ENDIF
+ENDIF
+
+IF (<ACT.ISEVENT.t_bound_item>) || (<ACT.ISEVENT.t_restricted_bound_item>)
+	ACT.MESSAGE @0481 [Bound]
+ENDIF
+
+IF <ACT.ATTR>&04
+	ACT.MESSAGE @0481 [Newbie]
+ENDIF
+
+ON=@ITEMPICKUP_PACk
+IF <SRC.ACCOUNT.PLEVEL> > 1
+	IF !(<UID> == <ACT.TOPOBJ.UID>)
+		WRITEFILE logs/<ACCOUNT>.LOG <SERV.RTIME>: <ACCOUNT>  pegou <ACT.AMOUNT> <ACT.NAME> (<ACT.UID>) de um <ACT.TOPOBJ.NAME> (<ACT.TOPOBJ.UID>) em <ACT.TOPOBJ.P>
+		//IF <SRC.ACCOUNT.PLEVEL> < 6
+		//WRITEFILE2 <ACCOUNT>.LOG <SERV.RTIME>: <ACCOUNT>  pegou <ACT.AMOUNT> <ACT.NAME> (<ACT.UID>) de um <ACT.TOPOBJ.NAME> (<<ACT.TOPOBJ.UID>) em <ACT.TOPOBJ.P>
+		//ENDIF
+	ENDIF
+ENDIF
+
+
+ON=@ITEMDROPON_SELF
+IF <SRC.ACCOUNT.PLEVEL> > 1
+	IF !(<UID> == <ACT.TOPOBJ.UID>)
+		WRITEFILE logs/<ACCOUNT>.LOG <SERV.RTIME>: <ACCOUNT>  dropou em <ACT.TOPOBJ.NAME> (<ACT.TOPOBJ.UID>) <ARGO.AMOUNT> <ARGO.NAME> (<ARGO.UID>) em <ACT.TOPOBJ.P>
+	ENDIF
+ENDIF
+
+ON=@ITEMDROPON_ITEM
+IF <SRC.ACCOUNT.PLEVEL> > 1
+	SERV.WRITEFILE logs/<ACCOUNT>.txt (<serv.rtime>) <ACCOUNT>  DropouonItem <ACT.AMOUNT> <ACT.name> (<ACT.UID>) on <ARGO.NAME> (<ARGO.UID>)
+ENDIF
+
+IF <SRC.FINDLAYER.21.UID> == <ARGO.UID>
+	IF <ARGO.COUNT> > 200
+		SRC.ACT.P=<SRC.P>
+		SRC.SYSMESSAGE Voce ja possui itens demais no seu backpack.
+		RETURN 1
+	ENDIF
+ENDIF
+
+ON=@SpellEffect
+	IF (<REGION.TAG0.PVM_ONLY>) && (<SRC.ISPLAYER>) && (<SERV.SPELL.<ARGN1>.FLAGS> & spellflag_harm)
+		RETURN 1
+	ENDIF
+
+	//magic reflection fix
+	IF (<FLAGS>&statf_reflection) && (<SRC.UID> != <UID>) && !(<SRC.FLAGS>&statf_reflection)
+		IF ((<SERV.SPELL.<ARGN1>.FLAGS>&spellflag_harm) || (<ARGN1> == 41)) //dispel
+				FLAGS &= ~statf_reflection
+				FINDID.i_rune_magic_reflection.REMOVE
+				FINDLAYER.layer_spell_magic_reflect.REMOVE
+
+				I.EFFECT 3 i_fx_glow, 16, 16
+
+				LOCAL.OLD_NOTORIETY <NOTOGETFLAG <SRC.UID>,0>
+				SRC.SPELLEFFECT <ARGN1>, <ARGN2>, <UID>
+
+				LOCAL.VICTIM_UID <UID>
+
+				IF (<NOTOGETFLAG <SRC.UID>,0> != <dLOCAL.OLD_NOTORIETY>)
+					FORCONT <SRC.UID> 0
+						IF (<BASEID> == i_memory) && (<LINK.UID> == <dLOCAL.VICTIM_UID>) && (<COLOR> & memory_harmedby)
+							REMOVE
+						ENDIF
+					ENDFOR
+
+					NOTOUPDATE
+				ENDIF
+
+				RETURN 1
+		ENDIF
+	ELSEIF (<I.FLAGS> & statf_reflection) && (<SRC.UID> != <I.UID>) && (<SRC.FLAGS> & statf_reflection)
+		IF (<SERV.SPELL.<ARGN1>.FLAGS> & spellflag_harm)
+			SRC.FLAGS &= ~statf_reflection
+			SRC.FINDID.i_rune_magic_reflection.REMOVE
+			SRC.FINDLAYER.layer_spell_magic_reflect.REMOVE
+
+			I.FLAGS &= ~statf_reflection
+			I.FINDID.i_rune_magic_reflection.REMOVE
+			I.FINDLAYER.layer_spell_magic_reflect.REMOVE
+
+			I.EFFECT 3 i_fx_glow, 16, 16
+			SRC.EFFECT 3 i_fx_glow, 16, 16
+
+			RETURN 1
+		ELSEIF (<ARGN1> == 41) //dispel
+			I.EFFECT 3 i_fx_glow, 16, 16
+		ENDIF
+	ENDIF
+
+	IF (<ARGN1> == 43) || (<ARGN1> == 49) || (<ARGN1> == 54) || (<ARGN1> == 55) || (<ARGN1> == 57)
+		IF (<REGION.ISEVENT.r_house_private>) && (!<SRC.REGION.ISEVENT.r_house_private>)
+			IF (<CANSEELOS> == 0)
+				// SYSMESSAGE Voce foi protegido de uma magia de area!
+				RETURN 1
+			ENDIF
+		ENDIF
+	ENDIF
+	// || (<ARGN1> == 54) mass dispel
+
+	IF (<ARGN1> == 59)
+	ref1 <src.uid> //caster
+	ref2 <uid>	//tobe resurrected
+		if (!<ref1.isgm>) && (<ref2.f_can_i_be_resurrected> == 0)
+			ref2.smsg @,,1 You cant be resurrected in that tile.
+			ref1.smsg @,,1 <ref2.name> can't be resurrected over there. //'
+			return 1
+		endif
+	ENDIF
+
+	IF (<ARGN1> == 11)
+		IF (<FINDID.i_poison_effect.MORE2> == 5)
+			FINDID.i_poison_effect.remove
+			FLAGS <FLAGS>&~080
+		ENDIF
+
+		RETURN 1
+	ENDIF
+
+	IF (<ARGN1> == 20)
+		IF (<SRC.UID> != <UID>)
+			FINDID.i_poison_effect.remove
+			TRYSRC <UID> SERV.NEWITEM i_poison_effect
+			NEW.more2 5
+			NEW.MORE 4
+			NEW.TAG.POISONTIMER <R12,16>
+			NEW.TAG.ATTACKER <SRC.UID>
+			NEW.CONT <UID>
+			TRYSRC <UID> NEW.TRIGGER @EQUIP
+			NEW.TIMER
+		ENDIF
+
+		RETURN 1
+	ENDIF
+
+ON=@KILL
+IF <ARGO.ISPLAYER>
+	FAME += <ARGO.FAME>/30
+	IF <FAME> > 10000
+		FAME 10000
+	ENDIF
+ELSE
+	IF (STRMATCH(*_poison, <ARGO.BASEID>))
+		F_GM_QUEST_SKILL_INCREASE 30,<ARGO.BASEID>
+	ENDIF
+ENDIF
+//////////rank
+IF (<ARGO.ISPLAYER>)
+	f_GeneratePoint 1,<ARGO>
+ELIF (<ARGO.ISNPC>)
+	f_GeneratePoint 2,<ARGO>
+ENDIF
+TAG.LASTKILL=<ARGO>
+//////////////////
+
+ON=@ITEMEQUIPTEST
+IF (<ACT.LAYER>==1) || (<ACT.LAYER>==2) || (<ACT.LAYER>==31)
+	IF <SRC.ACTION>==Skill_Mining
+		//SERV.WRITEFILE debugger.txt (<serv.rtime>) <NAME> ITEMEQUIPTEST Fast switch block
+		RETURN 1
+	ENDIF
+ENDIF
+
+On=@PersonalSpace
+if (<SRC.STAM> > <SRC.MAXSTAM>) && !((<FLAGS> & statf_invisible) || (<FLAGS>&STATF_DEAD) || (<flags>&statf_hidden) || (<src.isgm>))
+     RETURN 1
+elsesif (<stam> >= <Maxstam>) && !((<FLAGS> & statf_invisible) || (<FLAGS>&STATF_DEAD) || (<flags>&statf_hidden) || (<src.isgm>))
+     ARGN1=<eval (<SRC.MAXSTAM>*20)/100>
+endif
+
+//On=@PersonalSpace
+//say @,,1 PS <src.stam> >= <stam>)
+//IF (<FLAGS> & statf_invisible) || <ISGM>
+//    ARGN=0
+//elif (<FLAGS> & statf_hidden)
+// ARGN1=<eval (<SRC.MAXSTAM>*20)/100>
+//elif (<src.stam> >= <stam>)
+//say @,,1 !
+//     ARGN1=<eval (<SRC.MAXSTAM>*20)/100>
+//else
+//     return 1
+//endif
+
+ON=@LOGIN
+EVENTS=+e_cadastro
+f_imlinked
+CALL f_onlogin_global_protect
+f_save_vip_area_login
+	if (<account.plevel>==1)
+		invul 0
+	endif
+
+IF (STRMATCH(*54.*, <f_amzchk>)) || (STRMATCH(*52.*, <f_amzchk>)) || (STRMATCH(*57.*, <f_amzchk>))
+    S Player <name> (acc: <account>) com possivel IP da Amazon.
+ENDIF
+
+if !(<isgm>)
+	FORCHARMEMORYTYPE 0100
+		IF <UID.<LINK>.TYPE>==t_multi
+			LOCAL.COUNT +=1
+		ENDIF
+	ENDFOR
+	IF <dLOCAL.COUNT> > 1
+		TIMERF 1,f_house_warning <dLOCAL.COUNT>
+	ENDIF
+endif
+
+TAG.ISUSINBAND
+//CHECKIPS
+
+IF <ISEMPTY <TAG.FIXSTATSKILL4>>
+	FIXSTATUS_1
+	TAG.FIXSTATSKILL4 1
+	tag.FIXSTATSKILL
+	TAG.FIXSTATUSOK
+	TAG.FIXSTATUS
+ENDIF
+
+ON=@Rename
+IF (<SRC.ISGM>)
+	SERV.WRITEFILE logs/<src.account>.log (<serv.rtime>) <SRC.name> RENOMEOU <ARGO.NAME> <argo.uid>
+ENDIF
+		if (<argo.isplayer>)
+			ref1 <argo>
+			for x 0 <eval <serv.accounts> -1>
+				for y 0 <eval <account.chars> -1>
+					ref2 = <serv.account.<dlocal.x>.char.<dlocal.y>>
+					if !(strcmpi(<args>,<ref2.name>)) && !(<ref1>==<ref2>)
+						ref1.namechange
+						return 1
+					endif
+				endfor
+			endfor
+		endif
+
+ON=@Logout
+	IF (<SRC.CAMPING> >= <R1,1000>)
+		ARGN1 <EVAL <ARGN1> / 2>
+	ENDIF
+
+	SRC.FINDID.i_teleport_delay.remove
+	f_save_vip_area_logout
+
+ON=@Mount
+	IF !(<ISGM>) && (<FLAGS> & statf_freeze)
+		SYSMESSAGE <DEFMSG.reach_fail>
+		RETURN 1
+	ENDIF
+
+ON=@Dismount
+	IF !(<ISGM>) && (<FLAGS> & statf_freeze)
+		SYSMESSAGE <DEFMSG.reach_fail>
+		RETURN 1
+	ENDIF
+
+	CTAG.LAST_DISMOUNT <SERV.TIME>
+
+ON=@Death
+//	IF (<ATTACKER>)
+//		FOR 0 <EVAL <ATTACKER> - 1>
+//			REF1 <ATTACKER.<DLOCAL._FOR>>
+//			IF (<REF1.FLAGS> & statf_conjured)
+//				REF1.OWNER.KILLS += 1
+//			ENDIF
+//		ENDFOR
+//	ENDIF
+
+	IF (<ISONLINE>)
+		CTAG.LAST_DEATH <SERV.TIME>
+	ENDIF
+
+	REF1 <ATTACKER.LAST>
+	LOCAL.ATTACKER_BLUE 1
+
+	IF (<REF1.KILLS> > 0)
+		LOCAL.ATTACKER_BLUE 0
+	ENDIF
+
+	LOCAL.VICTIM_BLUE 1
+
+	IF (<KILLS> > 0)
+		LOCAL.VICTIM_BLUE 0
+	ENDIF
+
+	IF (<REF1.ISPLAYER>)
+		DB.EXECUTE INSERT INTO pvp_ranking (date_time, attacker_uid, attacker_name, attacker_guild_uid, attacker_guild_name, attacker_blue, attacker_events, victim_uid, victim_name, victim_guild_uid, victim_guild_name, victim_blue, victim_events, location_coordinates, location_name, location_events) VALUES ("<SERV.RTIME %Y-%m-%d %H:%M:%S>", "<REF1.UID>", "<REF1.NAME>", "<REF1.GUILD>", "<REF1.GUILD.ABBREV>", "<DLOCAL.ATTACKER_BLUE>", "<REF1.EVENTS>", "<UID>", "<NAME>", "<GUILD>", "<GUILD.ABBREV>", "<DLOCAL.VICTIM_BLUE>", "<EVENTS>", "<P>", "<REGION.NAME>", "<REGION.EVENTS>")
+	ENDIF
+
+	TAG.FINGERSLIP
+	TAG.ISUSINBAND
+	TAG.LASTKILLER=<ARGO>
+
+
+//ON=@SKILLPRESTART
+//IF <SRC.ISEVENT.e_runadano>
+//SRC.SYSMESSAGE You must wait to perform another action.
+//RETURN 1
+//ENDIF
+
+ON=@SpellCast
+	IF (<SRC.ISINSHIP>) && (<ACT.ISPLAYER>) && !(<ACT.ISINSHIP>)
+		IF !(<SRC.CANSEELOS <ACT.UID>>) || !(<ACT.CANSEELOS <SRC.UID>>)
+			RETURN 1
+		ENDIF
+	ENDIF
+
+ON=@SPELLSUCCESS
+IF (<ARGN1> == 41)
+	IF (<ACT.BASEID> == I_MOONGATE_BLUE)
+		IF (<ACT.TAG0.CRIADOR> != 0)
+			UID.<ACT.LINK>.REMOVE
+			ACT.REMOVE
+		ENDIF
+	ENDIF
+ENDIF
+
+// SERV.LOG <ACT.UID> <ACT.NAME> <UID> <UID.<UID>.NAME>
+IF (<ACT.ISPLAYER>)
+	IF ((<ARGN1> == 4) || (<ARGN1> == 29)) && !(<ACT.ISPLAYER>) && (<ACT.NOTOGETFLAG <UID>> >= noto_criminal) && (<ACT.NOTOGETFLAG <UID>> < noto_invul)
+		SERV.LOG <NAME> is trying to heal <ACT.NAME>.
+	//	HITS 0
+	ENDIF
+ENDIF
+
+//SERV.WRITEFILE debugger.txt (<serv.rtime>) <NAME> ACC:<ACCOUNT> castou spell(<ARGN1>) em <ACT.name>(<ACT.UID>) (Usou <ARGO.name>)
+
+ON=@SkillStart
+	IF (<ARGN1> == 7)
+		SRC.CTAG.BLACKSMITH_GM_INCREASE 1
+	ENDIF
+
+	IF (<ARGN1> == 7) && (<f_get_real_skill <SRC.UID>,7> >= 1000) && (<SERV.ITEMDEF.<LOCAL.CRAFTITEMDEF>.TYPE> == t_armor)
+		IF (<R100> < 10)
+			SRC.CTAG.BLACKSMITH_EXCEPTIONAL_ARMOR 1
+		ENDIF
+	ENDIF
+
+ON=@SkillMakeItem
+	IF (<SRC.CTAG0.BLACKSMITH_GM_INCREASE>)
+		F_GM_QUEST_SKILL_INCREASE 7,<ACT.BASEID>
+		SRC.CTAG.BLACKSMITH_GM_INCREASE
+	ENDIF
+
+	IF (<SRC.CTAG0.BLACKSMITH_EXCEPTIONAL_ARMOR>)
+		IF (<f_get_real_skill <SRC.UID>,7> >= 1000) && (<ACT.TYPE> == t_armor)
+			ACT.EVENTS +t_stat_mod
+			ACT.TAG.MOD_STATS AR
+			ACT.TAG.MOD_STAT_AR 5
+
+			SRC.SYSMESSAGE @,,1 Congratulations ! You just crafted an exceptional item !
+
+			SRC.CTAG.BLACKSMITH_EXCEPTIONAL_ARMOR
+		ENDIF
+	ENDIF
+
+
+//ON=@SKILLSTART
+//IF (<ARGN> == 45) || (<ARGN> == 44) || (<ARGN> == 18)
+	//checkips
+	//SERV.WRITEFILE debugger.txt (<serv.rtime>) <SRC.NAME> Esta usando skill <serv.SKILL.<ARGN1>.NAME> para fazer(se for fazer) <local.craftitemdef>
+//ENDIF
+
+
+//ON=@SKILLMENU
+//SERV.WRITEFILE debugger.txt (<serv.rtime>) <NAME> Abriu menu de <ARGS>
+
+//on=@SKILLMAKEITEM
+// SERV.WRITEFILE debugger.txt (<serv.rtime>) <NAME> Fez <ACT.NAME> DE <ARGO.NAME> (SKILLMAKEITEM)
+
+//ON=@DCLICK
+//	SERV.WRITEFILE debugger.txt (<serv.rtime>) <SRC.NAME> Dclicou em <NAME>(<UID>)
+
+//ON=@itemEQUIP
+//	SERV.WRITEFILE debugger.txt (<serv.rtime>) <NAME> EQUIPOU <ACT.NAME>
+
+//ON=@ITEMUNEQUIP
+//	SERV.WRITEFILE debugger.txt (<serv.rtime>) <NAME> UNEQUIPOU <ACT.NAME> (<ACT.UID>, <ACT.BASEID>, em <act.TOPOBJ.p>)
+
+
+[EVENTS E_CRITICAL_WEAPON]
+ON=@HIT
+IF (<WEAPON.TYPE>==T_WEAPON_MACE_SMITH) && (<WEAPON.MOREY> > 10)
+	LOCAL.RANDOM <EVAL 7000000/((<MACEFIGHTING>*<MACEFIGHTING>)+100000)>
+	IF <dlocal.random> < 7
+		local.random 7
+	endif
+	IF (<R<dlocal.random>> == 1)
+		ARGN1 += <EVAL (<WEAPON.MOREY>)/66>
+		SRC.SAY @32 Critical Hit!
+		SRC.EFFECT=3,i_fx_glow_spike,3,20,1,04c2
+		SERV.NEWITEM I_BLOOD_POOL_LARGE
+		NEW.P <SRC.P>
+		NEW.ATTR 02
+		NEW.TIMER 20
+		SERV.NEWITEM I_BLOOD_SMEAR
+		NEW.P <SRC.P>
+		NEW.MOVE NE
+		NEW.ATTR 02
+		NEW.TIMER 20
+	ENDIF
+ENDIF
+
+
+[EVENTS E_LogPlayer]
+
+ON=@ITEMCREATE
+ serv.writefile logs/account_<account>.LOG  <SERV.RTIME> <name> criou <argo.name> (<ARGO.UID>) em <P> - GOLD: <gold>
+
+ON=@ITEMPICKUP_PACk
+SERV.WRITEFILE logs/account_<account>.LOG <SERV.RTIME>: <NAME> pegou <act.amount> <ACT.NAME> (<ACT.UID>) de um <ACT.TOPOBJ.NAME> (<ACT.TOPOBJ.UID>) em <ACT.TOPOBJ.P> - GOLD: <gold>
+
+ON=@ItemPickUp_Ground
+SERV.WRITEFILE logs/account_<account>.LOG <SERV.RTIME>: <NAME> pegou <argn1> <ACT.NAME> (<ACT.UID>), com attr (<act.attr>) em <ACT.P>. Casa de <uid.<uid.<act.region.uid>.more1>.name> (<uid.<act.region.uid>.more1>) - GOLD: <gold> ItemPickUp_Ground
+
+ON=@ITEMDROPON_SELF
+SERV.WRITEFILE logs/account_<account>.LOG <SERV.RTIME>: <NAME> dropou em <ACT.TOPOBJ.NAME> (<ACT.TOPOBJ.UID>) amt <argo.amount> <ARGO.NAME> (<ARGO.UID>) em <ACT.TOPOBJ.P> - GOLD: <gold>
+
+ON=@ITEMDROPON_GROUND
+serv.WRITEFILE logs/account_<account>.LOG <SERV.RTIME>: <NAME> dropou em <P> amt <act.amount> <ACT.NAME> (<ACT.UID>) - GOLD: <gold>
+
+ON=@ITEMDROPON_ITEM
+SERV.WRITEFILE logs/account_<account>.LOG (<serv.rtime>) <NAME> DropouonItem <act.amount> <ACT.name> on <ARGO.NAME> (<ARGO.UID>) - GOLD: <gold>
+
+ON=@ITEMDROPON_char
+SERV.WRITEFILE logs/account_<account>.LOG (<serv.rtime>) <NAME> DropouonChar <act.amount> <ACT.name> (<act.uid>) on <ARGO.NAME> (<ARGO.UID>) - GOLD: <gold>
+
+on=@SKILLMAKEITEM
+SERV.WRITEFILE logs/account_<account>.LOG (<serv.rtime>) <NAME> Fez <ACT.NAME> DE <ARGO.NAME> (SKILLMAKEITEM) - GOLD: <gold>
+
+ON=@ITEMSELL
+SERV.WRITEFILE logs/account_<account>.LOG <SERV.RTIME> <NAME> vendeu <argn1> <ACT.NAME> por <ARGN2> para <ARGO.NAME> (<argo.uid>) em <ARGO.P> - GOLD: <gold>
+
+ON=@ITEMBUY
+SERV.WRITEFILE logs/account_<account>.LOG <SERV.RTIME> <NAME> comprou <argn1> <ACT.NAME> por <ARGN2> de <ARGO.NAME> (<argo.uid>) em <ARGO.P> TOTAL DE <dLOCAL.TOTALCOST> - GOLD: <gold>
+
+on=@CharTradeAccepted
+SERV.WRITEFILE logs/account_<account>.LOG <SERV.RTIME> <NAME> Traded com <act.name>.  - GOLD: <gold>
+for 1 <argn1>
+	SERV.WRITEFILE logs/account_<account>.LOG TRADE OF (AMT: <ref<DLOCAL._FOR>.amount>) (NAME: <ref<DLOCAL._FOR>.name>) (<ref<DLOCAL._FOR>.uid>)
+	SERV.WRITEFILE logs/account_<account>.LOG REVERSE TRADE OF (AMT: <act.ref<DLOCAL._FOR>.amount>) (NAME: <act.ref<DLOCAL._FOR>.name>) (<act.ref<DLOCAL._FOR>.uid>)
+ENDFOR
+
+ON=@ITEMDCLICK
+	SERV.WRITEFILE logs/account_<account>.LOG (<serv.rtime>) <NAME> Dclicou em <ACT.NAME>(<ACT.UID>) - GOLD: <gold>
+
+ON=@itemEQUIP
+SERV.WRITEFILE logs/account_<account>.LOG (<serv.rtime>) <NAME> EQUIPOU <ACT.NAME> <ACT.UID> em <P> - GOLD: <gold>
+
+[EOF]

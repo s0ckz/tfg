@@ -1,0 +1,161 @@
+[ITEMDEF i_pedra_CP]
+NAME=Pedra de saida
+ID=01184
+TYPE=T_NORMAL
+
+ON=@CREATE
+COLOR=0835
+
+ON=@DCLICK 
+if <src.findlayer(123).timer> > 1
+    src.sysmessage voce nao pode abrir esta tela tao rapido
+    return 1
+endif
+src.dialog d_cp
+src.findlayer(123).timer 5
+RETURN 1
+
+[EVENTS e_cp]
+ON=@CLICK
+MESSAGE @,,1 [Presidiario]
+    if (<src.isgm>)
+     message @,,1 Faltam [<dtag.CPAMOUNT>]
+     endif
+ON=@ItemCreate
+IF (<ARGO.TYPE>==t_ore) || (<ARGO.TYPE>==t_log)
+    TIMERF 1,f_cpcountup <ARGO.UID>
+ENDIF
+
+ON=@SKILLSTART
+IF !STRMATCH("<SRC.REGION.NAME>","Colonia Penal")
+    SRC.F_GO Colonia Penal
+    SRC.SYSMESSAGE Vamo minera :)
+ENDIF
+
+[FUNCTION cp]
+IF STRMATCH(<ARGS>,)
+    SYSMESSAGE Voce precisa estipular o valor da pena em resources. exemplo .cp 1000
+    RETURN 1
+ENDIF
+targetf f_cp_player <ARGS>
+SYSMESSAGE Selecione o player a receber a punicao.
+
+[function f_cp_player_fromjail]
+REF69 <uid.<argv[0]>>
+//pena <argv[1]>
+REF69.SYSMESSAGE Voce foi sentenciado a pena de <EVAL <argv[1]>> irons/logs.
+REF69.TAG.CPAMOUNT <argv[1]>
+REF69.TAG.EVENT.ID 1
+REF69.F_GO Colonia Penal
+SERV.WRITEFILE Historico_Jail.txt <ref69.name> (<ref69>) foi para CP completar sua pena. Qtd: <EVAL <argv[1]>>. em <serv.rtime>
+
+[function f_cp_player]
+REF69 <ARGO.UID>
+REF69.SYSMESSAGE Voce foi sentenciado a pena de <EVAL <ARGS>> irons/logs.
+SYSMESSAGE <REF69.NAME> foi sentenciado a pena de <EVAL <ARGS>> irons/logs.
+REF69.TAG.CPAMOUNT <ARGS>
+REF69.TAG.EVENT.ID 1
+REF69.EVENTS +e_cp
+REF69.F_GO Colonia Penal
+
+[Function f_cpcountup]
+REF69=<ARGS>
+TAG.CPAMOUNT -=<REF69.AMOUNT>
+REF69.REMOVE
+IF <TAG0.CPAMOUNT> < 1
+    TAG.CPAMOUNT
+    TAG.EVENT.ID
+    EVENTS -e_cp
+    F_GO HELP ROOM
+    SYSMESSAGE Voce terminou de cumprir sua pena. Bom Jogo.
+    SERV.WRITEFILE Historico_Jail.txt <name> (<uid>) acabou de completar sua pena na CP. em <serv.rtime>
+ELSE
+    SYSMESSAGE Faltam <dTAG0.CPAMOUNT> iron/logs para terminar sua pena.
+ENDIF
+
+[DIALOG d_cp]
+150,40 
+page 0
+resizepic 0 0 3600 350 350
+gumppic 85 35 96
+text 38 50 70 0
+text 30 65 70 1
+text 90 80 70 2
+text 110 95 70 3
+text 70 160 100 4
+text 70 190 100 5
+text 70 220 100 6
+text 70 250 100 7
+text 70 280 100 8
+text 100 15 148 9
+button 45 160 5540 5542 5542 0 1
+button 45 190 5540 5542 5542 0 2
+button 45 220 5540 5542 5542 0 3
+button 45 250 5540 5542 5542 0 4
+button 140 290 1144 1145 1 0 5
+
+
+[DIALOG d_cp TEXT] 
+//remover-----------------------------
+Voce foi preso por um GM e devera 
+cumprir sua sentenca nessas instalacoes 
+
+Escolha sua opcao:
+Bank Box (Desativado)
+Ver sua pena
+Regras da CP
+Sair da Colonia Penal
+
+Pedra de saida da CP
+
+[DIALOG d_cp BUTTON] 
+ON=0 
+RETURN 1
+ON=1
+SRC.SYSMESSAGE @1153 Opcao Desativada.
+src.dialog d_cp
+//src.bankself
+//var.sua_color 0481 //twinsen
+//src.syscolorida Opcao Desativada. //twinsen
+//var.sua_color 0 //twinsen
+//return 1
+
+ON=2
+//src.sysmessage Voce foi sentenciado a <src.findlayer(-75).tag.dias> dias de reclusao.
+src.sysmessage @1153 Voce devera pagar <eval <src.findlayer(-75).tag.pena>> logs ou iron ingots. //twinsen
+
+on=3
+src.dialog d_pagecerto
+
+on=4
+
+//if <time> < <src.findlayer(-75).tag.saida> 
+//src.sysmessage Voce ainda nao cumpriu a sua sentenca toda!!
+//return=1
+//else
+//src.sysmessage Voce pagou sua divida com a sociedade, voce esta livre para ir
+//src.findlayer(-75).remove
+//src.dialog d_sairjail
+//return 1
+//endif
+//return 1
+
+if <src.restest <eval <src.findlayer(-75).tag.pena>> i_ingot_iron> //twinsen
+    src.consume <eval <src.findlayer(-75).tag.pena>> i_ingot_iron //twinsen
+    src.sysmessage Voce pagou sua divida com a sociedade, esta livre para ir.//twinsen
+    src.findlayer(-75).remove //twinsen
+    src.dialog d_sairjail //twinsen
+    return 1 //twinsen
+elif <src.restest <eval <src.findlayer(-75).tag.pena>> i_log>  //twinsen
+    src.consume <eval <src.findlayer(-75).tag.pena>> i_log //twinsen
+    src.sysmessage Voce pagou sua divida com a sociedade, esta livre para ir. //twinsen
+    src.findlayer(-75).remove //twinsen
+    src.dialog d_sairjail //twinsen
+    return 1 //twinsen
+else //twinsen
+    src.sysmessage @1153 Voce Precisa de <eval <src.findlayer(-75).tag.pena>> Iron Ingots ou Logs para sair. //twinsen
+    return 1 //twinsen
+endif //twinsen
+
+on=5
+return 1

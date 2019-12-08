@@ -1,0 +1,20 @@
+[FUNCTION f_quarentena_sem_cadastro]
+local.ct 0
+			for x 0 <eval <serv.accounts> -1>
+				serv.log acc <dlocal.x> / <eval <serv.accounts> -1>
+							for y 0 <eval <serv.account.<dlocal.x>.chars> -1>
+								ref1 = <serv.account.<dlocal.x>.char.<dlocal.y>>
+								if !(<ref1.findid.i_cadastro>)
+									local.ct ++
+									serv.writefile Sem_Cadastro.txt O char <ref1.name> (conta <ref1.account.name>, lastconnectdate <ref1.account.lastconnectdate>) foi colocado em quarentena por nao ter se cadastrado.
+									ref1.stone 1
+									ref1.go <r5376,5383>,<r1244,1254>
+								endif
+							endfor
+						endif
+						//
+			endfor
+serv.log <dlocal.ct> chars em quarentena por nao terem se cadastrado!
+serv.writefile Sem_Cadastro.txt <dlocal.ct> chars em quarentena por nao terem se cadastrado!
+src.sysmessage @,,1 <dlocal.ct> chars em quarentena por nao terem se cadastrado!
+return 1

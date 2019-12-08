@@ -1,0 +1,21 @@
+[comment newtriggers]
+@SeeItem roda em Characters. (players)
+SRC e I = Player
+ARGO = Objeto
+ARGN1 = 1 Ver item, Argn1 = 0 Não vê item
+
+@SeeNpc roda em Characters. (players)
+I = Player
+SRC = NPC
+Argn1 = 1 Ver NPC, Argn1 = 0 Não vê NPC
+
+
+[events e_dianoite_quest]
+on=@SeeNpc
+	sysmessage I message <src.name> <src.sector.localtod>
+    if (<src.sector.localtod> > 1079) || (<src.sector.localtod> < 361)
+	smsg <sector.localtod>
+        if (<src.tag0.noite>) && !(<tag0.noite>)
+            argn1 = 0
+        endif
+    endif

@@ -1,0 +1,172 @@
+﻿[PLEVEL 1]
+recall
+gate
+
+[FUNCTION gate]
+if <isempty <args>>
+	sysmessage @,,1 Uso:
+	sysmessage @,,1 .gate pagina,runa
+	sysmessage @,,1 .gate set (para setar o runebook)
+	return 1
+endif
+if strmatch(set,<argv[0]>)
+	sysmessage @,,1 Defina seu runebook principal.
+	targetf f_set_runebook
+	return 1
+endif
+ref1 = <tag0.runebook>
+if !<ref1>
+	sysmessage @,,1 Voce precisa definir seu runebook principal.
+	targetf f_set_runebook
+	return 1
+elif !(<ref1.baseid> == i_x_runebook) && !(<ref1.baseid> == i_runebook)
+	sysmessage @,,1 Voce precisa definir seu runebook principal.
+	targetf f_set_runebook
+	return 1
+elif !(<ref1.cont> == <src.findlayer(21).uid>)
+	sysmessage @,,1 O runebook precisa estar na sua bag.
+	return 1
+endif
+local.runa = <eval <eval <eval <argn1>*14> + <argn2>> - 14>
+if (<ref1.baseid> == i_x_runebook)
+	NGATE <args>
+	return 1
+endif
+IF !(<ref1.TAG0.RUNA<dlocal.runa>>)
+sysmessage <def.runebook_nothingatthisslot>
+ELIF (<findid.i_recall_timer>) || (<findid.i_gate_timer>)
+sysmessage <def.runebook_alreadyusingmagic>
+ELIF (<flags>&statf_freeze)
+sysmessage <def.runebook_cantusethisbook>
+ELIF (<tag0.event.id>)
+sysmessage @07a1 You can't use this book in an event.
+ELIF !(<SRC.CANCAST s_gate_travel>)
+src.sysmessage <def.runebook_cantcastthismagic>
+ELSE
+SRC.rb_using_verify
+local.morep=<ref1.TAG0.RUNA<dlocal.runa>>
+SERV.NEWITEM i_gold
+NEW.ATTR=ATTR_INVIS
+NEW.P=<local.MOREP>
+LOCAL.COIN=<NEW>
+IF (<NEW.REGION.FLAGS>&region_antimagic_gate) || (<UID.<NEW.REGION.UID>.TYPE>==t_multi)
+SRC.SYSMESSAGE <def.runebook_placeblocked>
+ELIF (<SRC.REGION.FLAGS>&region_antimagic_recall_out)
+SRC.SYSMESSAGE <def.runebook_cantusethishere>
+ELSE
+IF !(<SRC.ISGM>)
+SRC.MANA -= <SERV.SPELL.s_gate_travel.MANAUSE>
+SRC.CONSUME 1 i_reag_black_pearl
+SRC.CONSUME 1 i_reag_sulfur_ash
+SRC.CONSUME 1 i_reag_mandrake_root
+ENDIF
+SRC.EVENTS +e_runadano
+SERV.NEWITEM i_gate_timer,1,<SRC>
+NEW.TIMERD=<SERV.SPELL.s_gate_travel.CAST_TIME>
+NEW.MOREP=<local.MOREP>
+src.sound snd_spell_recall
+
+IF (<SRC.FLAGS> & statf_hidden)
+	SRC.FLAGS = <SRC.FLAGS> & ~statf_hidden
+	SRC.SYSMESSAGE @,,1 <DEFMSG.hiding_revealed>
+ENDIF
+
+if !(<src.isgm>)
+    SRC.SAY @<SERV.WOPColor>,<SERV.WOPFont> Vas Rel Por
+endif
+SRC.ACTION -1
+SRC.FINDLAYER.1.UNEQUIP
+SRC.FINDLAYER.2.UNEQUIP
+src.anim 17
+ENDIF
+TRY UID.<LOCAL.COIN>.REMOVE
+ENDIF
+
+[FUNCTION recall]
+if <isempty <args>>
+	sysmessage @,,1 Uso:
+	sysmessage @,,1 .recall pagina,runa
+	sysmessage @,,1 .recall set (para setar o runebook)
+	return 1
+endif
+if strmatch(set,<argv[0]>)
+	sysmessage @,,1 Defina seu runebook principal.
+	targetf f_set_runebook
+	return 1
+endif
+ref1 = <tag0.runebook>
+local.runa = <eval <eval <eval <argn1>*14> + <argn2>> - 14>
+if !<ref1>
+	sysmessage @,,1 Voce precisa definir seu runebook principal.
+	targetf f_set_runebook
+	return 1
+elif !(<ref1.baseid> == i_x_runebook) && !(<ref1.baseid> == i_runebook)
+	sysmessage @,,1 Voce precisa definir seu runebook principal.
+	targetf f_set_runebook
+	return 1
+elif !(<ref1.cont> == <src.findlayer(21).uid>)
+	sysmessage @,,1 O runebook precisa estar na sua bag.
+	return 1
+endif
+if (<ref1.baseid> == i_x_runebook)
+	NRECALL <args>
+	return 1
+endif
+IF !(<ref1.TAG0.RUNA<dlocal.runa>>)
+sysmessage <def.runebook_nothingatthisslot>
+ELIF (<findid.i_recall_timer>) || (<findid.i_gate_timer>)
+sysmessage <def.runebook_alreadyusingmagic>
+ELIF (<flags>&statf_freeze)
+sysmessage <def.runebook_cantusethisbook>
+ELIF (<tag0.event.id>)
+sysmessage @07a1 You can't use this book in an event.
+ELIF !(<CANCAST s_recall>)
+sysmessage <def.runebook_cantcastthismagic>
+ELSE
+local.morep=<ref1.TAG0.RUNA<dlocal.runa>>
+SERV.NEWITEM i_gold
+NEW.ATTR=ATTR_INVIS
+NEW.P=<local.MOREP>
+LOCAL.COIN=<NEW>
+IF (<NEW.REGION.FLAGS>&region_antimagic_recall_in) || (<UID.<NEW.REGION.UID>.TYPE>==t_multi)
+SYSMESSAGE <def.runebook_placeblocked>
+ELIF (<REGION.FLAGS>&region_antimagic_recall_out)
+SYSMESSAGE <def.runebook_cantusethishere>
+ELSE
+rb_using_verify
+IF !(<ISGM>)
+MANA -= <SERV.SPELL.s_recall.MANAUSE>
+CONSUME 1 i_reag_black_pearl
+CONSUME 1 i_reag_blood_moss
+CONSUME 1 i_reag_mandrake_root
+ENDIF
+EVENTS +e_runadano
+SERV.NEWITEM i_recall_timer
+NEW.TIMERD=<SERV.SPELL.s_recall.CAST_TIME>
+NEW.MOREP=<local.MOREP>
+NEW.EQUIP
+sound snd_spell_recall
+
+IF (<FLAGS> & statf_hidden)
+	FLAGS = <FLAGS> & ~statf_hidden
+	SYSMESSAGE @,,1 <DEFMSG.hiding_revealed>
+ENDIF
+
+say Kal Ort Por
+ACTION -1
+FINDLAYER.1.UNEQUIP
+FINDLAYER.2.UNEQUIP
+anim 17
+ENDIF
+TRY UID.<LOCAL.COIN>.REMOVE
+ENDIF
+RETURN 1
+
+[FUNCTION f_set_runebook]
+if (<argo.baseid> == i_runebook) || (<argo.baseid> == i_x_runebook)
+	src.TAG.RUNEBOOK = <ARGO.UID>
+else
+	src.sysmessage @,,1 Selecione um runebook.
+	targetf f_set_runebook
+endif
+return 1

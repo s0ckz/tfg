@@ -1,0 +1,352 @@
+[ITEMDEF i_spellbook_full] 
+NAME=Spellbook
+ID=0efa
+WEIGHT=1
+VALUE=500
+type=t_spellbook
+
+ON=@Create 
+MORE=0ffffffff 
+MORE2=0ffffffff 
+ATTR=04
+COLOR=0
+
+//		//		//		//		//
+
+[CHARDEF c_llama_evento]
+ID=c_llama
+CAN=MT_RUN
+ICON=i_pet_llama
+DESCRIPTION=Evento Llama
+SUBSECTION=Montarias
+CATEGORY=evento
+
+ON=@Create
+NPC=brain_animal
+TAMING=50.0
+
+on=@death
+remove
+return 1
+
+on=@click
+s <name> clicada por <src.name> sera removida.
+remove
+return 1
+
+[template tm_bag_pvp]
+NAME=PvP Bag 
+CONTAINER=i_bag 
+ITEM=i_reag_black_pearl,{100 100} 
+ITEM=i_reag_nightshade,{100 100} 
+ITEM=i_reag_spider_silk,{100 100} 
+ITEM=i_reag_sulfur_ash,{100 100} 
+ITEM=i_reag_mandrake_root,{100 100} 
+ITEM=i_reag_garlic,{100 100} 
+ITEM=i_reag_ginseng,{100 100} 
+ITEM=i_reag_blood_moss,{100 100} 
+item=i_potion_refresh,{10 10}
+item=i_potion_mana_boost_great,{50 50}
+item=i_potion_life_boost_great,{50 50}
+item=i_scroll_flamestrike,{50 50}
+item=i_potion_explosionless
+item=i_potion_explosionless
+item=i_potion_explosionless
+item=i_potion_explosionless
+item=i_potion_explosionless
+item=i_potion_explosionless
+item=i_potion_explosionless
+item=i_potion_explosionless
+item=i_potion_explosionless
+item=i_potion_explosionless
+item=i_potion_explosionless
+item=i_potion_explosionless
+item=i_potion_explosionless
+item=i_potion_explosionless
+item=i_potion_explosionless
+item=i_potion_explosionless
+item=i_potion_explosionless
+item=i_potion_explosionless
+item=i_bandage,{80 80}
+item=i_arrow,{100 100}
+
+[template tm_bag_o_regs] 
+CONTAINER=i_bag 
+ITEM=i_reag_black_pearl,{100 100} 
+ITEM=i_reag_nightshade,{100 100} 
+ITEM=i_reag_spider_silk,{100 100} 
+ITEM=i_reag_sulfur_ash,{100 100} 
+ITEM=i_reag_mandrake_root,{100 100} 
+ITEM=i_reag_garlic,{100 100} 
+ITEM=i_reag_ginseng,{100 100} 
+ITEM=i_reag_blood_moss,{100 100} 
+
+[itemdef i_llama_evento] 
+id=i_pet_llama
+type=t_normal
+
+ON=@CREATE
+	ATTR=010
+
+ON=@click
+message <name>
+return 1
+
+on=@dclick
+if !(<src.findlayer.25.uid>) 
+serv.newitem i_mt_llama_evento
+new.more1=c_llama_evento
+new.more2=<new.uid>
+new.name <name>
+new.color <color>
+new.equip 
+new.update
+remove
+return 1 
+else
+src.message @07a1 Voce ja esta montado em um animal!
+return 1 
+endif
+
+[itemdef i_mt_llama_evento] 
+id=i_mt_llama
+layer=25 
+
+on=@equip
+link=<src.uid>
+
+on=@unequip
+//if (<SRC.FLAGS>&statf_dead)
+//serv.newitem i_llama_evento
+//new.color <color>
+//new.name <name>
+//new.p <src.p>
+//return 1
+//endif
+if <src.findlayer(21).uid>
+ serv.newitem i_llama_evento
+ new.color <color>
+ new.name <name>
+ new.cont=<src.findlayer(21)>
+ ref1 = <new>
+	if <var0.novo_ffa>
+		ref1.timerf 1,useitem
+	endif
+endif
+return 1
+
+//
+
+[CHARDEF c_cavalo_evento]
+ID=c_horse_brown_dk
+CAN=MT_RUN
+ICON=i_pet_horse_brown_dk
+
+DESCRIPTION=Evento Cavalo
+SUBSECTION=Montarias
+CATEGORY=Evento
+
+ON=@Create
+NPC=brain_animal
+TAMING=50.0
+
+on=@death
+remove
+return 1
+
+on=@click
+remove
+return 1
+
+[itemdef i_cavalo_evento] 
+id=i_pet_horse_brown_dk
+type=t_normal
+
+ON=@CREATE
+	ATTR=010
+
+ON=@click
+message <name>
+return 1
+
+on=@dclick
+if !(<src.findlayer.25.uid>) 
+serv.newitem i_mt_cavalo_evento
+new.more1=c_cavalo_evento
+new.more2=<src.uid>
+new.name <name>
+new.color <color>
+new.equip 
+new.update
+remove
+return 1 
+else
+src.message @07a1 Voce ja esta montado em um animal!
+return 1 
+endif
+
+[itemdef i_mt_cavalo_evento] 
+id=i_mt_horse_brown_dk
+layer=25 
+
+on=@equip
+link=<src.uid>
+
+on=@unequip
+if (<SRC.FLAGS>&statf_dead)
+serv.newitem i_cavalo_evento
+new.color <color>
+new.name <name>
+new.p <src.p>
+return 1
+endif
+serv.newitem i_cavalo_evento
+new.color <color>
+new.name <name>
+new.cont <src.findlayer(21)>
+return 1
+
+//		//		//		//		//
+
+[ITEMDEF i_mw_arms]
+DEFNAME=i_mw_arms
+NAME=Arms
+ID=013ee
+ARMOR = 81
+
+ON=@CREATE
+COLOR=0BB7
+HITPOINTS=999
+
+[ITEMDEF i_mw_gloves]
+DEFNAME=i_mw_gloves
+ID=013eb
+ARMOR=81
+
+ON=@CREATE
+COLOR=0BB7
+HITPOINTS=999
+
+[ITEMDEF i_mw_chest]
+DEFNAME=i_mw_chest
+ID=i_chainmail_tunic
+ARMOR = 81
+
+ON=@CREATE
+COLOR=0BB7
+HITPOINTS=999
+
+[ITEMDEF i_mw_leggings]
+DEFNAME=i_mw_leggings
+NAME=Leggings
+ID=i_chainmail_leggings
+ARMOR = 81
+
+ON=@CREATE
+COLOR=0BB7
+HITPOINTS=999
+
+[ITEMDEF i_mw_helm]
+DEFNAME=i_mw_helm
+NAME=Helm
+ID=i_chainmail_coif
+ARMOR = 81
+
+ON=@CREATE
+COLOR=0BB7
+HITPOINTS=999
+
+[ITEMDEF i_mw_shield]
+DEFNAME=i_mw_shield
+ID=i_shield_buckler
+NAME=Shield
+TYPE=T_SHIELD
+FLIP=1
+TWOHANDS=N
+
+ON=@CREATE
+COLOR=0BB7
+HITPOINTS=999
+
+[ITEMDEF i_mw_mace]
+DEFNAME=i_mw_mace
+ID=i_staff_quarter
+NAME=Macefight
+FLIP=1
+SKILL=Macefight
+TWOHANDS=N
+
+ON=@CREATE
+COLOR=0BB7
+HITPOINTS=999
+
+[ITEMDEF i_mw_archery]
+DEFNAME=i_mw_archery
+ID=i_bow
+NAME=Archery
+FLIP=1
+SKILL=Archery
+TWOHANDS=N
+
+ON=@CREATE
+COLOR=0BB7
+HITPOINTS=999
+
+[ITEMDEF i_mw_swords]
+DEFNAME=i_mw_swords
+ID=i_sword_viking
+NAME=Swordsmanship
+FLIP=1
+SKILL=Swordsmanship
+TWOHANDS=N
+
+ON=@CREATE
+COLOR=0BB7
+HITPOINTS=999
+
+[ITEMDEF i_mw_fencing]
+DEFNAME=i_mw_fencing
+ID=i_kryss
+NAME=Fencing 
+FLIP=1
+SKILL=Fencing
+TWOHANDS=N
+
+ON=@CREATE
+COLOR=0BB7
+HITPOINTS=999
+
+//		//		//		//		//
+
+[ITEMDEF i_mw_boots]
+DEFNAME=i_mw_boots
+ID=i_shoes_plain
+NAME=Boots of Status
+TYPE=t_clothing
+
+ON=@CREATE
+	MORE2 = 15
+	HITPOINTS=999
+
+ON=@EQUIP
+	SRC.MODSTR += <dMORE2>
+	SRC.HITS += <dMORE2>
+	SRC.MODINT += <dMORE2>
+	SRC.MANA += <dMORE2>
+	SRC.MODDEX += <dMORE2>
+	SRC.STAM += <dMORE2>
+
+		SRC.EFFECT 3,i_fx_bless_effect,6,15,1
+		SRC.SOUND snd_spell_strength
+
+ON=@UNEQUIP
+	SRC.MODSTR -= <dMORE2>
+	SRC.HITS -= <dMORE2>
+	SRC.MODINT -= <dMORE2>
+	SRC.MANA -= <dMORE2>
+	SRC.MODDEX -= <dMORE2>
+	SRC.STAM -= <dMORE2>
+		SRC.EFFECT 3,i_fx_bless_effect,6,15,1
+		SRC.SOUND snd_spell_strength
+
+[EOF]

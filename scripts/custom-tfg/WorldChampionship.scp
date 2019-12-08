@@ -1,0 +1,81 @@
+[ITEMDEF i_wc_stone]
+id=i_gravestone_3
+name=World Championship
+TYPE=t_normal
+
+ON=@CREATE
+ATTR 010
+color 0a23
+
+on=@click
+	message @,,1 Inscritos [<dtag.inscritos>/32]
+	message @,,1 <name>
+	return 1
+
+ON=@DCLICK
+
+    if (<tag0.player_<src.uid>) && !(<var0.NaoPodeSairWC>)
+        src.smsg @,,1 Você já está inscrito no TFG World Championship. Gostaria de se desinscrever? Digite .desistirWC
+        src.smsg @,,1 Ao digitar você será instantaneamente desinscrito.
+    endif
+
+	local.resultado <f_validate_event_subscription 1,<src.account>>
+
+	if (<local.resultado> == 0) //deu certo
+		src.smsg @,,1 Inscrição confirmada no TFG World Championship!
+		serv.b @90 <src.name> Acaba de confirmar sua inscricao para o TFG World Championship!
+        serv.writefile WC_Inscritos.txt ++ Player <src.name> (acc: <src.account>) (uid <src.uid>) inscrito no Championship em <serv.rtime>
+		tag0.inscritos += 1
+		tag0.player_<src.uid> = <src.name>
+		return 1
+	elif (<local.resultado> == 1) //sem argumentos pra funcao
+		serv.log erro result 1 f_validate_event_subscription SEM argumentos
+		src.smsg @,,1 Erro. Cod. <dlocal.resultado>
+		return 1
+	elif (<local.resultado> == 2) //erro inesperado comunicacao com o bd
+		serv.log erro result 2 f_validate_event_subscription ERRO COM. BD
+		src.smsg @,,1 Erro. Cod. <dlocal.resultado>
+		return 1
+	elif (<local.resultado> == 3) // inscricao nao foi feita no site
+		src.smsg @,,1 Sua inscrição deve ser realizada em nosso site antes de confirmar sua inscrição aqui.
+		src.timerf 3, weblink http:\\www.tfg.com.br/site/tfg-world-championship-1x1
+		return 1
+	elif (<local.resultado> == 4) //evento completo
+		src.smsg @,,1 Esse evento já está encerrado.
+		return 1
+	elif (<local.resultado> == 5) // nao achou a conta (nao deve acontecer, mas eu valido)
+		serv.log erro result 2 f_validate_event_subscription Conta nao encontrada
+		src.smsg @,,1 Erro. Cod. <dlocal.resultado>
+		return 1
+	elif (<local.resultado> == 6) //nao achou a id global da conta (nao deve acontecer, mas eu valido)
+		serv.log erro result 2 f_validate_event_subscription ID Conta global nao encontrada
+		src.smsg @,,1 Erro. Cod. <dlocal.resultado>
+		return 1
+	elif (<local.resultado> == 7) //ja tem um login cadastrado praquela conta global
+		src.smsg @,,1 Já existe um char dessa conta global cadastrado nesse evento.
+		return 1
+	endif
+
+	serv.log Erro na pedra do meu saco
+	s Erro na pedra do World Championship. LOCAL nao pegou result.
+	return 1
+
+    [function desistirWC]
+
+    if (<var0.NaoPodeSairWC>)
+        src.smsg @,,1 Você não pode mais sair do TFG World Championship.
+        return 1
+    endif
+
+    local.resultado <f_validate_event_removal 1,<src.account>>
+
+    if <local.resultado> == 0
+        forinstances i_wc_stone
+            tag0.player_<src.uid>
+            tag0.inscritos -= 1
+        endfor
+        serv.writefile WC_Inscritos.txt -- Player <src.name> (acc: <src.account>) (uid <src.uid>) SAIU do Championship em <serv.rtime>
+        src.smsg @,,1 Você foi desinscrito do TFG World Championship.
+    else
+        src.smsg @,,1 um erro ocorreu. Avise a staff (cod. <dlocal.resultado>)
+    endif

@@ -1,0 +1,122 @@
+[FUNCTION f_housing_can_add_house]
+if <ref1.isgm>
+	return 1
+endif
+
+ref1 = <uid>
+
+forinstances i_sign_house
+	if <link.tag0.global>
+		if (<link.tag0.global> == <ref1.account.tag0.global>)
+			if (<link.type> == t_multi)
+				local.ct ++
+			elseif (<link.type> == t_multi_custom)
+				local.ctc ++
+			endif
+		endif
+	else
+		if <uid> != <args>
+			// f_house_sign_should_link
+			s Erro: casa <uid> sem tag global.
+			serv.log Erro: casa <uid> sem tag global.
+		endif
+	endif
+endfor
+forinstances i_sign_house_2
+	if <link.tag0.global>
+		if (<link.tag0.global> == <ref1.account.tag0.global>)
+			if (<link.type> == t_multi)
+				local.ct ++
+			elseif (<link.type> == t_multi_custom)
+				local.ctc ++
+			endif
+		endif
+	else
+		if <uid> != <args>
+			// f_house_sign_should_link
+			s Erro: casa <uid> sem tag global.
+			serv.log Erro: casa <uid> sem tag global.
+		endif
+	endif
+endfor
+forinstances i_sign_brass
+	if <link.tag0.global>
+		if (<link.tag0.global> == <ref1.account.tag0.global>)
+			if (<link.type> == t_multi)
+				local.ct ++
+			elseif (<link.type> == t_multi_custom)
+				local.ctc ++
+			endif
+		endif
+	else
+		ref2 = <link.more1>
+		if (<ref2> == <ref1.uid>)
+			if (<link.type> == t_multi)
+				local.ct ++
+			elseif (<link.type> == t_multi_custom)
+				local.ctc ++
+			endif
+		elif (<ref2.account.tag0.global> == <ref1.account.tag0.global>)
+			if (<link.type> == t_multi)
+				local.ct ++
+			elseif (<link.type> == t_multi_custom)
+				local.ctc ++
+			endif
+		endif
+	endif
+endfor
+
+if (<dlocal.ct> == 0)
+	RETURN 1
+elseif (<carpentry> >= 1000) && (<dlocal.ctc> == 0)
+	RETURN 1
+else
+	RETURN 0
+endif
+
+[FUNCTION f_housing_gethouse]
+ref1 = <uid>
+forinstances i_sign_house
+	if <link.tag0.global>
+		if (<link.tag0.global> == <ref1.account.tag0.global>)
+			local.ct ++
+		endif
+	else
+		if <uid> != <args>
+			// f_house_sign_should_link
+			s Erro: casa <uid> sem tag global.
+			serv.log Erro: casa <uid> sem tag global.
+		endif
+	endif
+endfor
+forinstances i_sign_house_2
+	if <link.tag0.global>
+		if (<link.tag0.global> == <ref1.account.tag0.global>)
+			local.ct ++
+		endif
+	else
+		if <uid> != <args>
+			// f_house_sign_should_link
+			s Erro: casa <uid> sem tag global.
+			serv.log Erro: casa <uid> sem tag global.
+		endif
+	endif
+endfor
+forinstances i_sign_brass
+	if <link.tag0.global>
+		if (<link.tag0.global> == <ref1.account.tag0.global>)
+			local.ct ++
+		endif
+	else
+		ref2 = <link.more1>
+		if (<ref2> == <ref1.uid>)
+			local.ct ++
+		elif (<ref2.account.tag0.global> == <ref1.account.tag0.global>)
+			local.ct ++
+		endif
+	endif
+endfor
+if <ref1.isgm>
+	return 0
+endif
+return <dlocal.ct>

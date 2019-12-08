@@ -1,0 +1,5 @@
+Debug/
+Nightly/
+**/*.o
+spheresvr
+.vs

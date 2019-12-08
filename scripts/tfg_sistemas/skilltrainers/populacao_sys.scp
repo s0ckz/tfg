@@ -1,0 +1,124 @@
+////tile para posicionamento dos trainers///
+[TYPEDEF T_SKILL_TRAINER_TILE]
+
+[ITEMDEF i_skill_trainer_tile] //tile para posicionamento dos trainers
+id=i_floor_marble
+type=t_skill_trainer_tile
+name=Skill trainer Tile [nao mexer]
+
+on=@create
+    attr = attr_move_never|attr_invis
+    color = 3
+    local.count 0
+    forinstances i_skill_trainer_tile
+        local.count ++
+    endfor
+    tag.num <dlocal.count>
+    name Skill trainer Tile [n. <dtag.num>] [nao mexer]
+
+/////funcao para por trainers/////
+[function f_numero_skill_tiles]
+local.count 0
+forinstances i_skill_trainer_tile
+    local.count++
+endfor
+return <dlocal.count>
+
+[function f_populate_trainers]
+local.count 0
+local.worknumber 0
+local.tiles 0
+local.tiles <serv.itemdef.i_skill_trainer_tile.instances>
+
+serv.writefile Skilltrainers.txt ----- iniciado povoamento de trainers em <serv.rtime> -----
+src.sysmessage @,,1 Iniciado povoamento de trainers...aguarde.
+
+forinstances i_skill_trainer_tile
+    if !(<tag0.usado>)
+        local.count ++
+        local.freetile<dlocal.count> = <uid>
+    else
+        local.used++
+        if <local.used> >= <serv.itemdef.i_skill_trainer_tile.instances>
+            f_remove_trainers
+            return 1
+        endif
+    endif
+endfor
+
+if (<local.count> < 1)
+    f_remove_trainers
+    return 1
+endif
+
+for <def.work_min> <def.work_max>
+    local.rand <r1,<dlocal.count>>
+    ref1 = <uid.<local.freetile<dlocal.rand>>>
+
+    if (<ref1.tag0.usado>)
+        while (<ref1.tag0.usado>)
+            local.whilecount++
+            local.rand <r1,<dlocal.count>>
+            ref1 = <uid.<local.freetile<dlocal.rand>>>
+            if (<local.whilecount> > 29)
+                return 1
+            endif
+        endwhile
+    endif
+
+    local.worknumber <f_rand_trainer_skill_number>
+    serv.newnpc c_tfg_trainer
+    new.p <ref1.p>
+    new.tag.skill <def.work<dlocal.worknumber>>
+    new.tag.trainerlevel <f_get_trainer_level>
+    new.fix
+    new.title <serv.skill.<def.work<dlocal.worknumber>>.name> Trainer
+    new.timerf 1, f_pintar_trainer_roupas <def.def_skillcolor_<new.dtag.skill>>
+    new.flags 05 //paralyzed e invul
+    new.events +e_skill_trainer
+    ref1.link <new.uid>
+    serv.writefile Skilltrainers.txt Trainer em <ref1.P> UID: <new> Name: <new.name>
+    ref1.tag.usado 1
+    if (<local._for> == 14)
+      f_reset_vars
+      serv.writefile Skilltrainers.txt ----- finalizado povoamento de trainers em <serv.rtime> -----
+      src.sysmessage @,,1 <dlocal._for> trainers adicionados ao mundo. Posicoes logadas em txt.
+      return 1
+    endif
+endfor
+
+[function f_remove_trainers]
+forinstances i_skill_trainer_tile
+    tag.usado
+	link
+endfor
+forinstances c_tfg_trainer
+    remove
+endfor
+f_populate_trainers
+
+[function f_get_trainer_level]
+return <r1,6> //definir como vai ser isso
+
+
+
+[function f_rand_trainer_skill_number]
+local.returnnum <r1,14>
+if (<var0.worktrainer<dlocal.returnnum>>)
+    for 1 15
+        if (<var0.worktrainer<dlocal._for>> == 0)
+            local.returnnum <dlocal._for>
+            var.worktrainer<dlocal._for> = 1
+            return <dlocal.returnnum>
+        endif
+    endfor
+endif
+var.worktrainer<dlocal.returnnum> = 1
+return <dlocal.returnnum>
+
+[function f_reset_vars]
+for 1 15
+    var.worktrainer<dlocal._for>
+endfor
+
+[EOF]

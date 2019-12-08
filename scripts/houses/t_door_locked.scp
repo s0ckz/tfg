@@ -1,0 +1,148 @@
+[TYPEDEF t_door_locked]
+ON=@DClick
+	IF (<SRC.ISGM>)
+		RETURN 0
+	ENDIF
+
+	IF (<SRC.FLAGS> & statf_dead)
+		SRC.SYSMESSAGE @,,1 <DEFMSG.reach_ghost>
+		RETURN 1
+	ENDIF
+
+	IF (<SRC.FLAGS> & statf_freeze) || (<SRC.FLAGS> & statf_stone)
+		SRC.SYSMESSAGE @,,1 <DEFMSG.reach_fail>
+		RETURN 1
+	ENDIF
+
+	IF (<LINK.TYPE> == t_multi) || (<LINK.TYPE> == t_multi_custom)
+//		IF (<LINK.TAG0.GLOBAL>)
+//			IF ((<SRC.HITS> < <SRC.MAXHITS>) || (<SRC.FLAGS> & STATF_FREEZE) || (<SRC.FLAGS> & STATF_STONE))
+//				SRC.SYSMESSAGE You must have full health to open this door.
+//				RETURN 1
+//			ENDIF
+//		ENDIF
+
+		IF (<LINK.TAG0.GLOBAL> == <SRC.ACCOUNT.TAG0.GLOBAL>)
+			IF !(<SECTOR.CLIENTS>)
+				SECTOR.FLAGS = secf_nosleep
+				TIMERF 1,SECTOR.FLAGS 00
+			ENDIF
+
+			TIMER = 0
+
+			RETURN 1
+		ENDIF
+
+		LOCAL.CAN_OPEN_HOUSE 0
+		FOR 10
+			IF (<SRC.UID> == <LINK.TAG0.F<EVAL <LOCAL._FOR>>UID>)
+				LOCAL.CAN_OPEN_HOUSE = 1
+
+				IF (<LINK.TYPE> == t_multi_custom)
+					TIMER = 0
+				ENDIF
+			ENDIF
+		ENDFOR
+
+		IF !(<LOCAL.CAN_OPEN_HOUSE>)
+			FOR 10
+				IF (<SRC.UID> == <LINK.TAG0.CO<EVAL <LOCAL._FOR>>UID>)
+					LOCAL.CAN_OPEN_HOUSE = 1
+
+					IF (<LINK.TYPE> == t_multi_custom)
+						TIMER = 0
+					ENDIF
+
+				ENDIF
+			ENDFOR
+		ENDIF
+
+		IF !(<LOCAL.CAN_OPEN_HOUSE>)
+			SRC.SYSMESSAGE @,,1 You must be a friend or co-owner and have a house key to open or close the door.
+			RETURN 1
+		ENDIF
+	ENDIF
+
+ON=@Step
+//	IF (<EVAL ABS(<Z> - <SRC.P.Z>)> < 8) && (<LINK.TAG0.GLOBAL>)
+//		IF ((<SRC.HITS> < <SRC.MAXHITS>) || (<SRC.FLAGS> & STATF_FREEZE) || (<SRC.FLAGS> & STATF_STONE))
+//			SRC.SYSMESSAGE You must have full health to cross this door.
+//			RETURN 1
+//		ENDIF
+//	ENDIF
+
+    IF (<EVAL ABS(<Z> - <SRC.P.Z>)> < 8) && !(<SRC.FLAGS> & statf_dead)
+        RETURN 1
+    ENDIF
+
+[TYPEDEF t_keyring]
+ON=@DClick
+	SRC.SYSMESSAGE @,,1 <DEFMSG.itemuse_unable>
+	RETURN 1
+
+[TYPEDEF t_key]
+ON=@DClick
+	IF (<LINK.TYPE> != t_ship)
+		SRC.SYSMESSAGE @,,1 <DEFMSG.itemuse_unable>
+		RETURN 1
+	ENDIF
+
+ON=@TargOn_Item
+	IF (<SRC.TARG.TYPE> == t_ship_plank) && (<SRC.TARG.LINK.UID> == <LINK.UID>)
+		SRC.TARG.TIMER
+		SRC.SYSMESSAGE @,,1 You close the ship plank.
+		RETURN 1
+	ENDIF
+
+[PLEVEL 1]
+open_door
+
+[FUNCTION open_door]
+LOCAL.CURRENT_DOOR 0
+
+FORITEMS 0
+	IF (<TYPE> == t_door_locked) || (<TYPE> == t_door)
+		IF (<EVAL ABS(<Z> - <SRC.P.Z>)> < 8)
+			LOCAL.CURRENT_DOOR <UID>
+			IF (<SRC.CTAG0.LAST_DOOR> != <UID>)
+				DCLICK
+				SRC.CTAG.LAST_DOOR <UID>
+				RETURN
+			ENDIF
+		ENDIF
+	ENDIF
+ENDFOR
+
+FORITEMS 1
+	IF (<TYPE> == t_door_locked) || (<TYPE> == t_door)
+		IF (<EVAL ABS(<Z> - <SRC.P.Z>)> < 8)
+			LOCAL.CURRENT_DOOR <UID>
+			IF (<SRC.CTAG0.LAST_DOOR> != <UID>)
+				DCLICK
+				SRC.CTAG.LAST_DOOR <UID>
+				RETURN
+			ENDIF
+		ENDIF
+	ENDIF
+ENDFOR
+
+FORITEMS 2
+	IF (<TYPE> == t_door_locked) || (<TYPE> == t_door)
+		IF (<EVAL ABS(<Z> - <SRC.P.Z>)> < 8)
+			LOCAL.CURRENT_DOOR <UID>
+			IF (<SRC.CTAG0.LAST_DOOR> != <UID>)
+				DCLICK
+				SRC.CTAG.LAST_DOOR <UID>
+				RETURN
+			ENDIF
+		ENDIF
+	ENDIF
+ENDFOR
+
+IF (<LOCAL.CURRENT_DOOR>)
+	REF1 <LOCAL.CURRENT_DOOR>
+
+	IF (<EVAL ABS(<REF1.Z> - <SRC.P.Z>)> < 8)
+		REF1.DCLICK
+	ENDIF
+ENDIF

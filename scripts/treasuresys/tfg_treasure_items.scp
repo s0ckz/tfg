@@ -1,0 +1,107 @@
+/////////////////////////////////
+//                             //
+//                             //
+//        ITEMS                //
+//                             //
+//                             //
+/////////////////////////////////
+
+[itemdef i_sos_bottle]
+id=i_bottle_liquor
+name=SOS Bottle
+TEVENTS=t_sos_bottle
+
+ON=@CREATE
+	color=colors_sos
+	if (<r1,100> < 35)
+		tag.lvl 5
+	else
+		tag.lvl 4
+	endif
+
+on=@dclick
+	if !(<cont.topobj> == <src>)
+		src.sysmessage This item must be in your bank or backpack.
+		return 1
+	endif
+
+	if (<tag0.lvl>)
+		serv.newitem i_treasure_map_lvl_<dtag.lvl>
+		new.cont <src>
+		remove
+		src.message You have found a treasure map level <dtag.lvl> inside. Good luck!
+	endif
+
+	return 1
+
+[ITEMDEF i_treasure_map_lvl_1]
+ID=i_map
+NAME=treasure map level 1
+TYPE=t_map
+TDATA1=300
+TDATA2=300
+TEVENTS=t_treasure_map
+TAG.map.level=1
+
+[ITEMDEF i_treasure_map_lvl_2]
+ID=i_map
+NAME=treasure map level 2
+TYPE=t_map
+TDATA1=300
+TDATA2=300
+TEVENTS=t_treasure_map
+TAG.map.level=2
+
+[ITEMDEF i_treasure_map_lvl_3]
+ID=i_map
+NAME=treasure map level 3
+TYPE=t_map
+TDATA1=300
+TDATA2=300
+TEVENTS=t_treasure_map
+TAG.map.level=3
+
+[ITEMDEF i_treasure_map_lvl_4]
+ID=i_map
+NAME=treasure map level 4
+TYPE=t_map
+TDATA1=300
+TDATA2=300
+TEVENTS=t_treasure_map
+TAG.map.level=4
+
+[ITEMDEF i_treasure_map_lvl_5]
+ID=i_map
+NAME=treasure map level 5
+TYPE=t_map
+TDATA1=300
+TDATA2=300
+TEVENTS=t_treasure_map,t_drop_loggable
+TAG.map.level=5
+
+
+[ITEMDEF i_treasure_map_lvl_6]
+ID=i_map
+NAME=treasure map level 6
+TYPE=t_map
+TDATA1=300
+TDATA2=300
+TEVENTS=t_treasure_map,t_drop_loggable
+TAG.map.level=6
+
+ON=@Create
+	COLOR 0a23
+
+
+[ITEMDEF i_treasure_shovel]
+ID=i_shovel
+NAME=Copper Alloy Shovel
+TYPE=t_treasure_shovel
+RESOURCES=15 I_INGOT_DULL_COPPER, 10 I_INGOT_COPPER, 10 I_INGOT_OLD_COPPER
+SKILLMAKE=BLACKSMITHING 45.0, TINKERING 70.0, MINING 60.0, T_TINKER_TOOLS
+
+ON=@CREATE
+	COLOR=04d0
+	HITS={45 50}
+
+[EOF]

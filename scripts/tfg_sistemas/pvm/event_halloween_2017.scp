@@ -1,0 +1,287 @@
+[DEFNAME HALLOWEEN_2017_SETTINGS]
+HALLOWEEN_2017_COLOR_1 080e
+HALLOWEEN_2017_COLOR_2 0bb2
+HALLOWEEN_2017_COLOR_COUNT 2
+
+[ITEMDEF i_halloween_2017_jin_baori]
+ID=i_jinbaori
+TYPE=t_clothing
+LAYER=layer_ears
+NAME=Halloween 2017 1st Place Award Jin-Baori
+TEVENTS=t_global_bound_item
+
+ON=@Create
+	COLOR=<DEF.HALLOWEEN_2017_COLOR_<R1,<DEF.HALLOWEEN_2017_COLOR_COUNT>>>
+	ATTR attr_newbie
+
+[ITEMDEF i_halloween_2017_ethereal_mount_talisman]
+ID=i_talisman4
+NAME=Halloween 2017 Ethereal Mount Talisman
+TEVENTS=t_global_bound_item
+
+ON=@Create
+	ATTR=attr_newbie
+	COLOR=<DEF.HALLOWEEN_2017_COLOR_<R1,<DEF.HALLOWEEN_2017_COLOR_COUNT>>>
+
+[ITEMDEF i_halloween_2017_bottle_hair_dye]
+ID=i_bottle_hair_dye
+NAME=Halloween 2017 Hair Dye
+
+ON=@Create
+	ATTR=attr_newbie
+	COLOR=<DEF.HALLOWEEN_2017_COLOR_<R1,<DEF.HALLOWEEN_2017_COLOR_COUNT>>>
+
+ON=@Click
+	MESSAGE @<f_get_halloween_2017_text_color <COLOR>>,,1 <NAME>
+	RETURN 1
+
+ON=@DClick
+	IF (<TOPOBJ.UID> != <SRC.UID>)
+		SRC.SYSMESSAGE @,,1 This item must be inside your backpack or bank to be used.
+		RETURN 1
+	ENDIF
+
+	IF (<SRC.FINDLAYER.layer_hair.UID>)
+		SRC.FINDLAYER.layer_hair.COLOR <COLOR>
+		REMOVE
+	ELSE
+		SRC.SYSMESSAGE @,,1 <DEFMSG.itemuse_dye_nohair>
+	ENDIF
+
+	RETURN 1
+
+[ITEMDEF i_halloween_2017_title_deed]
+ID=i_deed
+NAME=Halloween 2017 Title Deed
+
+ON=@Create
+	COLOR = <DEF.HALLOWEEN_2017_COLOR_<R1,<DEF.HALLOWEEN_2017_COLOR_COUNT>>>
+	DORAND 21
+		TAG.HALLOWEEN_2017_TITLE_NAME Freddy Krueger
+		TAG.HALLOWEEN_2017_TITLE_NAME Jason Voorhees
+		TAG.HALLOWEEN_2017_TITLE_NAME Michael Myers
+		TAG.HALLOWEEN_2017_TITLE_NAME Leatherface
+		TAG.HALLOWEEN_2017_TITLE_NAME Pinhead
+		TAG.HALLOWEEN_2017_TITLE_NAME Pennywise
+		TAG.HALLOWEEN_2017_TITLE_NAME Jack Torrance
+		TAG.HALLOWEEN_2017_TITLE_NAME Regan MacNeil
+		TAG.HALLOWEEN_2017_TITLE_NAME Chucky
+		TAG.HALLOWEEN_2017_TITLE_NAME The Thing
+		TAG.HALLOWEEN_2017_TITLE_NAME The Poltergeist
+		TAG.HALLOWEEN_2017_TITLE_NAME Count Dracula
+		TAG.HALLOWEEN_2017_TITLE_NAME Samara Morgan
+		TAG.HALLOWEEN_2017_TITLE_NAME Ghostface
+		TAG.HALLOWEEN_2017_TITLE_NAME Jigsaw
+		TAG.HALLOWEEN_2017_TITLE_NAME Frankenstein
+		TAG.HALLOWEEN_2017_TITLE_NAME The Stay Puft Marshmallow Man
+		TAG.HALLOWEEN_2017_TITLE_NAME Emily Rose
+		TAG.HALLOWEEN_2017_TITLE_NAME Esther
+		TAG.HALLOWEEN_2017_TITLE_NAME Annabelle
+		TAG.HALLOWEEN_2017_TITLE_NAME Bellatrix Lestrange
+	ENDDO
+
+ON=@Click
+	MESSAGE @<f_get_halloween_2017_text_color <COLOR>>,,1 [<TAG.HALLOWEEN_2017_TITLE_NAME>]
+
+ON=@DClick
+	IF (<TOPOBJ.UID> != <SRC.UID>)
+		SRC.SYSMESSAGE This item must be inside your backpack or bank to be used.
+		RETURN 1
+	ENDIF
+
+	remove_title_christmas_nightmare_2017
+
+	SRC.EVENTS +e_halloween_2017_title
+	SRC.TAG.HALLOWEEN_2017_TITLE_NAME <TAG.HALLOWEEN_2017_TITLE_NAME>
+	SRC.TAG.HALLOWEEN_2017_TITLE_COLOR <COLOR>
+	REMOVE
+
+	RETURN 1
+
+[ITEMDEF i_halloween_2017_dye_tub]
+ID=0fab
+NAME=Halloween 2017 Dye Tub
+TYPE=T_NORMAL
+VALUE=20
+
+ON=@Create
+	MOREX = 1
+	COLOR = <DEF.HALLOWEEN_2017_COLOR_<R1,<DEF.HALLOWEEN_2017_COLOR_COUNT>>>
+
+ON=@Click
+	MESSAGE @,,1 <QVAL (<MOREX> < 2) ? [<DMOREX> charge] : [<DMOREX> charges] >
+
+ON=@DClick
+IF (<ATTR> == attr_move_never)
+	SRC.SYSMESSAGE @,,1 This item is locked.
+	RETURN 1
+ELSEIF (<MOREX> < 1)
+	REMOVE
+	RETURN 1
+ELSE
+	TARGET @,,1 Select what you want to dye.
+ENDIF
+RETURN 1
+
+ON=@Targon_Item
+IF (<ARGO.UID> == <UID>)
+	SRC.SYSMESSAGE @,,1 This dye tub is already colored.
+	RETURN 1
+ENDIF
+
+IF (<ARGO.BASEID> == <BASEID>) && (<ARGO.COLOR> == <COLOR>)
+  ARGO.MOREX += <MOREX>
+  SRC.SYSMESSAGE @,,1 You merged both dye tubs.
+  REMOVE
+  RETURN 1
+ENDIF
+
+if (<ARGO.BASEID> == i_dye_tub) && !(<ARGO.COLOR>)
+	if (<ARGO.CONT> == <SRC.FINDLAYER(21).UID>)
+		ARGO.REMOVE
+		SERV.NEWITEM i_halloween_2017_dye_tub
+		NEW.COLOR <COLOR>
+		NEW.MOREX = 1
+		NEW.LINK <SRC>
+		SRC.NEW.BOUNCE
+
+		SRC.SYSMESSAGE @,,1 You added one charge to this blank dye tube.
+
+		MOREX -= 1
+
+		IF (<MOREX> <= 0) || (<MOREX> > 100)
+			REMOVE
+		ENDIF
+
+		RETURN 1
+	ELSE
+		SRC.SYSMESSAGE @,,1 The dye tub must be inside your bag.
+	ENDIF
+ENDIF
+
+LOCAL.CHARGE_COST 1
+
+IF (<MOREX> <= 0) || (<MOREX> > 100)
+	REMOVE
+	RETURN 1
+ELSEIF (<ARGO.TYPE> != t_clothing)
+	SRC.SYSMESSAGE @,,1 You can't dye this item.
+	RETURN 1
+ELSEIF (<ARGO.ATTR> & attr_newbie) && !(STRMATCH(i_paragon_*, <ARGO.BASEID>))
+	LOCAL.CHARGE_COST 4
+ENDIF
+
+IF (<LOCAL.CHARGE_COST> > <MOREX>)
+	SRC.SYSMESSAGE @,,1 You must have <DLOCAL.CHARGE_COST> charges to dye this item.
+	RETURN 1
+ENDIF
+
+IF (<ARGO.TOPOBJ> == <SRC.UID>)
+	ARGO.COLOR <COLOR>
+	MOREX -= <LOCAL.CHARGE_COST>
+	IF (<MOREX> <= 0) || (<MOREX> > 100)
+		REMOVE
+	ENDIF
+
+	RETURN 1
+ELSE
+	SRC.SYSMESSAGE @,,1 The item to be dyed must be inside your backpack or bank.
+	RETURN 1
+ENDIF
+
+ON=@TargOn_Char
+	RETURN 1
+
+
+[FUNCTION f_become_halloween_2017_monster]
+IF (<ARGV> != 1)
+	RETURN
+ENDIF
+
+REF1 <ARGS>
+REF1.COLOR <DEF.HALLOWEEN_2017_COLOR_<R1,<DEF.HALLOWEEN_2017_COLOR_COUNT>>>
+REF1.EVENTS +e_halloween_2017
+REF1.STR <EVAL (<REF1.STR> * 12) / 10>
+REF1.MAXHITS <EVAL (<REF1.MAXHITS> * 12) / 10>
+REF1.HITS <REF1.MAXHITS>
+REF1.TAG.DISABLE_DEFAULT_LOOT 1
+
+[FUNCTION f_halloween_2017_decision]
+LOCAL.CHANCE 7
+
+IF (<STR> > 500)
+	LOCAL.CHANCE *= 3
+ENDIF
+
+IF !(<R<LOCAL.CHANCE>>)
+	SERV.NEWNPC <BASEID>
+	NEW.P <P>
+	NEW.HOME <NEW.P>
+	NEW.HOMEDIST 6
+
+	f_become_halloween_2017_monster <NEW.UID>
+
+	SERV.LOG A new <NEW.NAME> Halloween 2017 monster has been spawned at <NEW.P> (<NEW.REGION.NAME>) !
+ENDIF
+
+[FUNCTION f_get_halloween_2017_text_color]
+IF (<ARGS> == <DEF.HALLOWEEN_2017_COLOR_1>)
+	RETURN 013e
+ELSE
+	RETURN <ARGS>
+ENDIF
+
+[PLEVEL 1]
+score_halloween_2017
+remove_title_halloween_2017
+
+[FUNCTION remove_title_halloween_2017]
+SRC.EVENTS -e_halloween_2017_title
+SRC.TAG.HALLOWEEN_2017_TITLE_NAME
+SRC.TAG.HALLOWEEN_2017_TITLE_COLOR
+
+[EVENTS e_halloween_2017_title]
+ON=@Click
+	MESSAGE @<f_get_halloween_2017_text_color <TAG.HALLOWEEN_2017_TITLE_COLOR>>,,1 [<TAG.HALLOWEEN_2017_TITLE_NAME>]
+
+[FUNCTION score_halloween_2017]
+SRC.SYSMESSAGE @,,1 Monsters killed in Halloween 2017 event: <SRC.DTAG0.HALLOWEEN_2017_MONSTERS_KILLED>
+
+[EVENTS e_halloween_2017]
+ON=@Click
+	MESSAGE @<f_get_halloween_2017_text_color <COLOR>>,,1 [Halloween 2017 MOB]
+
+ON=@DeathCorpse
+	ARGO.TAG.DISABLE_CUT 1
+
+ON=@Death
+//	IF (<ATTACKER>)
+//		FOR 0 <EVAL <ATTACKER> - 1>
+//			REF1 <ATTACKER.<DLOCAL._FOR>>
+//			IF (<REF1.ISPLAYER>)
+//				REF1.TAG0.HALLOWEEN_2017_MONSTERS_KILLED += 1
+//			ENDIF
+//		ENDFOR
+//	ENDIF
+
+	FORCONT <UID>
+		REMOVE
+	ENDFOR
+
+	LOCAL.CHANCE 36
+
+	IF (<STR> > 500)
+		LOCAL.CHANCE /= 4
+	ENDIF
+
+	IF !(<R<LOCAL.CHANCE>>)
+		SERV.NEWITEM {i_halloween_2017_dye_tub 1 i_halloween_2017_title_deed 4}
+		NEW.CONT <UID>
+		SERV.LOG New Halloween Event 2017 Item dropped: <NEW.NAME>
+	ENDIF
+
+	SERV.NEWITEM i_gold
+	NEW.AMOUNT <R2500,5000>
+	NEW.CONT <UID>
+
+[EOF]

@@ -1,0 +1,9 @@
+[FUNCTION passabd]
+local.id = <args>
+local.total = 0
+local.instances = <serv.itemdef.<local.id>.instances>
+FORINSTANCES <local.id>
+	local.total += <amount>
+ENDFOR
+DB.EXECUTE "INSERT INTO item_instances ( BaseID, Instances, AmountTotal) values ( '<local.id>', '<dlocal.instances>', '<dlocal.total>')"
+return 1

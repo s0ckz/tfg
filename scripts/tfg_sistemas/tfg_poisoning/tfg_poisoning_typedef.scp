@@ -1,0 +1,3 @@
+[TYPEDEF t_poisoned_weapon]
+//ON=@CLICK
+//message @,,1 [Cargas: <tag0.charges>]

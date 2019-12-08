@@ -1,0 +1,454 @@
+[dialog d_trocas]
+10, 50
+resizepic 220 132 5054 340 236
+resizepic 230 142 3500 320 216
+dtext 320 150 400 Sistema de Trocas
+dtext 320 170 400 -Nick & Sexo-
+dtext 259 200 0790 **************************
+dtext 279 230 040 Trocar Nick
+dtext 279 260 040 Trocar Sexo
+dtext 259 290 0790 **************************
+dtext 304 320 400 The Fifteen Gems Shard
+button 259 233 1209 1210 1 0 1
+button 259 263 1209 1210 1 0 2
+
+[dialog d_trocas button]
+on=1
+SRC.TAG.NICK
+SRC.TAG.NICKE
+SRC.TAG.NICKT
+src.tag.LASTCHAR
+SRC.DIALOG D_NICKCHANGE
+on=2
+src.dialog D_BODYCHANGE
+
+[ITEMDEF i_pedra_trocas]
+ID=01184
+NAME=Trocas (Nick & Sexo)
+TYPE=t_script
+
+on=@dclick
+dialog d_trocas
+return 1
+
+ON=@Create
+NAME=@0790 Trocas (Nick & Sexo)
+COLOR=8137
+ATTR=010
+
+[DIALOG D_NICKCHANGE]
+140, 150
+nomove
+PAGE 0
+resizepic 0 0 5054 500 165
+resizepic 0 170 5054 500 100
+resizepic 5 20 3500 490 100
+resizepic 155 120 3500 200 40
+dtext 120 0 1152 The Fifteen Gems Shard [Nick Change]
+dtext 185 130 45 <TAG.NICK>
+dtext 20 130 1152 Caracteres: <EVAL <TAG0.NICKT>>/12
+dtext 40 80 55 "Espaco"
+button 25 81 2511 2510 1 0 53
+dtext 110 80 55 Apagar
+dtext 410 130 0790 Alterar
+button 95 81 2511 2510 1 0 54
+button 380 130 1153 1154 1 0 55
+IF <isempty <ctag.vip_nick_change>>
+ dtext 10 180 1152 > A mudança de nick custara 500k!
+ dtext 15 200 1152 (caso voce seja cliente VIP, acesse este menu pelo .VIPSHOP)
+else
+ dtext 10 180 1152 > A mudança de nick custara <ddef.vip_name_change_price> TFG Coins!
+endif
+IF (<TAG0.NICKDELAY> < <SERV.TIME>)
+ dtext 10 220 1152 > Voce ja pode mudar seu NICK! Aproveite!
+ELSE
+ dtext 10 220 1152 > Ainda faltam <EVAL (((((<TAG0.NICKDELAY>-<SERV.TIME>)/10)/24)/60)/60)> dias para voce mudar de nick novamente.
+ENDIF
+dtext 10 240 1152 >   Help
+button 23 242 1209 1210 1 0 56
+PAGE 1
+dtext 40 40 55 A
+button 25 41 2511 2510 1 0 1
+dtext 75 40 55 B
+button 60 41 2511 2510 1 0 2
+dtext 110 40 55 C
+button 95 41 2511 2510 1 0 3
+dtext 145 40 55 D
+button 130 41 2511 2510 1 0 4
+dtext 180 40 55 E
+button 165 41 2511 2510 1 0 5
+dtext 215 40 55 F
+button 200 41 2511 2510 1 0 6
+dtext 250 40 55 G
+button 235 41 2511 2510 1 0 7
+dtext 285 40 55 H
+button 270 41 2511 2510 1 0 8
+dtext 320 40 55 I
+button 305 41 2511 2510 1 0 9
+dtext 355 40 55 J
+button 340 41 2511 2510 1 0 10
+dtext 390 40 55 K
+button 375 41 2511 2510 1 0 11
+dtext 425 40 55 L
+button 410 41 2511 2510 1 0 12
+dtext 460 40 55 M
+button 445 41 2511 2510 1 0 13
+dtext 40 60 55 N
+button 25 61 2511 2510 1 0 14
+dtext 75 60 55 O
+button 60 61 2511 2510 1 0 15
+dtext 110 60 55 P
+button 95 61 2511 2510 1 0 16
+dtext 145 60 55 Q
+button 130 61 2511 2510 1 0 17
+dtext 180 60 55 R
+button 165 61 2511 2510 1 0 18
+dtext 215 60 55 S
+button 200 61 2511 2510 1 0 19
+dtext 250 60 55 T
+button 235 61 2511 2510 1 0 20
+dtext 285 60 55 U
+button 270 61 2511 2510 1 0 21
+dtext 320 60 55 V
+button 305 61 2511 2510 1 0 22
+dtext 355 60 55 X
+button 340 61 2511 2510 1 0 23
+dtext 390 60 55 W
+button 375 61 2511 2510 1 0 24
+dtext 425 60 55 Y
+button 410 61 2511 2510 1 0 25
+dtext 460 60 55 Z
+button 445 61 2511 2510 1 0 26
+dtext 405 80 55 Minusculo
+button 390 81 2511 2510 0 2
+PAGE 2
+dtext 40 40 55 a
+button 25 41 2511 2510 1 0 27
+dtext 75 40 55 b
+button 60 41 2511 2510 1 0 28
+dtext 110 40 55 c
+button 95 41 2511 2510 1 0 29
+dtext 145 40 55 d
+button 130 41 2511 2510 1 0 30
+dtext 180 40 55 e
+button 165 41 2511 2510 1 0 31
+dtext 215 40 55 f
+button 200 41 2511 2510 1 0 32
+dtext 250 40 55 g
+button 235 41 2511 2510 1 0 33
+dtext 285 40 55 h
+button 270 41 2511 2510 1 0 34
+dtext 320 40 55 i
+button 305 41 2511 2510 1 0 35
+dtext 355 40 55 j
+button 340 41 2511 2510 1 0 36
+dtext 390 40 55 k
+button 375 41 2511 2510 1 0 37
+dtext 425 40 55 l
+button 410 41 2511 2510 1 0 38
+dtext 460 40 55 m
+button 445 41 2511 2510 1 0 39
+dtext 40 60 55 n
+button 25 61 2511 2510 1 0 40
+dtext 75 60 55 o
+button 60 61 2511 2510 1 0 41
+dtext 110 60 55 p
+button 95 61 2511 2510 1 0 42
+dtext 145 60 55 q
+button 130 61 2511 2510 1 0 43
+dtext 180 60 55 r
+button 165 61 2511 2510 1 0 44
+dtext 215 60 55 s
+button 200 61 2511 2510 1 0 45
+dtext 250 60 55 t
+button 235 61 2511 2510 1 0 46
+dtext 285 60 55 u
+button 270 61 2511 2510 1 0 47
+dtext 320 60 55 v
+button 305 61 2511 2510 1 0 48
+dtext 355 60 55 x
+button 340 61 2511 2510 1 0 49
+dtext 390 60 55 w
+button 375 61 2511 2510 1 0 50
+dtext 425 60 55 y
+button 410 61 2511 2510 1 0 51
+dtext 460 60 55 z
+button 445 61 2511 2510 1 0 52
+dtext 405 80 55 Maiusculo
+button 390 81 2511 2510 0 1
+
+[DIALOG D_NICKCHANGE BUTTON]
+ON=0
+TAG.NICK
+TAG.NICKE
+TAG.NICKT
+tag.LASTCHAR
+ctag.vip_nick_change=
+
+ON=1 52
+IF (<TAG0.NICKT> < 15)
+DOSWITCH <EVAL (<ARGN1> - 1)>
+TAG.NICK = "<TAG.NICK>A"
+TAG.NICK = "<TAG.NICK>B"
+TAG.NICK = "<TAG.NICK>C"
+TAG.NICK = "<TAG.NICK>D"
+TAG.NICK = "<TAG.NICK>E"
+TAG.NICK = "<TAG.NICK>F"
+TAG.NICK = "<TAG.NICK>G"
+TAG.NICK = "<TAG.NICK>H"
+TAG.NICK = "<TAG.NICK>I"
+TAG.NICK = "<TAG.NICK>J"
+TAG.NICK = "<TAG.NICK>K"
+TAG.NICK = "<TAG.NICK>L"
+TAG.NICK = "<TAG.NICK>M"
+TAG.NICK = "<TAG.NICK>N"
+TAG.NICK = "<TAG.NICK>O"
+TAG.NICK = "<TAG.NICK>P"
+TAG.NICK = "<TAG.NICK>Q"
+TAG.NICK = "<TAG.NICK>R"
+TAG.NICK = "<TAG.NICK>S"
+TAG.NICK = "<TAG.NICK>T"
+TAG.NICK = "<TAG.NICK>U"
+TAG.NICK = "<TAG.NICK>V"
+TAG.NICK = "<TAG.NICK>X"
+TAG.NICK = "<TAG.NICK>W"
+TAG.NICK = "<TAG.NICK>Y"
+TAG.NICK = "<TAG.NICK>Z"
+TAG.NICK = "<TAG.NICK>a"
+TAG.NICK = "<TAG.NICK>b"
+TAG.NICK = "<TAG.NICK>c"
+TAG.NICK = "<TAG.NICK>d"
+TAG.NICK = "<TAG.NICK>e"
+TAG.NICK = "<TAG.NICK>f"
+TAG.NICK = "<TAG.NICK>g"
+TAG.NICK = "<TAG.NICK>h"
+TAG.NICK = "<TAG.NICK>i"
+TAG.NICK = "<TAG.NICK>j"
+TAG.NICK = "<TAG.NICK>k"
+TAG.NICK = "<TAG.NICK>l"
+TAG.NICK = "<TAG.NICK>m"
+TAG.NICK = "<TAG.NICK>n"
+TAG.NICK = "<TAG.NICK>o"
+TAG.NICK = "<TAG.NICK>p"
+TAG.NICK = "<TAG.NICK>q"
+TAG.NICK = "<TAG.NICK>r"
+TAG.NICK = "<TAG.NICK>s"
+TAG.NICK = "<TAG.NICK>t"
+TAG.NICK = "<TAG.NICK>u"
+TAG.NICK = "<TAG.NICK>v"
+TAG.NICK = "<TAG.NICK>x"
+TAG.NICK = "<TAG.NICK>w"
+TAG.NICK = "<TAG.NICK>y"
+TAG.NICK = "<TAG.NICK>z"
+ENDDO
+TAG0.NICKT += 1
+TAG0.LASTCHAR = char
+ELSE
+SYSMESSAGE Voce ja atingiu o numero maximo de caracteres no nick.
+ENDIF
+IF (<ARGN1> < 27)
+ DIALOG D_NICKCHANGE 1
+ELSE
+ DIALOG D_NICKCHANGE 2
+ENDIF
+
+ON=53
+IF (<TAG0.NICKT> < 15)
+ IF (<TAG0.NICKE> > 0)
+  SYSMESSAGE Voce ja pos um espaco no nick.
+ ELSE
+  TAG.NICK = "<TAG.NICK> "
+  tag0.LASTCHAR = space
+  TAG.NICKE = 1
+  TAG0.NICKT += 1
+ ENDIF
+ELSE
+ SYSMESSAGE Voce ja atingiu o numero maximo de caracteres no nick.
+ENDIF
+DIALOG D_NICKCHANGE 1
+
+ON=54
+TAG.NICK
+TAG.NICKE
+TAG.NICKT
+tag.LASTCHAR
+DIALOG D_NICKCHANGE 1
+
+ON=55
+if (STRMATCH(*space*,<tag.LASTCHAR>))
+	src.sysmessage @,,1 O ultimo caractere nao pode ser espaço.
+	TAG.NICK
+	TAG.NICKE
+	TAG.NICKT
+	tag.LASTCHAR
+	return 1
+endif
+IF (<TAG0.NICKT> > 2)
+	 IF (<TAG0.NICKDELAY> < <SERV.TIME>)
+		 if <canusenick <TAG.NICK>>
+			  IF !<isempty <ctag.vip_nick_change>>
+			   ctag.vip_nick_change_name <TAG.NICK>
+				sdialog d_compra_vip_confirm 4
+				TAG.NICK
+				TAG.NICKE
+				TAG.NICKT
+				tag.LASTCHAR
+				return 1
+			  ELIF (<GOLD> >= 500000)
+			   TAG.NICKVELHO <NAME>
+			   TAG.NICKDELAY <EVAL <SERV.TIME>+25920000>
+			   NAME <TAG.NICK>
+			   SYSMESSAGE @,,1 Seu nick agora eh: <NAME>
+				GOLD -= 500000
+			  ELSE
+			   SYSMESSAGE @0480@ Voce precisa de 500k no Bank ou Acessar este menu pelo .vipshop para pagar em TFG Coins.
+			  ENDIF
+		 else
+			sysmessage @,,1 O nick <TAG.NICK> ja esta em uso.
+			SDIALOG D_NICKCHANGE 1
+		endif
+	 ELSE
+	  SYSMESSAGE @,,1 Voce soh pode mudar de nick daqui <EVAL (((((<TAG0.NICKDELAY>-<SERV.TIME>)/10)/24)/60)/60)> dias.
+	 ENDIF
+ELSE
+SYSMESSAGE @,,1 O novo nick deve ter pelo menos 3 caracteres.
+ENDIF
+TAG.NICK
+TAG.NICKE
+TAG.NICKT
+tag.LASTCHAR
+ctag.vip_nick_change=
+
+ON=56
+TAG.NICK
+TAG.NICKE
+TAG.NICKT
+tag.LASTCHAR
+ctag.vip_nick_change=
+DIALOG D_NICKCHANGE_HELP
+
+[FUNCTION canusenick]
+for x 0 <eval <serv.accounts> -1>
+	for y 0 <eval <serv.account.<dlocal.x>.chars> -1>
+		ref2 = <serv.account.<dlocal.x>.char.<dlocal.y>>
+		if <uid> != <ref2>
+ 			if !(strcmpi(<args>,<ref2.name>))
+				return 0
+  			endif
+		endif
+	endfor
+endfor
+return 1
+
+[DIALOG D_NICKCHANGE_HELP]
+50, 50
+resizepic 50 50 5120 550 320 // FUNDO DO FUNDO
+Resizepic 60 60 83 530 300 // FUNDO
+resizepic 160 90 5120 330 80 // PARTE DENTRO
+gumppic 90 100 5504 // SIMBOLO UO DENTRO DO CIRCULO
+gumppic 500 100 5504 // SIMBOLO UO DENTRO DO CIRCULO2
+gumppic 450 130 9004 // TRECO DA SIGN
+gumppic 0 0 10440 // DRAGAO ESKERDO
+gumppic 568 0 10441 // DRAGAO DIREITO
+dtext 240 100 920 The Fifteen Gems Shard - Help
+dtext 260 125 1200 Mudanca de Nick
+dtext 80 200 900 A Troca de Nick custa 500k.
+dtext 80 260 1200 Voce soh pode trocar de nick de 30 em 30 dias
+
+[DIALOG D_BODYCHANGE]
+140, 150
+nomove
+PAGE 0
+resizepic 0 0 5054 500 165
+resizepic 0 170 5054 500 100
+resizepic 5 20 3500 490 130
+dtext 90 0 1152 The Fifteen Gems Shard [Mudanca de Sexo]
+dtext 30 30 400 Ola
+dtext 60 30 0790 <src.name>.
+dtext 30 50 400 Escolha uma das opcoes abaixo para mudar seu sexo!
+dtext 30 70 400 Caso tenha duvidas clique em Help!
+dtext 160 102 048 Homem
+dtext 260 102 0a48 Mulher
+button 140 105 1209 1210 1 0 1
+button 240 105 1209 1210 1 0 2
+IF (<SRC.FINDLAYER.30.BASEID> == i_vip_control)
+ dtext 10 180 1152 > Voce eh um client VIP!
+ dtext 15 200 1152 A mudanca de sexo sera Gratis
+ELSE
+ dtext 10 180 1152 > A mudanca de sexo custara 500k!
+ENDIF
+IF (<TAG0.BODYDELAY> < <SERV.TIME>)
+ dtext 10 220 1152 > Voce ja pode mudar seu Sexo! Aproveite!
+ELSE
+ dtext 10 220 1152 > Ainda faltam <EVAL (((((<TAG0.BODYDELAY>-<SERV.TIME>)/10)/24)/60)/60)> dias para voce mudar de sexo novamente.
+ENDIF
+dtext 10 240 1152 >   Help
+button 23 242 1209 1210 1 0 3
+
+[dialog d_bodychange button]
+ON=1
+IF (STRMATCH(<BODY>,c_man))
+SYSMESSAGE @0480@ Voce ja eh homem.
+ELSE
+ IF (<TAG0.BODYDELAY> < <SERV.TIME>)
+  IF (<BANKBALANCE> >= 500000) || (<SRC.FINDLAYER.30.BASEID> == i_vip_control)
+   TAG.BODYDELAY <EVAL <SERV.TIME>+25920000>
+   BODY C_MAN
+   OBODY C_MAN
+   UPDATE
+   SYSMESSAGE @0480@ Sexo alterado com sucesso. Voce agora eh um Homem.
+   IF !(<SRC.FINDLAYER.30.BASEID> == i_vip_control)
+    CONSUMEGOLD 500000
+   ENDIF
+  ELSE
+   SYSMESSAGE @0480@ Voce precisa de 500k no Bank ou ser cliente VIP.
+  ENDIF
+  ELSE
+   SYSMESSAGE @0480@ Voce soh pode mudar de sexo daqui <EVAL (((((<TAG0.BODYDELAY>-<SERV.TIME>)/10)/24)/60)/60)> dias.
+ ENDIF
+ ENDIF
+
+ON=2
+IF (STRMATCH(<BODY>,c_woman))
+SYSMESSAGE @0480@ Voce ja eh mulher.
+ELSE
+ IF (<TAG0.BODYDELAY> < <SERV.TIME>)
+  IF (<BANKBALANCE> >= 500000) || (<SRC.FINDLAYER.30.BASEID> == i_vip_control)
+   TAG.BODYDELAY <EVAL <SERV.TIME>+25920000>
+   BODY C_WOMAN
+   OBODY C_WOMAN
+   UPDATE
+   SYSMESSAGE @0480@ Sexo alterado com sucesso. Voce agora eh uma Mulher.
+   IF !(<SRC.FINDLAYER.30.BASEID> == i_vip_control)
+    CONSUMEGOLD 500000
+   ENDIF
+  ELSE
+   SYSMESSAGE @0480@ Voce precisa de 500k no Bank.
+  ENDIF
+ ELSE
+  SYSMESSAGE @0480@ Voce soh pode mudar de sexo daqui <EVAL (((((<TAG0.BODYDELAY>-<SERV.TIME>)/10)/24)/60)/60)> dias.
+ ENDIF
+ ENDIF
+
+ON=3
+DIALOG D_BODYCHANGE_HELP
+
+[DIALOG D_BODYCHANGE_HELP]
+50, 50
+resizepic 50 50 5120 550 320 // FUNDO DO FUNDO
+Resizepic 60 60 83 530 300 // FUNDO
+resizepic 160 90 5120 330 80 // PARTE DENTRO
+gumppic 90 100 5504 // SIMBOLO UO DENTRO DO CIRCULO
+gumppic 500 100 5504 // SIMBOLO UO DENTRO DO CIRCULO2
+gumppic 450 130 9004 // TRECO DA SIGN
+gumppic 0 0 10440 // DRAGAO ESKERDO
+gumppic 568 0 10441 // DRAGAO DIREITO
+dtext 240 100 920 The Fifteen Gems Shard - Help
+dtext 225 125 1200 Mudanca de Sexo
+dtext 80 200 900 A Troca de Sexo custa 500k.
+dtext 80 260 1200 Voce soh pode trocar de sexo de 30 em 30 dias
+
+
+[function teste]
+dialog d_bodychange
+[EOF]

@@ -1,0 +1,417 @@
+[TYPEDEF t_bound_item]
+
+ON=@DropOn_Char
+   IF !(<SRC.ISGM>) && (<SRC.ISPLAYER>)
+      I.CONT = <SRC.FINDLAYER.layer_pack>
+      RETURN 1
+   ENDIF
+
+ON=@DropOn_Ground
+   IF (<SRC>)
+      IF !(<SRC.ISGM>) && (<SRC.ISPLAYER>)
+         I.CONT = <SRC.FINDLAYER.layer_pack>
+         RETURN 1
+      ENDIF
+   ENDIF
+
+ON=@DropOn_Item
+   IF !(<SRC.ISGM>) && (<SRC.ISPLAYER>)
+      IF (<ARGO.UID> != <SRC.FINDLAYER.layer_pack.UID>)
+         I.CONT = <SRC.FINDLAYER.layer_pack>
+         RETURN 1
+      ENDIF
+   ENDIF
+
+ON=@DropOn_Trade
+   IF !(<SRC.ISGM>) && (<SRC.ISPLAYER>)
+      RETURN 1
+   ENDIF
+
+[TYPEDEF t_restricted_bound_item]
+
+ON=@PickUp_Ground
+	IF (!<SRC.ISGM>)
+		RETURN 1
+	ENDIF
+
+ON=@PickUp_Pack
+	IF (!<SRC.ISGM>)
+		RETURN 1
+	ENDIF
+
+ON=@PickUp_Self
+	IF (!<SRC.ISGM>)
+		RETURN 1
+	ENDIF
+
+ON=@PickUp_Stack
+	IF (!<SRC.ISGM>)
+		RETURN 1
+	ENDIF
+
+ON=@DropOn_Char
+   IF !(<SRC.ISGM>) && (<SRC.ISPLAYER>)
+      I.CONT = <SRC.FINDLAYER.layer_pack>
+      RETURN 1
+   ENDIF
+
+ON=@DropOn_Ground
+   IF (<SRC>)
+      IF !(<SRC.ISGM>) && (<SRC.ISPLAYER>)
+         I.CONT = <SRC.FINDLAYER.layer_pack>
+         RETURN 1
+      ENDIF
+   ENDIF
+
+ON=@DropOn_Item
+   IF !(<SRC.ISGM>) && (<SRC.ISPLAYER>)
+      IF (<ARGO.UID> != <SRC.FINDLAYER.layer_pack.UID>)
+         I.CONT = <SRC.FINDLAYER.layer_pack>
+         RETURN 1
+      ENDIF
+   ENDIF
+
+ON=@DropOn_Trade
+   IF !(<SRC.ISGM>) && (<SRC.ISPLAYER>)
+      RETURN 1
+   ENDIF
+
+[TYPEDEF t_global_bound_item]
+
+ON=@EquipTest
+	IF (<LINK.ACCOUNT.TAG0.GLOBAL> != <SRC.ACCOUNT.TAG0.GLOBAL>)
+		SRC.SYSMESSAGE This item does not belong to you
+		CONT = <LINK.FINDLAYER.layer_pack.UID>
+		RETURN 1
+	ENDIF
+
+ON=@DClick
+	ATTR |= attr_newbie
+	IF (<LINK> == 04fffffff)
+		LINK = <SRC.UID>
+	ENDIF
+	IF (<LINK.ACCOUNT.TAG0.GLOBAL> != <SRC.ACCOUNT.TAG0.GLOBAL>)
+		SRC.SYSMESSAGE This item does not belong to you
+		CONT = <LINK.FINDLAYER.layer_pack.UID>
+		RETURN 1
+	ENDIF
+
+ON=@DropOn_Char
+   IF !(<SRC.ISGM>) && (<SRC.ISPLAYER>) && (<SRC.ACCOUNT.TAG0.GLOBAL> != <ARGO.ACCOUNT.TAG0.GLOBAL>)
+      I.CONT = <SRC.FINDLAYER.layer_pack.UID>
+      RETURN 1
+   ENDIF
+
+ON=@DropOn_Ground
+   IF (<SRC>)
+      IF !(<SRC.ISGM>) && (<SRC.ISPLAYER>)
+         I.CONT = <SRC.FINDLAYER.layer_pack.UID>
+         RETURN 1
+      ENDIF
+   ENDIF
+
+ON=@DropOn_Item
+	IF (<SRC.ISGM>) && (<SRC.ISPLAYER>)
+		IF !(<SRC.ISGM>) && (<SRC.ISPLAYER>) && (!(<ARGO.TOPOBJ.ISPLAYER>) || (<SRC.ACCOUNT.TAG0.GLOBAL> != <ARGO.TOPOBJ.ACCOUNT.TAG0.GLOBAL>))
+			I.CONT = <SRC.FINDLAYER.layer_pack>
+			RETURN 1
+		ENDIF
+	ENDIF
+
+ON=@DropOn_Trade
+	IF !(<SRC.ISGM>) && (<SRC.ISPLAYER>) && (!(<ARGO.TOPOBJ.ISPLAYER>) || (<SRC.ACCOUNT.TAG0.GLOBAL> != <ARGO.TOPOBJ.ACCOUNT.TAG0.GLOBAL>))
+		RETURN 1
+	ENDIF
+
+[FUNCTION f_make_item_bag]
+IF (<ARGV> != 2)
+	RETURN 1
+ENDIF
+
+LOCAL.BASE_ID <ARGV[0]>
+LOCAL.AMOUNT <ARGV[1]>
+
+SERV.NEWITEM i_bag
+NEW.CONT <UID.0511fc.FINDLAYER.layer_pack>
+
+LOCAL.CONTAINER_ID <NEW.UID>
+
+FOR 1 <LOCAL.AMOUNT>
+	SERV.NEWITEM <LOCAL.BASE_ID>
+	NEW.CONT <LOCAL.CONTAINER_ID>
+ENDFOR
+
+[FUNCTION fill_bank]
+TARGETF f_fill_bank <ARGS>
+
+[FUNCTION f_fill_bank]
+IF (<ARGV> != 1)
+	SRC.SYSMESSAGE @,,1 You must inform the number of loots.
+ELSEIF !(<ARGO.ISPLAYER>)
+	SRC.SYSMESSAGE @,,1 This function must be used on players only.
+ELSE
+	f_fill_bank_char_uid <ARGO.UID>,<ARGV[0]>
+ENDIF
+
+[FUNCTION f_fill_bank_char_uid]
+IF (<ARGV> != 2)
+	RETURN 1
+ENDIF
+
+REF1 <ARGV[0]>
+LOCAL.LOOTS_COUNT <ARGV[1]>
+
+IF !(<REF1.ISPLAYER>)
+	RETURN 1
+ENDIF
+
+FORCONT <REF1.FINDLAYER.layer_bankbox> 0
+	REMOVE
+ENDFOR
+
+// gold
+SERV.NEWITEM <EVAL {i_chest_metal 1 i_chest_metal_brass 1 i_chest_wooden_brass 1 i_bag 1}>
+REF2 <NEW.UID>
+NEW.CONT <REF1.FINDLAYER.layer_bankbox>
+
+LOCAL.RANDOM_COUNT <R<EVAL <LOCAL.LOOTS_COUNT> - 3>,<EVAL <LOCAL.LOOTS_COUNT> + 3>>
+FOR 1 <LOCAL.RANDOM_COUNT>
+	SERV.NEWITEM i_gold
+	NEW.AMOUNT <R24500,25500>
+	NEW.CONT <REF2.UID>
+ENDFOR
+
+// pocoes
+SERV.NEWITEM <EVAL {i_chest_metal 1 i_chest_metal_brass 1 i_chest_wooden_brass 1 i_bag 1}>
+REF2 <NEW.UID>
+NEW.CONT <REF1.FINDLAYER.layer_bankbox>
+
+SERV.NEWITEM i_potion_life_boost_great
+NEW.AMOUNT <EVAL <R30,40> * <LOCAL.LOOTS_COUNT>>
+NEW.CONT <REF2.UID>
+
+SERV.NEWITEM i_potion_mana_boost_great
+NEW.AMOUNT <EVAL <R30,40> * <LOCAL.LOOTS_COUNT>>
+NEW.CONT <REF2.UID>
+
+SERV.NEWITEM i_potion_refilling_great
+NEW.AMOUNT <EVAL <R30,40> * <LOCAL.LOOTS_COUNT>>
+NEW.CONT <REF2.UID>
+
+SERV.NEWITEM i_potion_refreshtotal
+NEW.AMOUNT <EVAL <R20,25> * <LOCAL.LOOTS_COUNT>>
+NEW.CONT <REF2.UID>
+
+SERV.NEWITEM i_potion_curegreat
+NEW.AMOUNT <EVAL <R7,15> * <LOCAL.LOOTS_COUNT>>
+NEW.CONT <REF2.UID>
+
+SERV.NEWITEM i_potion_invisibility
+NEW.AMOUNT <EVAL <R10,15> * <LOCAL.LOOTS_COUNT>>
+NEW.CONT <REF2.UID>
+
+// reagentes
+SERV.NEWITEM <EVAL {i_chest_metal 1 i_chest_metal_brass 1 i_chest_wooden_brass 1 i_bag 1}>
+REF2 <NEW.UID>
+NEW.CONT <REF1.FINDLAYER.layer_bankbox>
+
+SERV.NEWITEM i_reag_sulfur_ash
+NEW.AMOUNT <EVAL <R250,400> * <LOCAL.LOOTS_COUNT>>
+NEW.CONT <REF2.UID>
+
+SERV.NEWITEM i_reag_blood_moss
+NEW.AMOUNT <EVAL <R250,400> * <LOCAL.LOOTS_COUNT>>
+NEW.CONT <REF2.UID>
+
+SERV.NEWITEM i_reag_spider_silk
+NEW.AMOUNT <EVAL <R250,400> * <LOCAL.LOOTS_COUNT>>
+NEW.CONT <REF2.UID>
+
+SERV.NEWITEM i_reag_nightshade
+NEW.AMOUNT <EVAL <R250,400> * <LOCAL.LOOTS_COUNT>>
+NEW.CONT <REF2.UID>
+
+SERV.NEWITEM i_reag_ginseng
+NEW.AMOUNT <EVAL <R250,400> * <LOCAL.LOOTS_COUNT>>
+NEW.CONT <REF2.UID>
+
+SERV.NEWITEM i_reag_mandrake_root
+NEW.AMOUNT <EVAL <R250,400> * <LOCAL.LOOTS_COUNT>>
+NEW.CONT <REF2.UID>
+
+SERV.NEWITEM i_reag_garlic
+NEW.AMOUNT <EVAL <R250,400> * <LOCAL.LOOTS_COUNT>>
+NEW.CONT <REF2.UID>
+
+SERV.NEWITEM i_reag_black_pearl
+NEW.AMOUNT <EVAL <R250,400> * <LOCAL.LOOTS_COUNT>>
+NEW.CONT <REF2.UID>
+
+// bandagens, fs, arrow
+SERV.NEWITEM <EVAL {i_chest_metal 1 i_chest_metal_brass 1 i_chest_wooden_brass 1 i_bag 1}>
+REF2 <NEW.UID>
+NEW.CONT <REF1.FINDLAYER.layer_bankbox>
+
+SERV.NEWITEM i_arrow
+NEW.AMOUNT <EVAL <R100,150> * <LOCAL.LOOTS_COUNT>>
+NEW.CONT <REF2.UID>
+
+SERV.NEWITEM i_bandage
+NEW.AMOUNT <EVAL <R250,400> * <LOCAL.LOOTS_COUNT>>
+NEW.CONT <REF2.UID>
+
+SERV.NEWITEM i_scroll_flamestrike
+NEW.AMOUNT <EVAL <R40,50> * <LOCAL.LOOTS_COUNT>>
+NEW.CONT <REF2.UID>
+
+// robes of bless
+SERV.NEWITEM <EVAL {i_chest_metal 1 i_chest_metal_brass 1 i_chest_wooden_brass 1 i_bag 1}>
+REF2 <NEW.UID>
+NEW.CONT <REF1.FINDLAYER.layer_bankbox>
+
+LOCAL.RANDOM_COUNT <R<EVAL <LOCAL.LOOTS_COUNT> - 3>,<EVAL <LOCAL.LOOTS_COUNT> + 3>>
+FOR 1 <LOCAL.RANDOM_COUNT>
+	SERV.NEWITEM i_bless_robe
+	NEW.CONT <REF2.UID>
+ENDFOR
+
+// robes of cure
+SERV.NEWITEM <EVAL {i_chest_metal 1 i_chest_metal_brass 1 i_chest_wooden_brass 1 i_bag 1}>
+REF2 <NEW.UID>
+NEW.CONT <REF1.FINDLAYER.layer_bankbox>
+
+LOCAL.RANDOM_COUNT <R<EVAL <LOCAL.LOOTS_COUNT> - 3>,<EVAL <LOCAL.LOOTS_COUNT> + 3>>
+FOR 1 <LOCAL.RANDOM_COUNT>
+	SERV.NEWITEM i_robe_of_cure
+	NEW.CONT <REF2.UID>
+ENDFOR
+
+// sashes
+SERV.NEWITEM <EVAL {i_chest_metal 1 i_chest_metal_brass 1 i_chest_wooden_brass 1 i_bag 1}>
+REF2 <NEW.UID>
+NEW.CONT <REF1.FINDLAYER.layer_bankbox>
+
+LOCAL.RANDOM_COUNT <R<EVAL <LOCAL.LOOTS_COUNT> - 3>,<EVAL <LOCAL.LOOTS_COUNT> + 3>>
+FOR 1 <LOCAL.RANDOM_COUNT>
+	SERV.NEWITEM i_ghealsash
+	NEW.CONT <REF2.UID>
+ENDFOR
+
+// armas magicas
+SERV.NEWITEM <EVAL {i_chest_metal 1 i_chest_metal_brass 1 i_chest_wooden_brass 1 i_bag 1}>
+REF2 <NEW.UID>
+NEW.CONT <REF1.FINDLAYER.layer_bankbox>
+
+LOCAL.RANDOM_COUNT <EVAL <R<EVAL <LOCAL.LOOTS_COUNT> - 3>,<EVAL <LOCAL.LOOTS_COUNT> + 3>> / 3>
+FOR 1 <LOCAL.RANDOM_COUNT>
+	SERV.NEWITEM <EVAL {i_Power_viking 3 i_Power_halberd 3 i_Power_bardiche 3 i_Power_war_fork 3 i_Power_mace_war 3 i_Power_axe_war 3 i_Power_pitchfork 3 i_Power_axe_exec 3 i_power_axe_battle 3 i_Power_axe 3 i_Power_katana 3 i_Power_kryss 3 i_vanquish_viking 1 i_vanquish_halberd 1 i_vanquish_bardiche 1 i_vanquish_war_fork 1 i_vanquish_mace_war 1 i_vanquish_axe_war 1 i_vanquish_pitchfork 1 i_vanquish_axe_exec 1 i_vanquish_axe_battle 1 i_vanquish_axe 1 i_vanquish_katana 1 i_vanquish_kryss 1}>
+	NEW.CONT <REF2.UID>
+ENDFOR
+
+// masks
+SERV.NEWITEM <EVAL {i_chest_metal 1 i_chest_metal_brass 1 i_chest_wooden_brass 1 i_bag 1}>
+REF2 <NEW.UID>
+NEW.CONT <REF1.FINDLAYER.layer_bankbox>
+
+LOCAL.RANDOM_COUNT <EVAL <R<EVAL <LOCAL.LOOTS_COUNT> - 3>,<EVAL <LOCAL.LOOTS_COUNT> + 3>>>
+FOR 1 <LOCAL.RANDOM_COUNT>
+	SERV.NEWITEM <EVAL {i_magic_mask_bear 1 i_magic_mask_bear_polar 1 i_magic_mask_bear_black 1 i_magic_mask_tribal 2 i_magic_mask 2 i_magic_mask_orc 1 i_magic_helm_orc 2 i_magic_mask_deer 1}>
+	NEW.CONT <REF2.UID>
+ENDFOR
+
+// peito, perna plate e heather
+SERV.NEWITEM <EVAL {i_chest_metal 1 i_chest_metal_brass 1 i_chest_wooden_brass 1 i_bag 1}>
+REF2 <NEW.UID>
+NEW.CONT <REF1.FINDLAYER.layer_bankbox>
+
+LOCAL.RANDOM_COUNT <EVAL <R<EVAL <LOCAL.LOOTS_COUNT> - 3>,<EVAL <LOCAL.LOOTS_COUNT> + 3>>>
+FOR 1 <LOCAL.RANDOM_COUNT>
+	SERV.NEWITEM <EVAL {i_blackrock_platemail 1 i_bloodrock_platemail 2 i_verite_platemail 3}>
+	NEW.CONT <REF2.UID>
+
+	SERV.NEWITEM <EVAL {i_blackrock_platemail_leggings 1 i_bloodrock_platemail_leggings 2 i_verite_platemail_leggings 3}>
+	NEW.CONT <REF2.UID>
+
+	SERV.NEWITEM <EVAL {i_blackrock_heater_shield 1 i_bloodrock_heater_shield 2 i_verite_heater_shield 3}>
+	NEW.CONT <REF2.UID>
+ENDFOR
+
+// wyrm
+SERV.NEWITEM <EVAL {i_chest_metal 1 i_chest_metal_brass 1 i_chest_wooden_brass 1 i_bag 1}>
+REF2 <NEW.UID>
+NEW.CONT <REF1.FINDLAYER.layer_bankbox>
+
+LOCAL.RANDOM_COUNT <EVAL <R<EVAL <LOCAL.LOOTS_COUNT> - 3>,<EVAL <LOCAL.LOOTS_COUNT> + 3>>>
+FOR 1 <LOCAL.RANDOM_COUNT>
+	SERV.NEWITEM i_leather_leggings_wyrm
+	NEW.CONT <REF2.UID>
+
+	SERV.NEWITEM i_leather_tunic_wyrm
+	NEW.CONT <REF2.UID>
+
+	SERV.NEWITEM i_leather_gorget_wyrm
+	NEW.CONT <REF2.UID>
+
+	SERV.NEWITEM i_leather_gloves_wyrm
+	NEW.CONT <REF2.UID>
+
+	SERV.NEWITEM i_leather_sleeves_wyrm
+	NEW.CONT <REF2.UID>
+ENDFOR
+
+// bows
+SERV.NEWITEM <EVAL {i_chest_metal 1 i_chest_metal_brass 1 i_chest_wooden_brass 1 i_bag 1}>
+REF2 <NEW.UID>
+NEW.CONT <REF1.FINDLAYER.layer_bankbox>
+
+LOCAL.RANDOM_COUNT <EVAL <R<EVAL <LOCAL.LOOTS_COUNT> - 3>,<EVAL <LOCAL.LOOTS_COUNT> + 3>>>
+FOR 1 <LOCAL.RANDOM_COUNT>
+	SERV.NEWITEM <EVAL {i_bow_blackrock 1 i_bow_bloodrock 2 i_bow_verite 3}>
+	NEW.CONT <REF2.UID>
+ENDFOR
+
+// armas excep
+SERV.NEWITEM <EVAL {i_chest_metal 1 i_chest_metal_brass 1 i_chest_wooden_brass 1 i_bag 1}>
+REF2 <NEW.UID>
+NEW.CONT <REF1.FINDLAYER.layer_bankbox>
+
+LOCAL.RANDOM_COUNT <EVAL <R<EVAL <LOCAL.LOOTS_COUNT> - 3>,<EVAL <LOCAL.LOOTS_COUNT> + 3>>>
+FOR 1 <LOCAL.RANDOM_COUNT>
+	SERV.NEWITEM i_except_kryss
+	NEW.NAME Greater Poisoned <NEW.NAME>
+	NEW.TAG.POISONLEVEL 3
+	NEW.TAG.POISONTIMER 5
+	NEW.CONT <REF2.UID>
+
+	SERV.NEWITEM i_except_axe_exec
+	NEW.NAME Greater Poisoned <NEW.NAME>
+	NEW.TAG.POISONLEVEL 3
+	NEW.TAG.POISONTIMER 5
+	NEW.CONT <REF2.UID>
+
+	SERV.NEWITEM i_except_war_fork
+	NEW.NAME Greater Poisoned <NEW.NAME>
+	NEW.TAG.POISONLEVEL 3
+	NEW.TAG.POISONTIMER 5
+	NEW.CONT <REF2.UID>
+ENDFOR
+
+// animais
+SERV.NEWITEM <EVAL {i_chest_metal 1 i_chest_metal_brass 1 i_chest_wooden_brass 1 i_bag 1}>
+REF2 <NEW.UID>
+NEW.CONT <REF1.FINDLAYER.layer_bankbox>
+
+LOCAL.RANDOM_COUNT <EVAL <R<EVAL <LOCAL.LOOTS_COUNT> - 3>,<EVAL <LOCAL.LOOTS_COUNT> + 3>>>
+FOR 1 <LOCAL.RANDOM_COUNT>
+	SERV.NEWNPC <EVAL {c_redroan_musta 1 c_light_green_musta 1 c_black_musta 1 c_storm_musta 1 c_mage_musta 1 c_night_musta 1 c_panamino_mustang 1 c_snow_musta 1 c_stone_musta 1 c_gay_musta 1 c_Grey_musta 1 c_crimson_musta 1 c_sky_musta 1 c_wimmimate_musta 1 c_chemical_musta 1 c_nature_musta 1 c_redroan_llama 1 c_light_green_llama 1 c_stone_llama 1 c_mage_llama 1 c_mage_llama 1 c_gay_llama 1 c_panamino_llama 1 c_black_llama 1 c_Grey_llama 1 c_snow_llama 1 c_night_llama 1 c_nightmare 1 c_redroan_zos 1 c_light_green_zos 1 c_panamino_zos 1 c_dark_green_zos 1 c_olive_zos 1 c_rock_zos 1 c_Swamp_zos 1 c_snow_zos 1 c_golden_zos 1 c_mage_zos 1 c_stone_zos 1 c_flame_zos 1 c_marine_zos 1 c_Grey_zos 1 c_night_zos 1 c_black_zos 1 c_gay_zos 1 c_poison_zos 1 c_dark_brown_zos 1 c_storm_zos 1 c_hard_zos 1 c_crimson_zos 1 c_sky_zos 1 c_wimmimate_zos 1 c_chemical_zos 1 c_nature_zos 1}>
+	REF3 <NEW.UID>
+
+	SERV.NEWITEM <REF3.ICON>
+	NEW.NAME <REF3.NAME>
+	NEW.COLOR <REF3.COLOR>
+	NEW.CONT <REF2.UID>
+
+	REF3.REMOVE
+ENDFOR
+
+[EOF]

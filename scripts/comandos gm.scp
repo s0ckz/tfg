@@ -1,0 +1,569 @@
+[PLEVEL 1]
+br
+bblues
+fielynhamy
+
+[ITEMDEF i_chao_ynhamy]
+ID=i_floor_marble
+NAME= Chao ynhamy 
+
+ON=@CREATE
+ATTR=090
+
+ON=@STEP
+if !<src.isevent.e_rei_blues>
+	src.sysmessage @,,1 Voce nao e Lord YnhamY.
+	src.move 1,0
+	return 1
+endif
+
+[FUNCTION fieisynhamyct]
+local.ct 0
+			for x 0 <eval <serv.accounts> -1>
+							for y 0 <eval <serv.account.<dlocal.x>.chars> -1>
+								ref1 = <serv.account.<dlocal.x>.char.<dlocal.y>>
+								if (<ref1.isevent.e_exercito_blue>)
+									local.ct ++
+									s Fiel a Ynhamy : <ref1.name>
+								endif
+							endfor
+			endfor
+var0.fieis_ynhamy = <local.ct>
+serv.b @93 <dlocal.ct> guerreiros ja declararam fidelidade ao Lorde YnhamY, rei dos Blues.
+return 1
+
+[function br]
+if <isevent.e_rei_blues>
+	SERV.B @55 [YnhamY, Rei dos Blues] <args>
+eLIF <ISEVENT.E_REI_DOS_PKS>
+	SERV.B @32 [Zorba, Rei dos PKS] <args>
+endif
+return 1
+
+[function bblues]
+if <isevent.e_rei_blues>
+	serv.allclients bblues_msg [YnhamY, Rei dos Blues] <args>
+elif <isevent.e_british_knight>
+	serv.allclients bblues_msg [<src.name>, Knight of Britain] <args>
+endif
+return 1
+
+[events e_british_knight]
+on=@click
+	message @91,,1 [British Knight]
+
+
+[function bblues_msg]
+if (<kills> < 1)
+	sysmessage @93,,1 <args>
+endif
+return 1
+
+[FUNCTION fielynhamy]
+if (<kills> > 0)
+	sysmessage @,,1 Voce e um assassino e nao pode declarar fidelidade ao Mito Blue.
+else
+if <isevent.e_exercito_blue>
+	events -e_exercito_blue
+	var0.fieis_ynhamy -= 1
+	sysmessage @,,1 Voce nao e mais fiel a YnhamY.
+else
+	events +e_exercito_blue
+	sysmessage @,,1 Voce declarou fidelidade a YnhamY.
+	var0.fieis_ynhamy += 1
+	if !<r0,9>
+		serv.b @93 <name> declarou fidelidade ao Lorde YnhamY. 
+		serv.b @93 <dvar.fieis_ynhamy> guerreiros ja declararam fidelidade ao Lorde YnhamY, rei dos Blues.
+	endif
+endif
+endif
+
+[PLEVEL 1]
+FIELZORBA
+
+[FUNCTION fielzorba]
+if (<kills> = 0)
+	sysmessage @,,1 Voce nao e um assassino e nao pode declarar fidelidade ao Mito Red...
+	return 1
+endif
+IF <isevent.e_exercito_red>
+ 		events -e_exercito_red
+  		var0.fieis_zorba -= 1
+  		sysmessage @,,1 Voce nao e mais fiel a Zorba.
+else
+   		events +e_exercito_red
+  		sysmessage @,,1 Voce declarou fidelidade a Zorba.
+  		var0.fieis_zorba += 1
+   		if !<r0,9>
+   			serv.b @32 <name> declarou fidelidade ao Lorde Zorba. 
+   			serv.b @32 <dvar.fieis_zorba> guerreiros ja declararam fidelidade ao Lorde Zorba, rei dos Reds.
+    	endif
+ endif
+
+[EVENTS e_exercito_blue]
+// ON=@CLICK 
+// message @93,,1 [Fiel a YnhamY]
+
+ ON=@KILL
+ if <argo.isplayer>
+ 	if (<argo.kills> < 1)
+// 		s <name> matou <argo.name> e perdeu status blue / YnhamY.
+// 		sysmessage @,,1 Voce matou um blue e foi expulso do exercito de YnhamY.
+		events -e_exercito_blue
+ 		var0.fieis_ynhamy -= 1
+ 	endif
+ endif
+
+[EVENTS e_rei_blues]
+// ON=@click
+// message @93,,1 [#Mito, Rei e Lider Congregador dos Blues]
+
+[EVENTS E_REI_DOS_PKS]
+// ON=@CLICK
+// MESSAGE @32,,1 [Destruidor de Vidas, Sanguinário e Lider dos PKs]
+
+
+[EVENTS e_exercito_red]
+// ON=@CLICK 
+// message @32,,1 [Fiel a Zorba]
+
+ON=@MurderDecay
+if <ARGN1> == 0
+// 		s <name> matou <argo.name> e perdeu status red / Zorba.
+// 		sysmessage @,,1 Voce virou um blue miseravel e nao pertence mais ao exercito Red!
+ 		events -e_exercito_red
+ 		var0.fieis_zorba -= 1
+endif
+
+
+
+[FUNCTION regionplays]
+FORPLAYERS 50
+	local.ct ++
+	if <kills> < 1
+		local.blue ++
+	else
+		local.pk ++
+	endif
+ENDFOR
+SERV.B @31 <dlocal.pk> Pk's
+SERV.B @91 <dlocal.blue> APK's / Blues.
+SERV.B @63 <dlocal.Ct> players em <region.name>.
+
+// IP
+
+[FUNCTION IP]
+IF <isempty <args>>
+	SRC.SYSMESSAGE @0790 Syntax: .ip IP
+	SRC.SYSMESSAGE @0793 Ex.: .ip 200.*.*.*
+	RETURN 1
+ENDIF
+SRC.SYSMESSAGE @0790 Encontrados :
+SERV.allclients f_ipf <args>
+
+[FUNCTION f_ipf]
+IF STRMATCH( "<args>", "<account.lastip>" ) 
+	SRC.SYSMESSAGE @0793 <account.lastip> - <name> <p>
+ENDIF
+
+// MENSAGEM
+[FUNCTION mensagem]
+IF (<SRC.UID> == <UID>)
+	IF (<SRC.ACCOUNT.PLEVEL> >= 4)
+		SRC.SYSMESSAGE Selecione...
+		TARGETF f_mensagem <ARGS>
+	ENDIF
+ENDIF
+RETURN 1
+
+[FUNCTION f_mensagem]
+	REF69 = <ARGO.UID>
+	IF (<ARGO.UID>)
+		IF (<REF69.ISPLAYER>)
+			TRYSRC <REF69.UID> DIALOG d_mensagem 0 "<SRC.NAME> enviou, <ARGS>"
+		ENDIF
+	ENDIF
+	RETURN 1
+
+[DIALOG d_mensagem]
+50,50
+PAGE 1
+button 0 0 2642 2643 0 2 0
+
+PAGE 2
+button 0 0 2642 2643 0 1 0
+resizepic 20 20 5120 230 260
+DTEXT 60 20 1 Sistema de Mensagens
+DHTMLGUMP 35 50 200 210 1 1 <ARGS>
+
+
+// GM INFO
+
+[FUNCTION gminfo]
+IF (<SRC.UID> == <UID>)
+	IF (<SRC.ACCOUNT.PLEVEL> >= 4)
+		SRC.SYSMESSAGE Selecione...
+		TARGETF f_gm_info
+	ENDIF
+ENDIF
+RETURN 1
+
+
+[FUNCTION f_gm_info]
+	SRC.TARG = <ARGO.UID>
+	IF (<ARGO.UID>)
+		IF <SRC.TARG.ISITEM>
+			SRC.SYSMESSAGE ITEM: <SRC.TARG.NAME>
+		ELSEIF <SRC.TARG.ISCHAR>
+			SRC.SYSMESSAGE CHAR: <SRC.TARG.NAME>
+			DIALOG d_gm_info
+		ENDIF
+	ENDIF
+	RETURN 1
+
+[DIALOG d_gm_info]
+70,40
+
+PAGE 0
+resizepic 0 0 5100 500 400
+
+IF (<SRC.TARG.BODY> == c_man)
+	gumppic 220 10 12
+ELSEIF (<SRC.TARG.BODY> == c_woman)
+	gumppic 220 10 13
+ENDIF
+
+gumppic 15 40 2443
+gumppic 15 65 2443
+gumppic 15 90 2443
+gumppic 15 115 2443
+gumppic 15 140 2443
+gumppic 15 165 2443
+gumppic 15 190 2443
+gumppic 15 215 2443
+gumppic 15 240 2443
+gumppic 15 265 2443
+
+button   100 100 5007 5007 1 0 2
+
+PAGE 1
+dtext 20 40 0 Serial
+dtext 80 40 0 <SRC.TARG.UID>
+dtext 20 65 0 Acct
+dtext 80 65 0 <SRC.TARG.ACCOUNT>
+dtext 20 90 0 Name
+dtext 80 90 0 <SRC.TARG.NAME>
+dtext 20 115 0 Title:
+dtext 80 115 0 <SRC.TARG.TITLE>
+dtext 20 140 0 Color:
+dtext 80 140 0 <SRC.TARG.COLOR>
+dtext 20 165 0 Oskin:
+dtext 80 165 0 <SRC.TARG.COLOR>
+dtext 20 190 0 ID:
+dtext 80 190 0 <SRC.TARG.ID>
+dtext 20 215 0 Body:
+dtext 80 215 0 <SRC.TARG.BODY>
+dtext 20 240 0 OBody:
+dtext 80 240 0 <SRC.TARG.OBODY>
+dtext 20 265 0 Timer:
+dtext 80 265 0 <SRC.TARG.TIMER>
+button   2 2 5007 5007 0 1 0  // 1
+button  90 2 5006 5006 0 2 0  // 2
+button 178 2 5006 5006 0 3 0  // 3
+button 266 2 5006 5006 1 0 1  // 4
+
+PAGE 2
+dtext 20 40 0 P
+dtext 80 40 0 <SRC.TARG.P>
+dtext 20 65 0 Home
+dtext 80 65 0 <SRC.TARG.HOME>
+dtext 20 90 0 Flags
+dtext 80 90 0 <SRC.TARG.FLAGS>
+dtext 20 115 0 Action
+dtext 80 115 0 <SRC.TARG.ACTION>
+dtext 20 140 0 Hit P
+dtext 80 140 0 <SRC.TARG.HITS>
+dtext 20 165 0 Stam
+dtext 80 165 0 <SRC.TARG.STAM>
+dtext 20 190 0 Mana
+dtext 80 190 0 <SRC.TARG.MANA>
+dtext 20 215 0 Food
+dtext 80 215 0 <SRC.TARG.FOOD>
+dtext 20 240 0 NPC
+dtext 80 240 0 <SRC.TARG.NPC>
+dtext 20 265 0 Speech
+dtext 80 265 0 <SRC.TARG.SPEECH>
+button   2 2 5006 5006 0 1 0  // 1
+button  90 2 5007 5007 0 2 0  // 2
+button 178 2 5006 5006 0 3 0  // 3
+
+PAGE 3
+dtext 20 40 0 Str
+dtext 80 40 0 <SRC.TARG.STR>
+dtext 20 65 0 Int
+dtext 80 65 0 <SRC.TARG.INT>
+dtext 20 90 0 Dex
+dtext 80 90 0 <SRC.TARG.DEX>
+dtext 20 115 0 Karma
+dtext 80 115 0 <SRC.TARG.KARMA>
+dtext 20 140 0 Fame
+dtext 80 140 0 <SRC.TARG.FAME>
+dtext 20 165 0 Kills
+dtext 80 165 0 <SRC.TARG.KILLS>
+dtext 20 190 0 Deaths
+dtext 80 190 0 <SRC.TARG.DEATHS>
+dtext 20 215 0 Guild
+dtext 80 215 0 <SRC.TARG.MEMORYFINDTYPE.memory_guild.LINK.ABBREV> (<SRC.TARG.MEMORYFINDTYPE.memory_guild.LINK.NAME>)
+dtext 20 240 0 .
+dtext 80 240 0 .
+dtext 20 265 0 .
+dtext 80 265 0 .
+button   2 2 5006 5006 0 1 0  // 1
+button  90 2 5006 5006 0 2 0  // 2
+button 178 2 5007 5007 0 3 0  // 3
+
+[DIALOG d_gm_info BUTTON]
+ONBUTTON=1
+	DIALOG d_gm_skills
+	
+ONBUTTON=2
+	SRC.TARG.BANK
+
+
+// GUMP GM SKILLS
+
+[DIALOG d_gm_skills]
+0,0
+
+PAGE 0
+resizepic 0 0 5100 680 400
+
+PAGE 1
+dtext 20 40 0 Alchemy
+dtext 125 40 0 <SRC.TARG.ALCHEMY>
+dtext 20 65 0 Anatomy
+dtext 125 65 0 <SRC.TARG.ANATOMY>
+dtext 20 90 0 Animal Lore
+dtext 125 90 0 <SRC.TARG.ANIMALLORE>
+dtext 20 115 0 Taming
+dtext 125 115 0 <SRC.TARG.TAMING>
+dtext 20 140 0 Archery
+dtext 125 140 0 <SRC.TARG.ARCHERY>
+dtext 20 165 0 Armslore
+dtext 125 165 0 <SRC.TARG.ARMSLORE>
+dtext 20 190 0 Begging
+dtext 125 190 0 <SRC.TARG.BEGGING>
+dtext 20 215 0 Blacksmithing
+dtext 125 215 0 <SRC.TARG.BLACKSMITHING>
+dtext 20 240 0 Bowcraft
+dtext 125 240 0 <SRC.TARG.BOWCRAFT>
+dtext 20 265 0 Camping
+dtext 125 265 0 <SRC.TARG.CAMPING>
+dtext 20 290 0 Carpentry
+dtext 125 290 0 <SRC.TARG.CARPENTRY>
+dtext 20 315 0 Cartography
+dtext 125 315 0 <SRC.TARG.CARTOGRAPHY>
+dtext 20 340 0 Cooking
+dtext 125 340 0 <SRC.TARG.COOKING>
+
+dtext 180 40 0 Detect. Hid.
+dtext 285 40 0 <SRC.TARG.DETECTINGHIDDEN>
+dtext 180 65 0 Enticement
+dtext 285 65 0 <SRC.TARG.ENTICEMENT>
+dtext 180 90 0 Eval. Intel.
+dtext 285 90 0 <SRC.TARG.EVALUATINGINTEL>
+dtext 180 115 0 Fencing
+dtext 285 115 0 <SRC.TARG.FENCING>
+dtext 180 140 0 Fishing
+dtext 285 140 0 <SRC.TARG.FISHING>
+dtext 180 165 0 Forensics
+dtext 285 165 0 <SRC.TARG.FORENSICS>
+dtext 180 190 0 Healing
+dtext 285 190 0 <SRC.TARG.HEALING>
+dtext 180 215 0 Herding
+dtext 285 215 0 <SRC.TARG.HERDING>
+dtext 180 240 0 Hiding
+dtext 285 240 0 <SRC.TARG.HIDING>
+dtext 180 265 0 Inscription
+dtext 285 265 0 <SRC.TARG.INSCRIPTION>
+dtext 180 290 0 Item ID
+dtext 285 290 0 <SRC.TARG.ITEMID>
+dtext 180 315 0 Lockpicking
+dtext 285 315 0 <SRC.TARG.LOCKPICKING>
+dtext 180 340 0 Lumberjacking
+dtext 285 340 0 <SRC.TARG.LUMBERJACKING>
+
+dtext 340 40 0 Mace Fighting
+dtext 445 40 0 <SRC.TARG.MACEFIGHTING>
+dtext 340 65 0 Magery
+dtext 445 65 0 <SRC.TARG.MAGERY>
+dtext 340 90 0 Magic Resist.
+dtext 445 90 0 <SRC.TARG.MAGICRESISTANCE>
+dtext 340 115 0 Meditation
+dtext 445 115 0 <SRC.TARG.MEDITATION>
+dtext 340 140 0 Mining
+dtext 445 140 0 <SRC.TARG.MINING>
+dtext 340 165 0 Musicianship
+dtext 445 165 0 <SRC.TARG.MUSICIANSHIP>
+dtext 340 190 0 Necomancy
+dtext 445 190 0 <SRC.TARG.NECROMANCY>
+dtext 340 215 0 Parrying
+dtext 445 215 0 <SRC.TARG.PARRYING>
+dtext 340 240 0 Peacemaking
+dtext 445 240 0 <SRC.TARG.PEACEMAKING>
+dtext 340 265 0 Poisoning
+dtext 445 265 0 <SRC.TARG.POISONING>
+dtext 340 290 0 Provocation
+dtext 445 290 0 <SRC.TARG.PROVOCATION>
+dtext 340 315 0 Remove Trap
+dtext 445 315 0 <SRC.TARG.REMOVETRAP>
+dtext 340 340 0 Snooping
+dtext 445 340 0 <SRC.TARG.SNOOPING>
+
+dtext 520 40 0 SpiritSpeak
+dtext 605 40 0 <SRC.TARG.SPIRITSPEAK>
+dtext 520 65 0 Stealing
+dtext 605 65 0 <SRC.TARG.STEALING>
+dtext 520 90 0 Stealth
+dtext 605 90 0 <SRC.TARG.STEALTH>
+dtext 520 115 0 Swordsman
+dtext 605 115 0 <SRC.TARG.SWORDSMANSHIP>
+dtext 520 140 0 Tactics
+dtext 605 140 0 <SRC.TARG.TACTICS>
+dtext 520 165 0 Tailoring
+dtext 605 165 0 <SRC.TARG.TAILORING>
+dtext 520 190 0 Taste ID
+dtext 605 190 0 <SRC.TARG.TASTEID>
+dtext 520 215 0 Tinkering
+dtext 605 215 0 <SRC.TARG.TRACKING>
+dtext 520 240 0 Tracking
+dtext 605 240 0 <SRC.TARG.TRACKING>
+dtext 520 265 0 Veterinary
+dtext 605 265 0 <SRC.TARG.VETERINARY>
+dtext 520 290 0 Wrestling
+
+dtext 605 290 0 <SRC.TARG.WRESTLING>
+dtext 520 315 0 Skilltotal
+dtext 605 315 0 <SRC.TARG.SKILLTOTAL>
+dtext 520 340 0 Skillgain
+dtext 605 340 0 <EVAL(<SRC.TARG.TAG.SKILL_TOTAL>)>
+
+// GM ADD
+
+[FUNCTION gmadd]
+IF (<SRC.ACCOUNT.PLEVEL> >= 4)
+	IF <ISEMPTY <ARGS>>
+		SRC.SYSMESSAGE Utilize: .gmadd (item)
+		RETURN 1
+	ENDIF
+
+	IF (<ARGS> == 0)
+		SRC.SYSMESSAGE Item inexistente
+		RETURN 1
+	ENDIF
+
+	SRC.NEWITEM <ARGS>
+	NEW.TAG.ADDFOR = <SRC.UID>
+	NEW.BOUNCE
+ENDIF
+RETURN 1
+
+// GM STONE
+
+[FUNCTION gmstone]
+	IF (<SRC.ACCOUNT.PLEVEL> >= 2)
+		IF (<SRC.UID> == <UID>)
+			SRC.SYSMESSAGE Quem Voce Deseja Stonar?
+			TARGETF f_gm_stone
+		ENDIF
+	ENDIF
+	RETURN 1
+
+
+[FUNCTION f_gm_stone]
+	IF (<SRC.ACCOUNT.PLEVEL> >= 2)
+		SRC.TARG = <ARGO.UID>
+		IF (<ARGO.UID>)
+			IF <SRC.TARG.ISITEM>
+				RETURN 1
+			ELSEIF <SRC.TARG.ISCHAR>
+				SRC.TARG.STONE
+			ENDIF
+		ENDIF
+	ENDIF
+	RETURN 1
+
+// GM COLOR
+
+[FUNCTION gmcolor]
+	IF (<SRC.ACCOUNT.PLEVEL> >= 4)
+		IF <ISEMPTY <ARGS>>
+			SRC.SYSMESSAGE Utilize: .gmcolor (color)
+			RETURN 1
+		ENDIF
+		IF (<SRC.UID> == <UID>)
+			SRC.SYSMESSAGE Color?...
+			TARGETF f_gm_color <ARGS>
+		ENDIF
+	ENDIF
+	RETURN 1
+
+
+[FUNCTION f_gm_color]
+IF !<ISEMPTY <ARGS>>
+	IF (<SRC.ACCOUNT.PLEVEL> >= 4)
+		SRC.TARG = <ARGO.UID>
+		IF (<ARGO.UID>)
+			IF <SRC.TARG.ISITEM>
+				SRC.TARG.COLOR <ARGS>
+			ENDIF
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 1
+
+// GM NAME
+
+[FUNCTION gmname]
+	IF (<SRC.ACCOUNT.PLEVEL> >= 4)
+		IF <ISEMPTY <ARGS>>
+			SRC.SYSMESSAGE Utilize: .gmname (NOME)
+			RETURN 1
+		ENDIF
+		IF (<SRC.UID> == <UID>)
+			SRC.SYSMESSAGE Name?...
+			TARGETF f_gm_name <ARGS>
+		ENDIF
+	ENDIF
+	RETURN 1
+
+
+[FUNCTION f_gm_name]
+IF !<ISEMPTY <ARGS>>
+	IF (<SRC.ACCOUNT.PLEVEL> >= 4)
+		SRC.TARG = <ARGO.UID>
+		IF (<ARGO.UID>)
+			IF <SRC.TARG.ISITEM>
+				SRC.TARG.NAME <ARGS>
+			ENDIF
+		ENDIF
+	ENDIF
+ENDIF
+RETURN 1
+
+[FUNCTION b]
+IF (<SRC.ACCOUNT.PLEVEL>= 2)
+	SRC.SERV.ALLCLIENTS SYSMESSAGE @0790 [Cons] <SRC.NAME>: <ARGS>
+ELSEIF (<SRC.ACCOUNT.PLEVEL>= 3)
+	SRC.SERV.ALLCLIENTS SYSMESSAGE @0790 [Seer] <SRC.NAME>: <ARGS>
+ELSEIF (<SRC.ACCOUNT.PLEVEL>= 4)
+	SRC.SERV.ALLCLIENTS SYSMESSAGE @0790 [Gm] <SRC.NAME>: <ARGS>
+ELSEIF (<SRC.ACCOUNT.PLEVEL>= 5)
+	SRC.SERV.ALLCLIENTS SYSMESSAGE @0790 [Dev] <SRC.NAME>: <ARGS>
+ELSEIF (<SRC.ACCOUNT.PLEVEL>= 6)
+	SRC.SERV.ALLCLIENTS SYSMESSAGE @0790 [Admin] <SRC.NAME>: <ARGS>
+ELSE
+	SRC.SERV.ALLCLIENTS SYSMESSAGE @0790 [Owner] <SRC.NAME>: <ARGS>
+ENDIF
+
+[EOF]

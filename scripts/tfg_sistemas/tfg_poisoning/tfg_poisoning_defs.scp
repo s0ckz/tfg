@@ -1,0 +1,88 @@
+[DEFNAME Poisons]
+
+//Lesser Poison
+PoisonType_0 = Lesser
+PoisonType_0_Message_Self = Voce se sente mal.
+PoisonType_0_Message_Other = esta levemente envenenado.
+PoisonType_0_DamLow = 2
+PoisonType_0_DamHigh = 3
+PoisonType_0_Divide = 40
+// o que era esse divide?
+PoisonType_0_Frequency = 60
+PoisonType_0_Duration = 8
+PoisonType_0_RecalcChance = 50
+PoisonType_0_Difficulty = 50
+PoisonType_0_ApplicationDifficulty = 0
+PoisonType_0_ApplicationCharges = 5
+
+//Normal Poison
+PoisonType_1 = Regular
+PoisonType_1_Message_Self = Voce se sente doente.
+PoisonType_1_Message_Other = esta envenenado.
+PoisonType_1_DamLow = 3
+PoisonType_1_DamHigh = 6
+PoisonType_1_Divide = 22
+PoisonType_1_Frequency = 60
+PoisonType_1_Duration = 13
+PoisonType_1_RecalcChance = 50
+PoisonType_1_Difficulty = 600
+PoisonType_1_ApplicationDifficulty = 300
+PoisonType_1_ApplicationCharges = 4
+PoisonType_1_ExtraDmgPvm = 2
+
+//Greater Poison
+PoisonType_2 = Greater
+PoisonType_2_Message_Self = Voce se sente doente.
+PoisonType_2_Message_Other = esta muito envenenado.
+PoisonType_2_DamLow = 7
+PoisonType_2_DamHigh = 9
+PoisonType_2_Divide = 14
+PoisonType_2_Frequency = 60
+PoisonType_2_Duration = 19
+PoisonType_2_RecalcChance = 50
+PoisonType_2_Difficulty = 900
+PoisonType_2_ApplicationDifficulty = 600
+PoisonType_2_ApplicationCharges = 3
+PoisonType_2_ExtraDmgPvm = 4
+
+//Deadly Poison
+PoisonType_3 = Deadly
+PoisonType_3_Message_Self = Voce se sente mortalmente envenenado.
+PoisonType_3_Message_Other = esta mortalmente envenenado.
+PoisonType_3_DamLow = 10
+PoisonType_3_DamHigh = 12
+PoisonType_3_Divide = 8
+PoisonType_3_Frequency = 60
+PoisonType_3_Duration = 25
+PoisonType_3_RecalcChance = 50
+PoisonType_3_Difficulty = 1000
+PoisonType_3_ApplicationDifficulty = 750
+PoisonType_3_ApplicationCharges = 1
+//This is a function to perform when poison is applied and whenever it ticks.
+//Argv[0] = 1 when the poison is first applied
+PoisonType_3_Function = f_poison_effect_deadly
+PoisonType_3_ExtraDmgPvm = 6
+
+
+//Mage Poison
+PoisonType_5 = Mage
+PoisonType_5_Message_Self = Voce se sente magicamente envenenado.
+PoisonType_5_Message_Other = esta magicamente envenenado.
+PoisonType_5_DamLow = 7
+PoisonType_5_DamHigh = 9
+PoisonType_5_Divide = 5
+PoisonType_5_Frequency = 60
+PoisonType_5_Duration = 120
+PoisonType_5_RecalcChance = 50
+PoisonType_5_Difficulty = 1000
+
+//Poisonable Weapon Types
+//Weapons of this type or weapons with TAG.OVERRIDE.POISONABLE set are poisonable
+PoisonWep_t_weapon_sword = 1
+PoisonWep_t_weapon_fence = 1
+PoisonWep_t_weapon_axe = 1
+
+//Poisonable Food Types
+PoisonFood_t_food = 1
+PoisonFood_t_drink = 1
+PoisonFood_t_booze = 1

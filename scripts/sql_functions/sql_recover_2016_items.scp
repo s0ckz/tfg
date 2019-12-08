@@ -1,0 +1,35 @@
+[function f_recover_2016_items]
+IF (<DB.connected>)
+	DB.QUERY "SELECT * FROM requests WHERE type='4'"
+		if <db.row.numrows> > 0
+				for 0 <eval <db.row.numrows> - 1>
+					local.id "<db.row.<dlocal._for>.IdRequest>"
+					local.log "<db.row.<dlocal._for>.Account>"
+					local.global "<db.row.<dlocal._for>.new_value2>"
+					IF (<SERV.ACCOUNT.<local.log>>)
+						if (<SERV.ACCOUNT.<local.log>.tag0.global> == <local.global>)
+							f_recover_items_char_uid <SERV.ACCOUNT.<LOCAL.LOG>.CHAR.0.UID>
+							serv.log Account <local.log> com itens de 2016 recuperados.
+							serv.writefile RecuperacaoItens2016.txt <serv.rtime> Account <local.log> com itens de 2016 recuperados.
+						else
+							s Recuperacao de itens de 2016 da account <local.log> nao funcionou: conta nao corresponde a conta global indicada.
+							serv.log Recuperacao de itens de 2016 da account <local.log> nao funcionou: conta nao corresponde a conta global indicada.
+							serv.writefile RecuperacaoItens2016.txt <serv.rtime> Recuperacao de itens de 2016 da account <local.log> nao funcionou: conta nao corresponde a conta global indicada.
+						endif
+					ELSE
+							serv.log Recuperacao de itens de 2016 da account <local.log> nao funcionou: conta nao existe.
+							serv.writefile RecuperacaoItens2016.txt <serv.rtime> Recuperacao de itens de 2016 da account <local.log> nao funcionou: conta nao existe.
+					ENDIF
+
+					DB.EXECUTE "DELETE FROM requests WHERE IdRequest='<dlocal.id>'"
+					serv.log Finalizado processo de recuperacao de itens de 2016 da conta <local.log>.
+					serv.writefile RecuperacaoItens2016.txt <serv.rtime> Finalizado processo de recuperacao de itens de 2016 da conta <local.log>.
+				endfor
+		else
+			serv.log Nenhum request de recuperacao de itens de 2016 ativo.
+			serv.writefile RecuperacaoItens2016.txt <serv.rtime> Nenhum request de recuperacao de itens de 2016 ativo.
+		endif
+ENDIF
+return 1
+
+[EOF]

@@ -1,0 +1,3715 @@
+//****************************************************************************
+//SPHERE by : Menasoft �1997-2004
+//www.sphereserver.com
+// All SPHERE script files and formats are copyright Menasoft & Partners.
+// This file may be freely edited for personal use, but may not be distributed
+// in whole or in part, in any format without express written permission from
+// Menasoft & Partners.  All donations and contributions
+// become the property of Menasoft & Partners.
+//****************************************************************************
+// FILE LAST UPDATED: Saturday, April 24th, 2016
+// by Lightsource
+// Agapite can only be worn by good. rejects evil.
+// Shadow can only be worn by evil. will poison good people.
+//
+// Ore colored armor
+
+[TYPEDEF t_shield]
+ON=@CLICK
+IF (<SRC.ISGM>)
+	IF (<SRC.PARRYING> < 1000)
+		message @0 [Armor : <FVAL (<dARMOR>*<src.parrying>)/100> - <dARMOR>]
+	ELIF (<SRC.PARRYING> > 1000)
+		message @0 [Armor : <FVAL (<dARMOR>*<src.parrying>)/100>]
+	ELSE
+		message @0 [Armor : <dARMOR>]
+	ENDIF
+ENDIF
+
+ON=@Damage
+	IF (<R6>)
+		RETURN 1
+	ENDIF
+
+[TYPEDEF t_armor]
+//Plate : 0.4
+//Legs : 0.25
+//Arms : 0.1
+//Gorget : 0.05
+//Gloves : 0.1
+//Helm : 0.1
+ON=@CLICK
+IF (<SRC.ISGM>)
+	IF (<LAYER> == 6 ) || (<LAYER> == 19 ) || (<LAYER> == 7 )
+		message @0 [Armor : <FVAL (<dARMOR>*0.1)>]
+	ELIF (<LAYER> == 10 )
+		message @0 [Armor : <FVAL (<dARMOR>*0.05)/10>]
+	ELIF (<LAYER> == 24 )
+		message @0 [Armor : <FVAL (<dARMOR>*0.25)/10>]
+	ELIF (<LAYER> == 13 )
+		message @0 [Armor : <FVAL (<dARMOR>*0.4)>]
+	ENDIF
+ENDIF
+
+// Rusty Armor
+
+[ITEMDEF i_RUSTY_PLATEMAIL]
+NAME=Rusty Platemail
+ID=i_platemail_chest
+ARMOR=26
+REQSTR=60
+WEIGHT=10
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Rusty
+DESCRIPTION=Platemail
+RESOURCES=25 i_INGOT_RUSTY
+SKILLMAKE=BLACKSMITHING 42.0
+
+ON=@Create
+	COLOR=color_o_rusty
+	HITPOINTS=51
+
+[ITEMDEF i_RUSTY_FEMALE_PLATEMAIL]
+NAME=Rusty Female Platemail
+ID=i_armor_female_plate
+ARMOR=26
+REQSTR=15
+WEIGHT=6
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Rusty
+DESCRIPTION=Female Platemail
+RESOURCES=22 i_INGOT_RUSTY
+SKILLMAKE=BLACKSMITHING 42.0
+
+ON=@Create
+	COLOR=color_o_rusty
+	HITPOINTS=51
+
+[ITEMDEF i_RUSTY_PLATEMAIL_ARMS]
+NAME=Rusty Platemail Arms
+ID=i_platemail_arms
+ARMOR=26
+REQSTR=40
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Rusty
+DESCRIPTION=Platemail Arms
+RESOURCES=18 i_INGOT_RUSTY
+SKILLMAKE=BLACKSMITHING 42.0
+
+ON=@Create
+	COLOR=color_o_rusty
+	HITPOINTS=51
+
+[ITEMDEF i_RUSTY_PLATEMAIL_leggings]
+NAME=Rusty Platemail Legs
+ID=i_platemail_leggings
+ARMOR=26
+REQSTR=60
+WEIGHT=15
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Rusty
+DESCRIPTION=Platemail Legs
+RESOURCES=20 i_INGOT_RUSTY
+SKILLMAKE=BLACKSMITHING 42.0
+
+ON=@Create
+	COLOR=color_o_rusty
+	HITPOINTS=51
+
+[ITEMDEF i_RUSTY_PLATE_HELM]
+NAME=Rusty Plate Helm
+ID=i_platemail_helm
+ARMOR=26
+REQSTR=40
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Rusty
+DESCRIPTION=Plate Helm
+RESOURCES=15 i_INGOT_RUSTY
+SKILLMAKE=BLACKSMITHING 42.0
+
+ON=@Create
+	COLOR=color_o_rusty
+	HITPOINTS=51
+
+[ITEMDEF i_RUSTY_PLATEMAIL_GORGET]
+NAME=Rusty Platemail Gorget
+ID=i_platemail_gorget
+ARMOR=26
+REQSTR=30
+WEIGHT=2
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Rusty
+DESCRIPTION=Platemail Gorget
+RESOURCES=10 i_INGOT_RUSTY
+SKILLMAKE=BLACKSMITHING 42.0
+
+ON=@Create
+	COLOR=color_o_rusty
+	HITPOINTS=51
+
+[ITEMDEF i_RUSTY_PLATEMAIL_GAUNTLETS]
+NAME=Rusty Platemail Gauntlets
+ID=i_platemail_gloves
+ARMOR=26
+REQSTR=30
+WEIGHT=2
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Rusty
+DESCRIPTION=Platemail Gauntlets
+RESOURCES=12 i_INGOT_RUSTY
+SKILLMAKE=BLACKSMITHING 42.0
+
+ON=@Create
+	COLOR=color_o_rusty
+	HITPOINTS=51
+
+
+[ITEMDEF i_RUSTY_BUCKLER_shield]
+NAME=Rusty Buckler
+ID=i_shield_buckler
+ARMOR=6
+REQSTR=15
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Rusty
+DESCRIPTION=Buckler
+RESOURCES=18 i_INGOT_RUSTY
+SKILLMAKE=BLACKSMITHING 42.0
+
+ON=@Create
+	COLOR=color_o_rusty
+	HITPOINTS=51
+
+[ITEMDEF i_RUSTY_HEATER_SHIELD]
+NAME=Rusty Heater Shield
+ID=I_SHIELD_HEATER
+ARMOR=12
+REQSTR=30
+WEIGHT=8
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Rusty
+DESCRIPTION=Heater Shield
+RESOURCES=18 i_INGOT_RUSTY
+SKILLMAKE=BLACKSMITHING 42.0
+
+ON=@Create
+	COLOR=color_o_rusty
+	HITPOINTS=51
+
+[ITEMDEF i_RUSTY_METAL_SHIELD]
+NAME=Rusty Metal Shield
+ID=i_shield_round_metal
+ARMOR=11
+.
+REQSTR=15
+WEIGHT=6
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Rusty
+DESCRIPTION=Metal Shield
+RESOURCES=18 i_INGOT_RUSTY
+SKILLMAKE=BLACKSMITHING 42.0
+
+ON=@Create
+	COLOR=color_o_rusty
+	HITPOINTS=51
+
+[ITEMDEF i_RUSTY_CLOSED_HELM]
+NAME=Rusty Closed Helm
+ID=i_helm_closed
+ARMOR=26
+REQSTR=20
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Rusty
+DESCRIPTION=Closed Helm
+RESOURCES=15 i_INGOT_RUSTY
+SKILLMAKE=BLACKSMITHING 42.0
+
+ON=@Create
+	COLOR=color_o_rusty
+	HITPOINTS=51
+
+[ITEMDEF i_RUSTY_HELMET]
+NAME=Rusty Helmet
+ID=i_helm_open
+ARMOR=26
+REQSTR=10
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Rusty
+DESCRIPTION=Helmet
+RESOURCES=15 i_INGOT_RUSTY
+SKILLMAKE=BLACKSMITHING 42.0
+
+ON=@Create
+	COLOR=color_o_rusty
+	HITPOINTS=51
+
+[ITEMDEF i_RUSTY_BASCINET]
+NAME=Rusty Bascinet
+ID=i_bascinet
+ARMOR=26
+REQSTR=10
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Rusty
+DESCRIPTION=Bascinet
+RESOURCES=15 i_INGOT_RUSTY
+SKILLMAKE=BLACKSMITHING 42.0
+
+ON=@Create
+	COLOR=color_o_rusty
+	HITPOINTS=51
+
+[ITEMDEF i_RUSTY_NOSE_HELM]
+NAME=Rusty Nose Helm
+ID=i_helm_nose
+ARMOR=26
+REQSTR=0
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Rusty
+DESCRIPTION=Nose Helm
+RESOURCES=15 i_INGOT_RUSTY
+SKILLMAKE=BLACKSMITHING 42.0
+
+ON=@Create
+	COLOR=color_o_rusty
+	HITPOINTS=51
+
+
+
+///-------------------------------------------------------///
+
+// Old Copper Armor
+
+[ITEMDEF i_old_copper_PLATEMAIL]
+NAME=Old Copper Platemail
+ID=i_platemail_chest
+ARMOR=29
+REQSTR=60
+WEIGHT=10
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Old Copper
+DESCRIPTION=Platemail
+RESOURCES=25i_INGOT_old_copper
+SKILLMAKE=BLACKSMITHING 45.5
+
+ON=@Create
+	COLOR=color_o_oldcopper
+	HITPOINTS={80 100}
+
+[ITEMDEF i_old_copper_FEMALE_PLATEMAIL]
+NAME=Old Copper Female Platemail
+ID=i_armor_female_plate
+ARMOR=29
+REQSTR=15
+WEIGHT=6
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Old Copper
+DESCRIPTION=Female Platemail
+RESOURCES=22 i_INGOT_old_copper
+SKILLMAKE=BLACKSMITHING 45.5
+
+ON=@Create
+	COLOR=color_o_oldcopper
+	HITPOINTS={80 100}
+
+[ITEMDEF i_old_copper_PLATEMAIL_ARMS]
+NAME=Old Copper Platemail Arms
+ID=i_platemail_arms
+ARMOR=29
+REQSTR=40
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Old Copper
+DESCRIPTION=Platemail Arms
+RESOURCES=18i_INGOT_old_copper
+SKILLMAKE=BLACKSMITHING 45.5
+
+ON=@Create
+	COLOR=color_o_oldcopper
+	HITPOINTS={80 100}
+
+[ITEMDEF i_old_copper_PLATEMAIL_leggings]
+NAME=Old Copper Platemail Legs
+ID=i_platemail_leggings
+ARMOR=29
+REQSTR=60
+WEIGHT=15
+LAYER=24
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Old Copper
+DESCRIPTION=Platemail Legs
+RESOURCES=20i_INGOT_old_copper
+SKILLMAKE=BLACKSMITHING 45.5
+
+ON=@Create
+	COLOR=color_o_oldcopper
+	HITPOINTS={80 100}
+
+[ITEMDEF i_old_copper_PLATE_HELM]
+NAME=Old Copper Plate Helm
+ID=i_platemail_helm
+ARMOR=29
+REQSTR=40
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Old Copper
+DESCRIPTION=Plate Helm
+RESOURCES=15i_INGOT_old_copper
+SKILLMAKE=BLACKSMITHING 45.5
+
+ON=@Create
+	COLOR=color_o_oldcopper
+	HITPOINTS={80 100}
+
+[ITEMDEF i_old_copper_PLATEMAIL_GORGET]
+NAME=Old Copper Platemail Gorget
+ID=i_platemail_gorget
+ARMOR=29
+REQSTR=30
+WEIGHT=2
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Old Copper
+DESCRIPTION=Platemail Gorget
+RESOURCES=10i_INGOT_old_copper
+SKILLMAKE=BLACKSMITHING 45.5
+
+ON=@Create
+	COLOR=color_o_oldcopper
+	HITPOINTS={80 100}
+
+[ITEMDEF i_old_copper_PLATEMAIL_GAUNTLETS]
+NAME=Old Copper Platemail Gauntlets
+ID=i_platemail_gloves
+ARMOR=29
+REQSTR=30
+WEIGHT=2
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Old Copper
+DESCRIPTION=Platemail Gauntlets
+RESOURCES=12i_INGOT_old_copper
+SKILLMAKE=BLACKSMITHING 45.5
+
+ON=@Create
+	COLOR=color_o_oldcopper
+	HITPOINTS={80 100}
+
+
+[ITEMDEF i_old_copper_HEATER_SHIELD]
+NAME=Old Copper Heater Shield
+ID=I_SHIELD_HEATER
+ARMOR=13
+REQSTR=30
+WEIGHT=8
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Old Copper
+DESCRIPTION=Heater Shield
+RESOURCES=18i_INGOT_old_copper
+SKILLMAKE=BLACKSMITHING 45.5
+
+ON=@Create
+	COLOR=color_o_oldcopper
+	HITPOINTS={80 100}
+
+[ITEMDEF i_old_copper_CLOSED_HELM]
+NAME=Old Copper Closed Helm
+ID=i_helm_closed
+ARMOR=29
+REQSTR=20
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Old Copper
+DESCRIPTION=Closed Helm
+RESOURCES=15i_INGOT_old_copper
+SKILLMAKE=BLACKSMITHING 45.5
+
+ON=@Create
+	COLOR=color_o_oldcopper
+	HITPOINTS={80 100}
+
+[ITEMDEF i_old_copper_HELMET]
+NAME=Old Copper Helmet
+ID=i_helm_open
+ARMOR=29
+REQSTR=10
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Old Copper
+DESCRIPTION=Helmet
+RESOURCES=15i_INGOT_old_copper
+SKILLMAKE=BLACKSMITHING 45.5
+
+ON=@Create
+	COLOR=color_o_oldcopper
+	HITPOINTS={80 100}
+
+[ITEMDEF i_old_copper_BASCINET]
+NAME=Old Copper Bascinet
+ID=i_bascinet
+ARMOR=29
+REQSTR=10
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Old Copper
+DESCRIPTION=Bascinet
+RESOURCES=15 i_INGOT_old_copper
+SKILLMAKE=BLACKSMITHING 45.5
+
+ON=@Create
+	COLOR=color_o_oldcopper
+	HITPOINTS={80 100}
+
+[ITEMDEF i_old_copper_NOSE_HELM]
+NAME=Old Copper Nose Helm
+ID=i_helm_nose
+ARMOR=29
+REQSTR=0
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Old Copper
+DESCRIPTION=Nose Helm
+RESOURCES=15 i_INGOT_old_copper
+SKILLMAKE=BLACKSMITHING 45.5
+
+ON=@Create
+	COLOR=color_o_oldcopper
+	HITPOINTS={80 100}
+
+//-----------------------------------------------//
+
+// Dull Copper Armor
+
+[ITEMDEF i_dull_copper_PLATEMAIL]
+NAME=Dull copper Platemail
+ID=i_platemail_chest
+ARMOR=31
+REQSTR=60
+WEIGHT=10
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Dull copper
+DESCRIPTION=Platemail
+RESOURCES=25i_INGOT_dull_copper
+SKILLMAKE=BLACKSMITHING 45.0
+
+ON=@Create
+	COLOR=color_o_dullcopper
+	HITPOINTS={80 100}
+
+[ITEMDEF i_dull_copper_FEMALE_PLATEMAIL]
+NAME=Dull Copper Female Platemail
+ID=i_armor_female_plate
+ARMOR=31
+REQSTR=15
+WEIGHT=6
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Dull copper
+DESCRIPTION=Female Platemail
+RESOURCES=22 i_INGOT_dull_copper
+SKILLMAKE=BLACKSMITHING 45.0
+
+ON=@Create
+	COLOR=color_o_dullcopper
+	HITPOINTS={80 100}
+
+[ITEMDEF i_dull_copper_PLATEMAIL_ARMS]
+NAME=Dull copper Platemail Arms
+ID=i_platemail_arms
+ARMOR=31
+REQSTR=40
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Dull copper
+DESCRIPTION=Platemail Arms
+RESOURCES=18i_INGOT_dull_copper
+SKILLMAKE=BLACKSMITHING 45.0
+
+ON=@Create
+	COLOR=color_o_dullcopper
+	HITPOINTS={80 100}
+
+[ITEMDEF i_dull_copper_PLATEMAIL_leggings]
+NAME=Dull copper Platemail Legs
+ID=i_platemail_leggings
+LAYER=24
+ARMOR=31
+REQSTR=60
+WEIGHT=15
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Dull copper
+DESCRIPTION=Platemail Legs
+RESOURCES=20i_INGOT_dull_copper
+SKILLMAKE=BLACKSMITHING 45.0
+
+ON=@Create
+	COLOR=color_o_dullcopper
+	HITPOINTS={80 100}
+
+[ITEMDEF i_dull_copper_PLATE_HELM]
+NAME=Dull copper Plate Helm
+ID=i_platemail_helm
+ARMOR=31
+REQSTR=40
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Dull copper
+DESCRIPTION=Plate Helm
+RESOURCES=15i_INGOT_dull_copper
+SKILLMAKE=BLACKSMITHING 45.0
+
+ON=@Create
+	COLOR=color_o_dullcopper
+	HITPOINTS={80 100}
+
+[ITEMDEF i_dull_copper_PLATEMAIL_GORGET]
+NAME=Dull copper Platemail Gorget
+ID=i_platemail_gorget
+ARMOR=31
+REQSTR=30
+WEIGHT=2
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Dull copper
+DESCRIPTION=Platemail Gorget
+RESOURCES=10i_INGOT_dull_copper
+SKILLMAKE=BLACKSMITHING 45.0
+
+ON=@Create
+	COLOR=color_o_dullcopper
+	HITPOINTS={80 100}
+
+[ITEMDEF i_dull_copper_PLATEMAIL_GAUNTLETS]
+NAME=Dull copper Platemail Gauntlets
+ID=i_platemail_gloves
+ARMOR=31
+REQSTR=30
+WEIGHT=2
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Dull copper
+DESCRIPTION=Platemail Gauntlets
+RESOURCES=12i_INGOT_dull_copper
+SKILLMAKE=BLACKSMITHING 45.0
+
+ON=@Create
+	COLOR=color_o_dullcopper
+	HITPOINTS={80 100}
+
+
+[ITEMDEF i_dull_copper_HEATER_SHIELD]
+NAME=Dull copper Heater Shield
+ID=I_SHIELD_HEATER
+ARMOR=13
+REQSTR=30
+WEIGHT=8
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Dull copper
+DESCRIPTION=Heater Shield
+RESOURCES=18i_INGOT_dull_copper
+SKILLMAKE=BLACKSMITHING 45.0
+
+ON=@Create
+	COLOR=color_o_dullcopper
+	HITPOINTS={80 100}
+
+
+[ITEMDEF i_dull_copper_CLOSED_HELM]
+NAME=Dull copper Closed Helm
+ID=i_helm_closed
+ARMOR=31
+REQSTR=20
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Dull copper
+DESCRIPTION=Closed Helm
+RESOURCES=15i_INGOT_dull_copper
+SKILLMAKE=BLACKSMITHING 45.0
+
+ON=@Create
+	COLOR=color_o_dullcopper
+	HITPOINTS={80 100}
+
+[ITEMDEF i_dull_copper_HELMET]
+NAME=Dull copper Helmet
+ID=i_helm_open
+ARMOR=31
+REQSTR=10
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Dull copper
+DESCRIPTION=Helmet
+RESOURCES=15i_INGOT_dull_copper
+SKILLMAKE=BLACKSMITHING 45.0
+
+ON=@Create
+	COLOR=color_o_dullcopper
+	HITPOINTS={80 100}
+
+[ITEMDEF i_dull_copper_BASCINET]
+NAME=Dull copper Bascinet
+ID=i_bascinet
+ARMOR=31
+REQSTR=10
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Dull copper
+DESCRIPTION=Bascinet
+RESOURCES=15i_INGOT_dull_copper
+SKILLMAKE=BLACKSMITHING 45.0
+
+ON=@Create
+	COLOR=color_o_dullcopper
+	HITPOINTS={80 100}
+
+[ITEMDEF i_dull_copper_NOSE_HELM]
+NAME=Dull copper Nose Helm
+ID=i_helm_nose
+ARMOR=31
+REQSTR=0
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Dull copper
+DESCRIPTION=Nose Helm
+RESOURCES=15i_INGOT_dull_copper
+SKILLMAKE=BLACKSMITHING 45.0
+
+ON=@Create
+	COLOR=color_o_dullcopper
+	HITPOINTS={80 100}
+
+
+
+///----------------------------------------------------------///
+
+
+//-------------------------- COPPER
+
+
+[ITEMDEF i_COPPER_PLATEMAIL_ARMS]
+NAME=Copper Platemail Arms
+ID=i_platemail_arms
+ARMOR=35
+REQSTR=40
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Copper
+DESCRIPTION=Platemail Arms
+RESOURCES=18 i_ingot_copper
+SKILLMAKE=BLACKSMITHING 48.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_copper
+	HITPOINTS={80 100}
+
+[ITEMDEF i_COPPER_PLATEMAIL_leggings]
+NAME=Copper Platemail Legs
+ID=i_platemail_leggings
+LAYER=24
+ARMOR=35
+REQSTR=60
+WEIGHT=15
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Copper
+DESCRIPTION=Platemail Legs
+RESOURCES=20 i_ingot_copper
+SKILLMAKE=BLACKSMITHING 48.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_copper
+	HITPOINTS={80 100}
+
+[ITEMDEF i_COPPER_PLATE_HELM]
+NAME=Copper Plate Helm
+ID=i_platemail_helm
+ARMOR=35
+REQSTR=40
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Copper
+DESCRIPTION=Plate Helm
+RESOURCES=15 i_ingot_copper
+SKILLMAKE=BLACKSMITHING 48.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_copper
+	HITPOINTS={80 100}
+
+[ITEMDEF i_COPPER_PLATEMAIL_GORGET]
+NAME=Copper Platemail Gorget
+ID=i_platemail_gorget
+ARMOR=35
+REQSTR=30
+WEIGHT=2
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Copper
+DESCRIPTION=Platemail Gorget
+RESOURCES=10 i_ingot_copper
+SKILLMAKE=BLACKSMITHING 48.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_copper
+	HITPOINTS={80 100}
+
+[ITEMDEF i_COPPER_PLATEMAIL_GAUNTLETS]
+NAME=Copper Platemail Gauntlets
+ID=i_platemail_gloves
+ARMOR=35
+REQSTR=30
+WEIGHT=2
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Copper
+DESCRIPTION=Platemail Gauntlets
+RESOURCES=12 i_ingot_copper
+SKILLMAKE=BLACKSMITHING 48.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_copper
+	HITPOINTS={80 100}
+
+[ITEMDEF i_COPPER_PLATEMAIL]
+NAME=Copper Platemail
+ID=i_platemail_chest
+ARMOR=35
+REQSTR=60
+WEIGHT=10
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Copper
+DESCRIPTION=Platemail
+RESOURCES=25 i_ingot_copper
+SKILLMAKE=BLACKSMITHING 48.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_copper
+	HITPOINTS={80 100}
+
+
+
+[ITEMDEF i_COPPER_FEMALE_PLATEMAIL]
+NAME=Copper Female Platemail
+ID=i_armor_female_plate
+ARMOR=35
+REQSTR=15
+WEIGHT=4
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Copper
+DESCRIPTION=Female Platemail
+RESOURCES=22 i_ingot_copper
+SKILLMAKE=BLACKSMITHING 48.0
+VALUE=200
+ON=@Create
+	HITPOINTS={80 100}
+	COLOR=color_o_copper
+
+[ITEMDEF i_COPPER_HEATER_SHIELD]
+NAME=Copper Heater Shield
+ID=I_SHIELD_HEATER
+ARMOR=13
+REQSTR=30
+WEIGHT=8
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Copper
+DESCRIPTION=Heater Shield
+RESOURCES=18 i_ingot_copper
+SKILLMAKE=BLACKSMITHING 48.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_copper
+	HITPOINTS={80 100}
+
+
+[ITEMDEF i_COPPER_CLOSED_HELM]
+
+NAME=Copper Closed Helm
+ID=i_helm_closed
+ARMOR=35
+REQSTR=20
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Copper
+DESCRIPTION=Closed Helm
+RESOURCES=15 i_ingot_copper
+SKILLMAKE=BLACKSMITHING 48.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_copper
+	HITPOINTS={80 100}
+
+[ITEMDEF i_COPPER_HELMET]
+
+NAME=Copper Helmet
+ID=i_helm_open
+ARMOR=35
+REQSTR=20
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Copper
+DESCRIPTION=Helmet
+RESOURCES=15 i_ingot_copper
+SKILLMAKE=BLACKSMITHING 48.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_copper
+	HITPOINTS={80 100}
+
+[ITEMDEF i_COPPER_BASCINET]
+
+NAME=Copper Bascinet
+ID=i_bascinet
+ARMOR=35
+REQSTR=20
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Copper
+DESCRIPTION=Bascinet
+RESOURCES=15 i_ingot_copper
+SKILLMAKE=BLACKSMITHING 48.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_copper
+	HITPOINTS={80 100}
+
+[ITEMDEF i_COPPER_NOSE_HELM]
+
+NAME=Copper Nose Helm
+ID=i_helm_nose
+ARMOR=35
+REQSTR=20
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Copper
+DESCRIPTION=Nose Helm
+RESOURCES=15 i_ingot_copper
+SKILLMAKE=BLACKSMITHING 48.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_copper
+	HITPOINTS={80 100}
+//---------------------------------------------------//
+
+
+// Bronze Armor
+
+[ITEMDEF i_bronze_PLATEMAIL]
+NAME=Bronze Platemail
+ID=i_platemail_chest
+ARMOR=40
+REQSTR=60
+WEIGHT=10
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Bronze
+DESCRIPTION=Platemail
+RESOURCES=25 i_INGOT_bronze
+SKILLMAKE=BLACKSMITHING 50.0
+
+ON=@Create
+	COLOR=color_o_bronze
+	HITPOINTS={80 100}
+
+[ITEMDEF i_bronze_FEMALE_PLATEMAIL]
+NAME=Bronze Female Platemail
+ID=i_armor_female_plate
+ARMOR=40
+REQSTR=15
+WEIGHT=6
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Bronze
+DESCRIPTION=Female Platemail
+RESOURCES=22 i_INGOT_bronze
+SKILLMAKE=BLACKSMITHING 50.0
+
+ON=@Create
+	COLOR=color_o_bronze
+	HITPOINTS={80 100}
+
+[ITEMDEF i_bronze_PLATEMAIL_ARMS]
+NAME=Bronze Platemail Arms
+ID=i_platemail_arms
+ARMOR=40
+REQSTR=40
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Bronze
+DESCRIPTION=Platemail Arms
+RESOURCES=18 i_INGOT_bronze
+SKILLMAKE=BLACKSMITHING 50.0
+
+ON=@Create
+	COLOR=color_o_bronze
+	HITPOINTS={80 100}
+
+[ITEMDEF i_bronze_PLATEMAIL_leggings]
+NAME=Bronze Platemail Legs
+ID=i_platemail_leggings
+LAYER=24
+ARMOR=40
+REQSTR=60
+WEIGHT=15
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Bronze
+DESCRIPTION=Platemail Legs
+RESOURCES=20 i_INGOT_bronze
+SKILLMAKE=BLACKSMITHING 50.0
+
+ON=@Create
+	COLOR=color_o_bronze
+	HITPOINTS={80 100}
+
+[ITEMDEF i_bronze_PLATE_HELM]
+NAME=Bronze Plate Helm
+ID=i_platemail_helm
+ARMOR=40
+REQSTR=40
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Bronze
+DESCRIPTION=Plate Helm
+RESOURCES=15 i_INGOT_bronze
+SKILLMAKE=BLACKSMITHING 50.0
+
+ON=@Create
+	COLOR=color_o_bronze
+	HITPOINTS={80 100}
+
+[ITEMDEF i_bronze_PLATEMAIL_GORGET]
+NAME=Bronze Platemail Gorget
+ID=i_platemail_gorget
+ARMOR=40
+REQSTR=30
+WEIGHT=2
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Bronze
+DESCRIPTION=Platemail Gorget
+RESOURCES=10 i_INGOT_bronze
+SKILLMAKE=BLACKSMITHING 50.0
+
+ON=@Create
+	COLOR=color_o_bronze
+	HITPOINTS={80 100}
+
+[ITEMDEF i_bronze_PLATEMAIL_GAUNTLETS]
+NAME=Bronze Platemail Gauntlets
+ID=i_platemail_gloves
+ARMOR=40
+REQSTR=30
+WEIGHT=2
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Bronze
+DESCRIPTION=Platemail Gauntlets
+RESOURCES=12 i_INGOT_bronze
+SKILLMAKE=BLACKSMITHING 50.0
+
+ON=@Create
+	COLOR=color_o_bronze
+	HITPOINTS={80 100}
+
+
+[ITEMDEF i_bronze_HEATER_SHIELD]
+NAME=Bronze Heater Shield
+ID=I_SHIELD_HEATER
+ARMOR=14
+REQSTR=30
+WEIGHT=8
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Bronze
+DESCRIPTION=Heater Shield
+RESOURCES=18 i_INGOT_bronze
+SKILLMAKE=BLACKSMITHING 50.0
+
+ON=@Create
+	COLOR=color_o_bronze
+	HITPOINTS={80 100}
+
+
+[ITEMDEF i_bronze_CLOSED_HELM]
+NAME=Bronze Closed Helm
+ID=i_helm_closed
+ARMOR=40
+REQSTR=20
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Bronze
+DESCRIPTION=Closed Helm
+RESOURCES=15 i_INGOT_bronze
+SKILLMAKE=BLACKSMITHING 50.0
+
+ON=@Create
+	COLOR=color_o_bronze
+	HITPOINTS={80 100}
+
+[ITEMDEF i_bronze_HELMET]
+NAME=Bronze Helmet
+ID=i_helm_open
+ARMOR=40
+REQSTR=10
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Bronze
+DESCRIPTION=Helmet
+RESOURCES=15 i_INGOT_bronze
+SKILLMAKE=BLACKSMITHING 50.0
+
+ON=@Create
+	COLOR=color_o_bronze
+	HITPOINTS={80 100}
+
+[ITEMDEF i_bronze_BASCINET]
+NAME=Bronze Bascinet
+ID=i_bascinet
+ARMOR=40
+REQSTR=10
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Bronze
+DESCRIPTION=Bascinet
+RESOURCES=15 i_INGOT_bronze
+SKILLMAKE=BLACKSMITHING 50.0
+
+ON=@Create
+	COLOR=color_o_bronze
+	HITPOINTS={80 100}
+
+[ITEMDEF i_bronze_NOSE_HELM]
+NAME=Bronze Nose Helm
+ID=i_helm_nose
+ARMOR=40
+REQSTR=0
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Bronze
+DESCRIPTION=Nose Helm
+RESOURCES=15 i_INGOT_bronze
+SKILLMAKE=BLACKSMITHING 50.0
+
+ON=@Create
+	COLOR=color_o_bronze
+	HITPOINTS={80 100}
+
+
+
+///-------------------------------------------------------///
+
+
+//Shadow Armor
+
+[ITEMDEF i_SHADOW_PLATEMAIL]
+
+NAME=Shadow Platemail
+ID=i_platemail_chest
+ARMOR=45
+REQSTR=60
+WEIGHT=10
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Shadow
+DESCRIPTION=Platemail
+RESOURCES=25 i_ingot_shadow
+SKILLMAKE=BLACKSMITHING 51.5
+VALUE=200
+ON=@Create
+	COLOR=color_o_shadow
+	HITPOINTS={80 100}
+
+
+[ITEMDEF i_SHADOW_PLATEMAIL_ARMS]
+NAME=Shadow Platemail Arms
+ID=i_platemail_arms
+ARMOR=45
+REQSTR=40
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Shadow
+DESCRIPTION=Platemail Arms
+RESOURCES=18 i_ingot_shadow
+SKILLMAKE=BLACKSMITHING 51.5
+VALUE=200
+
+ON=@Create
+	COLOR=color_o_shadow
+	HITPOINTS={80 100}
+
+[ITEMDEF i_SHADOW_PLATEMAIL_leggings]
+NAME=Shadow Platemail Legs
+ID=i_platemail_leggings
+LAYER=24
+ARMOR=45
+REQSTR=60
+WEIGHT=15
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Shadow
+DESCRIPTION=Platemail Legs
+RESOURCES=20 i_ingot_shadow
+SKILLMAKE=BLACKSMITHING 51.5
+VALUE=200
+
+ON=@Create
+	COLOR=color_o_shadow
+	HITPOINTS={80 100}
+
+[ITEMDEF i_SHADOW_PLATE_HELM]
+NAME=Shadow Plate Helm
+ID=i_platemail_helm
+ARMOR=45
+REQSTR=40
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Shadow
+DESCRIPTION=Plate Helm
+RESOURCES=15 i_ingot_shadow
+SKILLMAKE=BLACKSMITHING 51.5
+VALUE=200
+
+ON=@Create
+	COLOR=color_o_shadow
+	HITPOINTS={80 100}
+
+[ITEMDEF i_SHADOW_PLATEMAIL_GORGET]
+NAME=Shadow Platemail Gorget
+ID=i_platemail_gorget
+ARMOR=45
+REQSTR=30
+WEIGHT=2
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Shadow
+DESCRIPTION=Platemail Gorget
+RESOURCES=10 i_ingot_shadow
+SKILLMAKE=BLACKSMITHING 51.5
+VALUE=200
+
+ON=@Create
+	COLOR=color_o_shadow
+	HITPOINTS={80 100}
+
+[ITEMDEF i_SHADOW_PLATEMAIL_GAUNTLETS]
+NAME=Shadow Platemail Gauntlets
+ID=i_platemail_gloves
+ARMOR=45
+REQSTR=30
+WEIGHT=2
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Shadow
+DESCRIPTION=Platemail Gauntlets
+RESOURCES=12 i_ingot_shadow
+SKILLMAKE=BLACKSMITHING 51.5
+VALUE=200
+
+ON=@Create
+	COLOR=color_o_shadow
+	HITPOINTS={80 100}
+
+[ITEMDEF i_SHADOW_FEMALE_PLATEMAIL]
+NAME=Shadow Female Platemail
+ID=i_armor_female_plate
+ARMOR=45
+REQSTR=15
+WEIGHT=6
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Shadow
+DESCRIPTION=Female Platemail
+RESOURCES=22 i_ingot_shadow
+SKILLMAKE=BLACKSMITHING 51.5
+VALUE=200
+
+ON=@Create
+	COLOR=color_o_shadow
+	HITPOINTS={80 100}
+
+[ITEMDEF i_SHADOW_HEATER_SHIELD]
+NAME=Shadow Heater Shield
+ID=I_SHIELD_HEATER
+ARMOR=14
+REQSTR=30
+WEIGHT=8
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Shadow
+DESCRIPTION=Heater Shield
+RESOURCES=18 i_ingot_shadow
+SKILLMAKE=BLACKSMITHING 51.5
+VALUE=200
+
+ON=@Create
+	COLOR=color_o_shadow
+	HITPOINTS={80 100}
+
+[ITEMDEF i_SHADOW_CLOSED_HELM]
+NAME=Shadow Closed Helm
+ID=i_helm_closed
+ARMOR=45
+REQSTR=20
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Shadow
+DESCRIPTION=Closed Helm
+RESOURCES=15 i_ingot_shadow
+SKILLMAKE=BLACKSMITHING 51.5
+VALUE=200
+
+ON=@Create
+	COLOR=color_o_shadow
+	HITPOINTS={80 100}
+
+[ITEMDEF i_SHADOW_HELMET]
+NAME=Shadow Helmet
+ID=i_helm_open
+ARMOR=45
+REQSTR=10
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Shadow
+DESCRIPTION=Helmet
+RESOURCES=15 i_ingot_shadow
+SKILLMAKE=BLACKSMITHING 51.5
+VALUE=200
+
+ON=@Create
+	COLOR=color_o_shadow
+	HITPOINTS={80 100}
+
+[ITEMDEF i_SHADOW_BASCINET]
+NAME=Shadow Bascinet
+ID=i_bascinet
+ARMOR=45
+REQSTR=10
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Shadow
+DESCRIPTION=Bascinet
+RESOURCES=15 i_ingot_shadow
+SKILLMAKE=BLACKSMITHING 51.5
+VALUE=200
+
+ON=@Create
+	COLOR=color_o_shadow
+	HITPOINTS={101 115}
+
+[ITEMDEF i_SHADOW_NOSE_HELM]
+NAME=Shadow Bascinet
+ID=i_helm_nose
+ARMOR=45
+REQSTR=0
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Shadow
+DESCRIPTION=Bascinet
+RESOURCES=15 i_ingot_shadow
+SKILLMAKE=BLACKSMITHING 51.5
+VALUE=200
+
+ON=@Create
+	COLOR=color_o_shadow
+	HITPOINTS={101 115}
+
+
+//---------------------------------------------------//
+
+
+// Agapite Armor
+
+[ITEMDEF i_agapite_PLATEMAIL]
+NAME=Agapite Platemail
+ID=i_platemail_chest
+ARMOR=49
+REQSTR=60
+WEIGHT=10
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Agapite
+DESCRIPTION=Platemail
+RESOURCES=25 i_INGOT_agapite
+SKILLMAKE=BLACKSMITHING 54.5
+
+ON=@Create
+	COLOR=color_o_agapite
+	HITPOINTS={80 100}
+
+[ITEMDEF i_agapite_FEMALE_PLATEMAIL]
+NAME=Agapite Female Platemail
+ID=i_armor_female_plate
+ARMOR=49
+REQSTR=15
+WEIGHT=6
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Agapite
+DESCRIPTION=Female Platemail
+RESOURCES=22 i_INGOT_agapite
+SKILLMAKE=BLACKSMITHING 54.5
+
+ON=@Create
+	COLOR=color_o_agapite
+	HITPOINTS={80 100}
+
+[ITEMDEF i_agapite_PLATEMAIL_ARMS]
+NAME=Agapite Platemail Arms
+ID=i_platemail_arms
+ARMOR=49
+REQSTR=40
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Agapite
+DESCRIPTION=Platemail Arms
+RESOURCES=18 i_INGOT_agapite
+SKILLMAKE=BLACKSMITHING 54.5
+
+ON=@Create
+	COLOR=color_o_agapite
+	HITPOINTS={80 100}
+
+[ITEMDEF i_agapite_PLATEMAIL_leggings]
+NAME=Agapite Platemail Legs
+ID=i_platemail_leggings
+LAYER=24
+ARMOR=49
+REQSTR=60
+WEIGHT=15
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Agapite
+DESCRIPTION=Platemail Legs
+RESOURCES=20 i_INGOT_agapite
+SKILLMAKE=BLACKSMITHING 54.5
+
+ON=@Create
+	COLOR=color_o_agapite
+	HITPOINTS={80 100}
+
+[ITEMDEF i_agapite_PLATE_HELM]
+NAME=Agapite Plate Helm
+ID=i_platemail_helm
+ARMOR=49
+REQSTR=40
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Agapite
+DESCRIPTION=Plate Helm
+RESOURCES=15 i_INGOT_agapite
+SKILLMAKE=BLACKSMITHING 54.5
+
+ON=@Create
+	COLOR=color_o_agapite
+	HITPOINTS={80 100}
+
+[ITEMDEF i_agapite_PLATEMAIL_GORGET]
+NAME=Agapite Platemail Gorget
+ID=i_platemail_gorget
+ARMOR=49
+REQSTR=30
+WEIGHT=2
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Agapite
+DESCRIPTION=Platemail Gorget
+RESOURCES=10 i_INGOT_agapite
+SKILLMAKE=BLACKSMITHING 54.5
+
+ON=@Create
+	COLOR=color_o_agapite
+	HITPOINTS={80 100}
+
+[ITEMDEF i_agapite_PLATEMAIL_GAUNTLETS]
+NAME=Agapite Platemail Gauntlets
+ID=i_platemail_gloves
+ARMOR=49
+REQSTR=30
+WEIGHT=2
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Agapite
+DESCRIPTION=Platemail Gauntlets
+RESOURCES=12 i_INGOT_agapite
+SKILLMAKE=BLACKSMITHING 54.5
+
+ON=@Create
+	COLOR=color_o_agapite
+	HITPOINTS={80 100}
+
+
+[ITEMDEF i_agapite_HEATER_SHIELD]
+NAME=Agapite Heater Shield
+ID=I_SHIELD_HEATER
+ARMOR=15
+REQSTR=30
+WEIGHT=8
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Agapite
+DESCRIPTION=Heater Shield
+RESOURCES=18 i_INGOT_agapite
+SKILLMAKE=BLACKSMITHING 54.5
+
+ON=@Create
+	COLOR=color_o_agapite
+	HITPOINTS={80 100}
+
+
+[ITEMDEF i_agapite_CLOSED_HELM]
+NAME=Agapite Closed Helm
+ID=i_helm_closed
+ARMOR=49
+REQSTR=20
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Agapite
+DESCRIPTION=Closed Helm
+RESOURCES=15 i_INGOT_agapite
+SKILLMAKE=BLACKSMITHING 54.5
+
+ON=@Create
+	COLOR=color_o_agapite
+	HITPOINTS={80 100}
+
+[ITEMDEF i_agapite_HELMET]
+NAME=Agapite Helmet
+ID=i_helm_open
+ARMOR=49
+REQSTR=10
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Agapite
+DESCRIPTION=Helmet
+RESOURCES=15 i_INGOT_agapite
+SKILLMAKE=BLACKSMITHING 54.5
+
+ON=@Create
+	COLOR=color_o_agapite
+	HITPOINTS={80 100}
+
+[ITEMDEF i_agapite_BASCINET]
+NAME=Agapite Bascinet
+ID=i_bascinet
+ARMOR=49
+REQSTR=10
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Agapite
+DESCRIPTION=Bascinet
+RESOURCES=15 i_INGOT_agapite
+SKILLMAKE=BLACKSMITHING 54.5
+
+ON=@Create
+	COLOR=color_o_agapite
+	HITPOINTS={80 100}
+
+[ITEMDEF i_agapite_NOSE_HELM]
+NAME=Agapite Nose Helm
+ID=i_helm_nose
+ARMOR=49
+REQSTR=0
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Agapite
+DESCRIPTION=Nose Helm
+RESOURCES=15 i_INGOT_agapite
+SKILLMAKE=BLACKSMITHING 54.5
+
+ON=@Create
+	COLOR=color_o_agapite
+	HITPOINTS={80 100}
+
+//-----------------------------------------------------------//
+
+
+// Rose Armor
+
+[ITEMDEF i_rose_PLATEMAIL]
+NAME=Rose Platemail
+ID=i_platemail_chest
+ARMOR=53
+REQSTR=60
+WEIGHT=10
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Rose
+DESCRIPTION=Platemail
+RESOURCES=25 i_INGOT_rose
+SKILLMAKE=BLACKSMITHING 57.0
+
+ON=@Create
+	COLOR=color_o_rose
+	HITPOINTS={80 100}
+
+[ITEMDEF i_rose_FEMALE_PLATEMAIL]
+NAME=Rose Female Platemail
+ID=i_armor_female_plate
+ARMOR=53
+REQSTR=15
+WEIGHT=6
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Rose
+DESCRIPTION=Female Platemail
+RESOURCES=22 i_INGOT_rose
+SKILLMAKE=BLACKSMITHING 57.0
+
+ON=@Create
+	COLOR=color_o_rose
+	HITPOINTS={80 100}
+
+[ITEMDEF i_rose_PLATEMAIL_ARMS]
+NAME=Rose Platemail Arms
+ID=i_platemail_arms
+ARMOR=53
+REQSTR=40
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Rose
+DESCRIPTION=Platemail Arms
+RESOURCES=18 i_INGOT_rose
+SKILLMAKE=BLACKSMITHING 57.0
+
+ON=@Create
+	COLOR=color_o_rose
+	HITPOINTS={80 100}
+
+[ITEMDEF i_rose_PLATEMAIL_leggings]
+NAME=Rose Platemail Legs
+ID=i_platemail_leggings
+LAYER=24
+ARMOR=53
+REQSTR=60
+WEIGHT=15
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Rose
+DESCRIPTION=Platemail Legs
+RESOURCES=20 i_INGOT_rose
+SKILLMAKE=BLACKSMITHING 57.0
+
+ON=@Create
+	COLOR=color_o_rose
+	HITPOINTS={80 100}
+
+[ITEMDEF i_rose_PLATE_HELM]
+NAME=Rose Plate Helm
+ID=i_platemail_helm
+ARMOR=53
+REQSTR=40
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Rose
+DESCRIPTION=Plate Helm
+RESOURCES=15 i_INGOT_rose
+SKILLMAKE=BLACKSMITHING 57.0
+
+ON=@Create
+	COLOR=color_o_rose
+	HITPOINTS={80 100}
+
+[ITEMDEF i_rose_PLATEMAIL_GORGET]
+NAME=Rose Platemail Gorget
+ID=i_platemail_gorget
+ARMOR=53
+REQSTR=30
+WEIGHT=2
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Rose
+DESCRIPTION=Platemail Gorget
+RESOURCES=10 i_INGOT_rose
+SKILLMAKE=BLACKSMITHING 57.0
+
+ON=@Create
+	COLOR=color_o_rose
+	HITPOINTS={80 100}
+
+[ITEMDEF i_rose_PLATEMAIL_GAUNTLETS]
+NAME=Rose Platemail Gauntlets
+ID=i_platemail_gloves
+ARMOR=53
+REQSTR=30
+WEIGHT=2
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Rose
+DESCRIPTION=Platemail Gauntlets
+RESOURCES=12 i_INGOT_rose
+SKILLMAKE=BLACKSMITHING 57.0
+
+ON=@Create
+	COLOR=color_o_rose
+	HITPOINTS={80 100}
+
+
+[ITEMDEF i_rose_HEATER_SHIELD]
+NAME=Rose Heater Shield
+ID=I_SHIELD_HEATER
+ARMOR=16
+REQSTR=30
+WEIGHT=8
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Rose
+DESCRIPTION=Heater Shield
+RESOURCES=18 i_INGOT_rose
+SKILLMAKE=BLACKSMITHING 57.0
+
+ON=@Create
+	COLOR=color_o_rose
+	HITPOINTS={80 100}
+
+
+[ITEMDEF i_rose_CLOSED_HELM]
+NAME=Rose Closed Helm
+ID=i_helm_closed
+ARMOR=53
+REQSTR=20
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Rose
+DESCRIPTION=Closed Helm
+RESOURCES=15 i_INGOT_rose
+SKILLMAKE=BLACKSMITHING 57.0
+
+ON=@Create
+	COLOR=color_o_rose
+	HITPOINTS={80 100}
+
+[ITEMDEF i_rose_HELMET]
+NAME=Rose Helmet
+ID=i_helm_open
+ARMOR=53
+REQSTR=10
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Rose
+DESCRIPTION=Helmet
+RESOURCES=15 i_INGOT_rose
+SKILLMAKE=BLACKSMITHING 57.0
+
+ON=@Create
+	COLOR=color_o_rose
+	HITPOINTS={80 100}
+
+[ITEMDEF i_rose_BASCINET]
+NAME=Rose Bascinet
+ID=i_bascinet
+ARMOR=53
+REQSTR=10
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Rose
+DESCRIPTION=Bascinet
+RESOURCES=15 i_INGOT_rose
+SKILLMAKE=BLACKSMITHING 57.0
+
+ON=@Create
+	COLOR=color_o_rose
+	HITPOINTS={80 100}
+
+[ITEMDEF i_rose_NOSE_HELM]
+NAME=Rose Nose Helm
+ID=i_helm_nose
+ARMOR=53
+REQSTR=0
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Rose
+DESCRIPTION=Nose Helm
+RESOURCES=15 i_INGOT_rose
+SKILLMAKE=BLACKSMITHING 57.0
+
+ON=@Create
+	COLOR=color_o_rose
+	HITPOINTS={80 100}
+
+//-----------------------------------------------------------//
+
+
+
+// Silver Armor
+
+[ITEMDEF i_silver_PLATEMAIL]
+NAME=Silver Platemail
+ID=i_platemail_chest
+ARMOR=64
+REQSTR=60
+WEIGHT=10
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Silver
+DESCRIPTION=Platemail
+RESOURCES=25 i_INGOT_Silver
+SKILLMAKE=BLACKSMITHING 59.0
+
+ON=@Create
+	COLOR=color_o_Silver
+	HITPOINTS={80 100}
+
+[ITEMDEF i_silver_FEMALE_PLATEMAIL]
+NAME=Silver Female Platemail
+ID=i_armor_female_plate
+ARMOR=64
+REQSTR=15
+WEIGHT=6
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Silver
+DESCRIPTION=Female Platemail
+RESOURCES=22 i_INGOT_Silver
+SKILLMAKE=BLACKSMITHING 59.0
+
+ON=@Create
+	COLOR=color_o_Silver
+	HITPOINTS={80 100}
+
+[ITEMDEF i_silver_PLATEMAIL_ARMS]
+NAME=Silver Platemail Arms
+ID=i_platemail_arms
+ARMOR=64
+REQSTR=40
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Silver
+DESCRIPTION=Platemail Arms
+RESOURCES=18 i_INGOT_Silver
+SKILLMAKE=BLACKSMITHING 59.0
+
+ON=@Create
+	COLOR=color_o_Silver
+	HITPOINTS={80 100}
+
+[ITEMDEF i_silver_PLATEMAIL_leggings]
+NAME=Silver Platemail Legs
+ID=i_platemail_leggings
+LAYER=24
+ARMOR=64
+REQSTR=60
+WEIGHT=15
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Silver
+DESCRIPTION=Platemail Legs
+RESOURCES=20 i_INGOT_Silver
+SKILLMAKE=BLACKSMITHING 59.0
+
+ON=@Create
+	COLOR=color_o_Silver
+	HITPOINTS={80 100}
+
+[ITEMDEF i_silver_PLATE_HELM]
+NAME=Silver Plate Helm
+ID=i_platemail_helm
+ARMOR=64
+REQSTR=40
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Silver
+DESCRIPTION=Plate Helm
+RESOURCES=15 i_INGOT_Silver
+SKILLMAKE=BLACKSMITHING 59.0
+
+ON=@Create
+	COLOR=color_o_Silver
+	HITPOINTS={80 100}
+
+[ITEMDEF i_silver_PLATEMAIL_GORGET]
+NAME=Silver Platemail Gorget
+ID=i_platemail_gorget
+ARMOR=64
+REQSTR=30
+WEIGHT=2
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Silver
+DESCRIPTION=Platemail Gorget
+RESOURCES=10 i_INGOT_Silver
+SKILLMAKE=BLACKSMITHING 59.0
+
+ON=@Create
+	COLOR=color_o_Silver
+	HITPOINTS={80 100}
+
+[ITEMDEF i_silver_PLATEMAIL_GAUNTLETS]
+NAME=Silver Platemail Gauntlets
+ID=i_platemail_gloves
+ARMOR=64
+REQSTR=30
+WEIGHT=2
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Silver
+DESCRIPTION=Platemail Gauntlets
+RESOURCES=12 i_INGOT_Silver
+SKILLMAKE=BLACKSMITHING 59.0
+
+ON=@Create
+	COLOR=color_o_Silver
+	HITPOINTS={80 100}
+
+
+
+[ITEMDEF i_silver_HEATER_SHIELD]
+NAME=Silver Heater Shield
+ID=I_SHIELD_HEATER
+ARMOR=17
+REQSTR=30
+WEIGHT=8
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Silver
+DESCRIPTION=Heater Shield
+RESOURCES=18 i_INGOT_Silver
+SKILLMAKE=BLACKSMITHING 59.0
+
+ON=@Create
+	COLOR=color_o_Silver
+	HITPOINTS={80 100}
+
+
+[ITEMDEF i_silver_CLOSED_HELM]
+NAME=Silver Closed Helm
+ID=i_helm_closed
+ARMOR=64
+REQSTR=20
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Silver
+DESCRIPTION=Closed Helm
+RESOURCES=15 i_INGOT_Silver
+SKILLMAKE=BLACKSMITHING 59.0
+
+ON=@Create
+	COLOR=color_o_Silver
+	HITPOINTS={80 100}
+
+[ITEMDEF i_silver_HELMET]
+NAME=Silver Helmet
+ID=i_helm_open
+ARMOR=64
+REQSTR=10
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Silver
+DESCRIPTION=Helmet
+RESOURCES=15 i_INGOT_Silver
+SKILLMAKE=BLACKSMITHING 59.0
+
+ON=@Create
+	COLOR=color_o_Silver
+	HITPOINTS={80 100}
+
+[ITEMDEF i_silver_BASCINET]
+NAME=Silver Bascinet
+ID=i_bascinet
+ARMOR=64
+REQSTR=10
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Silver
+DESCRIPTION=Bascinet
+RESOURCES=15 i_INGOT_Silver
+SKILLMAKE=BLACKSMITHING 59.0
+
+ON=@Create
+	COLOR=color_o_Silver
+	HITPOINTS={80 100}
+
+[ITEMDEF i_silver_NOSE_HELM]
+NAME=Silver Nose Helm
+ID=i_helm_nose
+ARMOR=64
+REQSTR=0
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Silver
+DESCRIPTION=Nose Helm
+RESOURCES=15 i_INGOT_Silver
+SKILLMAKE=BLACKSMITHING 59.0
+
+ON=@Create
+	COLOR=color_o_Silver
+	HITPOINTS={80 100}
+
+//-----------------------------------------------------------//
+
+
+//Valorite Armor
+
+[ITEMDEF i_VALORITE_PLATEMAIL]
+
+NAME=Valorite Platemail
+ID=i_platemail_chest
+ARMOR=72
+REQSTR=60
+WEIGHT=10
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Valorite
+DESCRIPTION=Platemail
+RESOURCES=25 i_ingot_valorite
+SKILLMAKE=BLACKSMITHING 60.5
+VALUE=200
+ON=@Create
+	COLOR=color_o_valorite
+	HITPOINTS={80 100}
+
+[ITEMDEF i_VALORITE_PLATEMAIL_ARMS]
+
+NAME=Valorite Platemail Arms
+ID=i_platemail_arms
+ARMOR=72
+REQSTR=40
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Valorite
+DESCRIPTION=Platemail Arms
+RESOURCES=18 i_ingot_valorite
+SKILLMAKE=BLACKSMITHING 60.5
+VALUE=200
+ON=@Create
+	COLOR=color_o_valorite
+	HITPOINTS={80 100}
+
+[ITEMDEF i_VALORITE_PLATEMAIL_leggings]
+
+NAME=Valorite Platemail Legs
+ID=i_platemail_leggings
+LAYER=24
+ARMOR=72
+REQSTR=60
+WEIGHT=15
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Valorite
+DESCRIPTION=Platemail Legs
+RESOURCES=20 i_ingot_valorite
+SKILLMAKE=BLACKSMITHING 60.5
+VALUE=200
+ON=@Create
+	COLOR=color_o_valorite
+	HITPOINTS={80 100}
+
+[ITEMDEF i_VALORITE_PLATE_HELM]
+
+NAME=Valorite Plate Helm
+ID=i_platemail_helm
+ARMOR=72
+REQSTR=40
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Valorite
+DESCRIPTION=Plate Helm
+RESOURCES=15 i_ingot_valorite
+SKILLMAKE=BLACKSMITHING 60.5
+VALUE=200
+ON=@Create
+	COLOR=color_o_valorite
+	HITPOINTS={80 100}
+
+[ITEMDEF i_VALORITE_PLATEMAIL_GORGET]
+
+NAME=Valorite Platemail Gorget
+ID=i_platemail_gorget
+ARMOR=72
+REQSTR=30
+WEIGHT=2
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Valorite
+DESCRIPTION=Platemail Gorget
+RESOURCES=10 i_ingot_valorite
+SKILLMAKE=BLACKSMITHING 60.5
+VALUE=200
+ON=@Create
+	COLOR=color_o_valorite
+	HITPOINTS={80 100}
+
+[ITEMDEF i_VALORITE_PLATEMAIL_GAUNTLETS]
+
+NAME=Valorite Platemail Gauntlets
+ID=i_platemail_gloves
+ARMOR=72
+REQSTR=45
+WEIGHT=2
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Valorite
+DESCRIPTION=Platemail Gauntlets
+RESOURCES=12 i_ingot_valorite
+SKILLMAKE=BLACKSMITHING 60.5
+VALUE=200
+ON=@Create
+	COLOR=color_o_valorite
+	HITPOINTS={80 100}
+
+[ITEMDEF i_VALORITE_FEMALE_PLATEMAIL]
+
+NAME=Valorite Female Platemail
+ID=i_armor_female_plate
+ARMOR=72
+REQSTR=15
+WEIGHT=6
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Valorite
+DESCRIPTION=Female Platemail
+RESOURCES=22 i_ingot_valorite
+SKILLMAKE=BLACKSMITHING 60.5
+VALUE=200
+ON=@Create
+	COLOR=color_o_valorite
+	HITPOINTS={80 100}
+
+[ITEMDEF i_VALORITE_HEATER_SHIELD]
+
+NAME=Valorite Heater Shield
+ID=I_SHIELD_HEATER
+ARMOR=18
+REQSTR=30
+WEIGHT=8
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Valorite
+DESCRIPTION=Heater Shield
+RESOURCES=18 i_ingot_valorite
+SKILLMAKE=BLACKSMITHING 60.5
+VALUE=200
+ON=@Create
+	COLOR=color_o_valorite
+	HITPOINTS={80 100}
+
+
+[ITEMDEF i_VALORITE_CLOSED_HELM]
+
+NAME=Valorite Closed Helm
+ID=i_helm_closed
+ARMOR=72
+REQSTR=20
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Valorite
+DESCRIPTION=Closed Helm
+RESOURCES=15 i_ingot_valorite
+SKILLMAKE=BLACKSMITHING 60.5
+VALUE=200
+ON=@Create
+	COLOR=color_o_valorite
+	HITPOINTS={80 100}
+
+[ITEMDEF i_VALORITE_HELMET]
+
+NAME=Valorite Helmet
+ID=i_helm_open
+ARMOR=72
+REQSTR=10
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Valorite
+DESCRIPTION=Helmet
+RESOURCES=15 i_ingot_valorite
+SKILLMAKE=BLACKSMITHING 60.5
+VALUE=200
+ON=@Create
+	COLOR=color_o_valorite
+	HITPOINTS={80 100}
+
+
+[ITEMDEF i_VALORITE_BASCINET]
+
+NAME=Valorite Bascinet
+ID=i_bascinet
+ARMOR=72
+REQSTR=10
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Valorite
+DESCRIPTION=Bascinet
+RESOURCES=15 i_ingot_valorite
+SKILLMAKE=BLACKSMITHING 60.5
+VALUE=200
+ON=@Create
+	COLOR=color_o_valorite
+	HITPOINTS={80 100}
+
+[ITEMDEF i_VALORITE_NOSE_HELM]
+
+NAME=Valorite Nose Helm
+ID=i_helm_nose
+ARMOR=72
+REQSTR=0
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Valorite
+DESCRIPTION=Nose Helm
+RESOURCES=15 i_ingot_valorite
+SKILLMAKE=BLACKSMITHING 60.5
+VALUE=200
+
+ON=@Create
+	COLOR=color_o_valorite
+	HITPOINTS={80 100}
+
+//----------------------------------------------------------//
+
+//Verite Armor
+
+[ITEMDEF i_VERITE_PLATEMAIL]
+NAME=Verite Platemail
+ID=i_platemail_chest
+ARMOR=80
+REQSTR=60
+WEIGHT=10
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Verite
+DESCRIPTION=Platemail
+RESOURCES=25 i_ingot_verite
+SKILLMAKE=BLACKSMITHING 62.5
+VALUE=200
+
+ON=@Create
+	COLOR=color_o_verite
+	HITPOINTS={80 100}
+
+[ITEMDEF i_VERITE_PLATEMAIL_ARMS]
+
+NAME=Verite Platemail Arms
+ID=i_platemail_arms
+ARMOR=80
+REQSTR=40
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Verite
+DESCRIPTION=Platemail Arms
+RESOURCES=18 i_ingot_verite
+SKILLMAKE=BLACKSMITHING 62.5
+VALUE=200
+
+ON=@Create
+	COLOR=color_o_verite
+	HITPOINTS={80 100}
+
+[ITEMDEF i_VERITE_PLATEMAIL_leggings]
+NAME=Verite Platemail Legs
+ID=i_platemail_leggings
+LAYER=24
+ARMOR=80
+REQSTR=60
+WEIGHT=15
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Verite
+DESCRIPTION=Platemail Legs
+RESOURCES=20 i_ingot_verite
+SKILLMAKE=BLACKSMITHING 62.5
+VALUE=200
+
+ON=@Create
+	COLOR=color_o_verite
+	HITPOINTS={80 100}
+
+[ITEMDEF i_VERITE_PLATE_HELM]
+NAME=Verite Plate Helm
+ID=i_platemail_helm
+ARMOR=80
+REQSTR=40
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Verite
+DESCRIPTION=Plate Helm
+RESOURCES=15 i_ingot_verite
+SKILLMAKE=BLACKSMITHING 62.5
+VALUE=200
+
+ON=@Create
+	COLOR=color_o_verite
+	HITPOINTS={80 100}
+
+[ITEMDEF i_VERITE_PLATEMAIL_GORGET]
+NAME=Verite Platemail Gorget
+ID=i_platemail_gorget
+ARMOR=80
+REQSTR=30
+WEIGHT=2
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Verite
+DESCRIPTION=Platemail Gorget
+RESOURCES=10 i_ingot_verite
+SKILLMAKE=BLACKSMITHING 62.5
+VALUE=200
+
+ON=@Create
+	COLOR=color_o_verite
+	HITPOINTS={80 100}
+
+[ITEMDEF i_VERITE_PLATEMAIL_GAUNTLETS]
+NAME=Verite Platemail Gauntlets
+ID=i_platemail_gloves
+ARMOR=80
+REQSTR=45
+WEIGHT=2
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Verite
+DESCRIPTION=Platemail Gauntlets
+RESOURCES=12 i_ingot_verite
+SKILLMAKE=BLACKSMITHING 62.5
+VALUE=200
+
+ON=@Create
+	COLOR=color_o_verite
+	HITPOINTS={80 100}
+
+[ITEMDEF i_VERITE_FEMALE_PLATEMAIL]
+NAME=Verite Female Platemail
+ID=i_armor_female_plate
+ARMOR=80
+REQSTR=15
+WEIGHT=6
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Verite
+DESCRIPTION=Female Platemail
+RESOURCES=22 i_ingot_verite
+SKILLMAKE=BLACKSMITHING 62.5
+VALUE=200
+
+ON=@Create
+	COLOR=color_o_verite
+	HITPOINTS={80 100}
+
+[ITEMDEF i_VERITE_HEATER_SHIELD]
+NAME=Verite Heater Shield
+ID=I_SHIELD_HEATER
+ARMOR=20
+REQSTR=30
+WEIGHT=8
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Verite
+DESCRIPTION=Heater Shield
+RESOURCES=18 i_ingot_verite
+SKILLMAKE=BLACKSMITHING 62.5
+VALUE=200
+
+ON=@Create
+	COLOR=color_o_verite
+	HITPOINTS={80 100}
+
+
+[ITEMDEF i_VERITE_CLOSED_HELM]
+NAME=Verite Closed Helm
+ID=i_helm_closed
+ARMOR=80
+REQSTR=20
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Verite
+DESCRIPTION=Closed Helm
+RESOURCES=15 i_ingot_verite
+SKILLMAKE=BLACKSMITHING 62.5
+VALUE=200
+
+ON=@Create
+	COLOR=color_o_verite
+	HITPOINTS={101 115}
+
+[ITEMDEF i_VERITE_HELMET]
+NAME=Verite Helmet
+ID=i_helm_open
+ARMOR=80
+REQSTR=10
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Verite
+DESCRIPTION=Helmet
+RESOURCES=15 i_ingot_verite
+SKILLMAKE=BLACKSMITHING 62.5
+VALUE=200
+
+ON=@Create
+	COLOR=color_o_verite
+	HITPOINTS={80 100}
+
+[ITEMDEF i_VERITE_BASCINET]
+
+NAME=Verite Bascinet
+ID=i_bascinet
+ARMOR=80
+REQSTR=10
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Verite
+DESCRIPTION=Bascinet
+RESOURCES=15 i_ingot_verite
+SKILLMAKE=BLACKSMITHING 62.5
+VALUE=200
+ON=@Create
+	COLOR=color_o_verite
+	HITPOINTS={101 115}
+
+[ITEMDEF i_VERITE_NOSE_HELM]
+
+NAME=Verite Nose Helm
+ID=i_helm_nose
+ARMOR=80
+REQSTR=0
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Verite
+DESCRIPTION=Nose Helm
+RESOURCES=15 i_ingot_verite
+SKILLMAKE=BLACKSMITHING 62.5
+VALUE=200
+ON=@Create
+	COLOR=color_o_verite
+	HITPOINTS={101 115}
+
+
+//----------------------------------------------------------//
+
+	//Golden Armor
+
+[ITEMDEF i_golden_PLATEMAIL]
+
+NAME=Golden Platemail
+ID=i_platemail_chest
+ARMOR=88
+REQSTR=60
+WEIGHT=10
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Golden
+DESCRIPTION=Platemail
+RESOURCES=25 i_ingot_Gold
+SKILLMAKE=BLACKSMITHING 64.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_Gold
+	HITPOINTS={80 100}
+
+[ITEMDEF i_golden_PLATEMAIL_ARMS]
+
+NAME=Golden Platemail Arms
+ID=i_platemail_arms
+ARMOR=88
+REQSTR=40
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Golden
+DESCRIPTION=Platemail Arms
+RESOURCES=18 i_ingot_Gold
+SKILLMAKE=BLACKSMITHING 64.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_Gold
+	HITPOINTS={80 100}
+
+[ITEMDEF i_golden_PLATEMAIL_leggings]
+
+NAME=Golden Platemail Legs
+ID=i_platemail_leggings
+LAYER=24
+ARMOR=88
+REQSTR=60
+WEIGHT=15
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Golden
+DESCRIPTION=Platemail Legs
+RESOURCES=20 i_ingot_Gold
+SKILLMAKE=BLACKSMITHING 64.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_Gold
+	HITPOINTS={80 100}
+
+[ITEMDEF i_golden_PLATE_HELM]
+
+NAME=Golden Plate Helm
+ID=i_platemail_helm
+ARMOR=88
+REQSTR=40
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Golden
+DESCRIPTION=Plate Helm
+RESOURCES=15 i_ingot_Gold
+SKILLMAKE=BLACKSMITHING 64.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_Gold
+	HITPOINTS={80 100}
+
+[ITEMDEF i_golden_PLATEMAIL_GORGET]
+
+NAME=Golden Platemail Gorget
+ID=i_platemail_gorget
+ARMOR=88
+REQSTR=30
+WEIGHT=2
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Golden
+DESCRIPTION=Platemail Gorget
+RESOURCES=10 i_ingot_Gold
+SKILLMAKE=BLACKSMITHING 64.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_Gold
+	HITPOINTS={80 100}
+
+[ITEMDEF i_golden_PLATEMAIL_GAUNTLETS]
+
+NAME=Golden Platemail Gauntlets
+ID=i_platemail_gloves
+ARMOR=88
+REQSTR=45
+WEIGHT=2
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Golden
+DESCRIPTION=Platemail Gauntlets
+RESOURCES=12 i_ingot_Gold
+SKILLMAKE=BLACKSMITHING 64.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_Gold
+	HITPOINTS={80 100}
+
+[ITEMDEF i_golden_FEMALE_PLATEMAIL]
+
+NAME=Golden Female Platemail
+ID=i_armor_female_plate
+ARMOR=88
+REQSTR=15
+WEIGHT=6
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Golden
+DESCRIPTION=Female Platemail
+RESOURCES=22 i_ingot_Gold
+SKILLMAKE=BLACKSMITHING 64.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_Gold
+	HITPOINTS={80 100}
+
+
+[ITEMDEF i_golden_HEATER_SHIELD]
+
+NAME=Golden Heater Shield
+ID=I_SHIELD_HEATER
+ARMOR=22
+REQSTR=30
+WEIGHT=8
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Golden
+DESCRIPTION=Heater Shield
+RESOURCES=18 i_ingot_Gold
+SKILLMAKE=BLACKSMITHING 64.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_Gold
+	HITPOINTS={80 100}
+
+
+[ITEMDEF i_golden_CLOSED_HELM]
+
+NAME=Golden Closed Helm
+ID=i_helm_closed
+ARMOR=88
+REQSTR=20
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Golden
+DESCRIPTION=Closed Helm
+RESOURCES=15 i_ingot_Gold
+SKILLMAKE=BLACKSMITHING 64.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_Gold
+	HITPOINTS={101 115}
+
+[ITEMDEF i_golden_HELMET]
+
+NAME=Golden Helmet
+ID=i_helm_open
+ARMOR=88
+REQSTR=10
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Golden
+DESCRIPTION=Helmet
+RESOURCES=15 i_ingot_Gold
+SKILLMAKE=BLACKSMITHING 64.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_Gold
+	HITPOINTS={80 100}
+
+[ITEMDEF i_golden_BASCINET]
+
+NAME=Golden Bascinet
+ID=i_bascinet
+ARMOR=88
+REQSTR=10
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Golden
+DESCRIPTION=Bascinet
+RESOURCES=15 i_ingot_Gold
+SKILLMAKE=BLACKSMITHING 64.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_Gold
+	HITPOINTS={101 115}
+
+[ITEMDEF i_golden_NOSE_HELM]
+
+NAME=Golden Nose Helm
+ID=i_helm_nose
+ARMOR=88
+REQSTR=0
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Golden
+DESCRIPTION=Nose Helm
+RESOURCES=15 i_ingot_Gold
+SKILLMAKE=BLACKSMITHING 64.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_Gold
+	HITPOINTS={80 100}
+
+
+//--------------------------------------------------------//
+//Blood Rock
+
+[ITEMDEF i_BLOODROCK_PLATEMAIL]
+
+NAME=Blood Rock Platemail
+ID=i_platemail_chest
+ARMOR=95
+REQSTR=60
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Blood Rock
+DESCRIPTION=Platemail
+RESOURCES=25 i_ingot_bloodrock
+SKILLMAKE=BLACKSMITHING 66.5
+VALUE=200
+ON=@Create
+	HITPOINTS={80 100}
+	COLOR=color_o_bloodrock
+
+[ITEMDEF i_BLOODROCK_PLATEMAIL_ARMS]
+
+NAME=Blood Rock Platemail Arms
+ID=i_platemail_arms
+ARMOR=95
+REQSTR=40
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Blood Rock
+DESCRIPTION=Platemail Arms
+RESOURCES=18 i_ingot_bloodrock
+SKILLMAKE=BLACKSMITHING 66.5
+VALUE=200
+ON=@Create
+	COLOR=color_o_bloodrock
+	HITPOINTS={80 100}
+
+[ITEMDEF i_BLOODROCK_PLATEMAIL_leggings]
+
+NAME=Blood Rock Platemail Legs
+ID=i_platemail_leggings
+LAYER=24
+ARMOR=95
+REQSTR=60
+WEIGHT=15
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Blood Rock
+DESCRIPTION=Platemail Legs
+RESOURCES=20 i_ingot_bloodrock
+SKILLMAKE=BLACKSMITHING 66.5
+VALUE=200
+ON=@Create
+	COLOR=color_o_bloodrock
+	HITPOINTS={80 100}
+
+[ITEMDEF i_BLOODROCK_PLATE_HELM]
+
+NAME=Blood Rock Plate Helm
+ID=i_platemail_helm
+ARMOR=95
+REQSTR=40
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Blood Rock
+DESCRIPTION=Plate Helm
+RESOURCES=15 i_ingot_bloodrock
+SKILLMAKE=BLACKSMITHING 66.5
+VALUE=200
+ON=@Create
+	COLOR=color_o_bloodrock
+	HITPOINTS={80 100}
+
+[ITEMDEF i_BLOODROCK_PLATEMAIL_GORGET]
+
+NAME=Blood Rock Platemail Gorget
+ID=i_platemail_gorget
+ARMOR=95
+REQSTR=30
+WEIGHT=2
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Blood Rock
+DESCRIPTION=Platemail Gorget
+RESOURCES=10 i_ingot_bloodrock
+SKILLMAKE=BLACKSMITHING 66.5
+VALUE=200
+ON=@Create
+	COLOR=color_o_bloodrock
+	HITPOINTS={80 100}
+
+[ITEMDEF i_BLOODROCK_PLATEMAIL_GAUNTLETS]
+
+NAME=Blood Rock Platemail Gauntlets
+ID=i_platemail_gloves
+ARMOR=95
+REQSTR=30
+WEIGHT=2
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Blood Rock
+DESCRIPTION=Platemail Gauntlets
+RESOURCES=12 i_ingot_bloodrock
+SKILLMAKE=BLACKSMITHING 66.5
+VALUE=200
+ON=@Create
+	COLOR=color_o_bloodrock
+	HITPOINTS={80 100}
+
+[ITEMDEF i_BLOODROCK_FEMALE_PLATEMAIL]
+
+NAME=Blood Rock Female Platemail
+ID=i_armor_female_plate
+ARMOR=95
+REQSTR=15
+WEIGHT=6
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Blood Rock
+DESCRIPTION=Female Platemail
+RESOURCES=22 i_ingot_bloodrock
+SKILLMAKE=BLACKSMITHING 66.5
+VALUE=200
+ON=@Create
+	COLOR=color_o_bloodrock
+	HITPOINTS={80 100}
+
+[ITEMDEF i_BLOODROCK_HEATER_SHIELD]
+
+NAME=Blood Rock Heater Shield
+ID=I_SHIELD_HEATER
+ARMOR=25
+REQSTR=30
+WEIGHT=8
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Blood Rock
+DESCRIPTION=Heater Shield
+RESOURCES=18 i_ingot_bloodrock
+SKILLMAKE=BLACKSMITHING 66.5
+VALUE=200
+ON=@Create
+	COLOR=color_o_bloodrock
+	HITPOINTS={80 100}
+
+
+
+[ITEMDEF i_BLOODROCK_CLOSED_HELM]
+
+NAME=Blood Rock Closed Helm
+ID=i_helm_closed
+ARMOR=95
+REQSTR=20
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Blood Rock
+DESCRIPTION=Closed Helm
+RESOURCES=15 i_ingot_bloodrock
+SKILLMAKE=BLACKSMITHING 66.5
+VALUE=200
+ON=@Create
+	COLOR=color_o_bloodrock
+	HITPOINTS={80 100}
+
+[ITEMDEF i_BLOODROCK_HELMET]
+
+NAME=Blood Rock Helmet
+ID=i_helm_open
+ARMOR=95
+REQSTR=10
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Blood Rock
+DESCRIPTION=helmet
+RESOURCES=15 i_ingot_bloodrock
+SKILLMAKE=BLACKSMITHING 66.5
+VALUE=200
+ON=@Create
+	COLOR=color_o_bloodrock
+	HITPOINTS={80 100}
+
+[ITEMDEF i_BLOODROCK_BASCINET]
+
+NAME=Blood Rock Bascinet
+ID=i_bascinet
+ARMOR=95
+REQSTR=10
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Blood Rock
+DESCRIPTION=Bascinet
+RESOURCES=15 i_ingot_bloodrock
+SKILLMAKE=BLACKSMITHING 66.5
+VALUE=200
+ON=@Create
+	COLOR=color_o_bloodrock
+	HITPOINTS={80 100}
+
+[ITEMDEF i_BLOODROCK_NOSE_HELM]
+
+NAME=Blood Rock Nose Helm
+ID=i_helm_nose
+ARMOR=95
+REQSTR=0
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Blood Rock
+DESCRIPTION=Nose Helm
+RESOURCES=15 i_ingot_bloodrock
+SKILLMAKE=BLACKSMITHING 66.5
+VALUE=200
+
+ON=@Create
+	COLOR=color_o_bloodrock
+	HITPOINTS={80 100}
+
+//------------------------------------------------------------//
+
+//Black Rock Armor
+
+
+[ITEMDEF i_BLACKROCK_PLATEMAIL]
+
+NAME=Black Rock Platemail
+ID=i_platemail_chest
+ARMOR=105
+REQSTR=60
+WEIGHT=10
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Black Rock
+DESCRIPTION=Platemail
+RESOURCES=25 i_ingot_blackrock
+SKILLMAKE=BLACKSMITHING 68.0
+VALUE=200
+
+ON=@Create
+	COLOR=color_o_blackrock
+	HITPOINTS={80 100}
+
+[ITEMDEF i_BLACKROCK_PLATEMAIL_ARMS]
+
+NAME=Black Rock Platemail Arms
+ID=i_platemail_arms
+ARMOR=105
+REQSTR=40
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Black Rock
+DESCRIPTION=Platemail Arms
+RESOURCES=18 i_ingot_blackrock
+SKILLMAKE=BLACKSMITHING 68.0
+VALUE=200
+
+ON=@Create
+	COLOR=color_o_blackrock
+	HITPOINTS={80 100}
+
+[ITEMDEF i_BLACKROCK_PLATEMAIL_leggings]
+
+NAME=Black Rock Platemail Legs
+ID=i_platemail_leggings
+LAYER=24
+ARMOR=105
+REQSTR=60
+WEIGHT=15
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Black Rock
+DESCRIPTION=Platemail Legs
+RESOURCES=20 i_ingot_blackrock
+SKILLMAKE=BLACKSMITHING 68.0
+VALUE=200
+
+ON=@Create
+	COLOR=color_o_blackrock
+	HITPOINTS={80 100}
+
+[ITEMDEF i_BLACKROCK_PLATE_HELM]
+
+NAME=Black Rock Plate Helm
+ID=i_platemail_helm
+ARMOR=105
+REQSTR=40
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Black Rock
+DESCRIPTION=Plate Helm
+RESOURCES=15 i_ingot_blackrock
+SKILLMAKE=BLACKSMITHING 68.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_blackrock
+	HITPOINTS={80 100}
+
+[ITEMDEF i_BLACKROCK_PLATEMAIL_GORGET]
+
+NAME=Black Rock Platemail Gorget
+ID=i_platemail_gorget
+ARMOR=105
+REQSTR=30
+WEIGHT=2
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Black Rock
+DESCRIPTION=Platemail Gorget
+RESOURCES=10 i_ingot_blackrock
+SKILLMAKE=BLACKSMITHING 68.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_blackrock
+	HITPOINTS={80 100}
+
+[ITEMDEF i_BLACKROCK_PLATEMAIL_GAUNTLETS]
+
+NAME=Black Rock Platemail Gauntlets
+ID=i_platemail_gloves
+ARMOR=105
+REQSTR=30
+WEIGHT=2
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Black Rock
+DESCRIPTION=Platemail Gauntlets
+RESOURCES=12 i_ingot_blackrock
+SKILLMAKE=BLACKSMITHING 68.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_blackrock
+	HITPOINTS={80 100}
+
+[ITEMDEF i_BLACKROCK_FEMALE_PLATEMAIL]
+
+NAME=Black Rock Female Platemail
+ID=i_armor_female_plate
+ARMOR=105
+REQSTR=22
+WEIGHT=6
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Black Rock
+DESCRIPTION=Female Platemail
+RESOURCES=22 i_ingot_blackrock
+SKILLMAKE=BLACKSMITHING 68.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_blackrock
+	HITPOINTS={80 100}
+
+
+[ITEMDEF i_BLACKROCK_HEATER_SHIELD]
+
+NAME=Black Rock Heater Shield
+ID=I_SHIELD_HEATER
+ARMOR=30
+REQSTR=30
+WEIGHT=8
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Black Rock
+DESCRIPTION=Heater Shield
+RESOURCES=18 i_ingot_blackrock
+SKILLMAKE=BLACKSMITHING 68.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_blackrock
+	HITPOINTS={80 100}
+
+
+[ITEMDEF i_BLACKROCK_CLOSED_HELM]
+
+NAME=Black Rock Closed Helm
+ID=i_helm_closed
+ARMOR=105
+REQSTR=20
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Black Rock
+DESCRIPTION=Closed Helm
+RESOURCES=15 i_ingot_blackrock
+SKILLMAKE=BLACKSMITHING 68.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_blackrock
+     HITPOINTS={80 100}
+
+[ITEMDEF i_BLACKROCK_HELMET]
+
+NAME=Black Rock Helmet
+ID=i_helm_open
+SKILLMAKE=BLACKSMITHING 68.0
+RESOURCES=15 i_ingot_blackrock
+ARMOR=105
+REQSTR=10
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Black Rock
+DESCRIPTION=Helmet
+VALUE=200
+ON=@Create
+	COLOR=color_o_blackrock
+	HITPOINTS={80 100}
+
+[ITEMDEF i_BLACKROCK_BASCINET]
+
+NAME=Black Rock Bascinet
+ID=i_bascinet
+ARMOR=105
+REQSTR=10
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Black Rock
+DESCRIPTION=Bascinet
+RESOURCES=15 i_ingot_blackrock
+SKILLMAKE=BLACKSMITHING 68.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_blackrock
+	HITPOINTS={80 100}
+
+[ITEMDEF i_BLACKROCK_NOSE_HELM]
+
+NAME=Black Rock Nose Helm
+ID=i_helm_nose
+ARMOR=105
+REQSTR=0
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Black Rock
+DESCRIPTION=Nose Helm
+RESOURCES=15 i_ingot_blackrock
+SKILLMAKE=BLACKSMITHING 68.0
+VALUE=200
+
+ON=@Create
+	COLOR=color_o_blackrock
+	HITPOINTS={80 100}
+// -----------------------------------------------------------
+
+//Order Platemail (para quest apenas)
+
+[ITEMDEF i_order_PLATEMAIL]
+
+NAME=Order Platemail
+ID=i_platemail_chest
+ARMOR=105
+REQSTR=60
+WEIGHT=10
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Order
+DESCRIPTION=Platemail
+RESOURCES=25 i_ingot_order
+SKILLMAKE=BLACKSMITHING 68.0
+VALUE=200
+
+ON=@Create
+	COLOR=color_o_order
+	HITPOINTS={80 100}
+
+[ITEMDEF i_order_PLATEMAIL_ARMS]
+
+NAME=Order Platemail Arms
+ID=i_platemail_arms
+ARMOR=105
+REQSTR=40
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Order
+DESCRIPTION=Platemail Arms
+RESOURCES=18 i_ingot_order
+SKILLMAKE=BLACKSMITHING 68.0
+VALUE=200
+
+ON=@Create
+	COLOR=color_o_order
+	HITPOINTS={80 100}
+
+[ITEMDEF i_order_PLATEMAIL_leggings]
+
+NAME=Order Platemail Legs
+ID=i_platemail_leggings
+LAYER=24
+ARMOR=105
+REQSTR=60
+WEIGHT=15
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Order
+DESCRIPTION=Platemail Legs
+RESOURCES=20 i_ingot_order
+SKILLMAKE=BLACKSMITHING 68.0
+VALUE=200
+
+ON=@Create
+	COLOR=color_o_order
+	HITPOINTS={80 100}
+
+[ITEMDEF i_order_PLATE_HELM]
+
+NAME=Order Plate Helm
+ID=i_platemail_helm
+ARMOR=105
+REQSTR=40
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Order
+DESCRIPTION=Plate Helm
+RESOURCES=15 i_ingot_order
+SKILLMAKE=BLACKSMITHING 68.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_order
+	HITPOINTS={80 100}
+
+[ITEMDEF i_order_PLATEMAIL_GORGET]
+
+NAME=Order Platemail Gorget
+ID=i_platemail_gorget
+ARMOR=105
+REQSTR=30
+WEIGHT=2
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Order
+DESCRIPTION=Platemail Gorget
+RESOURCES=10 i_ingot_order
+SKILLMAKE=BLACKSMITHING 68.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_order
+	HITPOINTS={80 100}
+
+[ITEMDEF i_order_PLATEMAIL_GAUNTLETS]
+
+NAME=Order Platemail Gauntlets
+ID=i_platemail_gloves
+ARMOR=105
+REQSTR=30
+WEIGHT=2
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Order
+DESCRIPTION=Platemail Gauntlets
+RESOURCES=12 i_ingot_order
+SKILLMAKE=BLACKSMITHING 68.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_order
+	HITPOINTS={80 100}
+
+[ITEMDEF i_order_FEMALE_PLATEMAIL]
+
+NAME=Order Female Platemail
+ID=i_armor_female_plate
+ARMOR=105
+REQSTR=22
+WEIGHT=6
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Order
+DESCRIPTION=Female Platemail
+RESOURCES=22 i_ingot_order
+SKILLMAKE=BLACKSMITHING 68.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_order
+	HITPOINTS={80 100}
+
+
+[ITEMDEF i_order_HEATER_SHIELD]
+
+NAME=Order Heater Shield
+ID=I_SHIELD_HEATER
+ARMOR=30
+REQSTR=30
+WEIGHT=8
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Order
+DESCRIPTION=Heater Shield
+RESOURCES=18 i_ingot_order
+SKILLMAKE=BLACKSMITHING 68.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_order
+	HITPOINTS={80 100}
+
+
+[ITEMDEF i_order_CLOSED_HELM]
+
+NAME=Order Closed Helm
+ID=i_helm_closed
+ARMOR=105
+REQSTR=20
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Order
+DESCRIPTION=Closed Helm
+RESOURCES=15 i_ingot_order
+SKILLMAKE=BLACKSMITHING 68.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_order
+     HITPOINTS={80 100}
+
+[ITEMDEF i_order_HELMET]
+
+NAME=Order Helmet
+ID=i_helm_open
+SKILLMAKE=BLACKSMITHING 68.0
+RESOURCES=15 i_ingot_order
+ARMOR=105
+REQSTR=10
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Order
+DESCRIPTION=Helmet
+VALUE=200
+ON=@Create
+	COLOR=color_o_order
+	HITPOINTS={80 100}
+
+[ITEMDEF i_order_BASCINET]
+
+NAME=Order Bascinet
+ID=i_bascinet
+ARMOR=105
+REQSTR=10
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Order
+DESCRIPTION=Bascinet
+RESOURCES=15 i_ingot_order
+SKILLMAKE=BLACKSMITHING 68.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_order
+	HITPOINTS={80 100}
+
+[ITEMDEF i_order_NOSE_HELM]
+
+NAME=Order Nose Helm
+ID=i_helm_nose
+ARMOR=105
+REQSTR=0
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Order
+DESCRIPTION=Nose Helm
+RESOURCES=15 i_ingot_order
+SKILLMAKE=BLACKSMITHING 68.0
+VALUE=200
+
+ON=@Create
+	COLOR=color_o_order
+	HITPOINTS={80 100}
+
+//--------------------------------------------------------------/
+
+//Mytheril Armor
+
+[ITEMDEF i_MYTHERIL_PLATEMAIL]
+
+NAME=Mytheril Platemail
+ID=i_platemail_chest
+ARMOR=115
+REQSTR=60
+WEIGHT=10
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Mytheril
+DESCRIPTION=Platemail
+RESOURCES=25 i_ingot_mytheril
+SKILLMAKE=BLACKSMITHING 70.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_mytheril
+	HITPOINTS={80 100}
+
+[ITEMDEF i_MYTHERIL_PLATEMAIL_ARMS]
+
+NAME=Mytheril Platemail Arms
+ID=i_platemail_arms
+ARMOR=115
+REQSTR=40
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Mytheril
+DESCRIPTION=Platemail Arms
+RESOURCES=18 i_ingot_mytheril
+SKILLMAKE=BLACKSMITHING 70.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_mytheril
+	HITPOINTS={80 100}
+
+[ITEMDEF i_MYTHERIL_PLATEMAIL_leggings]
+
+NAME=Mytheril Platemail Legs
+ID=i_platemail_leggings
+LAYER=24
+ARMOR=115
+REQSTR=60
+WEIGHT=1
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Mytheril
+DESCRIPTION=Platemail Legs
+RESOURCES=20 i_ingot_mytheril
+SKILLMAKE=BLACKSMITHING 70.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_mytheril
+	HITPOINTS={80 100}
+
+[ITEMDEF i_MYTHERIL_PLATE_HELM]
+
+NAME=Mytheril Plate Helm
+ID=i_platemail_helm
+ARMOR=115
+REQSTR=40
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Mytheril
+DESCRIPTION=Plate Helm
+RESOURCES=15 i_ingot_mytheril
+SKILLMAKE=BLACKSMITHING 70.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_mytheril
+	HITPOINTS={80 100}
+
+[ITEMDEF i_MYTHERIL_PLATEMAIL_GORGET]
+
+NAME=Mytheril Platemail Gorget
+ID=i_platemail_gorget
+ARMOR=115
+REQSTR=30
+WEIGHT=2
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Mytheril
+DESCRIPTION=Platemail Gorget
+RESOURCES=10 i_ingot_mytheril
+SKILLMAKE=BLACKSMITHING 70.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_mytheril
+	HITPOINTS={80 100}
+
+[ITEMDEF i_MYTHERIL_PLATEMAIL_GAUNTLETS]
+
+NAME=Mytheril Platemail Gauntlets
+ID=i_platemail_gloves
+ARMOR=115
+REQSTR=30
+WEIGHT=2
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Mytheril
+DESCRIPTION=Platemail Gauntlets
+RESOURCES=12 i_ingot_mytheril
+SKILLMAKE=BLACKSMITHING 70.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_mytheril
+	HITPOINTS={80 100}
+
+[ITEMDEF i_MYTHERIL_FEMALE_PLATEMAIL]
+
+NAME=Mytheril Female Platemail
+ID=i_armor_female_plate
+ARMOR=115
+REQSTR=15
+WEIGHT=6
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Mytheril
+DESCRIPTION=Female Platemail
+RESOURCES=22 i_ingot_mytheril
+SKILLMAKE=BLACKSMITHING 70.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_mytheril
+	HITPOINTS={80 100}
+
+
+[ITEMDEF i_MYTHERIL_HEATER_SHIELD]
+
+NAME=Mytheril Heater Shield
+ID=I_SHIELD_HEATER
+ARMOR=35
+REQSTR=30
+WEIGHT=8
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Mytheril
+DESCRIPTION=Heater Shield
+RESOURCES=18 i_ingot_mytheril
+SKILLMAKE=BLACKSMITHING 70.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_mytheril
+	HITPOINTS={80 100}
+
+
+[ITEMDEF i_MYTHERIL_CLOSED_HELM]
+
+NAME=Mytheril Closed Helm
+ID=i_helm_closed
+ARMOR=115
+REQSTR=20
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Mytheril
+DESCRIPTION=Closed Helm
+RESOURCES=15 i_ingot_mytheril
+SKILLMAKE=BLACKSMITHING 70.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_mytheril
+	HITPOINTS={101 115}
+
+[ITEMDEF i_MYTHERIL_HELMET]
+
+NAME=Mytheril Helmet
+ID=i_helm_open
+ARMOR=115
+REQSTR=10
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Mytheril
+DESCRIPTION=Helmet
+RESOURCES=15 i_ingot_mytheril
+SKILLMAKE=BLACKSMITHING 70.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_mytheril
+	HITPOINTS={80 100}
+
+[ITEMDEF i_MYTHERIL_BASCINET]
+
+NAME=Mytheril Bascinet
+ID=i_bascinet
+ARMOR=115
+REQSTR=10
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Mytheril
+DESCRIPTION=Bascinet
+RESOURCES=15 i_ingot_mytheril
+SKILLMAKE=BLACKSMITHING 70.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_mytheril
+	HITPOINTS={101 115}
+
+[ITEMDEF i_MYTHERIL_NOSE_HELM]
+
+NAME=Mytheril Nose Helm
+ID=i_helm_nose
+ARMOR=115
+REQSTR=0
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Mytheril
+DESCRIPTION=Nose Helm
+RESOURCES=15 i_ingot_mytheril
+SKILLMAKE=BLACKSMITHING 70.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_mytheril
+	HITPOINTS={101 115}
+
+//-------------------------------------------------------------//
+// Chaos Shield
+
+[ITEMDEF i_chaos_shield]
+ID=i_shield_chaos
+NAME=Chaos Shield
+TYPE=t_shield
+FLIP=1
+RESOURCES=50 i_ingot_chaos
+SKILLMAKE=BLACKSMITHING 70.0
+WEIGHT=10
+ARMOR=30
+REQSTR=100
+
+
+CATEGORY=Novos Itens Blacksmithing
+SUBSECTION=Magic Shields
+DESCRIPTION=Chaos Shield
+
+ON=@Create
+COLOR=0
+HITPOINTS=100
+
+
+on=@equiptest
+//IF !(<src.memoryfindtype.memory_guild.link.align>==2)
+//src.sysmessage Voce nao tem alinhamento para usar esse escudo...
+//return 1
+//endif
+
+If (<src.kills>>30) && (<src.fame>>9998)
+COLOR=0819
+src.spelleffect s_protection,<src.magery>,<src.uid>
+endif
+
+on=@unequip
+color 0
+
+//-------------------------------------------------------------//
+// Order Shield
+
+[ITEMDEF i_order_shield]
+ID=i_shield_order
+NAME=Order Shield
+TYPE=t_shield
+FLIP=1
+RESOURCES=50 i_ingot_order
+SKILLMAKE=BLACKSMITHING 70.0
+WEIGHT=10
+ARMOR=30
+REQSTR=100
+
+
+CATEGORY=Novos Itens Blacksmithing
+SUBSECTION=Magic Shields
+DESCRIPTION=Order Shield
+
+
+ON=@Create
+COLOR=0
+HITPOINTS=100
+
+on=@equiptest
+//IF !(<src.memoryfindtype.memory_guild.link.align>==1)
+//src.sysmessage Voce nao tem alinhamento para usar esse escudo...
+//return 1
+//endif
+
+IF (<src.fame>>9998) && (<src.kills>==0)
+COLOR=0790
+src.spelleffect s_protection,<src.magery>,<src.uid>
+endif
+
+on=@unequip
+color 0
+
+[ITEMDEF i_order_shield_knight]
+ID=i_shield_order
+NAME=Lord British Knight Shield
+TYPE=t_shield
+FLIP=1
+RESOURCES=50 i_ingot_order
+SKILLMAKE=BLACKSMITHING 70.0
+WEIGHT=10
+ARMOR=30
+REQSTR=100
+
+
+CATEGORY=Novos Itens Blacksmithing
+SUBSECTION=Magic Shields
+DESCRIPTION=Order Shield
+
+
+ON=@Create
+COLOR=0800
+HITPOINTS=250
+
+on=@equiptest
+//IF !(<src.memoryfindtype.memory_guild.link.align>==1)
+//src.sysmessage Voce nao tem alinhamento para usar esse escudo...
+//return 1
+//endif
+
+IF (<src.fame>>9998) && (<src.kills>==0)
+COLOR=0790
+src.spelleffect s_protection,<src.magery>,<src.uid>
+endif
+
+on=@unequip
+color 0800
+
+
+//-------------------------------------------------------------//
+// Adamantium Armor
+
+[ITEMDEF i_adamantium_PLATEMAIL]
+
+NAME=Adamantium Platemail
+ID=i_platemail_chest
+ARMOR=140
+REQSTR=60
+WEIGHT=10
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Adamantium
+DESCRIPTION=Platemail
+RESOURCES=25 i_ingot_adamantium
+SKILLMAKE=BLACKSMITHING 80.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_adamantium
+	HITPOINTS={80 100}
+
+[ITEMDEF i_adamantium_PLATEMAIL_ARMS]
+
+NAME=Adamantium Platemail Arms
+ID=i_platemail_arms
+ARMOR=140
+REQSTR=40
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Adamantium
+DESCRIPTION=Platemail Arms
+RESOURCES=18 i_ingot_adamantium
+SKILLMAKE=BLACKSMITHING 80.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_adamantium
+	HITPOINTS={80 100}
+
+[ITEMDEF i_ADAMANTIUM_PLATEMAIL_leggings]
+
+NAME=Adamantium Platemail Legs
+ID=i_platemail_leggings
+LAYER=24
+ARMOR=140
+REQSTR=60
+WEIGHT=15
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Adamantium
+DESCRIPTION=Platemail Legs
+RESOURCES=20 i_ingot_adamantium
+SKILLMAKE=BLACKSMITHING 80.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_adamantium
+	HITPOINTS={80 100}
+
+[ITEMDEF i_adamantium_PLATE_HELM]
+
+NAME=Adamantium Plate Helm
+ID=i_platemail_helm
+ARMOR=140
+REQSTR=40
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Adamantium
+DESCRIPTION=Plate Helm
+RESOURCES=15 i_ingot_adamantium
+SKILLMAKE=BLACKSMITHING 80.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_adamantium
+	HITPOINTS={80 100}
+
+[ITEMDEF i_adamantium_PLATEMAIL_GORGET]
+
+NAME=Adamantium Platemail Gorget
+ID=i_platemail_gorget
+ARMOR=140
+REQSTR=30
+WEIGHT=2
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Adamantium
+DESCRIPTION=Platemail Gorget
+RESOURCES=10 i_ingot_adamantium
+SKILLMAKE=BLACKSMITHING 80.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_adamantium
+	HITPOINTS={80 100}
+
+[ITEMDEF i_adamantium_PLATEMAIL_GAUNTLETS]
+
+NAME=Adamantium Platemail Gauntlets
+ID=i_platemail_gloves
+ARMOR=140
+REQSTR=30
+WEIGHT=2
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Adamantium
+DESCRIPTION=Platemail Gauntlets
+RESOURCES=12 i_ingot_adamantium
+SKILLMAKE=BLACKSMITHING 80.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_adamantium
+	HITPOINTS={80 100}
+
+[ITEMDEF i_adamantium_FEMALE_PLATEMAIL]
+
+NAME=Adamantium Female Platemail
+ID=i_armor_female_plate
+ARMOR=140
+REQSTR=15
+WEIGHT=6
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Adamantium
+DESCRIPTION=Female Platemail
+RESOURCES=22 i_ingot_adamantium
+SKILLMAKE=BLACKSMITHING 80.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_adamantium
+	HITPOINTS={80 100}
+
+
+[ITEMDEF i_adamantium_HEATER_SHIELD]
+
+NAME=Adamantium Heater Shield
+ID=I_SHIELD_HEATER
+ARMOR=40
+REQSTR=30
+WEIGHT=8
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Adamantium
+DESCRIPTION=Heater Shield
+RESOURCES=18 i_ingot_adamantium
+SKILLMAKE=BLACKSMITHING 80.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_adamantium
+	HITPOINTS={80 100}
+
+
+[ITEMDEF i_adamantium_CLOSED_HELM]
+
+NAME=Adamantium Closed Helm
+ID=i_helm_closed
+ARMOR=140
+REQSTR=20
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Adamantium
+DESCRIPTION=Closed Helm
+RESOURCES=15 i_ingot_adamantium
+SKILLMAKE=BLACKSMITHING 80.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_adamantium
+	HITPOINTS={80 100}
+
+[ITEMDEF i_adamantium_HELMET]
+
+NAME=Adamantium Helmet
+ID=i_helm_open
+ARMOR=140
+REQSTR=10
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Adamantium
+DESCRIPTION=Helmet
+RESOURCES=15 i_ingot_adamantium
+SKILLMAKE=BLACKSMITHING 80.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_adamantium
+	HITPOINTS={80 100}
+
+[ITEMDEF i_adamantium_BASCINET]
+
+NAME=Adamantium Bascinet
+ID=i_bascinet
+ARMOR=140
+REQSTR=10
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Adamantium
+DESCRIPTION=Bascinet
+RESOURCES=15 i_ingot_adamantium
+SKILLMAKE=BLACKSMITHING 80.0
+VALUE=200
+ON=@Create
+	COLOR=color_o_adamantium
+	HITPOINTS={80 100}
+
+[ITEMDEF i_adamantium_NOSE_HELM]
+NAME=Adamantium Nose Helm
+ID=i_helm_nose
+ARMOR=140
+REQSTR=0
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Adamantium
+DESCRIPTION=Nose Helm
+RESOURCES=15 i_ingot_adamantium
+SKILLMAKE=BLACKSMITHING 80.0
+VALUE=200
+
+ON=@Create
+	COLOR=color_o_adamantium
+	HITPOINTS={80 100}
+
+
+[EOF]

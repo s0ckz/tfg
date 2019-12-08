@@ -1,0 +1,103 @@
+///////////////
+//
+//   Areas VIP do TFG Shard
+//
+//
+////////////
+[REGIONTYPE r_vip_mina t_rock]
+RESOURCES=1.0 mr_nothing
+RESOURCES=12.0 mr_iron
+RESOURCES=10.0 mr_ceramic
+//RESOURCES=1.0 mr_copper
+//RESOURCES=1.0 mr_bronze
+//RESOURCES=8.0 mr_shadow
+RESOURCES=5.0 mr_silver
+RESOURCES=3.0 mr_Valorite
+RESOURCES=5.0 mr_verite
+RESOURCES=4.0 mr_gold
+RESOURCES=2.5 mr_bloodrock
+RESOURCES=2.5 mr_blackrock
+RESOURCES=1.5 mr_order
+RESOURCES=1.5 mr_chaos
+RESOURCES=2.2 mr_mytheril
+RESOURCES=0.7 mr_adamantium
+RESOURCES=0.5 mr_diamond
+RESOURCES=0.7 mr_ruby
+RESOURCES=0.7 mr_citrine
+RESOURCES=0.7 mr_Emerald
+RESOURCES=0.7 mr_Star_Sapphire
+RESOURCES=0.7 mr_Sapphire
+RESOURCES=0.7 mr_Amethyst
+RESOURCES=0.7 mr_Tourmaline
+
+[REGIONTYPE r_vip_floresta t_tree]
+RESOURCES=1.0 mr_nothing
+RESOURCES=85.0 mr_tree
+//RESOURCES=4.2 mr_tree2
+RESOURCES=9.3 mr_tree3
+//RESOURCES=2.2 mr_tree4
+//RESOURCES=0.3 mr_tree5
+
+[REGIONTYPE r_vip_areas]
+ON=@Enter
+	if <src.f_vip_verify_region <name>> || (<SRC.ISGM>)
+		src.sysmessage @,,1 Bem-vindo a uma area VIP ! Obrigado por contribuir com o shard!
+		src.dspeech +spk_vip_area
+		src.events +e_vip_area_noship
+	else
+		src.sysmessage @,,1 Voce nao possui acesso a Area VIP!
+		return 1
+	endif
+
+On=@Exit
+	if <src.isplayer>
+		if !(<src.ctag0.auth_exit_vip_area>)
+			src.sysmessage @,,1 Voce so pode sair desta area VIP pelo gate.
+			return 1
+		endif
+	endif
+		src.ctag0.auth_exit_vip_area = 
+		src.sysmessage @,,1 Voce saiu da area VIP.
+		src.dspeech -spk_vip_area
+		src.events -e_vip_area_noship
+
+// Felluca
+[AREADEF a_vip_mina]
+EVENTS=r_vip_areas,r_vip_mina
+Name=Mina Vip
+FLAGS=region_flag_safe|region_flag_no_pvp|region_antimagic_gate|region_flag_nobuilding|region_antimagic_recall_in|region_antimagic_recall_out|region_flag_underground|region_antimagic_damage|region_antimagic_teleport|region_flag_insta_logout
+P=6085,1354,30
+RECT=6063,1316,6130,1382
+
+// Trammel
+[AREADEF a_vip_floresta]
+EVENTS=r_vip_areas,r_vip_floresta
+Name=Floresta Vip
+FLAGS=region_flag_safe|region_flag_no_pvp|region_antimagic_gate|region_flag_nobuilding|region_antimagic_recall_in|region_antimagic_recall_out|region_antimagic_damage|region_antimagic_teleport|region_flag_insta_logout
+RECT=2557,3858,2345,4066,1
+P=2491,3930,5,1
+
+[FUNCTION f_vip_verify_region]
+forcontid i_memory_areavip
+  if strmatch("<args>","<def.vip_local_<dtag0.type>>")
+    return 1
+  endif
+endfor
+return 0
+
+[SPEECH spk_vip_area]
+ON=*bank*
+	if strmatch(*vip*,<src.region.name>)
+		src.bankself
+	endif
+	
+[EVENTS e_vip_area_noship]
+On=@ItemDClick
+	if strmatch(*i_deed_ship*,<act.baseid>)
+		src.sysmessage @,,1 Barcos proibidos nesta area !
+		return 1
+	endif
+On=@GetHit
+return 1
+
+[EOF]

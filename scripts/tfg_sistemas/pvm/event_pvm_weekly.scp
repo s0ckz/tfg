@@ -1,0 +1,81 @@
+[ITEMDEF i_weekly_pvm_single_champion_katana]
+ID=i_katana
+NAME=PvM Grinding Champion Katana
+RESOURCES=8 i_ingot_iron
+WEIGHT=8
+TYPE=T_WEAPON_SWORD
+FLIP=1
+DAM=11,12
+SPEED=73
+SKILL=Swordsmanship
+REQSTR=25
+TWOHANDS=N
+SKILLMAKE=BLACKSMITHING 200.0
+TAG.LEVEL_ATTRIBUTE=DAMAGE
+TAG.LEVEL_ATTRIBUTE_BONUS=35
+
+ON=@Create
+	COLOR=077a
+	HITPOINTS=5000
+	ATTR attr_newbie
+
+on=@equiptest
+	IF !(<SRC.ISEVENT.e_weekly_pvm_single_champion>)
+		SRC.SYSMESSAGE @,,1 You must be the champion of the weekly pvm challenge to use this item.
+		RETURN 1
+	ENDIF
+
+ON=@EQUIP
+	HITS <MAXHITS>
+
+[EVENTS e_weekly_pvm_single_champion]
+
+[FUNCTION set_weekly_pvm_single_champion]
+TARGETF f_set_weekly_pvm_single_champion
+
+[FUNCTION f_set_weekly_pvm_single_champion]
+IF !(<ARGO.ISPLAYER>)
+	SRC.SYSMESSAGE @,,1 This function must be used on players only.
+ELSE
+	f_set_weekly_pvm_single_champion_char_uid <ARGO.UID>
+ENDIF
+
+[FUNCTION f_set_weekly_pvm_single_champion_char_uid]
+IF (<ARGV> != 1)
+	RETURN 1
+ENDIF
+
+REF1 <ARGV[0]>
+
+IF !(<REF1.ISPLAYER>)
+	RETURN 1
+ENDIF
+
+IF (<REF1.FLAGS> & statf_stone) || (<REF1.ACCOUNT.JAIL>) || (<REF1.ACCOUNT.BLOCK>)
+	RETURN 1
+ENDIF
+
+FOR X 0 <EVAL <SERV.ACCOUNTS> - 1>
+    IF (<SERV.ACCOUNT.<DLOCAL.X>.CHARS> > 0)
+        FOR Y 0 <EVAL <SERV.ACCOUNT.<DLOCAL.X>.CHARS> -1>
+            REF2 <SERV.ACCOUNT.<DLOCAL.X>.CHAR.<DLOCAL.Y>>
+
+            REF2.EVENTS -e_weekly_pvm_single_champion
+        ENDFOR
+    ENDIF
+ENDFOR
+
+FORINSTANCES i_weekly_pvm_single_champion_katana
+	IF (<TOPOBJ.ISPLAYER>)
+		IF (<TOPOBJ.FINDLAYER.<LAYER>> == <UID>)
+			CONT <TOPOBJ.FINDLAYER.layer_pack>
+		ENDIF
+	ENDIF
+ENDFOR
+
+REF1.EVENTS +e_weekly_pvm_single_champion
+
+SERV.NEWITEM i_weekly_pvm_single_champion_katana
+NEW.CONT <REF1.FINDLAYER.layer_pack>
+
+[EOF]

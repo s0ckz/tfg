@@ -1,0 +1,69 @@
+﻿// Crested 11/2/2009 05:35:46, with GumpStudio
+// Exported SphereExporter ver 2.0.
+// Script ver 0.56/Revisions
+
+[FUNCTION pagehelpteste]
+SRC.DIALOG d_page_help
+
+[DIALOG d_page_help]
+0,0
+page 0
+gumppic 460 108 1416 883
+gumppic 204 108 1416 883
+gumppic 332 108 1416 883
+gumppic 475 107 1416 883
+gumppic 153 93 10421
+gumppic 177 79 10420
+gumppic 166 226 10422
+gumppic 186 374 10462
+gumppic 240 374 10462
+gumppic 294 374 10462
+gumppic 348 374 10462
+gumppic 402 374 10462
+gumppic 456 374 10462
+gumppic 511 374 10462
+gumppic 565 374 10462
+gumppic 599 92 10431
+gumppic 593 226 10432
+gumppic 571 78 10430
+resizepic 238 85 9200 332 25
+gumppic 460 236 1416 883
+gumppic 204 236 1416 883
+gumppic 332 236 1416 883
+gumppic 475 235 1416 883
+gumppic 460 246 1416 883
+gumppic 204 246 1416 883
+gumppic 332 246 1416 883
+gumppic 475 245 1416 883
+dtext 295 87 567 Bem vindo a TFG Shard
+gumppic 223 131 9762 900
+dtext 256 129 567 Mandar page.
+dtext 224 146 567 Seja sempre específico. Evite mandar várias pages
+dtext 225 162 567 para facilitar nosso trabalho.
+gumppic 223 202 9762 900
+dtext 256 200 567 Ir para Help Room!
+dtext 224 216 567 Está morto ou preso em algum lugar? Use esta opção.
+gumppic 223 260 9762 900
+dtext 256 259 567 Informativo TFG Shard
+dtext 224 274 567 Utilizando essa opção você terá acesso a algumas
+dtext 224 289 567 informações do shard.
+gumppic 223 325 9762 900
+dtext 256 324 567 Informações Do Personagem
+dtext 225 339 567 Karma? Fama? Pagar Kills? Aqui mesmo :D
+
+[DIALOG d_page_help text] // useless
+Bem vindo a TFG Shard
+Mandar page.
+Seja sempre específico. Evite mandar pages por bobagem
+para facilitar nosso trabalho.
+Ir para Help Room!
+Está morto ou preso em algum lugar? Use esta opção.
+Informativo TFG Shard
+Utilizando essa opção você terá acesso a algumas
+informações do shard.
+Informações Do Personagem
+Karma? Fama? Pagar Kills? Aqui mesmo :D
+
+[DIALOG d_page_help button]
+
+[EOF]

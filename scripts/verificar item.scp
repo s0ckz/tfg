@@ -1,0 +1,10 @@
+[function verificararea]
+local.count=0
+local.rusty=0
+FORITEMS 18
+local.count ++
+if (<baseid>==i_ore_rusty)
+  local.rusty ++
+endif
+ENDFOR
+sysmessage @,,1 <dlocal.count> itens no lugar. <dlocal.rusty> rustys

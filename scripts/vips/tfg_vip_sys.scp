@@ -1,0 +1,1619 @@
+[FUNCTION zeravip]
+        for h <serv.accounts>
+                local.i=0
+                if (<serv.account.<eval <local.h> +-1>.chars>)
+                        for i <serv.account.<eval <local.h> +-1>.chars>
+                                ref1 <serv.account.<eval <local.h> +-1>.char.<eval <local.i> +-1>.uid>
+                                if <ref1.tag0.tfgcoins>
+									src.smsg @,,1 <ref1.name> : <dref1.tag0.tfgcoins> coins.
+									ref1.tag.tfgcoins =
+								endif
+                        endfor
+                endif
+        endfor
+return 1
+
+[function tfg_vip_getcoins]
+local.global = <account.tag0.global>
+local.coins = 0
+DB.QUERY "SELECT * FROM tfg_vip WHERE IdContaGlobal = '<dlocal.global>'"
+		if <db.row.numrows> <= 0
+			local.coins = 0
+		elif <db.row.numrows> > 1
+			local.coins = 0
+			s VIP : ERRO GRAVE! Ha mais de uma entrada para conta global <dlocal.global> no banco de dados!
+		else
+				for 0 <eval <db.row.numrows> - 1>
+					local.coins += <db.row.<dlocal._for>.Coins>
+				endfor
+		endif
+return <dlocal.coins>
+
+[FUNCTION add_vip_coins]
+IF (<ARGV> != 2)
+	RETURN 1
+ENDIF
+
+LOCAL.GLOBAL <SERV.ACCOUNT.<ARGV[0]>.TAG0.GLOBAL>
+LOCAL.ADD <ARGV[1]>
+
+IF (<LOCAL.GLOBAL>)
+	tfg_vip_addcoins <LOCAL.GLOBAL>,<LOCAL.ADD>,0511fc,"Credito via Console"
+	SERV.LOG Global account for <ARGV[0]> was credited by <DLOCAL.ADD>.
+ELSE
+	SERV.LOG Global account for <ARGV[0]> not found.
+ENDIF
+
+[function tfg_vip_addcoins]
+local.global = <argv[0]>
+local.add = <argv[1]>
+ref1 = <argv[2]>
+local.motivo = "<argv[3]>"
+DB.QUERY "SELECT * FROM tfg_vip WHERE IdContaGlobal = '<dlocal.global>'"
+		if <db.row.numrows> <= 0
+			DB.EXECUTE "INSERT INTO tfg_vip ( IdContaGlobal, Coins) values ( '<dlocal.global>', '<dlocal.add>')"
+			DB.EXECUTE "INSERT INTO tfg_vip_historico_creditos ( IdContaGlobal, Coins, Por, Motivo) values ( '<dlocal.global>', '<dlocal.add>', '<ref1.name> (<ref1.uid>)', '<local.motivo>')"
+		else
+				for 0 <eval <db.row.numrows> - 1>
+					DB.QUERY "UPDATE tfg_vip SET Coins = Coins + <dlocal.add> WHERE IdContaGlobal = '<dlocal.global>'"
+					DB.EXECUTE "INSERT INTO tfg_vip_historico_creditos ( IdContaGlobal, Coins, Por, Motivo) values ( '<dlocal.global>', '<dlocal.add>', '<ref1.name> (<ref1.uid>)', '<local.motivo>')"
+				endfor
+		endif
+return 1
+
+[function tfg_vip_subcoins]
+local.global = <account.tag0.global>
+local.sub = <argv[0]>
+DB.QUERY "SELECT * FROM tfg_vip WHERE IdContaGlobal = '<dlocal.global>'"
+		if <db.row.numrows> <= 0
+			return 0
+		else
+				for 0 <eval <db.row.numrows> - 1>
+					DB.QUERY "UPDATE tfg_vip SET Coins = Coins - <dlocal.sub> WHERE IdContaGlobal = '<dlocal.global>'"
+					DB.EXECUTE "INSERT INTO tfg_vip_historico_debitos ( IdContaGlobal, Coins, Motivo) values ( '<dlocal.global>', '<dlocal.sub>', '<argv[1]>')"
+					//s INSERT INTO tfg_vip_historico_debitos ( IdContaGlobal, Coins, Motivo) values ( '<dlocal.global>', '<dlocal.sub>', '<argv[1]>')"
+				endfor
+		endif
+return 1
+
+
+[DEFNAME tfg_vip_configs]
+vip_pet_respawn_time 20 // tempo em segundos pra poder usar o animal vip apos desmontar ou morrer
+vip_pet_cloner 1 // esta funçao habilita a funçao clone (se voce dropar o pet vip emcima de qualquer outra montaria, ele pega o aspecto e cor dessa montaria)
+vip_hue_changes 1 // Se 1, a pessoa pode mudar a cor do dye tub VIP quantas vezes criar. Se 0, so pode escolher a cor na primeira vez que usar.
+vip_value_percentage 100
+vip_name_change_price 20
+
+[DEFNAME tfg_vip_system]
+vip_produtos 19
+vip_produto1 i_vip_robe_of_gems
+vip_produto1_desc "Esse robe adiciona 10 a todos os stats (STR, INT e DEX). Ele é newbie e dura 30 dias."
+vip_produto2 "Extra Mining Buffer"
+vip_produto2_desc "Permite comprar até 16.000 pontos extras de buffer de mining para a conta global. Os pontos sao cumulativos. O limite é diario e reiniciado as 21h."
+vip_produto3 i_vip_dexterity_sandals
+vip_produto3_desc "Estas sandals adicionam 5 ao DEX do player e possui recuperacao passiva de stamina - +1 a cada 4 segundos - SOBE em war mode. Elas sao newbies e duram 30 dias."
+vip_produto4 i_vip_dye_tub
+vip_produto4_desc "Este dye tube possue 1 carga para pintar tecidos. Você pode escolher entre diversas cores true clicando no item."
+vip_produto5 "Troca de Nick"
+vip_produto5_desc "Troque o seu nick."
+vip_produto6 i_vip_intelligence_cloak
+vip_produto6_desc "Esta capa adiciona 5 ao INT do player e possui recuperacao passiva de mana - +1 a cada três segundos - NÃO SOBE em war mode. Ela eh newbie e duram 30 dias."
+vip_produto7 i_vip_strength_sash
+vip_produto7_desc "Esta sash adiciona 5 ao STR do player. Elas sao newbies e duram 30 dias."
+vip_produto8 i_vip_raiden_hat
+vip_produto8_desc "Este chapeu adiciona 5 a todos os stats (STR, INT e DEX) e possui recuperacao passiva de mana - +1 a cada dois segundos - SOBE em war mode. Ele eh newbie e duram 30 dias."
+vip_produto9 i_vip_raiden_robe_of_gems
+vip_produto9_desc "Esse robe adiciona 15 a todos os stats (STR, INT e DEX) e possui recuperacao passiva de mana - +1 a cada dois segundos - SOBE em war mode. Ele é newbie e dura 30 dias."
+vip_produto10 i_deed_sandstone_cabin_horse_place
+vip_produto10_desc "Uma deed para a casa Sandstone Cabin with Horse Slot. Todas as VIPs Deeds são newbies e intransferiveis."
+vip_produto11 i_deed_log_cabin_horse_places
+vip_produto11_desc "Uma deed para a casa Log Cabin with Horse Slots. Todas as VIPs Deeds são newbies e intransferiveis."
+vip_produto12 i_deed_large_log_cabin_ranch
+vip_produto12_desc "Uma deed para a casa Large Log Cabin Ranch. Todas as VIPs Deeds são newbies e intransferiveis."
+vip_produto13 i_deed_country_house
+vip_produto13_desc "Uma deed para a casa Country Side House. Todas as VIPs Deeds são newbies e intransferiveis."
+vip_produto14 i_deed_marble_tower_with_fence
+vip_produto14_desc "Uma deed para a casa Marble Tower with Fence. Todas as VIPs Deeds são newbies e intransferiveis."
+vip_produto15 i_deed_twin_fortress
+vip_produto15_desc "Uma deed para a casa Twin Fortress. Todas as VIPs Deeds são newbies e intransferiveis."
+vip_produto16 i_deed_foundation_18x18
+vip_produto16_desc "Uma deed para a foundation 18x18. Todas as VIPs Deeds são newbies e intransferiveis."
+vip_produto17 i_vip_special_dye_tub
+vip_produto17_desc "Este dye tube possue 1 carga para pintar tecidos. Você pode escolher entre quatro cores especiais clicando no item."
+vip_produto18 i_ethereal_mount_deed
+vip_produto18_desc "Esta deed dá direito a uma montaria Ethereal: Horse, Mustang, Llama, Zostrich, Orn ou Oclock."
+vip_produto19 i_ethereal_special_mount_deed
+vip_produto19_desc "Esta deed dá direito a uma montaria Special Ethereal: Giant Beetle."
+
+vip_local_1 "Mina Vip" //mina
+vip_local_2 "Floresta Vip" //floresta
+vip_local_exit "Help room" //local pra onde vai quando acaba o VIP da mina ou floresta
+
+[DEFNAME tgf_vip_pets]
+vip_pet_type1 "Mustang"
+vip_pet_type2 "Llama"
+vip_pet_type3 "Oclock"
+vip_pet_type4 "Orn"
+vip_pet_type5 "Zostrich"
+///// Mustangs
+vip_Mustang 15
+vip_Mustang1	C_A_MUSTANG_ROAN
+vip_Mustang1_color	01bb
+vip_Mustang2	C_A_MUSTANG_CRIMSON
+vip_Mustang2_color 01b6
+vip_Mustang3	C_A_MUSTANG_PAMAMINO
+vip_Mustang3_color 033
+vip_Mustang4	C_A_MUSTANG_REDROAN
+vip_Mustang4_color 0279
+vip_Mustang5	C_A_MUSTANG_WIMMIMATE
+vip_Mustang5_color 0158
+vip_Mustang6	C_A_MUSTANG_CHOCOLATE
+vip_Mustang6_color 01bb
+vip_Mustang7	c_dark_brown_musta
+vip_Mustang7_color 0750
+vip_Mustang8	c_black_musta
+vip_Mustang8_color 0455
+vip_Mustang9	c_swamp_musta
+vip_Mustang9_color 0590
+vip_Mustang10	c_mage_musta
+vip_Mustang10_color 030
+vip_Mustang11	c_night_musta
+vip_Mustang11_color 052d
+vip_Mustang12	c_snow_musta
+vip_Mustang12_color 0481
+vip_Mustang13	c_indian_horse
+vip_Mustang13_color 04b9
+vip_Mustang14	c_nightmare
+vip_Mustang14_color 0515
+vip_Mustang15	c_elder_nightmare
+vip_Mustang15_color 0455
+
+///// Llama
+vip_Llama	6
+vip_Llama1	c_llama
+vip_llama2	c_desert_llama
+vip_llama2_color	01be
+vip_llama3	c_pale_llama
+vip_llama3_color	0641
+vip_llama4	c_shadow_llama
+vip_llama4_color	0770
+vip_llama5	c_gay_llama
+vip_llama5_color	024
+vip_llama6	c_snow_llama
+vip_llama6_color	0481
+
+
+///// Zostrich
+vip_Zostrich 9
+vip_Zostrich1	c_ostard_zostrich
+vip_Zostrich2	c_rock_zos
+vip_Zostrich2_color	02eb
+vip_Zostrich3	c_snow_zos
+vip_Zostrich3_color	0481
+vip_Zostrich4	c_Swamp_zos
+vip_Zostrich4_color	0590
+vip_Zostrich5	c_black_zos
+vip_Zostrich5_color	0455
+vip_Zostrich6	c_poison_zos
+vip_Zostrich6_color	0043
+vip_Zostrich7	c_mage_zos
+vip_Zostrich7_color	0030
+vip_Zostrich8 c_dark_brown_zos
+vip_Zostrich8_color 0750
+vip_Zostrich9 c_night_zos
+vip_Zostrich9_color 052d
+
+///// Orn
+vip_Orn 3
+vip_Orn1	c_ostard_forest
+vip_Orn2	c_snow_orn
+vip_Orn2_color	0481
+vip_Orn3	c_dark_orn
+vip_Orn3_color	0455
+///// Oclock
+vip_Oclock 3
+vip_Oclock1	c_ostard_desert
+vip_Oclock2	c_snow_oclock
+vip_Oclock2_color	0481
+vip_Oclock3	c_dark_oclock
+vip_Oclock3_color	0455
+
+[DEFNAME vip_hues]
+vip_hue1 001
+vip_hue1_name True Black
+vip_hue2 0481
+vip_hue2_name True White
+vip_hue3 0482
+vip_hue3_name True Grey
+
+[DEFNAME vip_special_hues]
+vip_special_hue_page 5
+vip_special_hue_count 7
+vip_special_hue1 2058
+vip_special_hue1_name Special Red
+vip_special_hue2 1942
+vip_special_hue2_name Special Blue
+vip_special_hue3 1941
+vip_special_hue3_name Special Green
+vip_special_hue4 1944
+vip_special_hue4_name Special Yellow
+vip_special_hue5 2064
+vip_special_hue5_name Special Gray
+vip_special_hue6 2695
+vip_special_hue6_name Special Graphite
+vip_special_hue7 2740
+vip_special_hue7_name Special Navy
+
+[DEFNAME vip_robes_dispid]
+vip_robe_dispid1 02683
+vip_robe_dispid2 i_robe
+vip_robe_dispid3 i_dress_plain
+vip_robe_dispid4 i_dress_full
+vip_robe_dispid5 i_kamishimo
+
+[DEFNAME tilepics] // Optimizar o codigo para tirar essas defs que me parecem desnecessarias.
+tilepic_Mustang 8480
+tilepic_Llama 8438
+tilepic_Oclock 8501
+tilepic_Orn 8503
+tilepic_Zostrich 8502
+
+
+
+/////
+//
+//   Compra de Acesso as Areas VIP
+//
+//
+/////
+
+
+[DIALOG d_compra_acesso]
+250,250
+page 0
+ctag.compra_acesso_type <argv[0]>
+ctag.compra_acesso_time <qval <argv[1]> ? <argv[1]> : 21600>
+local.compra_acesso_price <eval <eval <ctag0.compra_acesso_time> / 21600> * 6>
+resizepic 6 8 3500 276 192
+dhtmlgump 49 112 190 35 1 0 <def.center><timeformat 0,<ctag0.compra_acesso_time>>
+dhtmlgump 43 24 212 24 0 0 <def.center><def.u>Comprar acesso à <qval (<argv[0]> == 2)? Floresta VIP : Mina VIP>
+dhtmlgump 33 91 229 24 0 0 <def.center>Selecione o tempo desejado:
+button 246 119 2511 2511 1 0 1
+button 28 118 56 56 1 0 2
+dhtmlgump 28 160 190 24 0 0 <def.div_right><def.Bfont_red><dlocal.compra_acesso_price> TFG coins<def.div_end>
+button 230 158 4023 4024 1 0 3
+local.access_time = <f_vip_acess <dctag.compra_acesso_type>>
+dhtmlgump 33 44 220 43 0 0 <def.center> Você possui <eval <tfg_vip_getcoins>> TFG coins.<def.br> Você dispoe de: <timeformat 0,<local.access_time>>.
+
+[DIALOG d_compra_acesso button]
+ON=0
+ctag.compra_acesso_type=
+ctag.compra_acesso_time=
+return 0
+
+ON=1
+//add time
+local.estimativa = <eval <eval <eval <ctag0.compra_acesso_time> + 21600> / 21600> * 6>
+if (<tfg_vip_getcoins> >= <local.estimativa>)
+ctag0.compra_acesso_time += 21600
+SDIALOG d_compra_acesso 0,<ctag.compra_acesso_type>,<ctag.compra_acesso_time>
+else
+sysmessage @,,1 Você nao possui TFG coins suficientes para comprar mais que <timeformat 0,<ctag.compra_acesso_time>>
+SDIALOG d_compra_acesso 0,<ctag.compra_acesso_type>,<ctag.compra_acesso_time>
+endif
+return 0
+
+ON=2
+//remove time
+if (<ctag.compra_acesso_time> > 21600)
+ctag.compra_acesso_time -= 21600
+else
+ctag.compra_acesso_time = 21600
+sysmessage @,,1 Você nao pode comprar menos de 6 horas.
+endif
+SDIALOG d_compra_acesso 0,<ctag.compra_acesso_type>,<ctag.compra_acesso_time>
+return 0
+
+ON=3
+SDIALOG d_compra_acesso_confirm 0,<ctag.compra_acesso_type>,<ctag.compra_acesso_time>
+return 0
+
+[DIALOG d_compra_acesso_confirm]
+250,250
+page 0
+ctag.compra_acesso_type <argv[0]>
+ctag.compra_acesso_time <argv[1]>
+local.compra_acesso_price <eval <eval <argv[1]> / 21600> * 6>
+resizepic 6 8 3500 276 192
+dhtmlgump 33 24 212 24 0 0 <def.center><def.u>Comprar acesso à <qval (<argv[0]> == 2)? Floresta VIP : Mina VIP>
+dhtmlgump 33 54 212 24 0 0 <def.center> Você possui <eval <tfg_vip_getcoins>> TFG coins.
+dhtmlgump 20 84 250 70 1 0 <def.center><def.bfont_red>Você tem certeza que deja comprar <timeformat 0,<argv[1]>> de acesso à <qval (<argv[0]> == 2) ? Floresta VIP : Mina VIP> por <def.b><dlocal.compra_acesso_price> TFG coins ?
+dhtmlgump 28 162 199 24 0 0 <def.div_right><def.Bfont_red><def.u>EU CONFIRMO A COMPRA<def.div_end>
+button 230 160 4023 4024 1 0 1
+
+[DIALOG d_compra_acesso_confirm BUTTON]
+ON=0
+ctag.compra_acesso_type=
+ctag.compra_acesso_time=
+return 0
+
+ON=1
+ctag.compra_acesso_price <eval <eval <ctag.compra_acesso_time> / 21600> * 6>
+if (<tfg_vip_getcoins> >= <ctag.compra_acesso_price>)
+SYSMESSAGE @,,1 Você adquiriu <timeformat 0,<ctag.compra_acesso_time>> de acesso à <qval (<ctag.compra_acesso_type> == 2)? Floresta VIP : Mina VIP>.
+tfg_vip_subcoins <ctag.compra_acesso_price>
+f_vip_logs 2,<dctag0.compra_acesso_price>,"Acesso <qval (<ctag.compra_acesso_type> == 2)? Floresta VIP : Mina VIP> de <timeformat 0,<dctag.compra_acesso_time>>"
+f_vip_grant_access <dctag.compra_acesso_type>,<dctag.compra_acesso_time>
+else
+SYSMESSAGE @,,1 Você nao possui TFG coins suficientes para esta compra.
+endif
+ctag.compra_acesso_type=
+ctag.compra_acesso_time=
+ctag.compra_acesso_price=
+return 0
+
+[FUNCTION f_vip_grant_access]
+ref1 = <uid>
+FORCONTID i_memory_areavip
+  if (<tag0.type> == <argn1>)
+    if !<local.verify>
+    timer += <argn2>
+    ref1.sysmessage @,,1 Seu tempo total de acesso a <qval (<argn1> == 2) ? Floresta VIP: Mina VIP> agora é de <timeformat 0,<timer>>.
+    local.verify ++
+    else
+    ref1.sysmessage @,,1 Existe um problema com sua conta. Um LOG deste erro foi gerado no servidor, queira contatar rapidamente a nossa equipe !
+    ref1.f_vip_logs 3,"Por alguma razao (bug), <ref1.name> (uid: <ref1.uid>, account <ref1.account>) possui mais de uma memoria de mina/floresta (Type: <dtag0.type>, UID: <uid>, contagem <dlocal.verify>) vip. Isto pode ter anulado uma de suas compras recentes."
+    return 1
+    endif
+   endif
+ENDFOR
+if !<local.verify>
+	SERV.NEWITEM i_memory_areavip
+	NEW.TAG.TYPE <ARGN1>
+	NEW.TIMER <ARGN2>
+	TRYSRC <UID> NEW.EQUIP
+        sysmessage @,,1 Seu tempo total de acesso a <qval (<argn1> == 2) ? Floresta VIP: Mina VIP> agora é de <timeformat 0,<argn2>>.
+endif
+return 1
+
+[FUNCTION f_vip_acess]
+ref1 = <uid>
+FORCONTID i_memory_areavip
+  if (<tag0.type> == <argn1>)
+    if !<local.verify>
+    local.result = <timer>
+    local.verify ++
+    else
+    ref1.sysmessage @,,1 Existe um problema com sua conta. Um LOG deste erro foi gerado no servidor, queira contatar rapidamente a nossa equipe !
+    ref1.f_vip_logs 3,"Por alguma razao (bug), <ref1.name> (uid: <ref1.uid>, account <ref1.account>) possui mais de uma memoria de mina/floresta (Type: <dtag0.type>, UID: <uid>, contagem <dlocal.verify>) vip. Detectamos isso durante uma verificaçao simples para o gump."
+    return "Error"
+    endif
+   endif
+ENDFOR
+return <local.result>
+
+//////
+//
+//  Memorias de Acesso as Areas VIPS
+//
+//
+/////
+
+[ITEMDEF i_memory_areavip]
+BASEID=i_memory
+TYPE=t_eq_script
+NAME=Acesso a Area VIP
+
+On=@timer
+IF STRMATCH("<CONT.REGION.NAME>","<DEF.vip_local_<dtag0.type>>")
+cont.ctag0.auth_exit_vip_area = 1
+cont.F_GO <def.vip_local_exit>
+ENDIF
+cont.sysmessage @,,1 Seu tempo de acesso à <qval (<tag0.type> == 2) ? Floresta: Mina> VIP acabou.
+remove
+return 1
+
+////
+//
+//   Gate e Gump de Acesso as Areas VIPS
+//
+//
+////
+
+[ITEMDEF i_vip_moongate]
+ID=i_moongate_blue
+
+ON=@click
+MESSAGE @,,1 Acesso às areas VIP
+return 1
+
+ON=@step
+if !<argn1>
+sdialog d_acesso_areavip
+endif
+return 1
+
+[DIALOG d_acesso_areavip]
+250,250
+page 0
+ref1 = <src.f_vip_verify_access 1>
+ref2 = <src.f_vip_verify_access 2>
+resizepic 6 8 3500 276 120
+dhtmlgump 43 24 212 24 0 0 <def.center><def.u>Acesso às areas VIP
+dhtmlgump 70 60 200 24 0 0 <qval <ref1> ? Mina VIP - <timeformat 0,<ref1.timer>> : Comprar acesso a Mina VIP>
+dhtmlgump 70 90 200 24 0 0 <qval <ref2> ? Floresta VIP - <timeformat 0,<ref2.timer>> : Comprar acesso a Floresta VIP>
+button 33 58 4023 4024 1 0 1
+button 33 88 4023 4024 1 0 2
+
+[DIALOG d_acesso_areavip BUTTON]
+ON=0
+return 0
+
+ON=1 2
+// Mina VIP
+ref1 = <src.f_vip_verify_access <argn1>>
+if (<distance> > 1)
+src.sysmessage @,,1 Você esta muito longe de <name>!
+elif <ref1>
+SRC.F_GO <def.vip_local_<dargn1>>
+else
+SRC.SDIALOG d_compra_acesso 0,<argn1>
+endif
+return 0
+
+[FUNCTION f_vip_verify_access]
+ref1 = <uid>
+forcontid i_memory_areavip
+  if <tag0.type> == <argn1>
+    return <uid>
+  endif
+endfor
+return 0
+
+
+/////////////
+//
+//  Gate de Saida das Areas VIPS
+//
+////////////
+
+[ITEMDEF i_vip_moongate_exit]
+ID=i_moongate_blue
+
+ON=@click
+MESSAGE @,,1 Saida das areas VIP
+return 1
+
+ON=@step
+	if strmatch(*vip*,<src.region.name>)
+		src.ctag.auth_exit_vip_area = 1
+		src.F_GO <def.vip_local_exit>
+	endif
+
+///////////
+//
+//
+//    Gestao de Coins pela Staff
+//    Gestao de Duraçao dos Itens VIP pela staff
+//
+//
+////////
+
+[function creditar_vip]
+TARGETF f_add_tfg_coins
+return 1
+
+[function f_add_tfg_coins]
+if <argo.isplayer>
+	ARGO.SDIALOG d_add_tfg_coins
+else
+	sysmessage @,,1 Voce so pode usar esta funcao em players.
+endif
+return 1
+
+[function editar_item_vip]
+TARGETF f_edit_vip_item
+return 1
+
+[function f_edit_vip_item]
+if <argo.istevent.t_vip_item_time_control>
+	ARGO.SDIALOG d_edit_vip_item
+else
+	SYSMESSAGE @,,1 Este nao e um item vip com duraçao.
+endif
+return 1
+
+[function remover_item_vip]
+TARGETF f_remove_vip_item
+return 1
+
+[function f_remove_vip_item]
+if <argo.istevent.t_vip_all>
+		if <serv.itemdef.<argo.baseid>.tdata2>
+			ref1 = <argo.link>
+				if !<ref1.isplayer>
+					SRC.SYSMESSAGE @,,1 <REF1.NAME> Removido.
+					ref1.remove
+				endif
+		endif
+	f_vip_logs 5,"STAFF <src.name> acc <src.account.name> vai remover um item VIP (<argo.name>)..."
+	ARGO.TAG.AUTH_DESTROY = 1
+	ARGO.REMOVE
+else
+	SYSMESSAGE @,,1 Este nao e um item vip.
+endif
+return 1
+
+[DIALOG d_add_tfg_coins]
+250,250
+page 0
+resizepic 6 8 3500 276 205
+dhtmlgump 33 24 212 24 0 0 <def.center><def.u>TFG Coins
+dhtmlgump 20 54 240 24 0 0 <def.center> Login <account.name> possui <eval <tfg_vip_getcoins>> TFG coins.
+dhtmlgump 33 74 212 24 0 0 <def.center> Quantas você deseja creditar?
+resizepic 19 95 3500 245 40
+resizepic 19 130 3500 245 40
+dtextentry 60 105 240 30 33 1
+dtextentry 60 140 240 30 33 2 motivo
+dhtmlgump 28 175 199 24 0 0 <def.div_right><def.Bfont_red><def.u>EU CONFIRMO O CREDITO<def.div_end>
+button 230 172 4023 4024 1 0 1
+
+[DIALOG d_add_tfg_coins BUTTON]
+ON=0
+return 0
+
+ON=1
+if <isnum <argtxt[1]>>
+tfg_vip_addcoins <account.tag0.global>,<eval <argtxt[1]>>,<src.uid>,"<argtxt[2]>"
+src.f_vip_logs 1,1,<eval <argtxt[1]>>,<uid>
+SRC.SYSMESSAGE @,,1 Você creditou <eval <argtxt[1]>> TFG coins para o jogador <NAME>. Agora ele possui <eval <tfg_vip_getcoins>> coins.
+SYSMESSAGE @,,1 Sua conta foi creditada de <eval <argtxt[1]>> TFG coins. Seu saldo agora é de <eval <tfg_vip_getcoins>> coins.
+else
+SRC.SYSMESSAGE @,,1 O valor deve conter somente numeros.
+SDIALOG d_add_tfg_coins
+endif
+return 1
+
+[DIALOG d_edit_vip_item]
+250,250
+page 0
+	if <serv.itemdef.<baseid>.tdata2>
+		if !<link.isplayer>
+			local.timer = <link.timer>
+		endif
+	else
+		local.timer = <timer>
+	endif
+resizepic 6 8 3500 276 165
+dhtmlgump 33 24 212 24 0 0 <def.center><def.u>Item VIP - Duraçao
+dhtmlgump 20 54 240 24 0 0 <def.center> Este item possui <timeformat 0,<local.timer>>.
+dhtmlgump 33 74 212 24 0 0 <def.center> Quanto tempo adicionar (em min)?
+resizepic 19 95 3500 245 40
+dtextentry 60 105 240 30 33 1 em minutos
+dhtmlgump 28 135 199 24 0 0 <def.div_right><def.Bfont_red><def.u>EU CONFIRMO O CREDITO<def.div_end>
+button 230 132 4023 4024 1 0 1
+
+[DIALOG d_edit_vip_item BUTTON]
+ON=0
+return 0
+
+ON=1
+if <isnum <argtxt[1]>>
+	src.f_vip_logs 1,2,<eval <argtxt[1]>>,<uid>
+		if <serv.itemdef.<baseid>.tdata2>
+			if !<link.isplayer>
+				link.timer += <eval <dargtxt[1]> * 60>
+			else
+				src.f_vip_new_memory <uid>,<eval <dargtxt[1]> * 60>
+			endif
+		local.timer = <link.timer>
+		else
+			timer += <eval <dargtxt[1]> * 60>
+			local.timer = <timer>
+		endif
+	src.sysmessage @,,1 Você aumentou o tempo do item em <dargtxt[1]> minutos. O tempo total do item agora e <timeformat 0,<local.timer>>.
+	topobj.sysmessage @,,1 Seu item <name> recebeu um credito de <dargtxt[1]> minutos. O tempo total do item agora e de <timeformat 0,<local.timer>>.
+else
+	SRC.SYSMESSAGE @,,1 O valor deve conter somente numeros.
+	SDIALOG d_edit_vip_item
+endif
+return 1
+
+////////
+//
+//   Evento para itens VIP com duraçao definida
+//   + Evento para todos itens VIP
+//   + Nao devem ser colocados como type, mas como TEVENT
+//
+///////
+
+[TYPEDEF t_vip_item_time_control]  // Ter nos itens VIP com duraçao definida
+ON=@Click
+if <serv.itemdef.<baseid>.tdata2>
+	if (<link.uid> == <src.uid>)
+		message @,,1 [Expirado]
+		sdialog d_vip_recharge
+	endif
+elif <timer> < 1
+	if (<link.uid> == <src.uid>)
+		message @,,1 [Expirado]
+		sdialog d_vip_recharge
+	endif
+endif
+
+On=@EquipTest
+if <tag0.create_auth>
+	tag0.create_auth =
+	return 0
+elif <serv.itemdef.<baseid>.tdata2>
+	if !<link.uid> || (<link.uid>==<src.uid>)
+		src.sysmessage @,,1 Este item esta expirado. Voce precisa recarrega-lo para continuar a usar.
+		sdialog d_vip_recharge
+		return 1
+	endif
+elif <timer> < 1
+	src.sysmessage @,,1 Este item esta expirado. Voce precisa recarrega-lo para continuar a usar.
+	sdialog d_vip_recharge
+	return 1
+endif
+
+On=@Timer
+if !<serv.itemdef.<baseid>.tdata2> && (<cont.uid> = <link>)
+	ref1=<cont.uid>
+	trysrc <cont.uid> unequip
+	ref1.sysmessage @,,1 A duracao do seu <name> acabou !
+	timer = -1
+endif
+
+
+/////////////////
+//
+//      TEVENT e Funcao para controlar create e destroy
+//
+//
+/////////////////
+
+[TYPEDEF t_vip_all]  // Ter em todos itens VIP pra controlar o Create (somente numa versao mais atualizada do sphere) e o Destroy
+On=@AfterClick
+	if <link.isplayer>
+		ref1=<uid>
+		ref2=<link.uid>
+	else
+		ref1=<link.uid>
+		ref2=<link.more1>
+	endif
+
+	if <ref2> == <src.uid>
+		message @,,1 <qval (<ref1.timer> < 1)?[VIP]:[VIP <timeformat 0,<ref1.timer>>]>
+	endif
+	message @,,1 <ref2.name>'s <name>
+	return 1
+
+//ON=@Create
+// nessa versao do sphere o on@create nao roda no TEVENT. Quando passar ao 56c tirar a funcao f_vip_create do create de cada item vip e por aqui
+
+ON=@Destroy
+if !<tag0.auth_destroy>
+	return 1
+endif
+if (<tag0.auth_destroy> == 2)
+	f_vip_logs 5,"DESHIRINK: O item <name> <uid> com timer de <timer> foi destruido (para deshirink somente) em <serv.rtime>."
+else
+	f_vip_logs 5,"O item <name> <uid> com timer de <timer> foi destruido em <serv.rtime>."
+endif
+
+[FUNCTION f_vip_create]
+f_vip_logs 4,"<qval <src.ctag0.vip_compra>?COMPRA:NAO FOI UMA COMPRA>:O item <name> foi criado por <src.name> (uid <src.uid> / acc <src.account.name> / plevel <src.account.plevel>) em <serv.rtime>."
+src.ctag.vip_compra =
+return 1
+
+/////
+//
+//  Funçoes de proteçao
+//
+//
+/////
+
+// Adicionar esta funçao no CommandTrigger= do INI.
+// CommandTrigger=f_vip_credit_protection
+// Se ja houver uma funcao pro CommandTrigger, adicionar o mecanismo desta no comeco da funçao ja existente
+
+[FUNCTION f_vip_credit_protection]
+if (<account.plevel> > 5)
+	 if strmatch(*tag.tfgcoins*,"<args>")
+		sysmessage @,,1 Atençao: o TFG Coins é um sistema que envolve dinheiro real. As alteraçoes nesse sistema so podem ser feitas via script para evitar bugs.
+		return 1
+	 elif strmatch(xtimer *,<args>)
+		sysmessage @,,1 Do que voce deseja editar o timer?
+		targetf f_timer_protected <explode " ",<args>>
+		return 1
+	 elif strmatch(set timer *,<args>)
+	 	sysmessage @,,1 Do que voce deseja editar o timer?
+		targetf f_timer_protected <explode " ",<args>>
+		return 1
+	 endif
+endif
+
+[FUNCTION f_timer_protected]
+if <argo.tag0.etglobal> || <argo.istevent.t_vip_item_time_control>
+	src.sysmessage @,,1 A edicao deste item e impossivel, pois trata-se de um item VIP.
+else
+	argo.timer = <dargv[<eval <argv> - 1>]>
+	src.sysmessage @,,1 Timer de <argo.name> setado em <argo.timer>
+endif
+return 1
+
+/////
+//
+//
+//  Funçoes de Logs
+//
+//
+/////
+
+[FUNCTION f_vip_logs]
+if (<argn1> == 1)
+local.ws_id_file=logs/vip_logs/creditos_mes_<SERV.RTIME.FORMAT %m>.txt
+ref1 = <argv[3]>
+local.mensagem <name> (UID: <uid> / Account: <account.name>) <qval (<argn2> == 2)?adicionou <dargn3> minutos no item:creditou <dargn3> TFG coins para> <ref1.name> (UID: <ref1.uid> <qval <ref1.isplayer>?/ Account <ref1.account.name>:>) em <SERV.RTIME>.
+elif (<argn1> == 2)
+local.ws_id_file=logs/vip_logs/compras_mes_<SERV.RTIME.FORMAT %m>.txt
+local.mensagem <name> (UID: <uid> / Account: <account.name>) gastou <argn2> TFG coins comprando <argv[2]> em <SERV.RTIME>.
+elif (<argn1> == 3)
+local.ws_id_file=logs/vip_logs/erros_mes_<SERV.RTIME.FORMAT %m>.txt
+local.mensagem ERRO: <argv[1]>
+elif (<argn1> == 4)
+local.ws_id_file=logs/vip_logs/creates_mes_<SERV.RTIME.FORMAT %m>.txt
+local.mensagem CRIACAO DE ITEM VIP: <argv[1]>
+elif (<argn1> == 5)
+local.ws_id_file=logs/vip_logs/destroys_mes_<SERV.RTIME.FORMAT %m>.txt
+local.mensagem DESTROY: <argv[1]>
+endif
+IF (<FILE.INUSE>)
+FILE.CLOSE
+ENDIF
+FILE.MODE.SETDEFAULT
+FILE.MODE.CREATE=1
+FILE.MODE.WRITE=1
+FILE.MODE.READLFLAG=1
+FILE.MODE.APPEND=1
+if (<FILE.OPEN <local.ws_id_file>>)
+FILE.WRITELINE <local.mensagem>
+FILE.CLOSE
+ENDIF
+
+////////////
+//
+//
+//   Customizaçao do Animal VIP
+//
+//
+///////////
+
+[DIALOG d_vip_pet_color]
+200,80
+page 0
+src.ctag0.vip_pet_type = <argv[0]>
+resizepic 0 0 3500 600 530
+dhtmlgump 25 17 570 19 0 0 <def.center><def.u>TFG Shard - Animal VIP
+button 45 50 <qval (<argv[0]> == 1)?4006 4005:4005 4006> 1 0 31
+tilepic 75 40 8480 // dobrado pros clients 3
+tilepichue 75 40 8480 33
+dhtmlgump 50 85 99 19 0 0 <def.center> Mustang
+button 145 50 <qval (<argv[0]> == 2)?4006 4005:4005 4006> 1 0 32
+tilepic 175 40 8438
+dhtmlgump 150 85 99 19 0 0 <def.center> Llama
+button 245 50 <qval (<argv[0]> == 3)?4006 4005:4005 4006> 1 0 33
+tilepic 275 40 8501
+dhtmlgump 250 85 99 19 0 0 <def.center> Oclock
+button 345 50 <qval (<argv[0]> == 4)?4006 4005:4005 4006> 1 0 34
+tilepic 375 40 8503
+dhtmlgump 350 85 99 19 0 0 <def.center> Orn
+button 445 50 <qval (<argv[0]> == 5)?4006 4005:4005 4006> 1 0 35
+tilepic 475 40 8502
+dhtmlgump 450 85 99 19 0 0 <def.center> Zostrich
+dhtmlgump 18 125 565 36 0 0 <def.center><def.bfont_green><def.u>Você escolheu <def.vip_pet_type<dargv[0]>>. Por favor, escolha sua cor preferida:
+local.linha = 1
+for x 1 <def.vip_<def.vip_pet_type<dargv[0]>>>
+local.pet = <def.vip_<def.vip_pet_type<dargv[0]>><dlocal.x>>
+local.color = <def.vip_<def.vip_pet_type<dargv[0]>><dlocal.x>_color>
+  if (<local.linha> >= 9)
+     local.linha = 1
+     local.coluna ++
+  endif
+local.posy = <eval 45 * <local.linha>>
+local.posx = <eval 180 * <local.coluna>>
+button <eval 20 + <local.posx>> <eval 120 + <local.posy>> 4005 4006 1 0 <local.x>
+tilepic <eval 60 + <local.posx>> <eval 110 + <local.posy>> <ddef.tilepic_<def.vip_pet_type<dargv[0]>>> // versao pra client 3
+tilepichue <eval 60 + <local.posx>> <eval 110 + <local.posy>> <ddef.tilepic_<def.vip_pet_type<dargv[0]>>> <dlocal.color>
+dhtmlgump <eval 110 + <local.posx>> <eval 117 + <local.posy>> 99 19 0 0 <serv.chardef.<local.pet>.name>
+local.linha ++
+endfor
+
+[DIALOG d_vip_pet_color BUTTON]
+ON=1 30
+if <uid>
+local.type = <src.ctag0.vip_pet_type>
+local.pet = <def.vip_<def.vip_pet_type<dlocal.type>><dargn>>
+local.color = <def.vip_<def.vip_pet_type<dlocal.type>><dargn>_color>
+SRC.SYSMESSAGE @,,1 Você escolheu o animal <serv.chardef.<local.pet>.name>.
+ tag0.ethid=<local.pet>
+ name=<serv.chardef.<local.pet>.name>
+ color=<dlocal.color>
+ dispid=<serv.chardef.<local.pet>.icon>
+ update
+else
+SRC.SYSMESSAGE @,,1 Este animal nao existe mais ou foi deshirinkado.
+endif
+return 1
+
+ON=31 35
+if <uid>
+local.newtype = <eval <argn> - 30>
+SDIALOG d_vip_pet_color 0,<local.newtype>
+SRC.SYSMESSAGE @,,1 Você escolheu <def.vip_pet_type<dlocal.newtype>>.
+else
+SRC.SYSMESSAGE @,,1 Este animal nao existe mais ou foi deshirinkado.
+endif
+return 1
+
+
+///////////////
+//
+//
+//    Menu de Compras VIP
+//
+//
+///////////////
+
+[PLEVEL 1]
+vipshop
+
+[FUNCTION vipshop]
+//if (<src.account.plevel> < 7)
+//	src.sysmessage @,,1 Tfg Vip desativado para manutencao. Volte em 30m.
+//	return 1
+//endif
+
+// IF <tfg_vip_getcoins> < 1
+// 	src.sysmessage @,,1 Voce nao tem coins para usar esse comando.
+// 	RETURN 1
+// ENDIF
+
+IF (<f_is_in_event <SRC.UID>>)
+	SRC.SYSMESSAGE @,,1 Esse comando nao pode ser usado em um evento!
+	RETURN 1
+ENDIF
+
+IF <isdialogopen d_compras_vip>
+SRC.SYSMESSAGE @,,1 Esse dialog ja esta aberto.
+return 1
+ENDIF
+
+SDIALOG d_compras_vip
+return 1
+
+[DIALOG d_compras_vip]
+250,80
+local.total_pages = <eval <eval <eval <def.vip_produtos> - 1> / 5> + 1>
+page 0
+resizepic 0 0 3500 458 610
+dhtmlgump 27 15 403 21 0 0 <def.center><def.u>TFG Shard - Compras VIP
+dhtmlgump 10 39 435 49 0 0 <def.center>Atualmente <def.bfont_green>você possui <eval <tfg_vip_getcoins>> TFG coins.
+
+IF (<DEF.vip_value_percentage> != 100)
+	dhtmlgump 10 64 435 49 0 0 <def.center><def.b><def.Bfont_red>Aproveite !!! <EVAL 100 - <DEF.vip_value_percentage>>% OFF !
+ENDIF
+
+dhtmlgump 12 92 435 21 0 0 <def.center>Selecione o item que deseja comprar:
+
+for page 0 <eval <local.total_pages> - 1>
+page <eval <local.page> + 1>
+
+local.itens_page = <qval (<eval <local.page> + 1> < <local.total_pages>)? 5 :<eval <def.vip_produtos> - <eval <local.page> * 5>>>
+for x 1 <local.itens_page>
+local.posy = <eval 37 + <eval <local.x> * 90>>
+local.item = <eval <eval <local.page> * 5> + <local.x>>
+button 18 <local.posy> 4005 4006 1 0 <local.item>
+// the "soon" functionality
+// button 18 <local.posy> 4005 4006 <eval qval(<local.item>,12,1,1,0)> 0 <local.item>
+//tilepic 40 <local.posy> <serv.itemdef.<def.vip_produto<dlocal.item>>.id>
+if (<local.item> == 2) || (<local.item> == 5)
+dhtmlgump 80 <local.posy> 390 21 0 0 <dlocal.item>. <def.vip_produto<dlocal.item>> (<ddef.vip_name_change_price> TFG Coins)
+// elif (<local.item> > 12)
+// dhtmlgump 80 <local.posy> 390 21 0 0 <dlocal.item>. <def.vip_produto<dlocal.item>> (EM BREVE)
+else
+dhtmlgump 80 <local.posy> 390 21 0 0 <dlocal.item>. <serv.itemdef.<def.vip_produto<dlocal.item>>.name> (<eval (<serv.itemdef.<def.vip_produto<dlocal.item>>.value> * <DEF.vip_value_percentage>) / 100> TFG Coins)
+endif
+dhtmlgump 16 <eval <local.posy> + 25> 425 47 1 1 <def.vip_produto<dlocal.item>_desc>
+endfor
+
+if <local.page> > 0
+button 132 575 4014 4015 0 <local.page> 0
+endif
+if <eval <local.page> + 1> < <local.total_pages>
+button 305 575 4005 4006 0 <eval <local.page> + 2> 0
+endif
+dhtmlgump 167 575 135 21 0 0 <def.center><def.u>Pagina <eval <local.page> + 1> / <dlocal.total_pages>
+endfor
+
+[DIALOG d_compras_vip BUTTON]
+ON=1 99 //Se houverem mais de 100 itens a venda, modificar esta linha.
+if (<local.page> == 0) && (<argn> == 2) // excessao para mina vip
+SDIALOG d_compra_acesso_buffer 0,1
+//elif (<local.page> == 0) && (<argn> == 9) // excessao para mina vip
+//SDIALOG d_compra_acesso 0,1
+//elif (<local.page> == 0) && (<argn> == 10) // excessao para floresta vip
+//SDIALOG d_compra_acesso 0,2
+elif (<local.page> == 0) && (<argn> == 5) // excessao para troca de nick
+TAG.NICK
+TAG.NICKE
+TAG.NICKT
+ctag.vip_nick_change = 1
+SDIALOG D_NICKCHANGE
+//elif (<argn> > 12)
+//sysmessage @,,1 Esta opcao de compra estara disponivel em breve!
+else
+SDIALOG d_compra_vip_confirm 1,<def.vip_produto<dargn>>
+endif
+return 1
+
+////////
+//
+//  Confirmaçao de Compra
+//
+//
+///////
+
+
+[DIALOG d_compra_vip_confirm]
+250,250
+page 0
+resizepic 6 8 3500 276 192
+
+page 1
+ctag.compra_item=<argv[0]>
+local.compra_price <EVAL (<serv.itemdef.<argv[0]>.value> * <DEF.vip_value_percentage>) / 100>
+local.compra_duration <serv.itemdef.<argv[0]>.tdata1>
+dhtmlgump 33 24 212 24 0 0 <def.center><def.u>Comprar <serv.itemdef.<argv[0]>.name>
+dhtmlgump 33 54 212 24 0 0 <def.center> Você possui <eval <tfg_vip_getcoins>> TFG coins.
+dhtmlgump 20 84 250 70 1 0 <def.center><def.bfont_red>Você tem certeza que deja comprar <serv.itemdef.<argv[0]>.name> <qval <local.compra_duration>? por <timeformat 0,<local.compra_duration>> pelo:pelo> preço de <def.b><dlocal.compra_price> TFG coins ?
+dhtmlgump 28 162 199 24 0 0 <def.div_right><def.Bfont_red><def.u>EU CONFIRMO A COMPRA<def.div_end>
+button 230 160 4023 4024 1 0 1
+
+page 2
+local.compra_price <EVAL (<serv.itemdef.<baseid>.value> * <DEF.vip_value_percentage>) / 100>
+local.compra_duration <serv.itemdef.<baseid>.tdata1>
+dhtmlgump 33 24 212 24 0 0 <def.center><def.u>Recarregar <name>
+dhtmlgump 33 54 212 24 0 0 <def.center> Você possui <eval <src.tfg_vip_getcoins>> TFG coins.
+dhtmlgump 20 84 250 70 1 0 <def.center><def.bfont_red>Você tem certeza que deja recarregar <name> <qval <local.compra_duration>? por <timeformat 0,<local.compra_duration>> pelo:pelo> preço de <def.b><dlocal.compra_price> TFG coins ?
+dhtmlgump 28 162 199 24 0 0 <def.div_right><def.Bfont_red><def.u>EU CONFIRMO A RECARGA<def.div_end>
+button 230 160 4023 4024 1 0 2
+
+page 3
+dhtmlgump 33 24 212 24 0 0 <def.center><def.u>Remover<name>
+dhtmlgump 33 54 212 24 0 0 <def.center> Você possui <eval <src.tfg_vip_getcoins>> TFG coins.
+dhtmlgump 20 84 250 70 1 0 <def.center><def.bfont_red>Você tem certeza que deseja <def.u>REMOVER <name><def.ue> definitivamente? (Voce sempre podera comprar outro, mas perdera as cores caso o item esteja pintado.)
+dhtmlgump 28 162 199 24 0 0 <def.div_right><def.Bfont_red><def.u>EU CONFIRMO A REMOCAO<def.div_end>
+button 230 160 4023 4024 1 0 3
+
+page 4
+local.compra_price <ddef.vip_name_change_price>
+dhtmlgump 33 24 212 24 0 0 <def.center><def.u>Trocar de Nick
+dhtmlgump 33 54 212 24 0 0 <def.center> Você possui <eval <tfg_vip_getcoins>> TFG coins.
+dhtmlgump 20 84 250 70 1 0 <def.center><def.bfont_red>Você tem certeza que deseja trocar seu nick para <ctag.vip_nick_change_name> pelo preço de <def.b><dlocal.compra_price> TFG coins ?
+dhtmlgump 28 162 199 24 0 0 <def.div_right><def.Bfont_red><def.u>EU CONFIRMO A TROCA<def.div_end>
+button 230 160 4023 4024 1 0 4
+
+[DIALOG d_compra_vip_confirm BUTTON]
+ON=0
+sysmessage @,,1 Você desistiu da compra !
+ctag0.compra_item=
+ctag.vip_nick_change_name=
+ctag.vip_nick_change=
+return 0
+
+ON=1
+local.id = <ctag0.compra_item>
+	ref1 = <uid>
+	if strmatch(*t_vip_item_time_control*,<serv.itemdef.<local.id>.tevents>)
+		forinstances <local.id>
+			if !<link.isplayer>
+				local.memory_link = <link.more1>
+			endif
+			if (<link.uid>==<ref1.uid>) || (<local.memory_link>==<ref1.uid>)
+				ref1.sysmessage @,,1 Voce ja possui um item como este. O uid do item e <uid>.
+				return 0
+			endif
+		endfor
+		if (<local.id>==i_pet_vip) && (<findid.i_memory_pet_link>)
+			sysmessage @,,1 Voce ja possui um item como este.
+			return 0
+		endif
+	endif
+local.name = <serv.itemdef.<ctag0.compra_item>.name>
+local.price = <EVAL (<serv.itemdef.<ctag0.compra_item>.value> * <DEF.vip_value_percentage>) / 100>
+local.duration = <serv.itemdef.<ctag0.compra_item>.tdata1>
+local.memory = <serv.itemdef.<ctag0.compra_item>.tdata2>
+if (<tfg_vip_getcoins> >= <local.price>)
+tfg_vip_subcoins <local.price>,"Compra de (<local.name> UID: <new.uid>) por <dlocal.price> TFG Coins duraçao de <timeformat 0,<local.duration>>"
+ctag.vip_compra = 1
+SYSMESSAGE @,,1 Você adquiriu <local.name><qval <local.duration>?por <timeformat 0,<local.duration>>.:.>
+SYSMESSAGE @,,1 Você gastou <dlocal.price> TFG Coins. Seu saldo atual é de <eval <tfg_vip_getcoins>>.
+CALL f_vip_new_item
+f_vip_logs 2,<dlocal.price>,"ITEM (<local.name> UID: <new.uid>) por <dlocal.price> TFG Coins duraçao de <timeformat 0,<local.duration>>"
+else
+SYSMESSAGE @,,1 Aguarde enquanto o site de doacoes eh carregado para recarregar seus creditos!
+WEBLINK http:\\www.tfg.com.br/site/doacao-vip
+endif
+ctag0.compra_item=
+return 0
+
+ON=2
+local.price = <EVAL (<serv.itemdef.<baseid>.value> * <DEF.vip_value_percentage>) / 100>
+local.duration = <serv.itemdef.<baseid>.tdata1>
+local.memory = <serv.itemdef.<baseid>.tdata2>
+	if (<src.tfg_vip_getcoins> >= <local.price>)
+		src.tfg_vip_subcoins <local.price>,"Recarga de (<name> UID: <uid>) por <dlocal.price> TFG Coins duraçao de <timeformat 0,<local.duration>>"
+		src.SYSMESSAGE @,,1 Você renovou <name> por <timeformat 0,<local.duration>>.
+		src.SYSMESSAGE @,,1 Você gastou <dlocal.price> TFG Coins. Seu saldo atual é de <eval <src.tfg_vip_getcoins>>.
+		src.f_vip_logs 2,<dlocal.price>,"RECARGA (<name> UID: <uid>) por <dlocal.price> TFG Coins duraçao de <timeformat 0,<local.duration>>"
+			if !<local.memory>
+				timer = <local.duration>
+			else
+				src.f_vip_new_memory <uid>,<local.duration>
+			endif
+	else
+		src.SYSMESSAGE @,,1 Você nao possui TFG coins suficientes para esta compra!
+	endif
+return 0
+
+ON=3
+f_vip_logs 5,"PLAYER <src.name> acc <src.account.name> vai remover (via menu) um item VIP (<name>)..."
+src.sysmessage @,,1 Voce removeu <name>.
+tag.auth_destroy = 1
+remove
+return 0
+
+ON=4
+local.price = <def.vip_name_change_price>
+ if (<tfg_vip_getcoins> < <local.price>)
+  src.sysmessage @,,1 Você nao possui TFG coins suficientes para esta compra!
+  return 1
+ endif
+f_vip_logs 2,80,"TROCA DE NICK (<NAME> to <ctag.vip_nick_change_name>)"
+TAG.NICKVELHO <NAME>
+TAG.NICKDELAY <EVAL <SERV.TIME>+8640000>
+NAME <ctag.vip_nick_change_name>
+sysmessage @,,1 Voce gastou <dlocal.price> TFG Coins.
+SYSMESSAGE @,,1 Seu nick agora e: <NAME>.
+tfg_vip_subcoins <local.price>
+ctag.vip_nick_change_name=
+ctag.vip_nick_change=
+return 0
+
+[FUNCTION f_vip_new_item]
+serv.newitem <local.id>
+serv.log  <name> <new.name> <uid>
+new.link <uid>
+IF !(<NEW.ISTEVENT.t_vip_deed>)
+	if !<local.memory>
+		new.timer <local.duration>
+	else
+		new.tag.create_auth = 1
+		timerf 1,f_vip_new_memory <new.uid>,<local.duration>
+	endif
+ENDIF
+//	if (<serv.itemdef.<local.id>.tdata2>) && (<f_vip_canequip_fullsetmage>)
+//		trysrc <uid> new.bounce
+//		sysmessage @,,1 Voce nao pode equipar este item VIP usando armas ou armaduras.
+	if <serv.itemdef.<local.id>.layer>
+		trysrc <uid> new.equip
+	else
+		trysrc <uid> new.bounce
+		IF !(<NEW.ISTEVENT.t_vip_deed>)
+			trysrc <uid> new.use
+		ENDIF
+	endif
+
+	uid.<uid>.timerf 2,statsfix
+return 1
+
+
+[FUNCTION f_vip_canequip_fullsetmage]
+for 1 25
+	if (<findlayer.<dlocal._for>.type>==t_armor) || (<findlayer.<dlocal._for>.type>==t_armor_leather)
+		if !((<findlayer.<dlocal._for>.id>==0144e) || (<findlayer.<dlocal._for>.id>==0144f) || (<findlayer.<dlocal._for>.id>==01450) || (<findlayer.<dlocal._for>.id>==01451) || (<findlayer.<dlocal._for>.id>==01452))
+			return 1
+		endif
+	endif
+endfor
+if <findlayer(1).uid>
+	return 1
+elif <findlayer(2).uid>
+	if !(<findlayer(2).type>==t_weapon_mace_staff)
+		return 1
+	endif
+endif
+return 0
+
+[FUNCTION nanana]
+ref1=<uid>
+forinstances i_vip_hat_wizards
+ref1.sysmessage @,,1 <P> <cont>
+endfor
+
+[FUNCTION f_vip_new_memory]
+ref1 = <argn1>
+serv.newitem i_memory_vip_link
+new.more1 <uid>
+new.link <ref1>
+new.timer <argn2>
+new.name <ref1.name> Link
+trysrc <uid> new.equip
+ref1.link <new.uid>
+return 1
+
+/////////////////////////
+//
+//
+//   Dye Tub - Escolha de Cor
+//
+//
+/////////////////////////
+
+[DIALOG d_vip_dye_tub_color]
+250,250
+page 0
+resizepic 0 0 3500 289 191
+dhtmlgump 16 14 256 20 0 0 <def.center><def.u>TFG Shard - True Dye Tubs
+dhtmlgump 11 35 264 25 0 0 <def.center><def.bfont_green>Escolha uma cor:
+tilepic 40 67 <serv.itemdef.i_dye_tub.id>
+tilepichue 40 67 <serv.itemdef.i_dye_tub.id> <ddef.vip_hue1>
+dhtmlgump 51 103 48 35 0 0 <def.bfont_black><def.vip_hue1_name>
+tilepic 124 67 <serv.itemdef.i_dye_tub.id>
+tilepichue 124 67 <serv.itemdef.i_dye_tub.id> <ddef.vip_hue2>
+dhtmlgump 135 103 48 35 0 0 <def.bfont_white><def.vip_hue2_name>
+tilepic 203 67 <serv.itemdef.i_dye_tub.id>
+tilepichue 203 67 <serv.itemdef.i_dye_tub.id> <ddef.vip_hue3>
+dhtmlgump 222 103 48 35 0 0 <def.bfont_dgray><def.vip_hue3_name>
+button 32 116 2117 2118 1 0 1
+button 112 117 2117 2118 1 0 2
+button 202 117 2117 2118 1 0 3
+dhtmlgump 17 156 214 25 0 0 <def.div_right>Escolher depois<def.div_end>
+button 236 156 4005 4006 1 0 0
+
+[DIALOG d_vip_dye_tub_color BUTTON]
+
+on=0
+if <uid> != <src.uid>  // esta condicao podera ser tirada numa versao 56c , mas a testar
+src.sysmessage @,,1 Voce decidiu escolher a cor mais tarde.
+endif
+return 0
+
+on=1 3
+if <def.vip_hue_changes> || !<color>
+	color = <ddef.vip_hue<dargn>>
+	src.sysmessage @,,1 Voce escolheu a cor <def.vip_hue<dargn>_name>.
+else
+	src.sysmessage @,,1 Voce nao pode mais colorir este dye tub.
+endif
+return 1
+
+[DIALOG d_vip_special_dye_tub_color]
+250,250
+page 0
+resizepic 0 0 3500 480 191
+dhtmlgump 16 14 407 20 0 0 <def.center><def.u>TFG Shard - Special Dye Tubs
+dhtmlgump 11 35 415 25 0 0 <def.center><def.bfont_green>Escolha uma cor:
+dhtmlgump 167 147 214 25 0 0 <def.div_right>Escolher depois<def.div_end>
+button 386 147 4005 4006 1 0 0
+LOCAL.PAGES <EVAL ((<DEF.vip_special_hue_count> - 1) / <DEF.vip_special_hue_page>) + 1>
+FOR PAGE 1 <LOCAL.PAGES>
+	page <DLOCAL.PAGE>
+	FOR X 1 <DEF.vip_special_hue_page>
+		LOCAL.ITEM <EVAL ((<LOCAL.PAGE> - 1) * <DEF.vip_special_hue_page>) + <LOCAL.X>>
+		IF (<LOCAL.ITEM> <= <DEF.vip_special_hue_count>)
+			tilepic <EVAL 40 + (90 * (<LOCAL.X> - 1))> 67 <serv.itemdef.i_dye_tub.id>
+			tilepichue <EVAL 40 + (90 * (<LOCAL.X> - 1))> 67 <serv.itemdef.i_dye_tub.id> <ddef.vip_special_hue<DLOCAL.ITEM>>
+			dhtmlgump <EVAL 51 + (90 * (<LOCAL.X> - 1))> 103 48 35 0 0 <def.vip_special_hue<DLOCAL.ITEM>_name>
+			button <EVAL 32 + (90 * (<LOCAL.X> - 1))> 117 2117 2118 1 0 <DLOCAL.ITEM>
+		ENDIF
+	ENDFOR
+
+	IF (<LOCAL.PAGE> > 1)
+		button 50 147 4014 4015 0 <EVAL <LOCAL.PAGE> - 1> 0
+	ENDIF
+
+	IF (<LOCAL.PAGE> < <LOCAL.PAGES>)
+		button 200 147 4005 4006 0 <EVAL <LOCAL.PAGE> + 1> 0
+	ENDIF
+
+	dhtmlgump 75 147 135 21 0 0 <def.center><def.u>Pagina <DLOCAL.PAGE> / <DLOCAL.PAGES>
+ENDFOR
+
+[DIALOG d_vip_special_dye_tub_color BUTTON]
+
+on=0
+if <uid> != <src.uid>  // esta condicao podera ser tirada numa versao 56c , mas a testar
+src.sysmessage @,,1 Voce decidiu escolher a cor mais tarde.
+endif
+return 0
+
+on=1 99
+if <def.vip_hue_changes> || !<color>
+	color = <ddef.vip_special_hue<dargn>>
+	src.sysmessage @,,1 Voce escolheu a cor <def.vip_special_hue<dargn>_name>.
+else
+	src.sysmessage @,,1 Voce nao pode mais colorir este dye tub.
+endif
+return 1
+
+/////////////////////////
+//
+//
+//   Robe - Escolha do Formato
+//
+//
+/////////////////////////
+
+[DIALOG d_vip_robe_format]
+250,250
+page 0
+resizepic 0 0 3500 450 205
+dhtmlgump 12 14 435 20 0 0 <def.center><def.u>TFG Shard - <name>
+dhtmlgump 12 35 435 25 0 0 <def.center><def.bfont_green>Escolha um formato:
+tilepichue 40 67 02683 <dcolor>
+dhtmlgump 51 121 48 35 0 0 <qval (<dispid>==02683)?<def.bfont_green>:<def.bfont_black>>hodeed shroud
+tilepichue 120 67 <serv.itemdef.i_robe.id> <dcolor>
+dhtmlgump 135 121 48 35 0 0 <qval (<dispid>==i_robe)?<def.bfont_green>:<def.bfont_black>><serv.itemdef.i_robe.name>
+tilepichue 203 67 <serv.itemdef.i_dress_plain.id> <dcolor>
+dhtmlgump 222 121 48 35 0 0 <qval (<dispid>==i_dress_plain)?<def.bfont_green>:<def.bfont_black>><serv.itemdef.i_dress_plain.name>
+tilepichue 282 67 <serv.itemdef.i_dress_full.id> <dcolor>
+dhtmlgump 306 121 48 35 0 0 <qval (<dispid>==i_dress_full)?<def.bfont_green>:<def.bfont_black>><serv.itemdef.i_dress_full.name>
+button 32 127 2117 2118 1 0 1
+button 115 127 2117 2118 1 0 2
+button 198 127 2117 2118 1 0 3
+button 286 127 2117 2118 1 0 4
+IF (<BASEID> == i_vip_raiden_robe_of_gems) || (<TAG0.LEVEL> >= 3)
+	tilepichue 380 64 <serv.itemdef.i_kamishimo.id> <dcolor>
+	dhtmlgump 379 121 60 35 0 0 <qval (<dispid>==i_kamishimo)?<def.bfont_green>:<def.bfont_black>><serv.itemdef.i_kamishimo.name>
+	button 359 127 2117 2118 1 0 5
+ENDIF
+dhtmlgump 70 173 214 25 0 0 <def.div_left>Escolher depois<def.div_end>
+button 30 170 4005 4006 1 0 0
+
+[DIALOG d_vip_robe_format BUTTON]
+on=0
+if <uid> != <src.uid>  // esta condicao podera ser tirada numa versao 56c , mas a testar
+src.sysmessage @,,1 Voce decidiu escolher o formato mais tarde.
+endif
+return 0
+
+on=1 5
+if (<cont> == <src.uid>)
+	dispid = <def.vip_robe_dispid<dargn>>
+	updatex
+	if (<def.vip_robe_dispid<dargn>>==02683)
+		src.sysmessage @,,1 Voce escolheu o formato hodeed shroud.
+	else
+		src.sysmessage @,,1 Voce escolheu o formato <serv.itemdef.<def.vip_robe_dispid<dargn>>.name>.
+	endif
+endif
+return 1
+
+
+//////////////////////
+//
+//
+//      Gump de Recarga para Itens Expirados
+//
+//
+//////////////////////
+
+[DIALOG d_vip_recharge]
+250,250
+page 0
+resizepic 0 0 3500 303 261
+gumppic 253 15 4036
+tilepic 233 31 3826
+tilepic 246 39 3820
+dhtmlgump 25 20 213 55 0 0 <def.center><def.u>TFG Coins<def.br>Recarga de Item
+dhtmlgump 15 73 274 85 1 0 <def.center> A validade de <name> chegou ao fim.
+dhtmlgump 13 169 274 27 0 0 <def.center><def.bfont_red>O que voce deseja fazer?
+button 257 196 4026 4027 1 0 1
+button 17 196 4017 4018 1 0 2
+button 241 228 4005 4006 1 0 0
+dhtmlgump 26 232 208 27 0 0 <def.div_right>Decidir mais tarde
+dhtmlgump 55 198 89 21 0 0 <def.u><def.bfont_red>Descartar
+dhtmlgump 155 198 97 21 0 0 <def.div_right><def.u><def.bfont_green>Recarregar
+
+[DIALOG d_vip_recharge BUTTON]
+ON=0
+src.sysmessage @,,1 Voce decidiu escolher mais tarde o que fazer com seu <name> com validade expirada.
+
+ON=1
+sdialog d_compra_vip_confirm 2
+
+ON=2
+sdialog d_compra_vip_confirm 3
+
+[FUNCTION f_save_vip_area_logout]
+FORCONTID i_memory_areavip
+ TAG.SAVE_TIMER = <TIMER>
+ TIMER = -1
+ENDFOR
+
+[FUNCTION f_save_vip_area_login]
+FORCONTID i_memory_areavip
+ if <tag0.save_timer>
+  TIMER = <TAG0.SAVE_TIMER>
+  TAG0.SAVE_TIMER =
+ endif
+ENDFOR
+
+//////////////////////////////
+///
+///  Troca de Sexo
+///
+///
+//////////////////////////////
+
+[ITEMDEF i_memory_trocasexo_vip]
+BASEID=i_memory
+TYPE=t_eq_script
+NAME=Troca de Sexo VIP
+VALUE=40
+LAYER=30
+
+ON=@EQUIP
+src.f_vip_logs 2,80,"TROCA DE SEXO (<SRC.NAME> ... <src.obody> to <qval (<src.obody>==c_man)?c_woman:c_man> )"
+SRC.BODY = <qval (<src.obody>==c_man)?c_woman:c_man>
+SRC.OBODY = <qval (<src.obody>==c_man)?c_woman:c_man>
+SRC.UPDATEX
+REMOVE
+
+
+///////////////////////
+
+[FUNCTION find_robevip]
+FORINSTANCES i_vip_robe_of_gems
+	if <link.uid> == <args>
+		s robe <uid> esta em <topobj.name> em <cont.name>
+	endif
+ENDFOR
+return 1
+
+
+/////
+//
+//   Compra de Buffer
+//
+//
+/////
+
+
+[DIALOG d_compra_acesso_buffer]
+250,250
+page 0
+ctag.compra_acesso_type <argv[0]>
+ctag.compra_acesso_time <qval <argv[1]> ? <argv[1]> : 2000>
+local.compra_acesso_price = <f_pricebuffer <ctag0.compra_acesso_time>>
+resizepic 6 8 3500 276 192
+if <f_buffermax <eval <ctag0.compra_acesso_time>>>
+	dhtmlgump 43 24 212 80 0 0 <def.center><def.u>Voce ja chegou ao seu limite de compra diario deste tipo de buffer.
+else
+	dhtmlgump 49 112 190 35 1 0 <def.center><dctag0.compra_acesso_time> pts
+	dhtmlgump 43 24 212 24 0 0 <def.center><def.u>Comprar buffer de <qval (<argv[0]> == 2)? Floresta VIP : Mining>
+	dhtmlgump 33 91 229 24 0 0 <def.center>Selecione a quantidade:
+	button 246 119 2511 2511 1 0 1
+	button 28 118 56 56 1 0 2
+	dhtmlgump 28 160 190 24 0 0 <def.div_right><def.Bfont_red><dlocal.compra_acesso_price> TFG coins<def.div_end>
+	button 230 158 4023 4024 1 0 3
+	local.access_time = <f_vip_acess <dctag.compra_acesso_type>>
+	dhtmlgump 33 44 220 43 0 0 <def.center> Você possui <eval <tfg_vip_getcoins>> TFG coins.<def.br> Você dispoe de: <dvar0.buffervip<account.dtag0.global>> Buffer Vip pts.
+endif
+[DIALOG d_compra_acesso_buffer button]
+ON=0
+ctag.compra_acesso_type=
+ctag.compra_acesso_time=
+return 0
+
+ON=1
+//add buffer
+local.estimativa = <f_pricebuffer <eval <ctag0.compra_acesso_time> + 2000>>
+if (<tfg_vip_getcoins> >= <local.estimativa>)
+	if <f_buffermax <eval <ctag0.compra_acesso_time> + 2000>>
+		sysmessage @,,1 Você nao pode comprar mais que <dctag0.compra_acesso_time> buffer pts, devido ao seu limite diario.
+		SDIALOG d_compra_acesso_buffer 0,<ctag.compra_acesso_type>,<ctag.compra_acesso_time>
+	else
+		ctag0.compra_acesso_time += 2000
+		SDIALOG d_compra_acesso_buffer 0,<ctag.compra_acesso_type>,<ctag.compra_acesso_time>
+	endif
+else
+	sysmessage @,,1 Você nao possui TFG coins suficientes para comprar mais que <dctag0.compra_acesso_time> buffer pts.
+	SDIALOG d_compra_acesso_buffer 0,<ctag.compra_acesso_type>,<ctag.compra_acesso_time>
+endif
+return 0
+
+ON=2
+//remove buffer
+if (<ctag.compra_acesso_time> > 2000)
+	ctag.compra_acesso_time -= 2000
+else
+	ctag.compra_acesso_time = 2000
+	sysmessage @,,1 Você nao pode comprar menos que 2.000 buffer pts.
+endif
+	SDIALOG d_compra_acesso_buffer 0,<ctag.compra_acesso_type>,<ctag.compra_acesso_time>
+return 0
+
+ON=3
+SDIALOG d_compra_acesso_buffer_confirm 0,<ctag.compra_acesso_type>,<ctag.compra_acesso_time>
+return 0
+
+
+[function f_pricebuffer]
+local.times = <eval <args> / 2000>
+// define o extra
+if <src.findid.i_memory_buffervip_mining>
+	local.buffer_acquis =  <eval <src.findid.i_memory_buffervip_mining.tag0.buffer> / 2000>
+endif
+// define o preco aplicando o extra
+local.prix_range = <eval 2 + <local.buffer_acquis>>
+local.prix = <local.prix_range>
+local.x = 0
+if (<local.times> >= 2)
+	for 2 <local.times>
+		local.x += 1
+		local.prix += <eval <local.prix_range> + <local.x>>
+	endfor
+endif
+
+local.prix <EVAL (<local.prix> * <DEF.vip_value_percentage>) / 100>
+
+return <local.prix>
+
+[function f_buffermax]
+local.buffer = <eval <args> / 2000>
+if <src.findid.i_memory_buffervip_mining>
+	local.buffer_acquis =  <eval <src.findid.i_memory_buffervip_mining.tag0.buffer> / 2000>
+endif
+local.buffer_total = <eval <local.buffer_acquis> + <local.buffer>>
+if (<local.buffer_total> > 8)
+	return 1
+endif
+return 0
+
+[DIALOG d_compra_acesso_buffer_confirm]
+250,250
+page 0
+ctag.compra_acesso_type <argv[0]>
+ctag.compra_acesso_time <qval <argv[1]> ? <argv[1]> : 2000>
+local.compra_acesso_price = <f_pricebuffer <ctag0.compra_acesso_time>>
+resizepic 6 8 3500 276 192
+dhtmlgump 33 24 212 24 0 0 <def.center><def.u>Comprar buffer de <qval (<argv[0]> == 2)? Floresta VIP : Mining>
+dhtmlgump 33 54 212 24 0 0 <def.center> Você possui <eval <tfg_vip_getcoins>> TFG coins.
+dhtmlgump 20 84 250 70 1 0 <def.center><def.bfont_red>Você tem certeza que deja comprar <eval <argv[1]>> buffer pts de <qval (<argv[0]> == 2) ? Floresta VIP : Mining> por <def.b><dlocal.compra_acesso_price> TFG coins ?
+dhtmlgump 28 162 199 24 0 0 <def.div_right><def.Bfont_red><def.u>EU CONFIRMO A COMPRA<def.div_end>
+button 230 160 4023 4024 1 0 1
+
+[DIALOG d_compra_acesso_buffer_confirm BUTTON]
+ON=0
+ctag.compra_acesso_type=
+ctag.compra_acesso_time=
+return 0
+
+ON=1
+ctag.compra_acesso_price = <f_pricebuffer <ctag0.compra_acesso_time>>
+if (<tfg_vip_getcoins> >= <ctag.compra_acesso_price>)
+	SYSMESSAGE @,,1 Você adquiriu <eval <ctag.compra_acesso_time>> buffer pts de <qval (<ctag.compra_acesso_type> == 2)? Floresta VIP : Mining>.
+	var0.buffervip<account.dtag0.global> += <eval <ctag.compra_acesso_time>>
+	tfg_vip_subcoins <ctag.compra_acesso_price>,"Compra: <eval <ctag.compra_acesso_time>> buffer pts de <qval (<ctag.compra_acesso_type> == 2)? Floresta VIP : Mining>."
+	f_vip_logs 2,<dctag0.compra_acesso_price>,"Buffer <qval (<ctag.compra_acesso_type> == 2)? Floresta VIP : Mining> de <eval <dctag.compra_acesso_time>>pts"
+	f_buffer_vip_memory <dctag.compra_acesso_type>,<dctag.compra_acesso_time>
+else
+	SYSMESSAGE @,,1 Você nao possui TFG coins suficientes para esta compra.
+endif
+ctag.compra_acesso_type=
+ctag.compra_acesso_time=
+ctag.compra_acesso_price=
+return 0
+
+[function f_buffer_vip_memory]
+local.add = <argv[1]>
+if <findid.i_memory_buffervip_mining>
+	ref1 = <findid.i_memory_buffervip_mining>
+	ref1.tag0.buffer += <local.add>
+else
+	serv.newitem i_memory_buffervip_mining
+	new.tag0.buffer = <local.add>
+	trysrc <uid> new.equip
+endif
+return 1
+
+[ITEMDEF i_memory_buffervip_mining]
+BASEID=i_memory
+TYPE=t_eq_script
+NAME=Limit Buffer Vip
+VALUE=40
+LAYER=30
+
+[ITEMDEF i_vip_coins_deed]
+ID=i_deed
+NAME=TFG Coins Deed
+
+ON=@Create
+	COLOR=93
+	ATTR=attr_newbie
+
+ON=@Click
+	IF (<TAG.AMOUNT> > 1)
+		MESSAGE @<COLOR> [<DTAG.AMOUNT> Coins - created by <LINK.NAME>]
+	ELSE
+		MESSAGE @<COLOR> [<DTAG.AMOUNT> Coin - created by <LINK.NAME>]
+	ENDIF
+
+ON=@DClick
+	IF (<CONT> != <SRC.FINDLAYER.21>)
+		SRC.SYSMESSAGE @,,1 This deed must be inside your bag.
+		RETURN 1
+	ENDIF
+
+	TRYSRC <SRC> tfg_vip_addcoins <SRC.ACCOUNT.TAG0.GLOBAL>,<TAG.AMOUNT>,<SRC.UID>,"Deed VIP criada por <LINK.NAME>"
+	SRC.SYSMESSAGE @,,1 You were credited by <DTAG.AMOUNT> TFG Coin(s).
+
+	SERV.LOG <SRC.UID> / <SRC.NAME> / <SRC.ACCOUNT.LOGIN> was credited by <DTAG.AMOUNT> - deed created by <LINK.NAME>.
+
+	REMOVE
+
+	RETURN 1
+
+[FUNCTION f_vip_coins_deed]
+IF (<<ARGV> != 1)
+	RETURN 1
+ENDIF
+
+IF !(STRMATCH(*[0-9]*, <ARGS>))
+	SRC.SYSMESSAGE @0481,,1 Type only numbers.
+	RETURN 1
+ENDIF
+
+IF (<ARGV[0]> < 1)
+	SRC.SYSMESSAGE @0481,,1 The minimum amount of TFG VIP Coins to generate a deed is 1.
+	RETURN 1
+ENDIF
+
+LOCAL.VIP_COINS_BALANCE <SRC.tfg_vip_getcoins>
+IF !(<SRC.ISGM>) && (<ARGV[0]> > <LOCAL.VIP_COINS_BALANCE>)
+	SRC.SYSMESSAGE @,,1 You don't have enough VIP Coins to create the deed.
+	RETURN 1
+ENDIF
+
+SERV.NEWITEM i_vip_coins_deed
+NEW.LINK <SRC.UID>
+NEW.TAG.AMOUNT <ARGV[0]>
+NEW.CONT <SRC.UID>
+
+IF !(<SRC.ISGM>)
+	SRC.tfg_vip_subcoins <ARGV[0]>,"Criacao de deed VIP"
+ENDIF
+
+SERV.LOG A new VIP Coins Deed was created by <SRC.UID> / <SRC.NAME> / <SRC.LOGIN> - amount of <ARGV[0]>.
+
+SRC.SYSMESSAGE @,,1 Your new TFG Coins Deed is inside your bag.
+
+[ITEMDEF i_vip_coins_stone]
+ID=i_gravestone_3
+NAME=VIP Coins Deed Stone
+TYPE=t_script
+
+on=@Dclick
+	SRC.PROMPTCONSOLE f_vip_coins_deed @,,1 Type the amount of TFG Coins to create a deed.
+	return 1
+
+ON=@Create
+	NAME=@0790 <NAME>
+	COLOR=93
+	ATTR=010
+
+[EOF]

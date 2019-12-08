@@ -1,0 +1,115 @@
+[CHARDEF c_michelle_healer]
+NAME=Michelle the Healer
+ID=C_WOMAN
+DESIRES=i_gold,e_notoriety,i_reag_GARLIC,i_reag_GINSENG,i_cloth
+TSPEECH=spk_shopkeep
+TSPEECH=jobHealer
+TSPEECH=spk_human_default
+TSPEECH=spk_michelle_healer
+TEVENTS=e_Human_HearUnk
+TEVENTS=e_Human_Needs
+TEVENTS=e_Human_ConvInit
+TEVENTS=e_Human_Greet
+TEVENTS=e_Human_Space
+TEVENTS=e_Human_Refuse
+TEVENTS=e_Human_Environ
+
+ON=@Create
+	tag.name.hue=0481
+	COLOR=colors_skin
+	STR={71 85}
+	DEX={81 95}
+	INT={86 100}
+	ANATOMY={55.0 78.0}
+	FORENSICS={35.0 58.0}
+		HEALING={99.0 99.0}
+		SPIRITSPEAK={55.0 78.0}
+		WRESTLING={15.0 38.0}
+		TACTICS={15.0 35.0}
+		NPC=brain_healer
+		ITEMNEWBIE=random_female_hair
+		COLOR=colors_hair
+
+ON=@NPCRestock
+	ITEM=RANDOM_LIGHT
+	ITEM=i_robe
+	COLOR=colors_yellow
+	ITEM=i_sandals
+	ITEM=random_coin_purse
+	SELL=VENDOR_S_HEALER_SHOP
+	BUY=VENDOR_B_HEALER_SHOP
+
+[Speech spk_michelle_healer]
+
+On=*quest*
+on=*scroll*
+on=*pergaminho*
+on=*secret*
+    if (<src.tag0.tam75e5> == 1)
+        Message @,,1 Where did you get this, <src.name>?!
+        Message @,,1 Arghhh, always fooled! C'mon, tell me, where did you find it?! //'
+    elif (<src.tag0.tam75e5> == 2)
+        Message @,,1 I have no idea of how that ended up there, but that scroll is NOT what it seems!
+        Message @,,1 A Tresshorn Knight came asking for help capturing monsters that were showing up around Serpent's Hold and I came up with that plan to him.//'
+        Message @,,1 Before finishing the plan I remember being at the tavern when I felt asleep. When I woke up the tavern was ruined, lots of wounded and that knight gone with the scroll.
+        Message @,,1 I was waiting until today for his return...Arghh I am so angry at myself..Grrr...I need to calm down! Bring me an Elixir made by Diana the Alchemist, from here.
+    endif
+
+on=*ruinas*
+on=*ruins*
+    if (<src.tag0.tam75e5> == 1)
+        Message @,,1 I have no idea of how that ended up there, but that scroll is NOT what it seems!
+        Message @,,1 A Tresshorn Knight came asking for help capturing monsters that were showing up around Serpent's Hold and I came up with that plan to him.//'
+        Message @,,1 Before finishing the plan I remember being at the tavern when I felt asleep. When I woke up the tavern was ruined, lots of wounded and that knight gone with the scroll.
+        Message @,,1 I was waiting until today for his return...Arghh I am so angry at myself..Grrr...I need to calm down! Bring me an Elixir made by Diana the Alchemist, from here.
+        src.tag0.tam75e5 = 2
+        src.tag0.tam75e6 = 1
+        src.findid.i_pergaminho_tam75.remove
+        src.smsg @,,1 Go find Diana, the Alchemist and retrive some of her Elixir for Michelle.
+    elif (<src.tag0.tam75e5> == 2)
+        Message @,,1 I have no idea of how that ended up there, but that scroll is NOT what it seems!
+        Message @,,1 A Tresshorn Knight came asking for help capturing monsters that were showing up around Serpent's Hold and I came up with that plan to him.//'
+        Message @,,1 Before finishing the plan I remember being at the tavern when I felt asleep. When I woke up the tavern was ruined, lots of wounded and that knight gone with the scroll.
+        Message @,,1 I was waiting until today for his return...Arghh I am so angry at myself..Grrr...I need to calm down! Bring me an Elixir made by Diana the Alchemist, from here.
+    endif
+
+on=*elixir*
+on=*consegui*
+on=*trouxe*
+on=*i have it*
+on=*got it*
+on=*Emissary*
+on=*where*
+
+if (<src.tag0.tam75e6> == 3) && (<src.tag0.tam75e5> == 2)
+    if (<src.restest i_diana_elixir>)
+        src.consume 1 i_diana_elixir
+        salute
+        EMOTE drinking the Elixir
+        SOUND snd_Z_END_LIQUID
+        color <r30,80>
+        timerf 1, color colors_skin
+
+        src.tag.tam75e5=3
+
+        Message @,,1 Arghhh! Hmmmm I am calm now, thank you very much <src.name>!!
+        Message @,,1 I can help you with that: The Emissary is Sir Illantril, who kisses Tresshorn ass!
+        Message @,,1 He has a very sweet appearance, however he live in the Underworld and really enjoys the Night.
+        Message @,,1 I know that he uses Dark Magic to hide in a very impossible place to track, but if you know the entrance you can make it with that Amulet you got.
+        Message @,,1 Near the place you found it there must be a circle made out of natural stuff, since nature has always reacted to magic, Dark or not.
+        Message @,,1 Search for this circle and you shall find the Emissary! Go! Hurry up!
+        src.tag0.tam75e7 1
+    else
+        src.smsg @,,1 error (CODE Tam75e5-3)
+    endif
+elif (<src.tag0.tam75e7> == 1)
+        Message @,,1 Arghhh! Hmmmm I am calm now, thank you very much <src.name>!!
+        Message @,,1 I will say it again: The Emissary is Sir Illantril, who kisses Tresshorn ass!
+        Message @,,1 He has a very sweet appearance, however he live in the Underworld and really enjoys the Night.
+        Message @,,1 I know that he uses Dark Magic to hide in a very impossible place to track, but if you know the entrance you can make it with that Amulet you got.
+        Message @,,1 Near the place you found it there must be a circle made out of natural stuff, since nature has always reacted to magic, Dark or not.
+        Message @,,1 Search for this circle and you shall find the Emissary! Go! Hurry up!
+endif
+
+
+

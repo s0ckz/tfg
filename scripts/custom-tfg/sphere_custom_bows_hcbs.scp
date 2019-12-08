@@ -1,0 +1,632 @@
+////////////////////////////////////////////////////
+///////////// Special Bows /////////////////////////
+////////////////////////////////////////////////////
+[ITEMDEF I_BOW_SUP]
+//Superior Bow
+ID=i_bow
+NAME=Superior Bow
+SKILLMAKE=45.0 BOWCRAFT
+RESOURCES=50 i_log
+DAM=12,20
+SPEED=85
+RANGE=2,10
+SKILL=Archery
+REQSTR=30
+TWOHANDS=Y
+WEIGHT=3
+CATEGORY=Provisions - Weapons
+SUBSECTION=Bows - Short Range
+DESCRIPTION=Short Ranged Bow
+VALUE=100
+ON=@Create
+	HITPOINTS={41 80}
+
+[ITEMDEF I_XBOW_SUP]
+//Superior Crossbow
+NAME=Superior Crossbow
+ID=i_crossbow
+RESOURCES=75 i_log
+SKILLMAKE=55.0 BOWCRAFT
+DAM=16,22
+RANGE=2,10
+SPEED=55
+SKILL=Archery
+REQSTR=30
+TWOHANDS=Y
+WEIGHT=5
+CATEGORY=Provisions - Weapons
+SUBSECTION=Bows - Medium Range
+DESCRIPTION=Medium Ranged Crossbow
+VALUE=100
+ON=@Create
+	HITPOINTS={41 100}
+
+[ITEMDEF I_HXBOW_SUP]
+//Superior Heavy Crossbow
+ID=i_crossbow_heavy
+NAME=superior Heavy Crossbow
+SKILLMAKE=65.0 BOWCRAFT
+RESOURCES=100 i_log
+DAM=19,24
+SPEED=45
+RANGE=2,10
+SKILL=Archery
+REQSTR=30
+TWOHANDS=Y
+WEIGHT=7
+CATEGORY=Provisions - Weapons
+SUBSECTION=Bows - Medium Range
+DESCRIPTION=Medium Ranged Heavy Crossbow
+VALUE=100
+ON=@Create
+	HITPOINTS={41 120}
+
+[ITEMDEF I_BOW_EXCEP]
+//Exceptional Bow
+ID=i_bow
+NAME=Exceptional Bow
+RESOURCES=150 i_log
+SKILLMAKE=45.0 BOWCRAFT
+DAM=18,23
+SPEED=55
+RANGE=2,10
+SKILL=Archery
+REQSTR=90
+TWOHANDS=Y
+WEIGHT=3
+CATEGORY=Provisions - Weapons
+SUBSECTION=Bows - Medium Range
+DESCRIPTION=Medium Ranged Bow
+VALUE=100
+ON=@Create
+	HITPOINTS={51 120}
+
+[ITEMDEF I_XBOW_EXCEP]
+//Exceptional Crossbow
+ID=i_crossbow
+NAME=Exceptional Crossbow
+RESOURCES=125 i_log
+SKILLMAKE=45.0 BOWCRAFT
+DAM=20,24
+SPEED=45
+RANGE=2,10
+SKILL=Archery
+REQSTR=100
+TWOHANDS=Y
+WEIGHT=5
+CATEGORY=Provisions - Weapons
+SUBSECTION=Bows - Long Range
+DESCRIPTION=Long Ranged Crossbow
+VALUE=100
+ON=@Create
+	HITPOINTS={51 140}
+
+[ITEMDEF I_HXBOW_EXCEP]
+//Exceptional Heavy Crossbow
+ID=i_crossbow_heavy
+NAME=Exceptional Heavy Crossbow
+DAM=23,28
+SPEED=35
+RANGE=2,10
+SKILL=Archery
+REQSTR=105
+TWOHANDS=Y
+WEIGHT=7
+SKILLMAKE=55.0 BOWCRAFT
+RESOURCES=150 i_log
+CATEGORY=Provisions - Weapons
+SUBSECTION=Bows - Long Range
+DESCRIPTION=Long Ranged Heavy Crossbow
+VALUE=100
+ON=@Create
+	HITPOINTS={41 100}
+
+[ITEMDEF i_Bow_Elven]
+NAME=Elven Bow
+ID=i_bow
+DAM=25,29
+SPEED=65
+RANGE=2,9
+SKILL=Archery
+REQSTR=30
+TWOHANDS=Y
+WEIGHT=3
+RESOURCES=150 i_log,50 i_reag_dead_wood
+SKILLMAKE=70.0 BOWCRAFT, 100.0 ARCHERY,50.0 MAGERY
+CATEGORY=Provisions - Weapons
+SUBSECTION=Bows - Exceptional
+DESCRIPTION=Elven Bow
+VALUE=100
+ON=@Create
+	HITPOINTS={100 200}
+	COLOR=023c
+
+ON=@EQUIP
+	SRC.TACTICS += 150
+	SRC.ARCHERY += 100
+
+ON=@UNEQUIP
+	if <src.TACTICS> >= 150
+		src.TACTICS -= 150
+	else
+		src.TACTICS = 0
+	endif
+	if <src.ARCHERY> >= 100
+		src.ARCHERY -= 100
+	else
+		src.ARCHERY = 0
+	endif
+
+[ITEMDEF i_arrow_fire]
+ID i_arrow
+NAME=Flame Arrow
+SKILLMAKE=70.0 BOWCRAFT
+RESOURCES=1 i_arrow, 1 i_scroll_flamestrike
+
+ON=@CREATE
+COLOR 0793
+
+[ITEMDEF i_arrow_heaven]
+ID i_arrow
+NAME=Heaven Arrow
+SKILLMAKE=70.0 BOWCRAFT
+//RESOURCES=1 i_arrow, 1 i_scroll_flamestrike
+TAG.NAME.HUE=0ab4
+
+ON=@CREATE
+COLOR 0ab4
+
+
+[ITEMDEF i_bow_fire]
+ID=i_bow
+NAME=Fire Bow
+TYPE=T_WEAPON_BOW
+FLIP=1
+SKILLMAKE=70.0 BOWCRAFT
+RESOURCES=1000 i_log , 100 i_scroll_flamestrike
+WEIGHT=3
+RANGE=2,10
+DAM=26,31
+SPEED=70
+SKILL=Archery
+TWOHANDS=Y
+
+ON=@Create
+COLOR=0793
+tag.override.ammotype = i_arrow_fire
+tag.override.ammoanim = i_fx_fireball_small
+tag.override.ammoanimhue = 07aa
+HITPOINTS=100
+
+
+ON=@DAMAGE
+
+IF <R4>==1
+IF  (<CONT.ARCHERY> >= 100.0) && (<CONT.anatomy> >= 100.0)  && (<CONT.TACTICS> >= 100.0)
+	SRC.SOUND=0210
+	SRC.SPELLEFFECT s_explosion, 10000, <CONT.UID>
+	SRC.SAY=<SRC.NAME> sente sua pele queimando !
+ENDIF
+ENDIF
+
+[ITEMDEF i_bow_heaven]
+DEFNAME=I_BOW_HEAVEN
+ID=i_bow
+NAME=Archangel Bow
+TYPE=T_WEAPON_BOW
+FLIP=1
+SKILLMAKE=70.0 BOWCRAFT
+RESOURCES=1000 i_log , 100 i_scroll_flamestrike
+WEIGHT=3
+RANGE=2,8
+DAM=25,38
+SPEED=77
+SKILL=Archery
+TWOHANDS=Y
+
+ON=@Create
+COLOR=0ab4
+tag.override.ammotype = i_arrow_heaven
+tag.override.ammoanim = i_fx_fireball_small
+tag.override.ammoanimhue = 0ab4
+HITPOINTS=100
+
+
+ON=@DAMAGE
+IF <R15>==1
+	IF  (<CONT.ARCHERY> >= 100.0) && (<CONT.anatomy> >= 100.0)  && (<CONT.TACTICS> >= 100.0)
+		SRC.SOUND=0210
+		SRC.SPELLEFFECT s_explosion, 10000, <CONT.UID>
+		SRC.SAY=<SRC.NAME> sente sua pele queimando !
+	ENDIF
+ENDIF
+
+ON=@CLICK
+	MESSAGE @<color> an Archangel Bow [rare]
+	RETURN 1
+
+[ITEMDEF i_iron_arrow]
+ID i_arrow
+NAME=Iron Arrow
+SKILLMAKE=85.0 BOWCRAFT
+RESOURCES=1 i_ingot_iron, 1 i_arrow_shaft, 1 i_feather
+ON=@CREATE
+COLOR 0763
+
+[ITEMDEF i_arrow_poison]
+ID i_arrow
+NAME=Poison Arrow
+SKILLMAKE=90.0 BOWCRAFT
+RESOURCES=1 i_arrow, 1 i_potion_poisondeadly
+ON=@CREATE
+COLOR 0795
+
+[ITEMDEF i_bow_poison]
+ID=i_bow
+NAME=Poison Bow
+TYPE=T_WEAPON_BOW
+FLIP=1
+SKILLMAKE=100.0 BOWCRAFT
+RESOURCES=1000 i_log , 100 i_potion_poisondeadly
+WEIGHT=3
+RANGE=2,10
+DAM=26,31
+SPEED=70
+SKILL=Archery
+TWOHANDS=Y
+
+ON=@Create
+COLOR=0795
+TAG.POISONLEVEL 3
+TAG.POISONTIMER 3
+tag.override.ammotype = i_arrow_poison
+//tag.override.ammoanim = i_fx_ebolt
+tag.override.ammoanimhue = 0786
+HITPOINTS=100
+
+
+ON=@DAMAGE
+f_poisoncheck
+
+
+[ITEMDEF i_arrow_frost]
+ID=i_arrow
+NAME=Frost Arrow
+SKILLMAKE=100.0 BOWCRAFT
+RESOURCES=1 i_arrow, 1 i_scroll_paralyze
+ON=@CREATE
+COLOR 0786
+
+[ITEMDEF i_bow_frost]
+ID=i_bow
+NAME=Frost Bow
+TYPE=T_WEAPON_BOW
+FLIP=1
+SKILLMAKE=100.0 BOWCRAFT
+RESOURCES=1000 i_log , 100 i_scroll_paralyze
+WEIGHT=3
+RANGE=2,10
+DAM=26,31
+SPEED=70
+SKILL=Archery
+TWOHANDS=Y
+
+ON=@Create
+	COLOR=0786
+	tag.override.ammotype = i_arrow_frost
+	//tag.override.ammoanim = i_fx_fireball_small
+	tag.override.ammoanimhue = 0787
+	HITPOINTS=100
+
+
+ON=@DAMAGE
+IF <R4>==1
+	IF  (<CONT.ARCHERY> >= 100.0) && (<CONT.anatomy> >= 100.0)  && (<CONT.TACTICS> >= 100.0)
+		SRC.SOUND=0210
+		SERV.NEWITEM i_para_effect
+		NEW.P <SRC.P>
+		NEW.LINK <SRC.UID>
+		NEW.TIMERD 1
+	ENDIF
+ENDIF
+
+[itemdef i_para_effect]
+id=i_memory
+type=t_eq_script
+name=para_Effect
+
+ON=@CREATE
+attr 096
+
+ON=@TIMER
+LINK.SPELLEFFECT s_paralyze,10
+LINK.FINDID.i_rune_paralyze.timer 2
+REMOVE
+RETURN 0
+
+////////////////////////////////////
+///////// Color Bows ///////////////
+////////////////////////////////////
+
+
+
+[ITEMDEF i_bow_copper]
+ID=i_bow
+NAME=Copper Bow
+TYPE=T_WEAPON_BOW
+FLIP=1
+SKILLMAKE=50.0 BOWCRAFT
+RESOURCES=60 i_ingot_copper, i_log
+WEIGHT=3
+RANGE=2,12
+DAM=20,24
+SPEED=70
+SKILL=Archery
+TWOHANDS=Y
+
+ON=@Create
+COLOR=color_o_copper
+HITPOINTS=100
+
+[ITEMDEF i_bow_bronze]
+ID=i_bow
+NAME=Bronze Bow
+TYPE=T_WEAPON_BOW
+FLIP=1
+SKILLMAKE=52.0 BOWCRAFT
+RESOURCES=60 i_ingot_bronze, i_log
+WEIGHT=3
+RANGE=2,12
+DAM=21,25
+SPEED=70
+SKILL=Archery
+TWOHANDS=Y
+
+ON=@Create
+COLOR=color_o_bronze
+HITPOINTS=100
+
+
+[ITEMDEF i_bow_shadow]
+ID=i_bow
+NAME=Shadow Bow
+TYPE=T_WEAPON_BOW
+FLIP=1
+SKILLMAKE=56.0 BOWCRAFT
+RESOURCES=60 i_ingot_shadow, i_log
+WEIGHT=3
+RANGE=2,12
+DAM=24,28
+SPEED=70
+SKILL=Archery
+TWOHANDS=Y
+
+ON=@Create
+COLOR=color_o_shadow
+HITPOINTS=100
+
+[ITEMDEF i_bow_valorite]
+ID=i_bow
+NAME=Valorite Bow
+TYPE=T_WEAPON_BOW
+FLIP=1
+SKILLMAKE=57.0 BOWCRAFT
+RESOURCES=60 i_ingot_valorite, i_log
+WEIGHT=3
+RANGE=2,12
+DAM=26,30
+SPEED=70
+SKILL=Archery
+TWOHANDS=Y
+
+ON=@Create
+COLOR=color_o_valorite
+HITPOINTS=100
+
+[ITEMDEF i_bow_verite]
+ID=i_bow
+NAME=Verite Bow
+TYPE=T_WEAPON_BOW
+FLIP=1
+SKILLMAKE=58.5 BOWCRAFT
+RESOURCES=60 i_ingot_verite, i_log
+WEIGHT=3
+RANGE=2,12
+DAM=27,31
+SPEED=70
+SKILL=Archery
+TWOHANDS=Y
+
+ON=@Create
+COLOR=color_o_verite
+HITPOINTS=100
+
+[ITEMDEF i_bow_bloodrock]
+ID=i_bow
+NAME=Bloodrock Bow
+TYPE=T_WEAPON_BOW
+FLIP=1
+SKILLMAKE=60.0 BOWCRAFT
+RESOURCES=60 i_ingot_bloodrock, i_log
+WEIGHT=3
+RANGE=2,12
+DAM=29,33
+SPEED=70
+SKILL=Archery
+TWOHANDS=Y
+
+ON=@Create
+COLOR=color_o_bloodrock
+HITPOINTS=100
+
+[ITEMDEF i_bow_blackrock]
+ID=i_bow
+NAME=Blackrock Bow
+TYPE=T_WEAPON_BOW
+FLIP=1
+SKILLMAKE=70.0 BOWCRAFT
+RESOURCES=60 i_ingot_blackrock, i_log
+WEIGHT=3
+RANGE=2,12
+DAM=30,35
+SPEED=70
+SKILL=Archery
+TWOHANDS=Y
+
+ON=@Create
+COLOR=color_o_blackrock
+HITPOINTS=100
+
+[ITEMDEF i_bow_mytheril]
+ID=i_bow
+NAME=Mytheril Bow
+TYPE=T_WEAPON_BOW
+FLIP=1
+SKILLMAKE=70.0 BOWCRAFT
+RESOURCES=60 i_ingot_mytheril, i_log
+WEIGHT=3
+RANGE=2,12
+DAM=32,38
+SPEED=70
+SKILL=Archery
+TWOHANDS=Y
+
+ON=@Create
+COLOR=color_o_mytheril
+HITPOINTS=100
+
+
+
+
+//////////////////////////////////
+////// HXBows ////////////////////
+//////////////////////////////////
+
+
+[ITEMDEF i_xbow_copper]
+ID=i_crossbow_heavy
+NAME=Copper Heavy CrossBow
+TYPE=T_WEAPON_XBOW
+FLIP=1
+SKILLMAKE=70.0 BOWCRAFT
+RESOURCES=80 i_ingot_copper, i_log
+WEIGHT=3
+RANGE=2,12
+DAM=22,27
+SPEED=50
+SKILL=Archery
+TWOHANDS=Y
+
+ON=@Create
+COLOR=color_o_copper
+HITPOINTS=100
+
+[ITEMDEF i_xbow_shadow]
+ID=i_crossbow_heavy
+NAME=Shadow Heavy CrossBow
+TYPE=T_WEAPON_XBOW
+FLIP=1
+SKILLMAKE=70.0 BOWCRAFT
+RESOURCES=80 i_ingot_shadow, i_log
+WEIGHT=3
+RANGE=2,12
+DAM=26,32
+SPEED=50
+SKILL=Archery
+TWOHANDS=Y
+
+ON=@Create
+COLOR=color_o_shadow
+HITPOINTS=100
+
+[ITEMDEF i_xbow_valorite]
+ID=i_crossbow_heavy
+NAME=Valorite Heavy CrossBow
+TYPE=T_WEAPON_XBOW
+FLIP=1
+SKILLMAKE=85.0 BOWCRAFT
+RESOURCES=80 i_ingot_valorite, i_log
+WEIGHT=3
+RANGE=2,12
+DAM=28,34
+SPEED=50
+SKILL=Archery
+TWOHANDS=Y
+
+ON=@Create
+COLOR=color_o_valorite
+HITPOINTS=100
+
+
+[ITEMDEF i_xbow_verite]
+ID=i_crossbow_heavy
+NAME=Verite Heavy CrossBow
+TYPE=T_WEAPON_XBOW
+FLIP=1
+SKILLMAKE=70.0 BOWCRAFT
+RESOURCES=80 i_ingot_verite, i_log
+WEIGHT=3
+RANGE=2,12
+DAM=29,35
+SPEED=50
+SKILL=Archery
+TWOHANDS=Y
+
+ON=@Create
+COLOR=color_o_verite
+HITPOINTS=100
+
+
+[ITEMDEF i_xbow_bloodrock]
+ID=i_crossbow_heavy
+NAME=Bloodrock Heavy CrossBow
+TYPE=T_WEAPON_XBOW
+FLIP=1
+SKILLMAKE=70.0 BOWCRAFT
+RESOURCES=80 i_ingot_bloodrock, i_log
+WEIGHT=3
+RANGE=2,12
+DAM=31,38
+SPEED=50
+SKILL=Archery
+TWOHANDS=Y
+
+ON=@Create
+COLOR=color_o_bloodrock
+HITPOINTS=100
+
+[ITEMDEF i_xbow_blackrock]
+ID=i_crossbow_heavy
+NAME=Blackrock Heavy CrossBow
+TYPE=T_WEAPON_XBOW
+FLIP=1
+SKILLMAKE=70.0 BOWCRAFT
+RESOURCES=80 i_ingot_blackrock, i_log
+WEIGHT=3
+RANGE=2,12
+DAM=33,39
+SPEED=50
+SKILL=Archery
+TWOHANDS=Y
+
+ON=@Create
+COLOR=color_o_blackrock
+HITPOINTS=100
+
+[ITEMDEF i_xbow_mytheril]
+ID=i_crossbow_heavy
+NAME=Mytheril Heavy CrossBow
+TYPE=T_WEAPON_XBOW
+FLIP=1
+SKILLMAKE=70.0 BOWCRAFT
+RESOURCES=80 i_ingot_mytheril, i_log
+WEIGHT=3
+RANGE=2,12
+DAM=34,41
+SPEED=50
+SKILL=Archery
+TWOHANDS=Y
+
+ON=@Create
+COLOR=color_o_mytheril
+HITPOINTS=100

@@ -1,0 +1,73 @@
+[COMMENT script_pvp_ranking_table]
+CREATE TABLE `pvp_ranking` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`date_time` datetime NOT NULL DEFAULT current_timestamp(),
+	`attacker_uid` varchar(16) NOT NULL,
+	`attacker_name` varchar(64) NOT NULL,
+	`attacker_guild_uid` varchar(16) NOT NULL,
+	`attacker_guild_name` varchar(64) NOT NULL,
+	`attacker_blue` tinyint(1) NOT NULL,
+	`attacker_events` varchar(300) NOT NULL,
+	`victim_uid` varchar(16) NOT NULL,
+	`victim_name` varchar(64) NOT NULL,
+	`victim_guild_uid` varchar(16) NOT NULL,
+	`victim_guild_name` varchar(64) NOT NULL,
+	`victim_blue` tinyint(1) NOT NULL,
+	`victim_events` varchar(300) NOT NULL,
+	`location_coordinates` varchar(32) NOT NULL,
+	`location_name` varchar(200) NOT NULL,
+	`location_events` varchar(300) NOT NULL DEFAULT '',
+	PRIMARY KEY (`id`),
+	KEY `date_time` (`date_time`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+[FUNCTION f_fix_pvp_ranking]
+IF (<ARGV> != 1)
+	RETURN 1
+ENDIF
+
+LOCAL.DATE "<ARGV[0]>"
+LOCAL.LAST_ID 0
+LOCAL.LAST_ATTACKER_UID 0
+LOCAL.LAST_VICTIM_UID 0
+LOCAL.LAST_DATE_TIME 0
+LOCAL.REPEATED_COUNT 0
+LOCAL.TOLERANCE 60
+
+SERV.LIST.repeated_ids_pvp_ranking.CLEAR
+
+DB.QUERY "SELECT id, attacker_uid, victim_uid, UNIX_TIMESTAMP(date_time) date_time FROM pvp_ranking WHERE date_time >= SUBDATE('<LOCAL.DATE> 00:00:00', 1) ORDER BY attacker_uid, victim_uid, id ASC"
+FOR 0 <EVAL <DB.ROW.NUMROWS> - 1>
+	LOCAL.ID "<DB.ROW.<DLOCAL._FOR>.id>"
+	LOCAL.ATTACKER_UID "<DB.ROW.<DLOCAL._FOR>.attacker_uid>"
+	LOCAL.VICTIM_UID "<DB.ROW.<DLOCAL._FOR>.victim_uid>"
+	LOCAL.DATE_TIME "<DB.ROW.<DLOCAL._FOR>.date_time>"
+
+	IF (<LOCAL.ATTACKER_UID> == <LOCAL.LAST_ATTACKER_UID>) && (<LOCAL.VICTIM_UID> == <LOCAL.LAST_VICTIM_UID>) && (<EVAL <LOCAL.DATE_TIME> - <LOCAL.LAST_DATE_TIME>> <= <LOCAL.TOLERANCE>)
+		LOCAL.TOLERANCE 300
+		LOCAL.REPEATED_COUNT += 1
+		// SERV.LOG <LOCAL.ATTACKER_UID> <UID.<LOCAL.ATTACKER_UID>.NAME> <LOCAL.VICTIM_UID> <UID.<LOCAL.VICTIM_UID>.NAME> <LOCAL.DATE_TIME> <EVAL <LOCAL.DATE_TIME> - <LOCAL.LAST_DATE_TIME>> <DLOCAL.REPEATED_COUNT>
+
+		SERV.LIST.repeated_ids_pvp_ranking.ADD <LOCAL.ID>
+	ELSE
+		LOCAL.TOLERANCE 60
+		LOCAL.REPEATED_COUNT 0
+	ENDIF
+
+	LOCAL.LAST_ID <LOCAL.ID>
+	LOCAL.LAST_ATTACKER_UID <LOCAL.ATTACKER_UID>
+	LOCAL.LAST_VICTIM_UID <LOCAL.VICTIM_UID>
+	LOCAL.LAST_DATE_TIME <LOCAL.DATE_TIME>
+ENDFOR
+
+LOCAL.COUNT <EVAL <SERV.LIST.repeated_ids_pvp_ranking.COUNT> - 1>
+
+FOR 0 <LOCAL.COUNT>
+	DB.EXECUTE "DELETE FROM pvp_ranking WHERE id = '<DSERV.LIST.repeated_ids_pvp_ranking.<DLOCAL._FOR>>'"
+ENDFOR
+
+SERV.LOG Total pvp rows removed at <LOCAL.DATE>: <DSERV.LIST.repeated_ids_pvp_ranking.COUNT>
+
+SERV.LIST.repeated_ids_pvp_ranking.CLEAR
+
+[EOF]

@@ -1,0 +1,30 @@
+[plevel 5]
+epoints
+
+[plevel 1]
+myeventpoints
+
+[function epoints]
+targetf epoints2 <args>
+
+[function epoints2]
+argo.tag0.eventpoints += <args>
+argo.sysmessage @,,1 <name> creditou <eval <args>> event points. Agora voce possui <argo.dtag0.eventpoints> event points.
+sysmessage @,,1 Voce creditou <eval <args>> event points. Agora o player possui <argo.dtag0.eventpoints> event points.
+
+[function myeventpoints]
+sysmessage @,,1 Voce possui <dtag0.eventpoints> event points.
+
+[FUNCTION epshow]
+        for h <serv.accounts>
+                local.i=0
+                if (<serv.account.<eval <local.h> +-1>.chars>)
+                        for i <serv.account.<eval <local.h> +-1>.chars>
+                                ref1 <serv.account.<eval <local.h> +-1>.char.<eval <local.i> +-1>.uid>
+                                if <ref1.tag0.eventpoints>
+									s <ref1.name> <ref1.dtag0.eventpoints>
+								endif
+                        endfor
+                endif
+        endfor
+return 1

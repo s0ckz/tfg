@@ -1,0 +1,83 @@
+//
+// Sample house customization script.
+//
+// -> Allows players to design buildings from foundations with the
+//    type t_multi_custom.
+// -> Players can design their houses by double clicking the house
+//    sign (whilst within the house area).
+// -> Designing costs 500gp for each component that makes up the
+//    design, if a new design has less components than the previous
+//    one, gold is refunded.
+//
+
+[ITEMDEF i_house_coin]
+ID=i_gold
+NAME=House Coin
+TYPE=t_normal
+VALUE=20
+
+ON=@Create
+	COLOR=0a23
+
+[TYPEDEF t_sign_gump]
+ON=@Click
+	IF (<LINK.TYPE> != t_multi_custom)
+		RETURN 2
+	ELSEIF (<LINK.MORE1> != <SRC.UID>) && !(<SRC.ISGM>)
+		RETURN 2
+	ELSEIF (<SRC.REGION.UID> != <REGION.UID>)
+		RETURN 2
+	ELSEIF (<SRC.HOUSEDESIGN>)
+		SRC.SYSMESSAGE You are already designing <QVAL (<SRC.HOUSEDESIGN.UID> == <LINK.UID>)? this:another> building.
+		RETURN 1
+	ELSEIF !(<SRC.ISEVENT.e_house_customize>)
+		SRC.EVENTS +e_house_customize
+	ENDIF
+	LINK.CUSTOMIZE
+	RETURN 1
+
+[EVENTS e_house_customize]
+ON=@SkillStart
+	IF !(<HOUSEDESIGN>)
+		RETURN 2
+	ENDIF
+	SYSMESSAGE You cannot do this whilst designing a house.
+	RETURN 1
+
+ON=@SkillUseQuick
+	IF !(<HOUSEDESIGN>)
+		RETURN 2
+	ENDIF
+	RETURN 1
+
+ON=@HouseDesignCommit
+	IF (<ISGM>)
+		SYSMESSAGE Your new house design has been committed.
+		RETURN 2
+	ENDIF
+	LOCAL.OLDCOST = <EVAL (<ARGN1> * 500)>
+	LOCAL.NEWCOST = <EVAL (<ARGN2> * 500)>
+	LOCAL.CURCOST = <EVAL (<LOCAL.NEWCOST> - <LOCAL.OLDCOST>)>
+
+	IF (<LOCAL.CURCOST> > 0) && !(<RESTEST <LOCAL.CURCOST> i_house_coin>)
+		SYSMESSAGE You cannot afford this house design.
+		RETURN 1
+	ENDIF
+	SYSMESSAGE Your new house design has been committed.
+	IF (<LOCAL.CURCOST> == 0)
+		SYSMESSAGE As the new design costs the same as the previous one, no house coins has been taken out of your account.
+//	ELSEIF (<LOCAL.CURCOST> < 0)
+//		LOCAL.CURCOST = <EVAL (0 - <LOCAL.CURCOST>)>
+//		GOLD += <LOCAL.CURCOST>
+//		SYSMESSAGE As the new design is cheaper than the previous one, <dLOCAL.CURCOST> gold has been returned to you.
+	ELSEIF (<LOCAL.CURCOST> > 0)
+		CONSUME <LOCAL.CURCOST> i_house_coin
+		SYSMESSAGE <dLOCAL.CURCOST> house coins has been taken out of your account to pay for the construction.
+	ENDIF
+	RETURN 2
+
+ON=@HouseDesignExit
+	SYSMESSAGE You have left house design mode.
+	RETURN 2
+
+[EOF]

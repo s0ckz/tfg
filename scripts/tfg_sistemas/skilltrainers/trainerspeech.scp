@@ -1,0 +1,55 @@
+[SPEECH spk_tfg_trainer]
+on=*oi*
+on=*hello*
+on=*hi*
+	DORAND 3
+		SAY Hello ma friend, I can only train adventurers who seek knowledge in <serv.skill.<dtag.skill>.name>
+		SAY Howdy, can I help you with something?
+		SAY Hi, Im a trainer from the fifteen realms and will be leaving soon
+	ENDDO
+
+ON=*Treinar*
+ON=*Train*
+	if !(<tag.skill>)
+		s trainer <uid> tem um erro na tag de skill
+		return 1
+	endif
+
+	If <src.<dtag.skill>> < 700
+		SAY Come back when you know more. You know nothing...
+	elif (<src.<dtag.skill>> < 751)
+		DORAND 2
+			SAY I will train you if you want, but you must bring me some things first.
+			SAY You shall bring me an <serv.skill.<dtag.skill>.name> Stone of level 1 and pay a fee of <dvar.trainer_1_fee>gps
+		ENDDO
+	elif ((<src.<dtag.skill>> > 749) && (<src.<dtag.skill>> < 800))
+			DORAND 2
+				SAY I will train you if you want, but you must bring me some things first.
+				SAY You shall bring me an <serv.skill.<dtag.skill>.name> Stone of level 2 and pay a fee of <dvar.trainer_2_fee>gps
+			ENDDO
+	elif ((<src.<dtag.skill>> > 799) && (<src.<dtag.skill>> < 850))
+		DORAND 2
+			SAY I will train you if you want, but you must bring me some things first.
+			SAY You shall bring me an <serv.skill.<dtag.skill>.name> Stone of level 3 and pay a fee of <dvar.trainer_3_fee>gps
+		ENDDO
+	elif ((<src.<dtag.skill>> > 849) && (<src.<dtag.skill>> < 900))
+		DORAND 2
+			SAY I will train you if you want, but you must bring me some things first.
+			SAY You shall bring me an <serv.skill.<dtag.skill>.name> Stone of level 4 and pay a fee of <dvar.trainer_4_fee>gps
+		ENDDO
+	elif ((<src.<dtag.skill>> > 899) && (<src.<dtag.skill>> < 950))
+		DORAND 2
+			SAY I will train you if you want, but you must bring me some things first.
+			SAY You shall bring me an <serv.skill.<dtag.skill>.name> Stone of level 5 and pay a fee of <dvar.trainer_5_fee>gps
+		ENDDO
+	elif ((<src.<dtag.skill>> > 949) && (<src.<dtag.skill>> < 1000))
+		DORAND 2
+			SAY I will train you if you want, but you must bring me some things first.
+			SAY You shall bring me an <serv.skill.<dtag.skill>.name> Stone of level 6 and pay a fee of <dvar.trainer_6_fee>gps
+		ENDDO
+	elif ((<src.<dtag.skill>> > 999) && (<src.<dtag.skill>> < 1100))
+		DORAND 2
+			SAY I will train you if you want, but you must bring me some things first.
+			SAY You shall bring me an <serv.skill.<dtag.skill>.name> Stone of level 7 and pay a fee of <dvar.trainer_7_fee>gps
+		ENDDO
+	endif

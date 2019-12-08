@@ -1,0 +1,780 @@
+// TODO:
+// players might leave
+// disconnected players must be disconnected
+// prizes
+// current not needed
+
+// Settings
+[DEFNAME paintball_settings]
+PAINTBALL_TEAMS 2
+PAINTBALL_TEAM1_COLOR color_o_bloodrock
+PAINTBALL_TEAM1_BASE_LOCATION 2006,2003,0,1
+PAINTBALL_TEAM2_COLOR color_o_mytheril
+PAINTBALL_TEAM2_BASE_LOCATION 2132,1956,0,1
+PAINTBALL_GATE_LOCATION 2341,541,1
+PAINTBALL_CONTROL_LOCATION 2006,2003,0,1
+PAINTBALL_CHARS_RANGE 400
+PAINTBALL_START_AMMO 20
+PAINTBALL_BASE_RANGE 30
+PAINTBALL_WINNER_TEAM_EVENT_POINTS 50
+PAINTBALL_SURVIVOR_TEAM_EVENT_POINTS 10
+
+// Prize Functions
+[FUNCTION set_paintball_team_prize]
+TARGETF f_set_paintball_team_prize
+
+[FUNCTION f_set_paintball_team_prize]
+IF !(<ARGO.ISITEM>)
+	SRC.SYSMESSAGE @,,1 The paintball prize must be an item.
+	RETURN 1
+ENDIF
+
+VAR.PAINTBALL_TEAM_PRIZE <ARGO.UID>
+
+[FUNCTION set_paintball_survivor_prize]
+TARGETF f_set_paintball_survivor_prize
+
+[FUNCTION f_set_paintball_survivor_prize]
+IF !(<ARGO.ISITEM>)
+	SRC.SYSMESSAGE @,,1 The paintball prize must be an item.
+	RETURN 1
+ENDIF
+
+VAR.PAINTBALL_SURVIVOR_PRIZE <ARGO.UID>
+
+// Start Functions
+[FUNCTION start_paintball]
+IF <TAG0.CAN_I_USE_EVENT_CMD>
+	f_start_paintball <ARGS>
+ELSE
+	SRC.SYSMESSAGE @,,1 You can't use this command.
+ENDIF
+
+[FUNCTION f_start_paintball]
+IF (<ARGV> != 1)
+	SRC.SYSMESSAGE @,,1 You must inform: quantidade_players_por_time
+	RETURN 1
+ENDIF
+
+IF !(<VAR0.PAINTBALL_TEAM_PRIZE>)
+	SRC.SYSMESSAGE @,,1 The paintball team prize is not set. Set it using .set_paintball_team_prize.
+	RETURN 1
+ENDIF
+
+IF !(<VAR0.PAINTBALL_SURVIVOR_PRIZE>)
+	SRC.SYSMESSAGE @,,1 The paintball survivor prize is not set. Set it using .set_paintball_survivor_prize.
+	RETURN 1
+ENDIF
+
+IF (<VAR0.PAINTBALL_CONTROL>)
+	f_stop_paintball
+ENDIF
+
+FORINSTANCES i_paintball_control
+	REMOVE
+ENDFOR
+
+FOR 1 <DEF.PAINTBALL_TEAMS>
+	SERV.NEWITEM i_paintball_base
+	NEW.P <DEF.PAINTBALL_TEAM<dLOCAL._FOR>_BASE_LOCATION>
+	NEW.MULTICREATE
+	NEW.ATTR 010
+
+	REF1 = <NEW.UID>
+
+	SERV.NEWITEM i_paintball_lock_wall
+	NEW.P <EVAL <REF1.P.X> + 2>, <EVAL <REF1.P.Y> - 3>,<REF1.P.Z>,<REF1.P.MAP>
+	NEW.LINK = <REF1.UID>
+
+	SERV.NEWITEM i_paintball_lock_wall
+	NEW.P <EVAL <REF1.P.X> + 3>, <EVAL <REF1.P.Y> - 3>,<REF1.P.Z>,<REF1.P.MAP>
+	NEW.LINK = <REF1.UID>
+
+	SERV.NEWITEM i_paintball_lock_wall
+	NEW.P <EVAL <REF1.P.X> - 2>, <EVAL <REF1.P.Y> + 4>,<REF1.P.Z>,<REF1.P.MAP>
+	NEW.LINK = <REF1.UID>
+
+	SERV.NEWITEM i_paintball_lock_wall
+	NEW.P <EVAL <REF1.P.X> - 3>, <EVAL <REF1.P.Y> + 4>,<REF1.P.Z>,<REF1.P.MAP>
+	NEW.LINK = <REF1.UID>
+
+	REF1.f_set_paintball_base_color <dLOCAL._FOR>
+ENDFOR
+
+set_event_gate_walls 1
+
+SERV.NEWITEM i_paintball_gate
+NEW.TAG.TOTAL_PLAYERS <EVAL <ARGV[0]> * <DEF.PAINTBALL_TEAMS>>
+NEW.P <DEF.PAINTBALL_GATE_LOCATION>
+NEW.UPDATEX
+REF1=<NEW.UID>
+
+serv.newitem i_paintball_announcement
+NEW.P <REF1.P>
+NEW.TAG.GATE <REF1>
+NEW.UPDATE
+
+serv.newitem i_paintball_control
+NEW.TAG.PLAYERS_BY_TEAM <ARGV[1]>
+NEW.P <DEF.PAINTBALL_CONTROL_LOCATION>
+NEW.ATTR 090
+NEW.UPDATEX
+
+VAR.PAINTBALL_CONTROL = <NEW>
+SERV.LIST.PAINTBALL_PLAYERS.CLEAR
+SERV.LIST.CURRENT_PAINTBALL_PLAYERS.CLEAR
+
+SERV.B @55 Foram liberadas <EVAL <REF1.TAG.TOTAL_PLAYERS>> vagas para o Paint Ball. Gate na Commerce Room!
+RETURN 1
+
+[FUNCTION f_set_paintball_base_color]
+LOCAL.BASE_UID <UID>
+
+FORITEMS <DEF.PAINTBALL_BASE_RANGE>
+	IF (<LOCAL.BASE_UID> == <LINK.UID>)
+		COLOR = <DEF.PAINTBALL_TEAM<ARGS>_COLOR>
+	ENDIF
+
+	IF (<BASEID> == i_paintball_base_tile)
+		NAME Tile Recarga - Time <EVAL <ARGS>>
+		TAG.PAINTBALL_TEAM <ARGS>
+	ENDIF
+ENDFOR
+
+[FUNCTION stop_paintball]
+IF <TAG0.CAN_I_USE_EVENT_CMD>
+	f_stop_paintball
+ELSE
+	SRC.SYSMESSAGE @,,1 Voce nao pode usar este comando.
+ENDIF
+
+[FUNCTION f_stop_paintball]
+set_event_gate_walls 0
+
+FORINSTANCES i_paintball_gate
+	REMOVE
+ENDFOR
+
+FORINSTANCES i_paintball_announcement
+	REMOVE
+ENDFOR
+
+FORINSTANCES i_paintball_control
+	REMOVE
+ENDFOR
+
+FORINSTANCES i_paintball_ammo
+	REMOVE
+ENDFOR
+
+FORINSTANCES i_paintball_base
+	REMOVE
+ENDFOR
+
+VAR.PAINTBALL_CONTROL
+
+FOR 0 <EVAL <SERV.LIST.PAINTBALL_PLAYERS.COUNT> - 1>
+	REF1=<SERV.LIST.PAINTBALL_PLAYERS.<dLOCAL._FOR>>
+	REF1.TAG0.PAINTBALL_TEAM
+
+	IF (<REF1.ISEVENT.e_paintball_event>)
+		REF1.GO Commerce Room
+	ENDIF
+ENDFOR
+
+SERV.LIST.PAINTBALL_PLAYERS.CLEAR
+SERV.LIST.CURRENT_PAINTBALL_PLAYERS.CLEAR
+
+// Announcement
+[ITEMDEF i_paintball_announcement]
+ID=i_crystal_ball
+NAME=Paintball [DO NOT REMOVE]
+WEIGHT=200
+TYPE=t_eq_script
+
+ON=@Create
+    ATTR=attr_decay|attr_invis
+    TIMER=15
+
+ON=@TIMER
+	IF (<TAG0.COUNT> >= 40)
+		SERV.B @55 Paint Ball cancelado por falta de participantes!
+		f_stop_paintball
+		RETURN
+	ENDIF
+
+	REF1 = <TAG.GATE>
+  	SERV.B @55 Restam <eval <REF1.TAG.TOTAL_PLAYERS> - <SERV.LIST.PAINTBALL_PLAYERS.COUNT>> vagas para o Paint Ball! Gate na Commerce Room!
+	TIMER 15
+
+	TAG0.COUNT += 1
+
+	RETURN 1
+
+// Control
+[ITEMDEF i_paintball_control]
+ID=i_crystal_ball
+NAME=Paint Ball [DO NOT REMOVE]
+WEIGHT=200
+TYPE=t_eq_script
+
+ON=@Create
+    ATTR=attr_decay|attr_invis
+    TIMER=-1
+
+ON=@TIMER
+	IF !(<TAG0.START>)
+		FORCHARS <DEF.PAINTBALL_CHARS_RANGE>
+			IF (<ISEVENT.e_paintball_event>)
+				DISMOUNT
+			ENDIF
+		ENDFOR
+
+		FORCHARS <DEF.PAINTBALL_CHARS_RANGE>
+			IF (<ISEVENT.e_paintball_event>)
+				EVENTS -e_paintball_wait
+				SAY @33 Fight!
+			ELSEIF !(<ISPLAYER>)
+				TIMERF 1, GO COMMERCE ROOM
+			ENDIF
+		ENDFOR
+
+		FORINSTANCES i_paintball_lock_wall
+			REMOVE
+		ENDFOR
+
+		TAG.START = 1
+	ENDIF
+	RETURN 1
+
+// Gate
+[ITEMDEF i_paintball_gate]
+ID=0f6c
+WEIGHT=1
+TYPE=t_normal
+NAME=Paint Ball
+
+ON=@Create
+	ATTR 08000
+	COLOR 079D
+	TAG.TOTAL_PLAYERS 16
+
+ON=@Click
+	MESSAGE @0790 <NAME>
+	RETURN 1
+
+ON=@Step
+IF !(<SRC.ISPLAYER>)
+	RETURN 1
+ENDIF
+
+IF <SRC.TAG0.EVENT_BLOCK>
+	SRC.SYSMESSAGE @,,1 Voce esta banido de eventos!
+	RETURN 1
+ENDIF
+
+IF (<SERV.LIST.PAINTBALL_PLAYERS.COUNT> >= <TAG.TOTAL_PLAYERS>) && (<TAG.TOTAL_PLAYERS> > 0)
+    RETURN 1
+ENDIF
+
+SRC.shrinklayer25_save
+SERV.LIST.PAINTBALL_PLAYERS.ADD <SRC.UID>
+SERV.LIST.CURRENT_PAINTBALL_PLAYERS.ADD <SRC.UID>
+SRC.CANCELLHELPROOM
+
+SRC.TAG.ASKILLS = <SRC.KILLS>
+SRC.TAG.ASKARMA = <SRC.KARMA>
+SRC.TAG.ASFAME = <SRC.FAME>
+SRC.TAG.ASDEATHS = <SRC.DEATHS>
+SRC.TAG.ASHITS = <SRC.HITS>
+SRC.TAG.PAINTBALL_KILLS
+
+SRC.FINDLAYER.31.BOUNCE //LAYER DRAGGING
+SRC.TAG.LASTBACKPACK <SRC.FINDLAYER.21.UID>
+SRC.stripsave
+
+TAG0.CURRENT_TEAM += 1
+
+IF (<dTAG.CURRENT_TEAM> > <DEF.PAINTBALL_TEAMS>)
+	TAG.CURRENT_TEAM 1
+ENDIF
+
+LOCAL.TEAM_COLOR <DEF.PAINTBALL_TEAM<dTAG.CURRENT_TEAM>_COLOR>
+SRC.TAG.NAME.HUE = <LOCAL.TEAM_COLOR>
+SRC.TAG.PAINTBALL_TEAM = <TAG.CURRENT_TEAM>
+
+SRC.TAG.ONEVENT 1
+
+SRC.FINDLAYER.21.ATTR 0
+REF1=<SRC.FINDLAYER.21.UID>
+SRC.FINDLAYER.21.CONT <SRC.FINDLAYER.29.UID>
+REF1.UPDATEX
+SRC.NEWITEM I_BACKPACK
+
+SRC.ACT.COLOR <LOCAL.TEAM_COLOR>
+SRC.ACT.EQUIP
+
+SRC.NEWITEM i_paintball_hcb
+SRC.ACT.NAME TFG Shard Evento
+SRC.ACT.AMMOANIMHUE <LOCAL.TEAM_COLOR>
+SRC.ACT.COLOR <LOCAL.TEAM_COLOR>
+SRC.ACT.EQUIP
+
+SRC.NEWITEM i_paintball_ammo
+SRC.ACT.AMOUNT <DEF.PAINTBALL_START_AMMO>
+SRC.ACT.COLOR <LOCAL.TEAM_COLOR>
+SRC.ACT.EQUIP
+
+SRC.NEWITEM i_boots_thigh
+SRC.ACT.NAME TFG Shard Evento
+SRC.ACT.EQUIP
+
+SRC.NEWITEM i_robe
+SRC.ACT.NAME TFG Shard Evento
+SRC.ACT.EQUIP
+
+SRC.NEWITEM i_apron_half
+SRC.ACT.NAME TFG Shard Evento
+SRC.ACT.EQUIP
+
+SRC.NEWITEM i_leather_gloves
+SRC.ACT.NAME TFG Shard Evento
+SRC.ACT.EQUIP
+
+SRC.NEWITEM i_mask_tribal_red
+SRC.ACT.NAME TFG Shard Evento
+SRC.ACT.COLOR <LOCAL.TEAM_COLOR>
+SRC.ACT.EQUIP
+
+SRC.HITS=<SRC.MAXHITS>
+SRC.MANA=<SRC.MAXMANA>
+SRC.STAM=<SRC.MAXSTAM>
+
+SRC.GO <DEF.PAINTBALL_TEAM<dTAG.CURRENT_TEAM>_BASE_LOCATION>
+
+SRC.RESENDALL
+SRC.EVENTS +e_paintball_wait
+SRC.EVENTS +e_paintball_event
+
+IF (<SERV.LIST.CURRENT_PAINTBALL_PLAYERS.COUNT> == <TAG.TOTAL_PLAYERS>)
+	FORINSTANCES i_paintball_announcement
+		REMOVE
+	ENDFOR
+
+	SERV.B @55 Evento Completo! O Paint Ball comeca em 20 segundos!
+
+	REF1 = <VAR0.PAINTBALL_CONTROL>
+	REF1.TIMER 20
+
+	set_event_gate_walls 0
+
+	REMOVE
+ENDIF
+
+RETURN 1
+
+// Paintball Ammo
+[ITEMDEF i_paintball_ammo]
+ID=0e73
+NAME=Paintball Ammo
+TYPE=T_WEAPON_ARROW
+WEIGHT=5
+
+ON=@PickUp_Ground
+	IF (<COLOR> != <DEF.PAINTBALL_TEAM<dSRC.TAG0.PAINTBALL_TEAM>_COLOR>)
+		SRC.SYSMESSAGE Voce nao pode pegar municao do adversario!
+		RETURN 1
+	ENDIF
+
+// Base multi
+[ITEMDEF i_paintball_base]
+ID=018DE
+TYPE=t_multi
+MULTIREGION=0,0,0,0
+COMPONENT=0242 -5 -2 0 1
+COMPONENT=0242 -5 -1 0 1
+COMPONENT=0242 -5 0 0 1
+COMPONENT=02FF -5 1 0 1
+COMPONENT=02FF -5 2 0 1
+COMPONENT=0242 -5 3 0 1
+COMPONENT=0242 -5 4 0 1
+COMPONENT=0241 -4 -3 0 1
+COMPONENT=0241 -4 4 0 1
+COMPONENT=0241 -3 -3 0 1
+COMPONENT=02FE -2 -3 0 1
+COMPONENT=02FE -1 -3 0 1
+COMPONENT=0241 -1 4 0 1
+COMPONENT=0241 0 -3 0 1
+COMPONENT=0241 0 4 0 1
+COMPONENT=0241 1 -3 0 1
+COMPONENT=02FE 1 4 0 1
+COMPONENT=i_paintball_base_tile 2 0 0 1
+COMPONENT=02FE 2 4 0 1
+COMPONENT=0241 3 4 0 1
+COMPONENT=0241 4 -3 0 1
+COMPONENT=0241 4 4 0 1
+COMPONENT=0241 5 -3 0 1
+COMPONENT=0242 5 -2 0 1
+COMPONENT=0242 5 -1 0 1
+COMPONENT=0242 5 0 0 1
+COMPONENT=02FF 5 1 0 1
+COMPONENT=02FF 5 2 0 1
+COMPONENT=0242 5 3 0 1
+COMPONENT=0243 5 4 0 1
+
+// Base Lock wall
+[ITEMDEF i_paintball_lock_wall]
+ID=0241
+NAME=Base Lock Wall
+
+// Recharge tile
+[ITEMDEF i_paintball_base_tile]
+NAME=Base Tile
+ID=0497
+TYPE=t_normal
+DISPID=0495
+
+ON=@Create
+	ATTR = 010
+
+ON=@Step
+	IF (<SRC.ISEVENT.e_paintball_wait>)
+		MESSAGE @<COLOR> Evento nao comecou ainda !
+		RETURN 0
+	ENDIF
+
+	IF (<SRC.TAG.PAINTBALL_TEAM> != <TAG.PAINTBALL_TEAM>)
+		MESSAGE @<COLOR> Voce nao eh do mesmo time !
+		RETURN 0
+	ENDIF
+
+	IF (<TAG0.COOLDOWN_TIMER>)
+		MESSAGE @<COLOR> Aguarde <TIMER> segundos !
+		RETURN 0
+	ENDIF
+
+	SRC.FINDLAYER.layer_shoes.COLOR 0
+	SRC.FINDLAYER.layer_gloves.COLOR 0
+	SRC.FINDLAYER.layer_half_apron.COLOR 0
+	SRC.FINDLAYER.layer_robe.COLOR 0
+
+	SRC.HITS <SRC.MAXHITS>
+
+	IF (<SRC.FINDID.i_paintball_ammo>)
+		SRC.FINDID.i_paintball_ammo.AMOUNT <DEF.PAINTBALL_START_AMMO>
+	ELSE
+		SERV.NEWITEM i_paintball_ammo
+		NEW.AMOUNT 20
+		NEW.BOUNCE
+	ENDIF
+
+	MESSAGE <SRC.NAME> recarregado !
+
+	TAG.COOLDOWN_TIMER 1
+	TIMER 30
+
+ON=@Timer
+	TAG.COOLDOWN_TIMER
+	TIMER -1
+
+	RETURN 1
+
+// Paintball HCB
+[ITEMDEF i_paintball_hcb]
+ID=i_crossbow_heavy
+NAME=Paintball Heavy CrossBow
+TYPE=T_WEAPON_XBOW
+FLIP=1
+SKILLMAKE=200.0 BOWCRAFT
+RESOURCES=1000000 i_log
+WEIGHT=3
+RANGE=2,12
+DAM=31,38
+SPEED=50
+SKILL=Archery
+TWOHANDS=Y
+AMMOANIM=0e73
+AMMOTYPE=i_paintball_ammo
+
+ON=@Create
+	HITPOINTS=100
+
+ON=@Damage
+	RETURN 1
+
+// Eventos
+[EVENTS e_paintball_wait]
+ON=@GetHit
+	RETURN 1
+
+ON=@Hit
+	RETURN 1
+
+ON=@HitTry
+	RETURN 1
+
+ON=@SpellCast
+	RETURN 1
+
+ON=@SkillStart
+	RETURN 1
+
+[EVENTS e_paintball_event]
+ON=@Click
+	LOCAL.PARTS = 0
+
+	IF (<FINDLAYER.layer_shoes.COLOR> != 0)
+		LOCAL.PARTS += 1
+	ENDIF
+
+	IF (<FINDLAYER.layer_gloves.COLOR> != 0)
+		LOCAL.PARTS += 1
+	ENDIF
+
+	IF (<FINDLAYER.layer_half_apron.COLOR> != 0)
+		LOCAL.PARTS += 1
+	ENDIF
+
+	IF (<FINDLAYER.layer_robe.COLOR> != 0)
+		LOCAL.PARTS += 1
+	ENDIF
+
+	MESSAGE @<TAG.NAME.HUE>,,1 K: <dTAG.PAINTBALL_KILLS> [<dLOCAL.PARTS>/5]
+
+ON=@ItemDropOn_Self
+	IF (<ARGO.TYPE> == t_clothing) || (<ARGO.TYPE> == t_armor_leather)
+		RETURN 1
+	ENDIF
+
+ON=@ItemDropOn_Item
+	IF (<ACT.TYPE> == t_clothing) || (<ACT.TYPE> == t_armor_leather)
+		RETURN 1
+	ENDIF
+
+ON=@ItemDropOn_Ground
+	IF (<ACT.TYPE> == t_clothing) || (<ACT.TYPE> == t_armor_leather)
+		RETURN 1
+	ENDIF
+
+ON=@ItemDropOn_Char
+	IF (<ACT.TYPE> == t_clothing) || (<ACT.TYPE> == t_armor_leather)
+		RETURN 1
+	ENDIF
+
+ON=@SkillStart
+	IF (<ARGN1> == 21) || (<ARGN1> == 47)
+		SYSMESSAGE @,,1 You can't hide in a paintball event !
+		RETURN 1
+	ENDIF
+
+ON=@GetHit
+	IF (<TAG.PAINTBALL_TEAM> == <SRC.TAG.PAINTBALL_TEAM>)
+		SRC.SYSMESSAGE @,,1 You can't attack teammates!
+		RETURN 1
+	ENDIF
+
+	IF !(<SRC.WEAPON>)
+		SRC.SYSMESSAGE @,,1 You can't attack without your HCB!
+		RETURN 1
+	ENDIF
+
+ON=@HitTry
+	IF (<TAG.PAINTBALL_TEAM> == <SRC.TAG.PAINTBALL_TEAM>)
+		SYSMESSAGE @,,1 You can't attack teammates!
+		RETURN 1
+	ENDIF
+
+	IF !(<ARGO>)
+		SYSMESSAGE @,,1 You can't attack without your HCB!
+		RETURN 1
+	ENDIF
+
+ON=@Hit
+	IF (<TAG.PAINTBALL_TEAM> == <SRC.TAG.PAINTBALL_TEAM>)
+		SYSMESSAGE @,,1 You can't attack teammates!
+		RETURN 1
+	ENDIF
+
+	IF !(<WEAPON>)
+		SYSMESSAGE @,,1 You can't attack without your HCB!
+		RETURN 1
+	ENDIF
+
+	CONSUME i_paintball_ammo
+
+	LOCAL.ATTACKER_COLOR = <FINDLAYER.layer_hand2.COLOR>
+
+	IF (<SRC.FINDLAYER.layer_shoes.COLOR> == 0)
+		SRC.FINDLAYER.layer_shoes.COLOR <LOCAL.ATTACKER_COLOR>
+		SYSMESSAGE @,,1 You painted <SRC.NAME>'s shoes! 4 hits to go!
+		SRC.SYSMESSAGE @,,1 <NAME> painted your shoes! 4 hits to go!
+		SRC.HITS -= 20
+		RETURN 1
+	ENDIF
+
+	IF (<SRC.FINDLAYER.layer_gloves.COLOR> == 0)
+		SRC.FINDLAYER.layer_gloves.COLOR <LOCAL.ATTACKER_COLOR>
+		SYSMESSAGE @,,1 You painted <SRC.NAME>'s gloves! 3 hits to go!
+		SRC.SYSMESSAGE @,,1 <NAME> painted your gloves! 3 hits to go!
+		SRC.HITS -= 20
+		RETURN 1
+	ENDIF
+
+	IF (<SRC.FINDLAYER.layer_half_apron.COLOR> == 0)
+		SRC.FINDLAYER.layer_half_apron.COLOR <LOCAL.ATTACKER_COLOR>
+		SYSMESSAGE @,,1 You painted <SRC.NAME>'s half apron! 2 hits to go!
+		SRC.SYSMESSAGE @,,1 <NAME> painted your half apron! 2 hits to go!
+		SRC.HITS -= 20
+		RETURN 1
+	ENDIF
+
+	IF (<SRC.FINDLAYER.layer_robe.COLOR> == 0)
+		SRC.FINDLAYER.layer_robe.COLOR <LOCAL.ATTACKER_COLOR>
+		SYSMESSAGE @,,1 You painted <SRC.NAME>'s robe! 1 hit to go!
+		SRC.SYSMESSAGE @,,1 <NAME> painted your robe! 1 hit to go!
+		SRC.HITS -= 20
+		RETURN 1
+	ENDIF
+
+	IF (<SRC.FINDLAYER.layer_helm.COLOR> != <LOCAL.ATTACKER_COLOR>)
+		SRC.FINDLAYER.layer_helm.COLOR <LOCAL.ATTACKER_COLOR>
+		SYSMESSAGE @,,1 You defeated <SRC.NAME>'s by painting his mask!
+		SRC.SYSMESSAGE @,,1 <NAME> defeated you by painting your mask!
+
+		SRC.GO Commerce Room
+
+		f_paintball_verify_finish <UID>,<SRC.UID>
+
+		RETURN 1
+	ENDIF
+
+	RETURN 1
+
+ON=@EnvironChange
+	IF (<MAP> != 1)
+		IF (<HITS> < 1)
+			RESURRECT
+		ENDIF
+
+		STRIPREMOVE
+
+		SRC.KILLS=<TAG.ASKILLS>
+		SRC.KARMA=<TAG.ASKARMA>
+		SRC.FAME=<TAG.ASFAME>
+		SRC.DEATHS=<TAG.ASDEATHS>
+		SRC.HITS=<TAG.ASHITS>
+		SRC.MEMORYFINDTYPE.MEMORY_HARMEDBY.REMOVE
+		SRC.MEMORYFINDTYPE.MEMORY_IAGGRESSOR.REMOVE
+		SRC.MEMORYFINDTYPE.MEMORY_FIGHT.REMOVE
+		SRC.MEMORYFINDTYPE.MEMORY_SAWCRIME.REMOVE
+		SRC.MEMORYFINDTYPE.MEMORY_AGGREIVED.REMOVE
+		SRC.MEMORYFINDTYPE.MEMORY_WAR_TARG.REMOVE
+		SRC.MEMORYFINDTYPE.MEMORY_HARMEDBY.REMOVE
+		SRC.MEMORYFINDTYPE.MEMORY_IAGGRESSOR.REMOVE
+		SRC.MEMORYFINDTYPE.MEMORY_FIGHT.REMOVE
+		SRC.MEMORYFINDTYPE.MEMORY_SAWCRIME.REMOVE
+		SRC.MEMORYFINDTYPE.MEMORY_AGGREIVED.REMOVE
+		SRC.MEMORYFINDTYPE.MEMORY_WAR_TARG.REMOVE
+
+		TAG.ASKILLS
+		TAG.ASKARMA
+		TAG.ASFAME
+		TAG.ASDEATHS
+		TAG.ASHITS
+
+		SRC.CRIMINAL 0
+		INVIS 0
+
+	    FINDLAYER.21.REMOVE
+	    FINDLAYER.25.REMOVE
+	    FINDLAYER.31.REMOVE
+
+	    NEWITEM I_GOLD
+	    ACT.LINK 0<TAG.LASTBACKPACK>
+	    ACT.LINK.CONT <UID>
+	    ACT.REMOVE
+
+		EVENTS -e_paintball_event
+	    EVENTS -e_paintball_wait
+
+		IF (<FINDLAYER.21> = 0)
+			SERV.LOG Err... <NAME> saiu do evento e nao foi possivel recuperar sua backpack!
+			SERV.LOG Root: <UID> - Act: <ACT.UID> - Src: <SRC.UID> - Action: <ACTION> - Backpack: <TAG.LASTBACKPACK>
+		ENDIF
+
+		RESENDALL
+		REEQUIPALL
+
+		TAG.LASTBACKPACK
+		TAG.ONEVENT
+		TAG.NAME.HUE
+		TAG.PAINTBALL_KILLS
+	ENDIF
+
+	RETURN 0
+
+// Function to check event ending
+[FUNCTION f_paintball_verify_finish]
+REF1 <ARGV[0]> // attacker
+REF2 <ARGV[1]> // victim
+
+REF1.TAG0.PAINTBALL_KILLS += 1
+
+SERV.B @55 <REF2.NAME> (Equipe <dREF2.TAG.PAINTBALL_TEAM>) foi eliminado por <REF1.NAME> (Equipe <dREF1.TAG.PAINTBALL_TEAM>) do Paint Ball!
+
+SERV.LIST.CURRENT_PAINTBALL_PLAYERS.<SERV.LIST.CURRENT_PAINTBALL_PLAYERS.FINDELEM <REF2.UID>>.REMOVE
+
+FOR 1 <DEF.PAINTBALL_TEAMS>
+	LOCAL.TEAM<dLOCAL._FOR>_COUNT 0
+ENDFOR
+
+FOR 0 <EVAL <SERV.LIST.CURRENT_PAINTBALL_PLAYERS.COUNT> - 1>
+	REF3=<SERV.LIST.CURRENT_PAINTBALL_PLAYERS.<dLOCAL._FOR>>
+
+	// checking if there are victims yet
+	IF (<dREF3.TAG.PAINTBALL_TEAM> != <dREF1.TAG.PAINTBALL_TEAM>)
+		RETURN 1
+	ENDIF
+ENDFOR
+
+// PRIZE
+SERV.B @55 Equipe <dREF3.TAG.PAINTBALL_TEAM> foi a vencedora!
+
+FOR 0 <EVAL <SERV.LIST.PAINTBALL_PLAYERS.COUNT> - 1>
+	REF3=<SERV.LIST.PAINTBALL_PLAYERS.<dLOCAL._FOR>>
+
+	IF (<dREF3.TAG.PAINTBALL_TEAM> == <dREF1.TAG.PAINTBALL_TEAM>)
+		REF3.TAG0.EVENTPOINTS += <DEF.PAINTBALL_WINNER_TEAM_EVENT_POINTS>
+
+		SERV.NEWDUPE <VAR.PAINTBALL_TEAM_PRIZE>
+
+		f_shuffle_power_scrolls <NEW.UID>
+
+		NEW.NAME "@,,1 <REF3.NAME> - Campeão do Paint Ball - <SERV.RTIME.FORMAT %d/%m/%Y>"
+
+		IF (<REF3.TAG0.LASTBACKPACK>)
+			REF3.TAG0.EVENTPOINTS += <DEF.PAINTBALL_SURVIVOR_TEAM_EVENT_POINTS>
+
+			NEW.CONT <REF3.TAG.LASTBACKPACK>
+			REF4 = <NEW.UID>
+
+			SERV.NEWDUPE <VAR.PAINTBALL_SURVIVOR_PRIZE>
+
+			f_shuffle_power_scrolls <NEW.UID>
+
+			NEW.NAME "@,,1 <REF3.NAME> - Campeão e Sobrevivente do Paint Ball - <SERV.RTIME.FORMAT %d/%m/%Y>"
+			NEW.CONT <REF4.UID>
+		ELSE
+			NEW.CONT <REF3.FINDLAYER.layer_pack.UID>
+		ENDIF
+
+		IF (<REF3.UID> == <REF1.UID>) || (<REF3.ISEVENT.e_paintball_event>)
+		ENDIF
+
+		SERV.B @55 <REF3.NAME> ganhou um premio!
+	ENDIF
+ENDFOR
+
+f_stop_paintball
+
+[EOF]

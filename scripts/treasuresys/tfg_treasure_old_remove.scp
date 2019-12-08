@@ -1,0 +1,113 @@
+[FUNCTION f_new_treasure_system_fix]
+local.create 0
+local.count 0
+for x 1 5
+	for y 0 31
+		FORINSTANCES i_ttm_l<dlocal.x>_<dlocal.y>
+			SERV.NEWITEM i_treasure_map_lvl_<dlocal.x>
+			NEW.CONT <CONT>
+			LOCAL.CREATE ++
+			REMOVE
+			LOCAL.COUNT ++
+		ENDFOR
+	ENDFOR
+endfor
+SYSMESSAGE @,,1 Mapas: <dlocal.create> criados, <dLOCAL.COUNT> excluidos.
+//
+local.ct 0		
+FORINSTANCES i_plant_fern
+	if (<type>==T_L1MAP_CHEST) || (<type>==T_L2MAP_CHEST) || (<type>==T_L3MAP_CHEST) || (<type>==T_L4MAP_CHEST) || (<type>==T_L5MAP_CHEST) 
+		local.ct ++
+		remove
+	endif
+ENDFOR
+//
+FORINSTANCES i_plant_rushes
+	if (<type>==T_L1MAP_CHEST) || (<type>==T_L2MAP_CHEST) || (<type>==T_L3MAP_CHEST) || (<type>==T_L4MAP_CHEST) || (<type>==T_L5MAP_CHEST) 
+		local.ct ++
+		remove
+	endif
+ENDFOR
+//
+FORINSTANCES i_plant_fern_5
+	if (<type>==T_L1MAP_CHEST) || (<type>==T_L2MAP_CHEST) || (<type>==T_L3MAP_CHEST) || (<type>==T_L4MAP_CHEST) || (<type>==T_L5MAP_CHEST) 
+		local.ct ++
+		remove
+	endif
+ENDFOR
+//
+FORINSTANCES i_plant_bulrushes
+	if (<type>==T_L1MAP_CHEST) || (<type>==T_L2MAP_CHEST) || (<type>==T_L3MAP_CHEST) || (<type>==T_L4MAP_CHEST) || (<type>==T_L5MAP_CHEST)
+		local.ct ++	
+		remove
+	endif
+ENDFOR
+//
+FORINSTANCES i_plant_grasses
+	if (<type>==T_L1MAP_CHEST) || (<type>==T_L2MAP_CHEST) || (<type>==T_L3MAP_CHEST) || (<type>==T_L4MAP_CHEST) || (<type>==T_L5MAP_CHEST) 
+		local.ct ++
+		remove
+	endif
+ENDFOR
+//
+FORINSTANCES i_plant_fern_4
+	if (<type>==T_L1MAP_CHEST) || (<type>==T_L2MAP_CHEST) || (<type>==T_L3MAP_CHEST) || (<type>==T_L4MAP_CHEST) || (<type>==T_L5MAP_CHEST) 
+		local.ct ++
+		remove
+	endif
+ENDFOR
+//
+FORINSTANCES i_plant_fern_3
+	if (<type>==T_L1MAP_CHEST) || (<type>==T_L2MAP_CHEST) || (<type>==T_L3MAP_CHEST) || (<type>==T_L4MAP_CHEST) || (<type>==T_L5MAP_CHEST) 
+		local.ct ++
+		remove
+	endif
+ENDFOR
+//
+src.sysmessage @,,1 <dlocal.ct> plantinhas removidas!
+//
+local.ct 0
+//
+FORINSTANCES TM_LOOT_1
+	local.ct ++
+	remove
+ENDFOR
+FORINSTANCES TM_LOOT_2
+	local.ct ++
+	remove
+ENDFOR
+FORINSTANCES TM_LOOT_3
+	local.ct ++
+	remove
+ENDFOR
+FORINSTANCES TM_LOOT_4
+	local.ct ++
+	remove
+ENDFOR
+FORINSTANCES TM_LOOT_5
+	local.ct ++
+	remove
+ENDFOR
+//
+src.sysmessage @,,1 <dlocal.ct> tm_loots removidas!
+//
+local.ct 0
+//
+FORINSTANCES i_chest_treasure
+	local.ct ++
+	remove
+ENDFOR
+//
+src.sysmessage @,,1 <dlocal.ct> baus de tesouro removidos.
+//
+local.monster 0
+forchars 6500
+	IF <TAG0.TREAS>
+	LOCAL.monster +=1
+	REMOVE
+	ENDIF
+endfor
+SYSMESSAGE @,,1 <dLOCAL.monster> npcs de mapa removidos.
+return 1
+
+[EOF]

@@ -1,0 +1,203 @@
+﻿//****************************************************************************
+//SPHERE by : Menasoft �1997-2004
+//www.sphereserver.com
+// All SPHERE script files and formats are copyright Menasoft & Partners.
+// This file may be freely edited for personal use, but may not be distributed
+// in whole or in part, in any format without express written permission from
+// Menasoft & Partners.  All donations and contributions
+// become the property of Menasoft & Partners.
+//****************************************************************************
+// FILE LAST UPDATED: Saturday, November 15, 2003
+//
+VERSION=0.55i
+
+
+// Get the starting items for each skill.
+
+[NEWBIE MALE_DEFAULT]
+// Male Generic Starting Clothes
+ITEM=i_robe
+COLOR=colors_neutral
+ITEMNEWBIE=i_candle
+ITEMNEWBIE=i_gold,5000
+
+[NEWBIE FEMALE_DEFAULT]
+// Female Generic Starting Clothes
+ITEM=i_robe
+COLOR=colors_neutral
+ITEMNEWBIE=i_candle
+ITEMNEWBIE=i_gold,5000
+
+[NEWBIE ALCHEMY]
+// Alchemy is best skill
+
+
+[NEWBIE ANATOMY]
+// Anatomy is best skill
+
+
+[NEWBIE ANIMALLORE]
+// Animal Lore is best skill
+
+
+[NEWBIE ITEMID]
+// Item Identification is best skill
+
+
+[NEWBIE ARMSLORE]
+// Armslore is best skill
+
+[NEWBIE PARRYING]
+// Parrying is best skill
+
+[NEWBIE BEGGING]
+// Begging is best skill
+
+[NEWBIE BLACKSMITHING]
+// Blacksmithing is best skill
+
+
+[NEWBIE BOWCRAFT]
+// Bowcraft/Fletching is best skill
+
+
+[NEWBIE PEACEMAKING]
+// Peacemaking is best skill
+
+
+[NEWBIE CAMPING]
+// Camping is best skill
+
+
+[NEWBIE CARPENTRY]
+// Carpentry is best skill
+
+[NEWBIE CARTOGRAPHY]
+// Cartography is best skill
+
+
+[NEWBIE COOKING]
+// Cooking is best skill
+
+
+[NEWBIE DetectingHidden]
+// Detecting Hidden is best skill
+
+
+[NEWBIE ENTICEMENT]
+// Enticement is best skill
+
+
+[NEWBIE EvaluatingIntel]
+// Evaluate Intelligence is best skill
+
+[NEWBIE HEALING]
+// Healing is best skill
+
+
+[NEWBIE FISHING]
+// Fishing is best skill
+
+
+[NEWBIE FORENSICS]
+// Forensics is best skill
+
+[NEWBIE HERDING]
+// Herding is best skill
+
+
+[NEWBIE HIDING]
+// Hiding is best skill
+
+
+
+[NEWBIE PROVOCATION]
+// Provocation is best skill
+
+[NEWBIE INSCRIPTION]
+// Inscription is best skill
+
+
+[NEWBIE LOCKPICKING]
+// Lockpicking is best skill
+
+
+[NEWBIE MAGERY]
+// Magery is best skill
+
+
+[NEWBIE MAGICRESISTANCE]
+// Resisting Spells is best skill
+
+[NEWBIE TACTICS]
+// Tactics is best skill
+
+[NEWBIE SNOOPING]
+// Snooping is best skill
+
+[NEWBIE MUSICIANSHIP]
+// Musicianship is best skill
+
+[NEWBIE POISONING]
+// Poisoning is best skill
+
+[NEWBIE ARCHERY]
+// Archery is best skill
+
+
+[NEWBIE SPIRITSPEAK]
+// Spirit Speak is best skill
+
+
+[NEWBIE STEALING]
+// Steal is best skill
+
+[NEWBIE TAILORING]
+// Tailoring is best skill
+
+
+[NEWBIE TAMING]
+// Animal Training is best skill
+
+
+[NEWBIE TASTEID]
+// Taste Identification is best skill
+
+
+[NEWBIE TINKERING]
+// Tinkering is best skill
+
+
+[NEWBIE TRACKING]
+// Tracking is best skill
+
+
+[NEWBIE VETERINARY]
+// Veterinary is best skill
+
+[NEWBIE SWORDSMANSHIP]
+// Swordsmanship is best skill
+
+
+[NEWBIE MACEFIGHTING]
+// Mace Fighting is best skill
+
+
+[NEWBIE FENCING]
+// Fencing is best skill
+
+
+[NEWBIE WRESTLING]
+// Wrestling is best skill
+
+
+[NEWBIE LUMBERJACKING]
+// Lumberjacking is best skill
+
+
+[NEWBIE MINING]
+// Mining is best skill
+
+
+
+[EOF]

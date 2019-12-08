@@ -1,0 +1,538 @@
+// futuro: criar uma pedra pra se inscrever 
+
+[ITEMDEF i_gate_campmine2x2]
+ID=0f6c
+WEIGHT=1
+TYPE=t_normal
+NAME=Camp Mine 2x2
+
+ON=@Create
+  attr 08000
+  color 079d
+  tag.contagem 0
+  tag.maximo 16
+  return 0
+
+ON=@Click
+  message @0790 <name>
+  return 1
+
+ON=@Step
+if (<tag.contagem> >= <tag.maximo>) && (<tag.maximo> > 0)
+    src.message @0790,,1 Evento Lotado!
+    return 1
+endif
+IF !(<SRC.ISINPARTY>)
+		SRC.SYSMESSAGE @,,1 Voce precisa estar em party com seu parceiro para entrar neste evento.
+		RETURN 1
+ELSE
+	  IF (<SRC.PARTY.MEMBERS> > 2)
+			SRC.SYSMESSAGE @,,1 Existem mais de duas pessoas na sua party.
+			RETURN 1
+	  ELIF (<SRC.PARTY.MEMBERS> == 2)
+			REF1=<SRC.PARTY.MEMBER.0>
+			REF2=<SRC.PARTY.MEMBER.1>
+	  ENDIF
+	  IF (<REF1.DISTANCE> > 4) || (<REF2.DISTANCE> > 4)
+			SRC.SYSMESSAGE @,,1 Um dos membros da party esta muito longe.
+			RETURN 1
+	  ENDIF
+		tag.contagem += 1
+		tag.cortemp=<eval <tag.contagem> * 10>
+		ref1.tag.name.hue=<tag.cortemp>
+		ref2.tag.name.hue=<tag.cortemp>
+		ref1.tag.camp.2x2.DuplaId = <tag.contagem>
+		ref2.tag.camp.2x2.DuplaId = <tag.contagem>
+		ref1.tag.camp.2x2.DuplaUid = <ref2>
+		ref2.tag.camp.2x2.DuplaUid = <ref1>	
+		REF1.f_campminex2_enter
+		REF2.f_campminex2_enter
+		
+	IF (<tag.contagem> == <tag.maximo>)
+	  FORINSTANCES i_anuncia_campminex2
+		REMOVE
+	  ENDFOR
+	  SERV.B @55 Evento Camp Mine 2x2 Completo!
+		REMOVE
+	ENDIF
+ENDIF
+return 1
+
+[FUNCTION f_campminex2_enter]
+trysrc <uid> shrinklayer25_save
+trysrc <uid> cancellhelproom
+tag.askills=<kills> 
+tag.askarma=<karma> 
+tag.asfame=<fame>  
+tag.asdeaths=<deaths> 
+tag.camp.2x2.kills=
+//layer dragging 
+findlayer.31.bounce
+tag.lastbackpack <findlayer.21.uid>
+stripsave
+tag.onevent 1
+findlayer.21.attr 0
+ref1=<findlayer.21.uid>
+findlayer.21.cont <findlayer.29.uid>
+ref1.updatex
+trysrc <uid> f_campminex2_restock
+
+  // body 
+  BODY c_woman
+  
+go 4061,440,3,1
+
+  events +e_evento_cm_espera
+  events +e_evento_campmine_2x2
+ 
+return 1
+
+
+[FUNCTION f_campminex2_restock]
+	if <args>
+		findlayer.31.bounce
+		stripremove
+		findlayer.21.remove
+		findlayer.25.remove
+		findlayer.31.remove
+	endif
+	
+serv.newitem i_backpack
+new.color <src.tag.name.hue>
+new.equip
+		
+// testar se funciona ok com src
+// itens 
+  src.newitem i_bow_bloodrock  
+  src.act.name TFG Shard Evento
+  src.act.color <src.tag.name.hue>
+  src.act.equip
+
+  src.newitem i_except_War_fork  
+  src.act.name TFG Shard Evento (Poisoned)
+  src.act.tag.poisonlevel 4
+  src.act.tag.poisontimer 3
+  src.act.color <src.tag.name.hue>
+  src.act.equip
+  
+  src.newitem i_except_kryss
+  src.act.name TFG Shard Evento (Poisoned)
+  src.act.tag.poisonlevel 4
+  src.act.tag.poisontimer 3
+  src.act.color <src.tag.name.hue>
+  src.act.equip
+  
+  src.newitem i_bloodrock_closed_helm
+  //src.act.attr 010
+  src.act.name TFG Shard Evento
+  src.act.color <src.tag.name.hue>
+  src.act.equip
+  
+  src.newitem i_bloodrock_female_platemail
+  //src.act.attr 010
+  src.act.name TFG Shard Evento
+  src.act.color <src.tag.name.hue>
+  src.act.equip
+  
+  src.newitem i_bloodrock_platemail_arms
+  //src.act.attr 010
+  src.act.name TFG Shard Evento
+  src.act.color <src.tag.name.hue>
+  src.act.equip
+  
+  src.newitem i_bloodrock_platemail_gauntlets
+  //src.act.attr 010
+  src.act.name TFG Shard Evento
+  src.act.color <src.tag.name.hue>
+  src.act.equip
+  
+  src.newitem i_bloodrock_platemail_gorget
+  //src.act.attr 010
+  src.act.name TFG Shard Evento
+  src.act.color <src.tag.name.hue>
+  src.act.equip
+  
+  src.newitem i_bloodrock_platemail_leggings
+  //src.act.attr 010
+  src.act.name TFG Shard Evento
+  src.act.color <src.tag.name.hue>
+  src.act.equip
+  
+  src.newitem i_llama_evento // animal
+  src.act.name TFG Shard Evento
+  src.act.color <src.tag.name.hue>
+  src.act.attr 010
+  src.act.equip
+  
+  src.newitem i_spellbook_full
+  src.act.name TFG Shard Evento
+  src.act.color 07B5
+  src.act.bounce
+  
+  if (<src.memoryfindtype.memory_guild.link.align>==2)
+	  src.newitem i_chaos_shield
+	  //src.act.attr 010
+	  src.act.name TFG Shard Evento
+	  src.act.color <src.tag.name.hue>
+	  src.act.equip
+  elif (<src.memoryfindtype.memory_guild.link.align>==1)
+	  src.newitem i_order_shield 
+	  //src.act.attr 010
+	  src.act.name TFG Shard Evento
+      src.act.color <src.tag.name.hue>
+	  src.act.equip
+  else
+      src.newitem i_bloodrock_heater_shield
+	  //src.act.attr 010
+	  src.act.name TFG Shard Evento
+      src.act.color <src.tag.name.hue>
+	  src.act.equip
+  endif 
+  
+  	  src.newitem i_bless_robe
+	  //src.act.attr 010
+	  src.act.name TFG Shard Evento
+	  src.act.color <src.tag.name.hue>
+	  src.act.equip
+	  
+	  src.newitem i_leather_leggings_wyrm
+	  //src.act.attr 010
+	  src.act.name TFG Shard Evento
+	  src.act.color <src.tag.name.hue>
+	  src.act.equip
+	  
+	  src.newitem i_leather_tunic_wyrm
+	  //src.act.attr 010
+	  src.act.name TFG Shard Evento
+	  src.act.color <src.tag.name.hue>
+	  src.act.equip
+	  
+	  src.newitem i_leather_sleeves_wyrm
+	  //src.act.attr 010
+	  src.act.name TFG Shard Evento
+	  src.act.color <src.tag.name.hue>
+	  src.act.equip
+	  
+	  src.newitem i_leather_gorget_wyrm
+	  //src.act.attr 010
+	  src.act.name TFG Shard Evento
+	  src.act.color <src.tag.name.hue>
+	  src.act.equip
+	  
+	  src.newitem i_leather_gloves_wyrm
+	  //src.act.attr 010
+	  src.act.name TFG Shard Evento
+	  src.act.color <src.tag.name.hue>
+	  src.act.equip
+	  
+	  src.newitem i_color_orc_helm_12
+	  //src.act.attr 010
+	  src.act.name TFG Shard Evento
+	  src.act.color <src.tag.name.hue>
+	  src.act.equip
+	  
+  src.campmine_renew_resources
+	   RESENDALL
+	 
+[ITEMDEF i_anuncia_campminex2]
+ID=i_crystal_ball
+NAME=Camp Mine 2x2 [DO NOT REMOVE]
+WEIGHT=200
+TYPE=t_eq_script
+
+ON=@Create
+    ATTR=attr_decay|attr_invis
+    TIMER=15
+
+ON=@TIMER
+REF1=<TAG.GATE>
+  SERV.B @55 Restam vagas para <eval <ref1.tag.maximo> - <ref1.tag.contagem>> duplas para o Camp Mina 2x2! Gate na Commerce Room!
+TIMER 15
+RETURN 1
+
+
+[EVENTS e_evento_campmine_2x2]
+ON=@CLICK
+	MESSAGE @<TAG.NAME.HUE>,,1 [DUPLA <dtag0.camp.2x2.DuplaId> K: <dTAG.camp.2x2.Kills>]
+
+ON=@KILLEVENTO
+if !<tag0.onevent>
+	return 0
+endif
+ref1 = <tag.camp.2x2.DuplaUid>
+			CTF_DEATH_FIX
+			REF1.CTF_DEATH_FIX
+			INVIS 
+			ref1.invis
+		    TAG0.Camp.2x2.Kills += 1
+		    REF1.TAG0.Camp.2x2.Kills += 1			
+			events +e_evento_cm_espera
+			ref1.events +e_evento_cm_espera
+		    say @33,,1 <name> e <ref1.name> ganharam a disputa!
+			if <hits> < 1
+				ref2 = <tag.camp.2x2.MyCorpse>
+				if <ref2>
+					ref2.remove
+				endif
+			endif
+			if <ref1.hits> < 1
+				ref2 = <ref1.tag.camp.2x2.MyCorpse>
+				if <ref2>
+					ref2.remove
+				endif
+			endif
+		    go 4048,453,3,1
+			ref1.go 4048,453,3,1
+			timerf 1,ress_camp_2X2
+			ref1.timerf 1,ress_camp_2X2
+		  //stop_cscheck
+			tag.camp.2x2.MyCorpse =
+			ref1.tag.camp.2x2.MyCorpse =
+			limpa_arena_2x2
+			action -1
+
+//ON=@Death
+//ref1 = <tag.camp.2x2.DuplaUid>
+//if (<ref1.hits> > 0)
+//	return 0
+//endif
+
+
+On=@DeathCorpse
+argo.tag.camp.IAmCorpse = 1
+tag.camp.2x2.MyCorpse = <argo>
+ref1 = <tag.camp.2x2.DuplaUid>
+if (<ref1.hits> > 0)
+	return 0
+else
+ref2 = <ref1.tag.camp.2x2.MyCorpse>
+	if (<var.finais_mine>==1) // Modo Finais: ganhador prum lado, perdedor pro outro - mas reestocado
+		CTF_DEATH_FIX
+		ref1.ctf_death_fix
+		events +e_evento_cm_espera
+		ref1.events +e_evento_cm_espera
+		action -1
+		go 4061,440,3,1
+		ref1.go 4061,440,3,1
+		timerf 1,ress_camp_2X2
+		ref1.timerf 1,ress_camp_2X2
+		//stop_cscheck
+		message @0790 A dupla <name> e <ref1.name> foi derrotada!
+		IF <ATTACKER>
+			REF3=<ATTACKER.LAST>
+			if (<ref3.uid> == <uid>)
+			  ref3=<attacker.max>
+			endif
+			s <ref3.name> attacer
+			REF3.TRIGGER @KillEvento
+		ENDIF
+	else
+		CTF_DEATH_FIX
+		ref1.ctf_death_fix
+		events +e_evento_cm_espera
+		ref1.events +e_evento_cm_espera
+		action -1
+		go 4061,440,3,1
+		ref1.go 4061,440,3,1
+		timerf 1,RESURRECT
+		ref1.timerf 1,RESURRECT
+		//stop_cscheck
+		message @0790 A dupla <name> e <ref1.name> foi derrotada!
+		IF <ATTACKER>
+			REF3=<ATTACKER.LAST>
+			if (<ref3.uid> == <uid>)
+			  ref3=<attacker.max>
+			endif
+			REF3.TRIGGER @KillEvento
+		ENDIF
+	endif
+endif
+argo.remove
+ref2.remove 
+tag.camp.2x2.MyCorpse =
+ref1.tag.camp.2x2.MyCorpse =
+		
+ON=@Logout
+  message @32,,1 [Logout!]
+
+ON=@Login
+  message @478,,1 [Login!]
+
+
+ON=@EnvironChange
+if ((<p.x> < 4010) || (<p.x> > 4096) || (<p.y> < 389) || (<p.y> > 494)) || (<map> != 1)
+	  stripremove
+	  src.kills=<tag.askills> 	
+	  src.karma=<tag.askarma> 	
+	  src.fame=<tag.asfame>   	
+	  src.deaths=<tag.asdeaths> 	
+	  src.memoryfindtype.memory_harmedby.remove
+	  src.memoryfindtype.memory_iaggressor.remove
+	  src.memoryfindtype.memory_fight.remove
+	  src.memoryfindtype.memory_sawcrime.remove
+	  src.memoryfindtype.memory_aggreived.remove
+	  src.memoryfindtype.memory_war_targ.remove
+	  src.memoryfindtype.memory_harmedby.remove
+	  src.memoryfindtype.memory_iaggressor.remove
+	  src.memoryfindtype.memory_fight.remove
+	  src.memoryfindtype.memory_sawcrime.remove
+	  src.memoryfindtype.memory_aggreived.remove
+	  src.memoryfindtype.memory_war_targ.remove
+	  src.criminal 0
+	  invis 0
+		findlayer.21.remove
+		findlayer.25.remove
+		findlayer.31.remove
+		newitem i_gold
+		act.link 0<tag.lastbackpack>
+		act.link.cont <uid>
+		act.remove
+		events -e_evento_cm_espera
+		events -e_evento_campmine_2x2
+		tag.team
+		if (<findlayer.21> = 0)
+		  SERV.ALLCLIENTS MSTAFF2 @0790 [SYSTEM]: Err... <name> saiu do evento e nao foi possivel recuperar sua backpack!
+		  SERV.ALLCLIENTS MSTAFF2 @0790 [SYSTEM]: Root: <uid> - Act: <act.uid> - Src: <src.uid> - Action: <action> - Backpack: <tag.lastbackpack>
+		endif
+	BODY=<OBODY>
+	RESENDALL
+	REEQUIPALL 
+	  tag.askills=
+	  tag.askarma=
+	  tag.asfame=
+	  tag.asdeaths=
+	  tag.lastbackpack=
+	  tag.onevent=
+	  TAG.NOPREMIO=   // pra que eu sirvo?
+	  TAG.NAME.HUE=
+	  cleartags camp.2x2
+endif	
+return 0
+  
+[FUNCTION ress_camp_2X2]
+s ENTROU NA FUNSSAO <name> hits : <hits>
+if <hits> <= 0
+	s entrou para <name>
+	resurrect
+endif
+trysrc <uid> f_campminex2_restock 1
+HITS = <maxhits>
+MANA = <maxmana>
+stam = <maxstam>
+
+[FUNCTION limpa_arena_2x2]
+FORITEMS 400
+	if (<baseid> == i_llama_evento) || ((<baseid> == i_corpse) && (<tag0.camp.IAmCorpse>))
+		remove
+	endif
+ENDFOR
+	
+[FUNCTION novomine2x2]
+  var.finais_mine = 
+  serv.newitem i_gate_campmine2x2
+  new.tag.maximo <args>
+  new.p 2341,541,1
+  new.updatex
+  ref455=<new.uid>
+  serv.newitem i_anuncia_campminex2
+  new.p <ref455.p>
+  new.tag.gate <ref455>
+  new.update
+SERV.B @55 Foram liberadas vagas para <dargs> duplas para o Camp Mine 2x2. Para entrar, esteja em party com sua dupla! Gate na Commerce Room!
+
+[FUNCTION mine_arena2x2]
+TARGETF mine_arena2x2_2
+
+[FUNCTION mine_arena2x2_2]
+ref3 = <argo.tag.camp.2x2.DuplaUid>
+src.say <argo.tag.camp.2x2.DuplaUid> <ref3.name>
+if !<src.tag0.mine_duel_create>
+	ARGO.GO 4032,434,3,1
+	REF3.GO 4032,436,3,1
+	ARGO.INVIS 0
+	REF3.INVIS 0
+	argo.tag.nomovetill <eval <serv.time> + 1000>
+	ref3.tag.nomovetill <eval <serv.time> + 1000>
+	//ARGO.START_CSCHECK
+	src.tag.mine_duel_adv_1 = <argo.uid>
+	src.tag.mine_duel_create 1
+else
+	ARGO.GO 4054,439,3,1
+	REF3.GO 4054,441,3,1
+	//ARGO.START_CSCHECK
+	ARGO.INVIS 0
+	REF3.INVIS 0
+	ref1 = <src.tag.mine_duel_adv_1>
+	ref4 = <ref1.tag.camp.2x2.DuplaUid>
+	src.say @33 O duelo vai iniciar em 10 segundos!
+	argo.tag.nomovetill <eval <serv.time> + 100>
+	ref4.tag.nomovetill <eval <serv.time> + 100>
+	ref3.tag.nomovetill <eval <serv.time> + 100>
+	ref1.tag.nomovetill <eval <serv.time> + 100>
+	argo.timerf 10,mine_duel_start
+	ref4.timerf 10,mine_duel_start
+	ref3.timerf 10,mine_duel_start
+	ref1.timerf 10,mine_duel_start
+	src.tag.mine_duel_create=
+	src.tag.mine_duel_adv_1=
+endif
+
+[FUNCTION mine_duel_start]
+ctf_death_fix
+events -e_evento_cm_espera
+HITS = <maxhits>
+MANA = <maxmana>
+STAM = <maxstam>
+INVIS 0
+SAY @33 Fight!
+
+
+[FUNCTION gan_jogox2] //nao revisei
+targetf ganhar_jogo2
+ 
+[FUNCTION ganhar_jogo2_x2] //nao revisei
+argo.CTF_DEATH_FIX
+   argo.TAG0.campmine_KILLS += 1
+  	argo.events +e_evento_cm_espera
+  argo.say @33,,1 <argo.name> ganhou a disputa!
+  argo.hits <str>
+  argo.go 4061,440,3,1
+  trysrc <argo.uid> campmine_renew_resources
+  
+
+  
+  // Funcoes de party
+  
+  [FUNCTION f_packet_191]
+IF (<LOCAL.4>==06) // Party
+IF (<LOCAL.5>==04) // Mensagem 
+ LOCAL.MSG="Party: "
+ FOR 6 <LOCAL.NUM>
+  IF (<LOCAL.<dLOCAL._FOR>>)
+  LOCAL.MSG=<LOCAL.MSG><CHR <LOCAL.<dLOCAL._FOR>>>
+  ENDIF
+ ENDFOR
+ REF1=<LOCAL.CHAR>
+ REF1.f_party_gm <LOCAL.MSG>
+ELIF (<LOCAL.5>==03) // Tell
+REF2=<STRSUB 1 2 <LOCAL.6>><STRSUB 1 2 <LOCAL.7>><STRSUB 1 2 <LOCAL.8>><STRSUB 1 2 <LOCAL.9>>
+ LOCAL.MSG="Tell to <REF2.NAME>: "
+ FOR 10 <LOCAL.NUM>
+  IF (<LOCAL.<dLOCAL._FOR>>)
+  LOCAL.MSG=<LOCAL.MSG><CHR <LOCAL.<dLOCAL._FOR>>>
+  ENDIF
+ ENDFOR
+ REF1=<LOCAL.CHAR>
+ REF1.f_party_gm <LOCAL.MSG>
+ENDIF
+ENDIF
+
+[FUNCTION f_party_gm]
+ref1=<UID>
+forclients 18
+	if (<tag0.hearparty>==1)
+	trysrc <uid> uid.<ref1>.messageua 01de,6,6,0 [<ARGS>]
+	endif
+endfor
+
+[EOF]

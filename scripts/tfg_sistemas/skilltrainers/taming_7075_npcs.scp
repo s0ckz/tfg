@@ -1,0 +1,292 @@
+[CHARDEF c_day_goat]
+id=c_goat
+NAME=Ghjornu Goat
+
+ON=@Create
+    Color=0790
+	NPC=brain_animal
+	STR=19
+	DEX=15
+	INT=5
+	PARRYING=5.0
+	MAGICRESISTANCE=5.0
+	TACTICS=5.0
+	WRESTLING=5.0
+	TAMING=30.0
+	FAME=20
+	KARMA={-1 -99}
+
+[CHARDEF c_day_hart]
+ID=c_stag
+NAME=Ghjornu Hart
+
+ON=@Create
+    color=0790
+	NPC=brain_animal
+	STR={41 71}
+	DEX={47 77}
+	INT={27 57}
+	PARRYING={25.0 43.0}
+	MAGICRESISTANCE={27.0 45.0}
+	TACTICS={30.0 48.0}
+	WRESTLING={30.0 48.0}
+	TAMING=30.0
+	FAME=40
+	KARMA={-99 -199}
+	TAG.LOOTPROPRIO 1
+
+ON=@NPCRESTOCK
+ITEM=i_mask_deer,R7
+
+[CHARDEF c_day_cow]
+id=c_cow_bw
+NAME=Ghjornu Cow
+
+ON=@Create
+    Color=0790
+	NPC=brain_animal
+	STR=30
+	DEX=15
+	INT=5
+	PARRYING=6.0
+	MAGICRESISTANCE=6.0
+	TACTICS=6.0
+	WRESTLING=6.0
+	TAMING=45.0
+	FAME=10
+	KARMA={-1 -99}
+	//ALIGNMENT=NEUTRAL
+
+[CHARDEF c_day_wisp]
+id=c_wisp
+name=Ghjornu Wisp
+
+on=@Create
+    Color=0790
+	NPC=brain_animal
+	STR=30
+	DEX=15
+	INT=5
+	PARRYING=6.0
+	MAGICRESISTANCE=6.0
+	TACTICS=6.0
+	WRESTLING=6.0
+	TAMING=30.0
+	FAME=10
+	KARMA={-1 -99}    
+
+[CHARDEF c_day_sheep]
+id=c_sheep_woolly
+name=Ghjornu Sheep
+
+on=@Create
+    Color=0790
+	NPC=brain_animal
+	STR=30
+	DEX=15
+	INT=5
+	PARRYING=6.0
+	MAGICRESISTANCE=6.0
+	TACTICS=6.0
+	WRESTLING=6.0
+	TAMING=30.0
+	FAME=10
+	KARMA={-1 -99}
+
+[CHARDEF c_day_pig]
+id=c_pig
+name=Ghjornu Pig
+
+on=@Create
+    Color=0790
+	NPC=brain_animal
+	STR=30
+	DEX=15
+	INT=5
+	PARRYING=6.0
+	MAGICRESISTANCE=6.0
+	TACTICS=6.0
+	WRESTLING=6.0
+	TAMING=50.0
+	FAME=10
+	KARMA={-1 -99}
+
+[CHARDEF c_day_eagle]
+id=c_eagle
+name=Ghjornu Eagle
+
+on=@Create
+    Color=0790
+	NPC=brain_animal
+	STR=30
+	DEX=15
+	INT=5
+	PARRYING=6.0
+	MAGICRESISTANCE=6.0
+	TACTICS=6.0
+	WRESTLING=6.0
+	TAMING=30.0
+	FAME=10
+	KARMA={-1 -99}
+
+
+/////////// noturno //////////
+
+
+[CHARDEF c_night_frog]
+name=Notte Frog
+id=c_bullfrog
+
+on=@Create
+    Color=0774
+	NPC=brain_animal
+	STR=30
+	DEX=15
+	INT=5
+	PARRYING=6.0
+	MAGICRESISTANCE=6.0
+	TACTICS=6.0
+	WRESTLING=6.0
+	TAMING=30.0
+	FAME=10
+	KARMA={-1 -99}  
+
+
+[CHARDEF c_night_cougar]
+name=Notte Cougar
+id=c_a_cougar
+
+on=@Create
+    Color=0774
+	NPC=brain_animal
+	STR=30
+	DEX=15
+	INT=5
+	PARRYING=6.0
+	MAGICRESISTANCE=6.0
+	TACTICS=6.0
+	WRESTLING=6.0
+	TAMING=40.0
+	FAME=10
+	KARMA={-1 -99}  
+
+
+[CHARDEF c_night_eagle]
+id=c_eagle
+name=Notte Owl
+
+on=@Create
+    Color=0774
+	NPC=brain_animal
+	STR=30
+	DEX=15
+	INT=5
+	PARRYING=6.0
+	MAGICRESISTANCE=6.0
+	TACTICS=6.0
+	WRESTLING=6.0
+	TAMING=30.0
+	FAME=10
+	KARMA={-1 -99}
+
+[CHARDEF c_night_mongbat]
+id=c_mongbat
+name=Notte Mongbat
+
+on=@Create
+    Color=0774
+	NPC=brain_animal
+	STR=30
+	DEX=15
+	INT=5
+	PARRYING=6.0
+	MAGICRESISTANCE=6.0
+	TACTICS=6.0
+	WRESTLING=6.0
+	TAMING=50.0
+	FAME=10
+	KARMA={-1 -99}
+
+[CHARDEF c_night_bat]
+id=c_vampire_bat
+name=Notte Bat
+
+on=@Create
+    Color=0774
+	NPC=brain_animal
+	STR=30
+	DEX=15
+	INT=5
+	PARRYING=6.0
+	MAGICRESISTANCE=6.0
+	TACTICS=6.0
+	WRESTLING=6.0
+	TAMING=30.0
+	FAME=10
+	KARMA={-1 -99}
+
+[CHARDEF c_night_wolf]
+id=c_wolf
+name=Notte Wolf
+
+on=@Create
+    Color=0774
+	NPC=brain_animal
+	STR=30
+	DEX=15
+	INT=5
+	PARRYING=6.0
+	MAGICRESISTANCE=6.0
+	TACTICS=6.0
+	WRESTLING=6.0
+	TAMING=35.0
+	FAME=10
+	KARMA={-1 -99}
+
+[CHARDEF c_night_rat]
+id=c_rat
+name=Notte Rat
+
+on=@Create
+    Color=0774
+	NPC=brain_animal
+	STR=30
+	DEX=15
+	INT=5
+	PARRYING=6.0
+	MAGICRESISTANCE=6.0
+	TACTICS=6.0
+	WRESTLING=6.0
+	TAMING=30.0
+	FAME=10
+	KARMA={-1 -99}
+
+
+////////////////////
+
+[chardef c_sand_dragon]
+id=c_swamp_dragon
+name=Sand Dragon
+DAM=6,24
+ARMOR=20
+MOVERATE=40
+TEVENTS=e_horses
+RESLEVEL=2
+RESDISPDNID=c_horse_gray
+CATEGORY=Monsters
+SUBSECTION=New Mounts
+DESCRIPTION=Sand Dragon
+
+ON=@Create
+    color=096d
+	NPC=brain_animal
+	karma=-5000
+	STR={160 200}
+	DEX={83 92}
+	INT={51 90}
+	FAME={300 1000}
+	PARRYING={65.0 80.0}
+	MAGICRESISTANCE={65.0 80.0}
+	TACTICS={65.0 90.0}
+	WRESTLING={65.0 80.0}
+	TAMING=80.0

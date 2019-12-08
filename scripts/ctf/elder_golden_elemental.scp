@@ -1,0 +1,246 @@
+[CHARDEF c_m_elder_golden_elemental_event]
+ID=c_elem_water
+Name=Elder Gold Elemental (Evento)
+DAM=36,60
+ARMOR=20
+CAN=MT_WALK|MT_RUN
+AVERSIONS=r_civilization
+SOUND=snd_ELEMENTL_WATREL1
+
+ON=@Create
+	TIMERF 1,f_create_coords_announcer <UID>
+
+	TAG.LOOTPROPRIO 1
+	TAG.NO_PARAGON_LOOT 1
+	MAXHITS=24000
+	COLOR=color_o_gold
+	NPC=brain_monster
+	STR=800
+	DEX={800 900}
+	INT=300
+	PARRYING={95.0 105.0}
+	MAGERY=6.0
+	MAGICRESISTANCE={60.0 75.0}
+	TACTICS={90.0 100.0}
+	WRESTLING={99.0 100.0}
+	FAME={1000 6000}
+	KARMA=-10000
+	TAG.HITS_TO_CREATE_CHEST=<EVAL <MAXHITS> / 20>
+	//SPELLCIRCLE=3 5
+//	ITEMNEWBIE=i_light_source
+//	ITEMNEWBIE=i_spellbook
+//	ADDSPELL=s_magic_arrow
+//	ADDSPELL=s_fireball
+//	ADDSPELL=s_fire_field
+//	ADDSPELL=s_explosion
+//	ADDSPELL=s_flamestrike
+//	ADDSPELL=s_meteor_swarm
+//	ADDSPELL=s_fire_bolt
+//	EVENTS=+E_ANTIBOW
+
+ON=@Click
+	IF (<COLOR> == 0a23)
+		MESSAGE @0a23,,1 [Paragon]
+	ENDIF
+
+ON=@GetHit
+	TAG0.HITS_TAKEN += <ARGN1>
+
+	IF (<TAG.HITS_TAKEN> >= <TAG.HITS_TO_CREATE_CHEST>)
+		TAG.HITS_TAKEN = <EVAL <TAG.HITS_TAKEN> - <TAG.HITS_TO_CREATE_CHEST>>
+		SERV.NEWITEM i_ore_gold
+		NEW.AMOUNT 15
+		NEW.EVENTS +t_drop_challenge
+		NEW.P <P>
+	ENDIF
+
+ON=@Death
+	NEWITEM=i_fx_explode
+	act.TYPE=T_EXPLOSION
+	act.ATTR=ATTR_MOVE_NEVER | ATTR_DECAY
+	act.LINK=<uid>
+	act.morex=10 // damage
+	act.morey=090 // wFlags DAMAGE_GENERAL
+	act.morez=2 // iDist
+	act.p=<p>
+	act.TIMERD=1 // immediate decay
+	FORINSTANCES i_anuncia_elder_golden_elemental
+		TIMER = 1
+	ENDFOR
+	FORINSTANCES i_coords_announcer
+		TIMER = 1
+	ENDFOR
+	SERV.B @55 O Elder Gold Elemental morreu em <region.name>!
+
+	FORCHARS 200
+		IF (<NPC> == brain_animal) && (<dTAG0.EVENTO> == 1)
+			TAG.EVENTO
+			TAG.REMOVE_INVUL_ON_TAME 1
+			SERV.B @55 <NAME> pronto para ser tamado ! Boa sorte !!!
+		ENDIF
+	ENDFOR
+
+ON=@DeathCorpse
+	SERV.NEWITEM i_golden_elder_elemental_drop_loot
+	NEW.P = <P>
+
+	IF (<COLOR> ==  0a23)
+		NEW.TAG.PARAGON_LOOT 1
+	ENDIF
+
+	NEW.TIMER = 1
+
+	FOR 6
+		serv.newitem=i_fire_column
+		new.color 0250
+		new.p=<p>
+		new.move <R12>,<R12>
+		new.attr=attr_move_never|attr_decay
+		new.timer=10
+	ENDFOR
+
+[ITEMDEF i_golden_elder_elemental_drop_loot]
+NAME=Blood Elder Elemental Drop Loot
+ID=i_worldgem_bit
+TYPE=t_script
+
+ON=@create
+color=084d
+attr=attr_invis|attr_move_never|attr_decay
+
+on=@timer
+IF (<TAG0.PARAGON_LOOT>)
+	serv.newitem=i_power_scroll
+ELSE
+	serv.newitem=i_ore_gold
+ENDIF
+new.amount=<R3,5>
+new.p=<p>
+new.events +t_drop_challenge
+new.move <r30>,<r30>
+new.fix
+
+ref1 = <new.uid>
+
+serv.newnpc c_dog
+new.flags = statf_invul|statf_insubstantial
+
+new.p <ref1.p>
+local.tries 0
+
+while ((<new.isstuck>) || (<new.region.isevent.r_house_private>) || (<new.region.guarded>)) && (<local.tries> < 10)
+	ref1.p=<p>
+	ref1.move <r30>,<r30>
+	new.p <ref1.p>
+	ref1.fix
+	local.tries += 1
+endwhile
+
+new.remove
+
+more1 += 1
+IF (<MORE1>==30)
+REMOVE
+ELSE
+timerd 5
+ENDIF
+return 1
+
+[FUNCTION new_elder_golden_elemental_event]
+IF !(<ARGS>)
+	SRC.SMSG You must inform the timer - in seconds.
+	RETURN 1
+ENDIF
+
+IF (<ARGV> >= 4)
+	LOCAL.TEMPO = <ARGV[0]>
+	LOCAL.POSICAO = <ARGV[1]>,<ARGV[2]>,<ARGV[3]>
+
+	IF (<ARGV> == 5)
+		LOCAL.PARAGON = <ARGV[4]>
+	ELSE
+		LOCAL.PARAGON = 0
+	ENDIF
+ELSE
+	LOCAL.TEMPO = <EVAL <ARGS>>
+	LOCAL.POSICAO = <SRC.P>
+	LOCAL.PARAGON = 0
+
+	IF (<ARGV> == 2)
+		LOCAL.PARAGON = <ARGV[1]>
+	ELSE
+		LOCAL.PARAGON = 0
+	ENDIF
+ENDIF
+
+SERV.NEWITEM i_worldgem_bit
+NEW.P <LOCAL.POSICAO>
+NEW.ATTR 0b0
+NEW.TYPE t_spawn_char
+NEW.MORE1 c_m_elder_golden_elemental_event
+NEW.MOREP 9999,9999,5
+NEW.EVENTS +t_elder_golden_elemental_event
+NEW.TAG.PARAGON=<LOCAL.PARAGON>
+NEW.TIMER <dLOCAL.TEMPO>
+REF1=<new>
+SERV.NEWITEM i_anuncia_elder_golden_elemental
+NEW.P <LOCAL.POSICAO>
+NEW.LINK=<ref1>
+IF (<LOCAL.PARAGON>)
+	SERV.B @55 Um Elder Gold Elemental PARAGON nascera em <new.region.name> em <timeformat 1,<ref1.timer>>
+ELSE
+	SERV.B @55 Um Elder Gold Elemental nascera em <new.region.name> em <timeformat 1,<ref1.timer>>
+ENDIF
+return 1
+
+[TYPEDEF t_elder_golden_elemental_event]
+ON=@TIMER
+	FORINSTANCES i_anuncia_elder_golden_elemental
+		TIMER = 1
+	ENDFOR
+
+[ITEMDEF i_anuncia_elder_golden_elemental]
+ID=i_crystal_ball
+NAME=Anuncio Elder Gold [DO NOT REMOVE]
+WEIGHT=200
+TYPE=t_eq_script
+
+ON=@Create
+    ATTR=attr_decay|attr_invis
+    TIMER=20
+
+ON=@TIMER
+if <tag0.nasceu>
+	if (<link.more2> < 1)
+		SERV.B @55 Evento Elder Gold Elemental Finalizado. O monstro foi removido pois o tempo acabou.
+	endif
+	s removendo o assassino
+	link.remove
+	remove
+	return 1
+endif
+
+if (<link.timer> > 600) || (<link.timer> < 1)
+  SERV.B @55 Um Elder Gold Elemental nasceu em <region.name>. Se nao for morto em 1 hora sera removido.
+  TIMER = 3600
+  TAG.NASCEU = 1
+
+  IF (<LINK.TAG0.PARAGON>)
+  	FORINSTANCES c_m_elder_golden_elemental_event
+  		COLOR 0a23
+  		MAXHITS *= 3
+  		HITS = <MAXHITS>
+  	ENDFOR
+  ENDIF
+else
+  IF (<LINK.TAG0.PARAGON>)
+    SERV.B @55 Um Elder Gold Elemental PARAGON nascera em <region.name> em <timeformat 1,<link.timer>>
+  ELSE
+    SERV.B @55 Um Elder Gold Elemental nascera em <region.name> em <timeformat 1,<link.timer>>
+  ENDIF
+  TIMER 30
+endif
+
+RETURN 1
+
+[EOF]

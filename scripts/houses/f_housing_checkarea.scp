@@ -1,0 +1,102 @@
+//
+// O resultado desta funcao é armazenado no local.reason da funcao f_housing_checkplacement
+// Se o resultado for OK = pode colocar neste local
+// Se o resultado for uma outra frase, ela autoexplica a razao da interdiçao.
+//
+
+[FUNCTION f_housing_checkarea]
+if <f_housing_guards_check <ddef.housing.placement.dist.prot>>
+  return <def.housing.badplacement_prot>
+endif
+args = <uid.<region.uid>.multiregion>
+serv.newnpc c_dog
+new.flags = statf_invul|statf_insubstantial
+local.ctroad = 0
+for 0 7
+	new.p = <uid.<region.uid>.p>
+	doswitch <local._for>
+		  new.move <argv0> <argv1>
+		  new.move 0 <argv1>
+		  new.move <argv2> <argv1>
+		  new.move <argv2> 0
+		  new.move <argv2> <argv3>
+		  new.move 0 <argv3>
+		  new.move <argv0> <argv3>
+		  new.move <argv0> 0
+	enddo
+	doswitch <local._for>
+		  local.clear = <new.canmove nw>
+		  local.clear = <new.canmove n>
+		  local.clear = <new.canmove ne>
+		  local.clear = <new.canmove e>
+		  local.clear = <new.canmove se>
+		  local.clear = <new.canmove s>
+		  local.clear = <new.canmove sw>
+		  local.clear = <new.canmove w>
+	enddo
+	if <new.isonroad>
+		local.ctroad ++
+		//new.remove
+		//return <def.housing.badplacement_road>
+	elseif !<local.clear>
+		new.remove
+		return <def.housing.badplacement_blocking>
+	elseif <new.f_isneartype t_tree,<ddef.housing.placement.dist.tree>>
+		new.remove
+		return <def.housing.badplacement_tree>
+	elseif <new.f_isneartype t_water,<ddef.housing.placement.dist.water>>
+		new.remove
+		return <def.housing.badplacement_water>
+	elseif <new.f_isneartype t_entrance_dungeon,<ddef.housing.placement.dist.entrance>>
+		new.remove
+		return <def.housing.badplacement_entrance> <local.pos>
+	elseif <new.f_isneartype t_house_blocker,<ddef.housing.placement.dist.blocker>>
+		new.remove
+		return <def.housing.badplacement_blocker>
+	elseif <new.f_isneartype t_rock,<def.housing.placement.dist.rock>>
+		new.remove
+		return <def.housing.badplacement_rock>
+	endif
+	if (<local.ctroad> >= 3)
+		new.remove
+		return <def.housing.badplacement_road>
+	endif
+endfor
+local.area = <def.housing.placement.dist.multi>
+for 0 7
+	new.p = <uid.<region.uid>.p>
+	doswitch <local._for>
+		new.move <eval <argv0>+(<local.area>*-1)> <eval <argv1>+(<local.area>*-1)>
+		new.move 0 <eval <argv1>+(<local.area>*-1)>
+		new.move <eval <argv2>+<local.area>> <eval <argv1>+(<local.area>*-1)>
+		new.move <eval <argv2>+<local.area>> 0
+		new.move <eval <argv2>+<local.area>> <eval <argv3>+<local.area>>
+		new.move 0 <eval <argv3>+<local.area>>
+		new.move <eval <argv0>+(<local.area>*-1)> <eval <argv3>+<local.area>>
+		new.move <eval <argv0>+(<local.area>*-1)> 0
+	enddo
+	if strmatch("t_multi*","<uid.<new.region.uid>.type>")
+		new.remove
+		return <def.housing.badplacement_multi>
+	endif
+endfor
+ref2 = <region.uid>
+foritems 40
+	if <region.uid> == <ref2.uid>
+		if (<baseid> == i_worldgem_bit) || (<baseid> == i_sentenced_house_area)
+			new.remove
+			return <def.housing.badplacement_item>
+		elseif <f_housing_cansecure> && (<uid> != <region.uid>) && (<link.uid> != <region.uid>)
+			new.remove
+			return <def.housing.badplacement_item>
+		endif
+	endif
+endfor
+new.remove
+return <def.housing.badplacement_ok>
+
+[FUNCTION f_isneartype]
+for 0 <argv[1]>
+	local.result += <isneartype <argv[0]>,<dlocal._for>>
+endfor
+return <dlocal.result>

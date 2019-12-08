@@ -1,0 +1,633 @@
+// Begin Tinkering SKILLMENU
+[SKILLMENU sm_tinker]
+Tinkering
+
+ON=i_bone_chest Magic Bone Plates
+SKILLMENU=sm_bone_armor
+
+ON=i_barrel_open Containers
+SKILLMENU=sm_containers
+
+ON=i_clock_parts Parts
+SKILLMENU=sm_parts
+
+ON=i_shovel Tools
+SKILLMENU=sm_tools
+
+ON=i_fishing_pole Magic Poles
+SKILLMENU=sm_magic_poles
+
+ON=i_key_iron Keys
+SKILLMENU=sm_keys
+
+ON=i_tree_small_potted Plants
+SKILLMENU=sm_plants
+
+ON=i_decorative_armor Miscellaneous
+SKILLMENU=sm_misc_tink
+
+ON=i_lute Instruments
+SKILLMENU=sm_instruments
+
+ON=i_crystal_ball Magic Items
+SKILLMENU=sm_jewelry
+
+
+ON=i_plane_smoothing Wooden Items
+SKILLMENU=sm_wood_stuff
+
+[SKILLMENU sm_magic_poles]
+Magical Fishing Poles
+
+ON=i_2_fishing_pole <name> (<resmake>)
+makeitem=i_2_fishing_pole
+
+ON=i_3_fishing_pole <name> (<resmake>)
+makeitem=i_3_fishing_pole
+
+ON=i_5_fishing_pole <name> (<resmake>)
+makeitem=i_5_fishing_pole
+
+[SKILLMENU sm_misc_tink]
+Miscellaneous
+
+on=i_pack_ring <name> (<resmake>)
+MAKEITEM i_pack_ring
+
+on=i_pack_backpack_full <name> (<resmake>)
+MAKEITEM i_pack_backpack_full
+
+ON=i_decorative_armor <name> (<resmake>)
+MAKEITEM i_decorative_armor
+
+ON=i_decorative_armor2 <name> (<resmake>)
+MAKEITEM i_decorative_armor2
+
+ON=i_serpent_crest <name> (<resmake>)
+MAKEITEM i_serpent_crest
+
+on=i_oven_stone <name> (<resmake>)
+makeitem i_oven_stone
+
+on=092c <name> (<resmake>)
+makeitem 092c
+
+on=i_oven_sandstone <name> (<resmake>)
+makeitem i_oven_sandstone
+
+on=0462 <name> (<resmake>)
+makeitem 0462
+
+[SKILLMENU sm_plants]
+Plants
+
+ON=i_tree_small_potted <name> (<resmake>)
+makeitem i_tree_small_potted
+
+ON=i_TREE_LARGE_POTTED <name> (<resmake>)
+makeitem i_TREE_LARGE_POTTED
+
+ON=i_tree_small_potted_2 <name> (<resmake>)
+makeitem i_tree_small_potted_2
+
+ON=i_PLANT_POTTED_SMALL <name> (<resmake>)
+makeitem i_PLANT_POTTED_SMALL
+
+ON=i_FLOWER_POTTED_SMALL <name> (<resmake>)
+makeitem i_FLOWER_POTTED_SMALL
+
+
+[SKILLMENU sm_bone_armor]
+Magic Bone Plates
+
+
+ON=i_bone_chest Dark Bone Plate
+SKILLMENU=sm_bone_Dark
+
+ON=i_bone_chest Red Bone Plate
+SKILLMENU=sm_bone_red
+
+ON=i_bone_chest Blue Bone Plate
+SKILLMENU=sm_bone_blue
+
+ON=i_bone_chest Green Bone Plate
+SKILLMENU=sm_bone_Green
+
+ON=i_bone_chest Yellow Bone Plate
+SKILLMENU=sm_bone_yellow
+
+ON=i_bone_chest White Bone Plate
+SKILLMENU=sm_bone_white
+
+
+[SKILLMENU sm_bone_white]
+White Bone Plate
+
+ON=i_White_bone_ARMS <name> (<resmake>)
+MAKEITEM=i_White_bone_ARMS
+
+ON=i_White_bone_helmet <name> (<resmake>)
+MAKEITEM=i_White_bone_helmet
+
+ON=i_White_bone_plate <name> (<resmake>)
+MAKEITEM=i_White_bone_plate
+
+ON=i_White_bone_gloves <name> (<resmake>)
+MAKEITEM=i_White_bone_gloves
+
+ON=i_White_bone_leggings <name> (<resmake>)
+MAKEITEM=i_White_bone_leggings
+
+
+[SKILLMENU sm_bone_Yellow]
+Yellow Bone Plate
+
+ON=i_Yellow_bone_ARMS <name> (<resmake>)
+MAKEITEM=i_Yellow_bone_ARMS
+
+ON=i_Yellow_bone_helmet <name> (<resmake>)
+MAKEITEM=i_Yellow_bone_helmet
+
+ON=i_Yellow_bone_plate <name> (<resmake>)
+MAKEITEM=i_Yellow_bone_plate
+
+ON=i_Yellow_bone_gloves <name> (<resmake>)
+MAKEITEM=i_Yellow_bone_gloves
+
+ON=i_yellow_bone_leggings <name> (<resmake>)
+MAKEITEM=i_yellow_bone_leggings
+
+
+[SKILLMENU sm_bone_Green]
+Green Bone Plate
+
+ON=i_Green_bone_ARMS <name> (<resmake>)
+MAKEITEM=i_Green_bone_ARMS
+
+ON=i_Green_bone_helmet <name> (<resmake>)
+MAKEITEM=i_Green_bone_helmet
+
+ON=i_Green_bone_plate <name> (<resmake>)
+MAKEITEM=i_Green_bone_plate
+
+ON=i_Green_bone_gloves <name> (<resmake>)
+MAKEITEM=i_Green_bone_gloves
+
+ON=i_green_bone_leggings <name> (<resmake>)
+MAKEITEM=i_green_bone_leggings
+
+
+[SKILLMENU sm_bone_Blue]
+Blue Bone Plate
+
+ON=i_Blue_bone_ARMS <name> (<resmake>)
+MAKEITEM=i_Blue_bone_ARMS
+
+ON=i_Blue_bone_helmet <name> (<resmake>)
+MAKEITEM=i_Blue_bone_helmet
+
+ON=i_Blue_bone_plate <name> (<resmake>)
+MAKEITEM=i_Blue_bone_plate
+
+ON=i_Blue_bone_gloves <name> (<resmake>)
+MAKEITEM=i_Blue_bone_gloves
+
+ON=i_blue_bone_leggings <name> (<resmake>)
+MAKEITEM=i_blue_bone_leggings
+
+
+[SKILLMENU sm_bone_Red]
+Red Bone Plate
+
+ON=i_Red_bone_ARMS <name> (<resmake>)
+MAKEITEM=i_Red_bone_ARMS
+
+ON=i_Red_bone_helmet <name> (<resmake>)
+MAKEITEM=i_Red_bone_helmet
+
+ON=i_Red_bone_plate <name> (<resmake>)
+MAKEITEM=i_Red_bone_plate
+
+ON=i_Red_bone_gloves <name> (<resmake>)
+MAKEITEM=i_Red_bone_gloves
+
+ON=i_red_bone_leggings <name> (<resmake>)
+MAKEITEM=i_red_bone_leggings
+
+
+[SKILLMENU sm_bone_Dark]
+Dark Bone Plate
+
+ON=i_Dark_bone_ARMS <name> (<resmake>)
+MAKEITEM=i_Dark_bone_ARMS
+
+ON=i_Dark_bone_helmet <name> (<resmake>)
+MAKEITEM=i_Dark_bone_helmet
+
+ON=i_Dark_bone_plate <name> (<resmake>)
+MAKEITEM=i_Dark_bone_plate
+
+ON=i_Dark_bone_gloves <name> (<resmake>)
+MAKEITEM=i_Dark_bone_gloves
+
+ON=i_dark_bone_leggings <name> (<resmake>)
+MAKEITEM=i_dark_bone_leggings
+
+
+
+[SKILLMENU sm_containers]
+Containers
+
+ON=i_box_brass <name> (<resmake>)
+MAKEITEM=i_box_brass
+
+ON=i_keg_small <name> (<resmake>)
+MAKEITEM=i_keg_small
+
+ON=i_barrel_open <name> (<resmake>)
+MAKEITEM=i_barrel_open
+
+ON=i_barrel <name> (<resmake>)
+MAKEITEM=i_barrel
+
+ON=i_chest_wooden_brass <name> (<resmake>)
+MAKEITEM=i_chest_wooden_brass
+
+ON=i_chest_metal <name> (<resmake>)
+MAKEITEM=i_chest_metal
+
+ON=i_chest_metal_brass <name> (<resmake>)
+MAKEITEM=i_chest_metal_brass
+
+[SKILLMENU sm_instruments]
+Instruments
+
+ON=i_tambourine <name> (<resmake>)
+MAKEITEM=i_tambourine
+
+ON=i_tambourine_tas <name> (<resmake>)
+MAKEITEM=i_tambourine_tas
+
+ON=i_drum <name> (<resmake>)
+MAKEITEM=i_drum
+
+ON=i_lute <name> (<resmake>)
+MAKEITEM=i_lute
+
+ON=i_lyre <name> (<resmake>)
+MAKEITEM=i_lyre
+
+ON=i_HARP_LARGE <name> (<resmake>)
+MAKEITEM=i_HARP_LARGE
+
+[SKILLMENU sm_tools]
+Tools
+
+ON=i_tame_harp <name> (<resmake>)
+MAKEITEM i_tame_harp
+
+ON=i_magic_harp <name> (<resmake>)
+MAKEITEM i_magic_harp
+
+ON=i_treasure_shovel <NAME> (<RESMAKE>)
+MAKEITEM i_treasure_shovel
+
+on=i_fry_pan <name> (<resmake>)
+makeitem i_fry_pan
+
+ON=i_shovel <name> (<resmake>)
+MAKEITEM=i_shovel
+
+ON=i_shovel <name> (<resmake>)
+MAKEITEM=i_shovel
+
+ON=i_saw_dovetail <name> (<resmake>)
+MAKEITEM=i_saw_dovetail
+
+ON=i_bottle_empty Empty Bottles	
+SKILLMENU=sm_bottles_empty
+
+ON=i_hatchet <name> (<resmake>)
+MAKEITEM=i_hatchet
+
+ON=i_lockpick <name> (<resmake>)
+MAKEITEM=i_lockpick
+
+ON=i_mortar_pestle <name> (<resmake>)
+MAKEITEM=i_mortar_pestle
+
+ON=i_pickaxe <name> (<resmake>)
+MAKEITEM=i_pickaxe
+
+ON=i_saw <name> (<resmake>)
+MAKEITEM=i_saw
+
+ON=i_scissors <name> (<resmake>)
+MAKEITEM=i_scissors
+
+ON=i_sewing_kit <name> (<resmake>)
+MAKEITEM=i_sewing_kit
+
+ON=i_sextant <name> (<resmake>)
+MAKEITEM=i_sextant
+
+ON=i_hammer_sledge <name> (<resmake>)
+MAKEITEM=i_hammer_sledge
+
+ON=i_hammer_smith <name> (<resmake>)
+MAKEITEM=i_hammer_smith
+
+ON=i_tinker_tools <name> (<resmake>)
+MAKEITEM=i_tinker_tools
+
+ON=i_toolkit <name> (<resmake>)
+MAKEITEM=i_toolkit
+
+[SKILLMENU sm_bottles_empty]
+Empty Bottles
+
+ON=i_bottle_empty 10 Bottles (5 Ceramic)
+IF !(<RESTEST 5 i_ingot_ceramic>)
+SYSMESSAGE Voce nao possui Ceramic suficiente para fazer as Empty Bottles.
+RETURN 1
+ELSE
+NEWITEM i_bottle_empty
+new.amount 10
+new.bounce
+consume 5 i_ingot_ceramic
+ENDIF
+
+
+ON=i_bottle_empty 100 Bottles (50 Ceramic)
+IF !(<RESTEST 50 i_ingot_ceramic>)
+SYSMESSAGE Voce nao possui Ceramic suficiente para fazer as Empty Bottles.
+RETURN 1
+ELSE
+NEWITEM i_bottle_empty
+new.amount 100
+new.bounce
+consume 50 i_ingot_ceramic
+ENDIF
+
+
+ON=i_bottle_empty 500 Bottles (250 Ceramic)
+IF !(<RESTEST 250 i_ingot_ceramic>)
+SYSMESSAGE Voce nao possui Ceramic suficiente para fazer as Empty Bottles.
+RETURN 1
+ELSE
+NEWITEM i_bottle_empty
+new.amount 500
+new.bounce
+consume 250 i_ingot_ceramic 
+ENDIF
+
+
+[SKILLMENU sm_jewelry]
+Magic Items
+
+ON=i_beads +5 ITEMS
+SKILLMENU=sm_tink_5
+
+ON=i_beads +10 ITEMS
+SKILLMENU=sm_tink_10
+
+ON=i_beads +15 ITEMS
+SKILLMENU=sm_tink_15
+
+ON=i_beads +20 ITEMS
+SKILLMENU=sm_tink_20
+
+ON=i_beads MAGIC ITEMS
+SKILLMENU=sm_tink_magic
+
+[SKILLMENU sm_tink_5]
++5 Items
+
+ON=i_Massive_ring <name> (<resmake>)
+makeitem=i_Massive_ring
+
+
+ON=i_hurry_ring <name> (<resmake>)
+makeitem=i_hurry_ring
+
+
+ON=i_Smarty_ring <name> (<resmake>)
+makeitem=i_Smarty_ring
+
+
+ON=i_5life_necklace <name> (<resmake>)
+makeitem=i_5life_necklace
+
+
+ON=i_5Stamina_necklace <name> (<resmake>)
+makeitem=i_5Stamina_necklace
+
+
+ON=i_5Mana_necklace <name> (<resmake>)
+makeitem=i_5Mana_necklace
+
+
+
+[SKILLMENU sm_tink_10]
++10 Items
+
+ON=i_Fortified_ring <name> (<resmake>)
+makeitem=i_Fortified_ring
+
+
+ON=i_Quick_ring <name> (<resmake>)
+makeitem=i_Quick_ring
+
+
+ON=i_Cleaver_ring <name> (<resmake>)
+makeitem=i_Cleaver_ring
+
+
+ON=i_10life_necklace <name> (<resmake>)
+makeitem=i_10life_necklace
+
+
+ON=i_10Stamina_necklace <name> (<resmake>)
+makeitem=i_10Stamina_necklace
+
+
+ON=i_10Mana_necklace <name> (<resmake>)
+makeitem=i_10Mana_necklace
+
+
+[SKILLMENU sm_tink_15]
++15 Items
+
+ON=i_Strong_ring <name> (<resmake>)
+makeitem=i_Strong_ring
+
+
+ON=i_Speedy_ring <name> (<resmake>)
+makeitem=i_Speedy_ring
+
+
+ON=i_Knowledge_ring <name> (<resmake>)
+makeitem=i_Knowledge_ring
+
+
+ON=i_15life_necklace <name> (<resmake>)
+makeitem=i_15life_necklace
+
+
+ON=i_15Stamina_necklace <name> (<resmake>)
+makeitem=i_15Stamina_necklace
+
+
+ON=i_15Mana_necklace <name> (<resmake>)
+makeitem=i_15Mana_necklace
+
+[SKILLMENU sm_tink_20]
++20 Items
+
+ON=i_Titan_ring <name> (<resmake>)
+makeitem=i_Titan_ring
+
+
+ON=i_Haste_ring <name> (<resmake>)
+makeitem=i_Haste_ring
+
+
+ON=i_Wizardry_ring <name> (<resmake>)
+makeitem=i_Wizardry_ring
+
+
+ON=i_20life_necklace <name> (<resmake>)
+makeitem=i_20life_necklace
+
+
+ON=i_20Stamina_necklace <name> (<resmake>)
+makeitem=i_20Stamina_necklace
+
+
+ON=i_20Mana_necklace <name> (<resmake>)
+makeitem=i_20Mana_necklace
+
+
+[SKILLMENU sm_tink_magic]
+Magic Items
+
+ON=i_bs_hammer <NAME> (<RESMAKE>)
+MAKEITEM=i_bs_hammer
+
+ON=i_mahogany_pickaxe <name> (<resmake>)
+makeitem=i_mahogany_pickaxe
+
+ON=i_hickory_pickaxe <name> (<resmake>)
+makeitem=i_hickory_pickaxe
+
+ON=i_brace_fisher <name> (<resmake>)
+makeitem=i_brace_fisher
+
+
+ON=i_brace_lumber <name> (<resmake>)
+makeitem=i_brace_lumber
+
+
+ON=i_brace_tamer <name> (<resmake>)
+makeitem=i_brace_tamer
+
+
+ON=i_brace_steal <name> (<resmake>)
+makeitem=i_brace_steal
+
+
+ON=i_ring_medical <name> (<resmake>)
+makeitem=i_ring_medical
+
+ON=i_ring_Dead <name> (<resmake>)
+makeitem=i_ring_Dead
+
+ON=i_ring_magic <name> (<resmake>)
+makeitem=i_ring_magic
+
+ON=i_ring_dodger <name> (<resmake>)
+makeitem=i_ring_dodger
+
+ON=i_ring_blade <name> (<resmake>)
+makeitem=i_ring_blade
+
+ON=i_ring_mace <name> (<resmake>)
+makeitem=i_ring_mace
+
+ON=i_ring_fencer <name> (<resmake>)
+makeitem=i_ring_fencer
+
+ON=i_ring_elven <name> (<resmake>)
+makeitem=i_ring_elven
+
+
+
+[SKILLMENU sm_wood_stuff]
+Wooden Items
+
+ON=i_axel <name> (<resmake>)
+MAKEITEM=i_axel
+
+ON=i_clock_frame <name> (<resmake>)
+MAKEITEM=i_clock_frame
+
+ON=i_plane_jointing <name> (<resmake>)
+MAKEITEM=i_plane_jointing
+
+ON=i_plane_moulding <name> (<resmake>)
+MAKEITEM=i_plane_moulding
+
+ON=i_plane_smoothing <name> (<resmake>)
+MAKEITEM=i_plane_smoothing
+
+ON=i_clock <name> (<resmake>)
+MAKEITEM=i_clock
+
+[SKILLMENU sm_parts]
+Parts
+
+ON=i_wire_iron <name> (<resmake>)
+MAKEITEM=i_wire_iron
+
+ON=i_CLOCK_PARTS <name> (<resmake>)
+MAKEITEM=i_CLOCK_PARTS
+
+ON=i_gears <name> (<resmake>)
+MAKEITEM=i_gears
+
+ON=i_hinge <name> (<resmake>)
+MAKEITEM=i_hinge
+
+ON=i_barrel_tap <name> (<resmake>)
+MAKEITEM=i_barrel_tap
+
+ON=i_barrel_hoops <name> (<resmake>)
+MAKEITEM=i_barrel_hoops
+
+ON=i_SEXTANT_PARTS <name> (<resmake>)
+MAKEITEM=i_SEXTANT_PARTS
+
+ON=i_springs <name> (<resmake>)
+MAKEITEM=i_springs
+
+
+
+[SKILLMENU sm_keys]
+Keys
+
+ON=i_key_ring <name> (<resmake>)
+MAKEITEM=i_key_ring
+
+ON=i_key_copper <name> (<resmake>)
+MAKEITEM=i_key_copper
+
+ON=i_key_gold <name> (<resmake>)
+MAKEITEM=i_key_gold
+
+ON=i_key_iron <name> (<resmake>)
+MAKEITEM=i_key_iron
+
+ON=i_key_magic <name> (<resmake>)
+MAKEITEM=i_key_magic
+
+// End of Tinkering section

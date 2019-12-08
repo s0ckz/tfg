@@ -1,0 +1,87 @@
+[ITEMDEF i_gate_evento_lootproprio]
+ID=0f6c
+WEIGHT=1
+TYPE=t_normal
+NAME=Loot Proprio
+
+ON=@Create
+  attr 08000
+  color 079d
+  return 0
+
+ON=@Click
+  message @0790 <name>
+  message @0790 <dtag0.contagem> pessoas entraram.
+  return 1
+
+ON=@Step
+tag.contagem += 1
+tag.cortemp = <eval 10 + <tag.contagem>>
+src.tag.name.hue=<tag.cortemp>
+src.tag.askills=<src.kills> 
+src.tag.askarma=<src.karma> 
+src.tag.asfame=<src.fame>  
+src.tag.asdeaths=<src.deaths> 
+src.tag.onevent 1
+
+  // Cancelar HR
+  SRC.CANCELLHELPROOM
+
+  //GO
+  src.f_go <morep>
+
+  SRC.RESENDALL
+  src.events +e_evento_geral_lootproprio
+
+return 1
+
+
+[EVENTS e_evento_geral_lootproprio]
+ON=@CLICK
+	MESSAGE @31,,1 [EVENTO]
+
+ON=@Logout
+  message @32,,1 [Logout!]
+
+ON=@Login
+  message @478,,1 [Login!]
+
+
+
+ON=@EnvironChange
+if !(<p.map> == 1) && !(<region.defname>==a_wrong_level_4_1)
+s <region.defname>
+	if (<hits> < 1)
+		resurrect
+	endif
+  src.kills=<tag.askills> 	
+  src.karma=<tag.askarma> 	
+  src.fame=<tag.asfame>   	
+  src.deaths=<tag.asdeaths> 	
+  src.memoryfindtype.memory_harmedby.remove
+  src.memoryfindtype.memory_iaggressor.remove
+  src.memoryfindtype.memory_fight.remove
+  src.memoryfindtype.memory_sawcrime.remove
+  src.memoryfindtype.memory_aggreived.remove
+  src.memoryfindtype.memory_war_targ.remove
+  src.memoryfindtype.memory_harmedby.remove
+  src.memoryfindtype.memory_iaggressor.remove
+  src.memoryfindtype.memory_fight.remove
+  src.memoryfindtype.memory_sawcrime.remove
+  src.memoryfindtype.memory_aggreived.remove
+  src.memoryfindtype.memory_war_targ.remove
+  tag.askills=
+  tag.askarma=
+  tag.asfame=
+  tag.asdeaths=
+  src.criminal 0
+  events -e_evento_geral_lootproprio
+  INVIS 0
+  tag.onevent=
+  tag.name.hue=
+  src.sysmessage @,,1 Voce saiu do evento.
+  src.f_go Commerce Room
+endif	
+  return 0
+  
+[EOF]

@@ -1,0 +1,146 @@
+[itemdef i_tile__tam75e4]
+id=i_floor_marble
+type=t_normal
+name=a tile
+
+on=@create
+attr=attr_invis|attr_move_never
+color=088
+timer = -1
+
+ON=@STEP
+    IF !(<SRC.ISPLAYER>)
+        SRC.MOVE 1 1 
+        RETURN 1
+    ENDIF
+
+    IF (<SRC.FLAGS>&statf_dead)
+        SRC.MOVE 1 1 
+        RETURN 1
+    ENDIF
+
+    if (<src.tag0.pickedup>)
+
+    endif
+
+    if (<src.ISPLAYER>) && (<src.tag0.tam75e3> == 3) && (<src.tag0.tam75e4> == 1)
+        src.tag0.tam75e4 = 2
+        ref1 <uid.04005e68c> //bau
+        ref2 <uid.04005e8bb> //pedestal
+        ref1.attr = <attr>&~attr_invis
+        ref2.attr = <attr>&~attr_invis
+        src.update
+        timer 1
+    endif
+
+on=@TIMER
+    LOCAL.COUNT
+    FORCLIENTS 0
+        LOCAL.COUNT +=1
+    ENDFOR
+    IF !(<LOCAL.COUNT>)
+        ref1 <uid.04005e68c>
+        ref2 <uid.04005e8bb>
+        ref1.attr = <attr>&attr_invis
+        ref2.attr = <attr>&attr_invis
+        ref1.updatex
+        timer -1
+    ELSE
+        timer 1
+    ENDIF
+    RETURN 1
+
+[itemdef i_amuleto_tam75]
+name=Allintril's Amulet
+id=i_talisman4
+
+on=@create
+    attr=attr_newbie
+    color=0a22
+
+on=@pickup_self
+    src.smsg @,,1 I cannot be picked up...double click me.
+    return 1
+
+on=@pickup_pack
+    src.smsg @,,1 I cannot be picked up...double click me.
+    return 1
+
+on=@dclick
+    if !(<tag0.pickedup>) && !(<src.tag.amuleto_tam75>)
+        src.tag0.amuleto_tam75 += 1
+        tag0.pickedup += 1
+        if (<src.tag0.scroll_tam75>)
+            src.tag0.amuleto_tam75
+            src.tag0.scroll_tam75
+            src.tag0.pickedup = 1
+            src.move 1 1
+        ENDIF
+        src.bounce <uid>
+    endif
+
+    return 1
+
+[itemdef i_pergaminho_tam75]
+id=02258
+name=Secret Scroll
+
+on=@create
+    attr=attr_newbie
+
+on=@pickup_self
+    src.smsg @,,1 I cannot be picked up...double click me.
+    return 1
+
+on=@pickup_pack
+    src.smsg @,,1 I cannot be picked up...double click me.
+    return 1
+
+on=@dclick
+    if !(<tag0.pickedup>) && !(<src.tag.amuleto_tam75>)
+        src.tag0.scroll_tam75 += 1
+        tag0.pickedup += 1
+         if (<src.tag0.amuleto_tam75>)
+            src.tag0.amuleto_tam75
+            src.tag0.scroll_tam75
+            src.tag0.pickedup = 1
+            src.move 1 1
+        ENDIF
+        src.bounce <uid>
+    endif
+
+    if (<src.tag0.pickedup>)
+        src.dialog d_tam75_scroll
+        src.tag0.tam75e4 3
+        src.tag0.tam75e5 1
+        src.smsg @,,1 You have begun the 5th chapter of your Quest.
+    endif
+    return 1
+
+[DIALOG d_tam75_scroll]
+0,0
+page 0
+resizepic 90 65 9390 372 230
+text 152 107 0 0
+text 115 142 0 1
+text 179 177 33 2
+text 115 200 0 3
+text 206 243 0 4
+text 115 159 0 5
+gumppic 283 16 60992
+gumppic 109 223 92
+
+[DIALOG d_tam75_scroll text]
+The influence is the vital part! ...
+Evil trust is gained to be then brought
+Fake death then eat the predator
+Where is the treasure?
+Mi - from where all is light and bamboo
+to light.
+
+[DIALOG d_tam75_scroll button]
+
+[EOF]
+
+//uid bau 04005e68c
+//uid pedestal 04005e8bb

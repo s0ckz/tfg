@@ -1,0 +1,27 @@
+[EVENTS e_monster_of_the_month]
+ON=@Click
+	MESSAGE @0825 [Monster of the Month]
+
+[FUNCTION f_monster_of_the_month_loot]
+IF (<ARGV> != 2)
+	RETURN
+ENDIF
+
+LOCAL.SPECIAL_LOOT_INCREASE_PERCENTAGE <EVAL <ARGV[0]> / 2>
+LOCAL.WEEKLY_PVM_SINGLE_CHAMPION <ARGV[1]>
+LOCAL.CHANCE 100
+
+IF (<LOCAL.WEEKLY_PVM_SINGLE_CHAMPION>)
+	LOCAL.CHANCE <EVAL (<LOCAL.CHANCE> * 3) / 4>
+ENDIF
+
+LOCAL.CHANCE <EVAL (<LOCAL.CHANCE> * (100 - <LOCAL.SPECIAL_LOOT_INCREASE_PERCENTAGE>)) / 100>
+
+IF !(<R<DLOCAL.CHANCE>>)
+	SERV.NEWITEM <EVAL {i_ethereal_special_mount_deed 1 i_paragon_ethereal_mount_talisman 1 i_ethereal_mount_deed 2 i_magic_gem 90 i_panotrue_g 10 i_panotrue_b 10 i_panotrue_w 10 i_treasure_map_lvl_5 5 i_treasure_map_lvl_4 30 i_power_scroll 155}>
+	NEW.ATTR &= ~attr_newbie
+	NEW.CONT <UID>
+	SERV.LOG New Monster of the Month Item dropped: <NEW.NAME>
+ENDIF
+
+[EOF]

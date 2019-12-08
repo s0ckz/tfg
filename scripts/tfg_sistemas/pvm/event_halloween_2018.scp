@@ -1,0 +1,711 @@
+[DEFNAME HALLOWEEN_2018_SETTINGS]
+HALLOWEEN_2018_COLOR_1 079a
+HALLOWEEN_2018_COLOR_2 079b
+HALLOWEEN_2018_COLOR_COUNT 2
+HALLOWEEN_2018_INVASION_LOCATION_1 1297,1789,10 // Britain
+HALLOWEEN_2018_INVASION_LOCATION_2 4442,1218 // Moonglow
+HALLOWEEN_2018_INVASION_LOCATION_3 2275,1208 // Cove
+HALLOWEEN_2018_INVASION_LOCATION_4 3025,3386,15 // Serpent's Hold
+HALLOWEEN_2018_INVASION_LOCATION_5 2769,867 // Vesper
+HALLOWEEN_2018_INVASION_LOCATION_6 1288,3723 // Jhelom
+HALLOWEEN_2018_INVASION_LOCATION_7 3670,1168 // Nujelm
+HALLOWEEN_2018_INVASION_LOCATION_COUNT 7
+
+[FUNCTION start_halloween_2018_invasion]
+f_start_city_invasion <DEF.HALLOWEEN_2018_INVASION_LOCATION_<R1,<DEF.HALLOWEEN_2018_INVASION_LOCATION_COUNT>>>
+
+[ITEMDEF i_halloween_2018_pumpkin]
+name=Halloween 2018 Pumpkin
+id=i_fruit_pumpkin
+weight=1
+
+ON=@Create
+	COLOR=<DEF.HALLOWEEN_2018_COLOR_<R1,<DEF.HALLOWEEN_2018_COLOR_COUNT>>>
+	TIMERF 1,ATTR attr_newbie|attr_move_never
+
+ON=@DClick
+//	SRC.TAG0.HALLOWEEN_2018_PUMPKINS_FOUND += 1
+	SRC.SYSMESSAGE @,,1 Congratulations! You found a Halloween 2018 Pumpkin. Your score now is: <DSRC.TAG0.HALLOWEEN_2018_PUMPKINS_FOUND>.
+
+	LOCAL.MINX <EVAL ((<P.X> / 1000) - 1) * 1000>
+	LOCAL.MINY <EVAL ((<P.Y> / 1000) - 1) * 1000>
+	LOCAL.MAXX <EVAL ((<P.X> / 1000) + 1) * 1000>
+	LOCAL.MAXY <EVAL ((<P.Y> / 1000) + 1) * 1000>
+
+	IF (<LOCAL.MINX> < 0)
+		LOCAL.MINX 0
+	ENDIF
+
+	IF (<LOCAL.MINY> < 0)
+		LOCAL.MINY 0
+	ENDIF
+
+	IF (<LOCAL.MAXX> > 6144)
+		LOCAL.MAXX 6144
+	ENDIF
+
+	IF (<LOCAL.MAXY> > 6144)
+		LOCAL.MAXY 6144
+	ENDIF
+
+	IF (<TOPOBJ.P.TYPE> == t_forest)
+		LOCAL.TERRAIN = "Forest"
+	ELIF (<TOPOBJ.P.TYPE> == t_water)
+		LOCAL.TERRAIN = "Water"
+	ELIF (<TOPOBJ.P.TYPE> == t_normal)
+		LOCAL.TERRAIN = "Terrain or Building"
+	ELIF (<TOPOBJ.P.TYPE> == t_swamp)
+		LOCAL.TERRAIN = "Swamp"
+	ELIF (<TOPOBJ.P.TYPE> == t_rock)
+		LOCAL.TERRAIN = "Rock, Sand, Mine or Dungeon"
+	ELIF (<TOPOBJ.P.TYPE> == t_sand)
+		LOCAL.TERRAIN = "Sand or Desert"
+	ELIF (<TOPOBJ.P.TYPE> == t_dirt)
+		LOCAL.TERRAIN = "Plantation or Arable"
+	ELIF (<TOPOBJ.P.TYPE> == t_grass)
+		LOCAL.TERRAIN = "Grass or Flower"
+	ELIF (<TOPOBJ.P.TYPE> == t_jungle)
+		LOCAL.TERRAIN = "Jungle"
+	ELIF (<TOPOBJ.P.TYPE> == t_snow)
+		LOCAL.TERRAIN = "Snow"
+	ELSE
+		LOCAL.TERRAIN = "Unknown"
+	ENDIF
+
+	SERV.B @55 A <NAME> has just been found between: (<DLOCAL.MINX>, <DLOCAL.MINY>) and (<DLOCAL.MAXX>, <DLOCAL.MAXY>). The terrain type was: <LOCAL.TERRAIN> !
+
+	REMOVE
+
+	RETURN 1
+
+[FUNCTION f_halloween_2018_announce_hint]
+f_halloween_2018_announce_pumpkin_hint
+f_halloween_2018_announce_monster_hint
+
+[FUNCTION f_halloween_2018_announce_pumpkin_hint]
+LOCAL.TOTAL 0
+FORINSTANCES i_halloween_2018_pumpkin
+	LOCAL.TOTAL += 1
+ENDIF
+
+LOCAL.CURRENT 1
+LOCAL.TARGET <R1,<LOCAL.TOTAL>>
+
+FORINSTANCES i_halloween_2018_pumpkin
+	IF (<LOCAL.TARGET> == <LOCAL.CURRENT>)
+		LOCAL.MINX <EVAL ((<P.X> / 1000) - 1) * 1000>
+		LOCAL.MINY <EVAL ((<P.Y> / 1000) - 1) * 1000>
+		LOCAL.MAXX <EVAL ((<P.X> / 1000) + 1) * 1000>
+		LOCAL.MAXY <EVAL ((<P.Y> / 1000) + 1) * 1000>
+
+		IF (<LOCAL.MINX> < 0)
+			LOCAL.MINX 0
+		ENDIF
+
+		IF (<LOCAL.MINY> < 0)
+			LOCAL.MINY 0
+		ENDIF
+
+		IF (<LOCAL.MAXX> > 6144)
+			LOCAL.MAXX 6144
+		ENDIF
+
+		IF (<LOCAL.MAXY> > 6144)
+			LOCAL.MAXY 6144
+		ENDIF
+
+		IF (<TOPOBJ.P.TYPE> == t_forest)
+			LOCAL.TERRAIN = "Forest"
+		ELIF (<TOPOBJ.P.TYPE> == t_water)
+			LOCAL.TERRAIN = "Water"
+		ELIF (<TOPOBJ.P.TYPE> == t_normal)
+			LOCAL.TERRAIN = "Terrain or Building"
+		ELIF (<TOPOBJ.P.TYPE> == t_swamp)
+			LOCAL.TERRAIN = "Swamp"
+		ELIF (<TOPOBJ.P.TYPE> == t_rock)
+			LOCAL.TERRAIN = "Rock, Sand, Mine or Dungeon"
+		ELIF (<TOPOBJ.P.TYPE> == t_sand)
+			LOCAL.TERRAIN = "Sand or Desert"
+		ELIF (<TOPOBJ.P.TYPE> == t_dirt)
+			LOCAL.TERRAIN = "Plantation or Arable"
+		ELIF (<TOPOBJ.P.TYPE> == t_grass)
+			LOCAL.TERRAIN = "Grass or Flower"
+		ELIF (<TOPOBJ.P.TYPE> == t_jungle)
+			LOCAL.TERRAIN = "Jungle"
+		ELIF (<TOPOBJ.P.TYPE> == t_snow)
+			LOCAL.TERRAIN = "Snow"
+		ELSE
+			LOCAL.TERRAIN = "Unknown"
+		ENDIF
+
+		SERV.B @55 There's a Halloween 2018 Pumpkin somewhere between: (<DLOCAL.MINX>, <DLOCAL.MINY>) and (<DLOCAL.MAXX>, <DLOCAL.MAXY>) ! Why don't you try to find it?? The terrain type is: <LOCAL.TERRAIN>. Total of pumpkins around the world: <DLOCAL.TOTAL>.
+		RETURN
+	ENDIF
+
+	LOCAL.CURRENT += 1
+ENDFOR
+
+SERV.B @55 A new Halloween 2018 Pumpkin will be spawned somewhere in the next hour.
+RETURN
+
+[FUNCTION f_halloween_2018_announce_monster_hint]
+LOCAL.TOTAL 0
+FORINSTANCES c_halloween_2018_witch
+	LOCAL.TOTAL += 1
+ENDIF
+
+LOCAL.CURRENT 1
+LOCAL.TARGET <R1,<LOCAL.TOTAL>>
+
+FORINSTANCES c_halloween_2018_witch
+	IF (<LOCAL.TARGET> == <LOCAL.CURRENT>)
+		LOCAL.MINX <EVAL ((<P.X> / 1000) - 1) * 1000>
+		LOCAL.MINY <EVAL ((<P.Y> / 1000) - 1) * 1000>
+		LOCAL.MAXX <EVAL ((<P.X> / 1000) + 1) * 1000>
+		LOCAL.MAXY <EVAL ((<P.Y> / 1000) + 1) * 1000>
+
+		IF (<LOCAL.MINX> < 0)
+			LOCAL.MINX 0
+		ENDIF
+
+		IF (<LOCAL.MINY> < 0)
+			LOCAL.MINY 0
+		ENDIF
+
+		IF (<LOCAL.MAXX> > 6144)
+			LOCAL.MAXX 6144
+		ENDIF
+
+		IF (<LOCAL.MAXY> > 6144)
+			LOCAL.MAXY 6144
+		ENDIF
+
+		IF (<TOPOBJ.P.TYPE> == t_forest)
+			LOCAL.TERRAIN = "Forest"
+		ELIF (<TOPOBJ.P.TYPE> == t_water)
+			LOCAL.TERRAIN = "Water"
+		ELIF (<TOPOBJ.P.TYPE> == t_normal)
+			LOCAL.TERRAIN = "Terrain or Building"
+		ELIF (<TOPOBJ.P.TYPE> == t_swamp)
+			LOCAL.TERRAIN = "Swamp"
+		ELIF (<TOPOBJ.P.TYPE> == t_rock)
+			LOCAL.TERRAIN = "Rock, Sand, Mine or Dungeon"
+		ELIF (<TOPOBJ.P.TYPE> == t_sand)
+			LOCAL.TERRAIN = "Sand or Desert"
+		ELIF (<TOPOBJ.P.TYPE> == t_dirt)
+			LOCAL.TERRAIN = "Plantation or Arable"
+		ELIF (<TOPOBJ.P.TYPE> == t_grass)
+			LOCAL.TERRAIN = "Grass or Flower"
+		ELIF (<TOPOBJ.P.TYPE> == t_jungle)
+			LOCAL.TERRAIN = "Jungle"
+		ELIF (<TOPOBJ.P.TYPE> == t_snow)
+			LOCAL.TERRAIN = "Snow"
+		ELSE
+			LOCAL.TERRAIN = "Unknown"
+		ENDIF
+
+		SERV.B @55 There's a Halloween 2018 Witch somewhere between: (<DLOCAL.MINX>, <DLOCAL.MINY>) and (<DLOCAL.MAXX>, <DLOCAL.MAXY>) ! Why don't you try to find it?? The terrain type is: <LOCAL.TERRAIN>. Total of witches around the world: <DLOCAL.TOTAL>.
+		RETURN
+	ENDIF
+
+	LOCAL.CURRENT += 1
+ENDFOR
+
+SERV.B @55 A new Halloween 2018 Witch will be spawned somewhere in the next hour.
+RETURN
+
+[FUNCTION f_halloween_2018_spawn_witch]
+LOCAL.POSITION <f_get_world_random_location>
+SERV.NEWNPC c_halloween_2018_witch
+NEW.P <LOCAL.POSITION>
+NEW.HOME <NEW.P>
+NEW.HOMEDIST 10
+
+SERV.LOG A new <NEW.NAME> is at <NEW.P>.
+
+[FUNCTION f_halloween_2018_spawn_pumpkin]
+LOCAL.POSITION <f_get_world_random_location>
+SERV.NEWITEM i_halloween_2018_pumpkin
+NEW.P <LOCAL.POSITION>
+
+SERV.LOG A new <NEW.NAME> is at <NEW.P>.
+
+[ITEMDEF i_halloween_2018_jin_baori]
+ID=i_jinbaori
+TYPE=t_clothing
+LAYER=layer_ears
+NAME=Halloween 2018 Jin-Baori
+TEVENTS=t_global_bound_item
+
+ON=@Create
+	COLOR=<DEF.HALLOWEEN_2018_COLOR_<R1,<DEF.HALLOWEEN_2018_COLOR_COUNT>>>
+	ATTR attr_newbie
+
+[ITEMDEF i_halloween_2018_ethereal_mount_talisman]
+ID=i_talisman4
+NAME=Halloween 2018 Ethereal Mount Talisman
+TEVENTS=t_global_bound_item
+
+ON=@Create
+	COLOR=<DEF.HALLOWEEN_2018_COLOR_<R1,<DEF.HALLOWEEN_2018_COLOR_COUNT>>>
+	EVENTS +t_drop_challenge
+
+	SERV.LOG A <NAME> has been created.
+
+ON=@DClick
+	IF (<TOPOBJ.UID> != <SRC.UID>)
+		SRC.SYSMESSAGE @,,1 This item must be inside your backpack or bank to be used.
+		RETURN 1
+	ENDIF
+
+	ATTR <ATTR> | attr_newbie
+
+[ITEMDEF i_halloween_2018_bottle_hair_dye]
+ID=i_bottle_hair_dye
+NAME=Halloween 2018 Hair Dye
+
+ON=@Create
+	EVENTS +t_drop_challenge
+
+	COLOR=<DEF.HALLOWEEN_2018_COLOR_<R1,<DEF.HALLOWEEN_2018_COLOR_COUNT>>>
+
+	SERV.LOG A <NAME> has been created.
+
+ON=@Click
+	MESSAGE @<f_get_halloween_2018_text_color <COLOR>>,,1 <NAME>
+	RETURN 1
+
+ON=@DClick
+	IF (<TOPOBJ.UID> != <SRC.UID>)
+		SRC.SYSMESSAGE @,,1 This item must be inside your backpack or bank to be used.
+		RETURN 1
+	ENDIF
+
+	IF (<SRC.FINDLAYER.layer_hair.UID>)
+		SRC.FINDLAYER.layer_hair.COLOR <COLOR>
+	ELSE
+		SRC.SYSMESSAGE @,,1 <DEFMSG.itemuse_dye_nohair>
+		RETURN 1
+	ENDIF
+
+	IF (<SRC.FINDLAYER.layer_beard.UID>)
+		SRC.FINDLAYER.layer_beard.COLOR <COLOR>
+	ENDIF
+
+	REMOVE
+
+	RETURN 1
+
+[ITEMDEF i_halloween_2018_dye_tub]
+ID=0fab
+NAME=Halloween 2018 Dye Tub
+TYPE=T_NORMAL
+VALUE=20
+
+ON=@Create
+	MOREX = 1
+	COLOR = <DEF.HALLOWEEN_2018_COLOR_<R1,<DEF.HALLOWEEN_2018_COLOR_COUNT>>>
+	EVENTS +t_drop_challenge
+
+ON=@Click
+	MESSAGE @,,1 <QVAL (<MOREX> < 2) ? [<DMOREX> charge] : [<DMOREX> charges] >
+
+ON=@DClick
+IF (<ATTR> == attr_move_never)
+	SRC.SYSMESSAGE @,,1 This item is locked.
+	RETURN 1
+ELSEIF (<MOREX> < 1)
+	REMOVE
+	RETURN 1
+ELSE
+	TARGET @,,1 Select what you want to dye.
+ENDIF
+RETURN 1
+
+ON=@Targon_Item
+IF (<ARGO.UID> == <UID>)
+	SRC.SYSMESSAGE @,,1 This dye tub is already colored.
+	RETURN 1
+ENDIF
+
+IF (<ARGO.BASEID> == <BASEID>) && (<ARGO.COLOR> == <COLOR>)
+  ARGO.MOREX += <MOREX>
+  SRC.SYSMESSAGE @,,1 You merged both dye tubs.
+  REMOVE
+  RETURN 1
+ENDIF
+
+if (<ARGO.BASEID> == i_dye_tub) && !(<ARGO.COLOR>)
+	if (<ARGO.CONT> == <SRC.FINDLAYER(21).UID>)
+		ARGO.REMOVE
+		SERV.NEWITEM i_halloween_2018_dye_tub
+		NEW.COLOR <COLOR>
+		NEW.MOREX = 1
+		NEW.LINK <SRC>
+		NEW.EVENTS -t_drop_challenge
+		SRC.NEW.BOUNCE
+
+		SRC.SYSMESSAGE @,,1 You added one charge to this blank dye tube.
+
+		MOREX -= 1
+
+		IF (<MOREX> <= 0) || (<MOREX> > 100)
+			REMOVE
+		ENDIF
+
+		RETURN 1
+	ELSE
+		SRC.SYSMESSAGE @,,1 The dye tub must be inside your bag.
+	ENDIF
+ENDIF
+
+LOCAL.CHARGE_COST 1
+
+IF (<MOREX> <= 0) || (<MOREX> > 100)
+	REMOVE
+	RETURN 1
+ELSEIF (<ARGO.TYPE> != t_clothing)
+	SRC.SYSMESSAGE @,,1 You can't dye this item.
+	RETURN 1
+ELSEIF (<ARGO.ATTR> & attr_newbie) && !(STRMATCH(i_paragon_*, <ARGO.BASEID>))
+	LOCAL.CHARGE_COST 4
+ENDIF
+
+IF (<LOCAL.CHARGE_COST> > <MOREX>)
+	SRC.SYSMESSAGE @,,1 You must have <DLOCAL.CHARGE_COST> charges to dye this item.
+	RETURN 1
+ENDIF
+
+IF (<ARGO.TOPOBJ> == <SRC.UID>)
+	ARGO.COLOR <COLOR>
+	MOREX -= <LOCAL.CHARGE_COST>
+	IF (<MOREX> <= 0) || (<MOREX> > 100)
+		REMOVE
+	ENDIF
+
+	RETURN 1
+ELSE
+	SRC.SYSMESSAGE @,,1 The item to be dyed must be inside your backpack or bank.
+	RETURN 1
+ENDIF
+
+ON=@TargOn_Char
+	RETURN 1
+
+
+[FUNCTION f_become_halloween_2018_monster]
+IF (<ARGV> != 1)
+	RETURN
+ENDIF
+
+REF1 <ARGS>
+REF1.COLOR <DEF.HALLOWEEN_2018_COLOR_<R1,<DEF.HALLOWEEN_2018_COLOR_COUNT>>>
+REF1.EVENTS +e_halloween_2018
+REF1.STR <EVAL (<REF1.STR> * 12) / 10>
+REF1.MAXHITS <EVAL (<REF1.MAXHITS> * 12) / 10>
+REF1.HITS <REF1.MAXHITS>
+REF1.TAG.DISABLE_DEFAULT_LOOT 1
+
+[FUNCTION f_halloween_2018_decision]
+LOCAL.CHANCE 7
+
+IF (<STR> > 500)
+	LOCAL.CHANCE *= 3
+ENDIF
+
+IF !(<R<LOCAL.CHANCE>>)
+	SERV.NEWNPC <BASEID>
+	NEW.P <P>
+	NEW.HOME <NEW.P>
+	NEW.HOMEDIST 6
+
+	f_become_halloween_2018_monster <NEW.UID>
+
+	SERV.LOG A new <NEW.NAME> Halloween 2018 monster has been spawned at <NEW.P> (<NEW.REGION.NAME>) !
+ENDIF
+
+[FUNCTION f_get_halloween_2018_text_color]
+IF (<ARGS> == <DEF.HALLOWEEN_2018_COLOR_1>)
+	RETURN 0bb2
+ELSE
+	RETURN 01db
+ENDIF
+
+[PLEVEL 1]
+score_halloween_2018
+
+[FUNCTION score_halloween_2018]
+// SRC.SYSMESSAGE @,,1 Monsters killed in Halloween 2018 event: <SRC.DTAG0.HALLOWEEN_2018_MONSTERS_KILLED>
+SRC.SYSMESSAGE @,,1 Witches damage in Halloween 2018 event: <SRC.DTAG0.HALLOWEEN_2018_MONSTERS_DAMAGE>
+SRC.SYSMESSAGE @,,1 Pumpkins found in Halloween 2018 event: <SRC.DTAG0.HALLOWEEN_2018_PUMPKINS_FOUND>
+
+[EVENTS e_halloween_2018]
+ON=@Click
+	MESSAGE @<f_get_halloween_2018_text_color <COLOR>>,,1 [Halloween]
+
+ON=@DeathCorpse
+	ARGO.TAG.DISABLE_CUT 1
+
+ON=@Death
+//	IF (<ATTACKER>)
+//		FOR 0 <EVAL <ATTACKER> - 1>
+//			REF1 <ATTACKER.<DLOCAL._FOR>>
+//			IF (<REF1.ISPLAYER>)
+//				REF1.TAG0.HALLOWEEN_2018_MONSTERS_KILLED += 1
+//			ENDIF
+//		ENDFOR
+//	ENDIF
+
+	FORCONT <UID>
+		REMOVE
+	ENDFOR
+
+	LOCAL.CHANCE 300
+
+	IF (<STR> > 500)
+		LOCAL.CHANCE /= 4
+	ENDIF
+
+	IF !(<R<LOCAL.CHANCE>>)
+		SERV.NEWITEM <EVAL {i_halloween_2018_dye_tub 50 i_halloween_2018_bottle_hair_dye 40 i_halloween_2018_ethereal_mount_talisman 1}>
+		NEW.CONT <UID>
+		SERV.LOG New Halloween Event 2018 Item dropped: <NEW.NAME>
+	ENDIF
+
+	IF (!<R36>)
+		NEWITEM <EVAL {i_magic_gem 5 i_ethereal_special_mount_deed 3 i_panotrue_g 4 i_panotrue_b 4 i_panotrue_w 4 i_deed_shop_marble_small 1 i_deed_shop_stone_small 1 i_deed_villa_2story 1 i_deed_house_patio_sand 1 i_deed_cabin_log_2story 1 i_deed_house_3room_fence 1 i_Wizardry_ring 2 i_20life_necklace 2 i_20Stamina_necklace 2 i_20Mana_necklace 2 i_paragon_ethereal_mount_talisman 5 i_Titan_ring 4 i_15Stamina_necklace 4 i_Knowledge_ring 4 i_Speedy_ring 4 i_ethereal_mount_deed 7 i_treasure_map_lvl_5 20 I_X_RUNEBOOK 20 i_keg_glb1 20 i_keg_gmb1 20 i_keg_grf1 20 i_chaos_shield 40 i_order_shield 40 i_magic_mask_tribal 50 i_magic_mask_orc 50 i_magic_helm_orc 50 i_magic_mask_deer 50 i_magic_mask_bear 50 i_magic_mask_bear_polar 50 i_magic_mask_bear_black 50 i_power_scroll 60}>
+		NEW.ATTR &= ~attr_newbie
+		SERV.LOG New Halloween Event 2018 Item dropped: <NEW.NAME>
+		NEW.CONT <UID>
+	ENDIF
+
+	SERV.NEWITEM i_gold
+	NEW.AMOUNT <EVAL <BALANCEARGOLD <GRANAMOBS>> * 2>
+	NEW.CONT <UID>
+
+[CHARDEF c_halloween_2018_witch]
+id=c_Wailing_Banshee
+Name=Halloween 2018 Witch
+DAM=30,50
+ARMOR=25
+CAN=MT_WALK|MT_RUN|MT_FLY
+AVERSIONS=r_civilization
+
+ON=@Create
+	COLOR=<DEF.HALLOWEEN_2018_COLOR_<R1,<DEF.HALLOWEEN_2018_COLOR_COUNT>>>
+	TAG.LOOTPROPRIO 1
+	NPC=brain_monster
+	STR=1200
+	DEX={800 900}
+	INT=300
+	PARRYING={95.0 105.0}
+	MAGERY=6.0
+	MAGICRESISTANCE={60.0 75.0}
+	TACTICS={90.0 100.0}
+	WRESTLING={99.0 100.0}
+	FAME={1000 6000}
+	KARMA=-10000
+	//SPELLCIRCLE=3 5
+	HITS 3000
+	MAXHITS 3000
+	ITEMNEWBIE=i_light_source
+	ITEMNEWBIE=i_spellbook
+	ADDSPELL=s_magic_arrow
+	ADDSPELL=s_fireball
+	ADDSPELL=s_fire_field
+	ADDSPELL=s_explosion
+	ADDSPELL=s_flamestrike
+	ADDSPELL=s_meteor_swarm
+	ADDSPELL=s_fire_bolt
+
+// ON=@GetHit
+//	SRC.TAG.HALLOWEEN_2018_MONSTERS_DAMAGE += <ARGN1>
+
+ON=@Death
+	IF !(<R20>)
+		SERV.NEWITEM <ICON>
+		NEW.TAG.STATUETTE 1
+		NEW.COLOR <COLOR>
+		NEW.NAME <NAME> Statuette
+		NEW.CONT <UID>
+	ENDIF
+
+	LOCAL.MINX <EVAL ((<P.X> / 1000) - 1) * 1000>
+	LOCAL.MINY <EVAL ((<P.Y> / 1000) - 1) * 1000>
+	LOCAL.MAXX <EVAL ((<P.X> / 1000) + 1) * 1000>
+	LOCAL.MAXY <EVAL ((<P.Y> / 1000) + 1) * 1000>
+
+	IF (<LOCAL.MINX> < 0)
+		LOCAL.MINX 0
+	ENDIF
+
+	IF (<LOCAL.MINY> < 0)
+		LOCAL.MINY 0
+	ENDIF
+
+	IF (<LOCAL.MAXX> > 6144)
+		LOCAL.MAXX 6144
+	ENDIF
+
+	IF (<LOCAL.MAXY> > 6144)
+		LOCAL.MAXY 6144
+	ENDIF
+
+	IF (<TOPOBJ.P.TYPE> == t_forest)
+		LOCAL.TERRAIN = "Forest"
+	ELIF (<TOPOBJ.P.TYPE> == t_water)
+		LOCAL.TERRAIN = "Water"
+	ELIF (<TOPOBJ.P.TYPE> == t_normal)
+		LOCAL.TERRAIN = "Terrain or Building"
+	ELIF (<TOPOBJ.P.TYPE> == t_swamp)
+		LOCAL.TERRAIN = "Swamp"
+	ELIF (<TOPOBJ.P.TYPE> == t_rock)
+		LOCAL.TERRAIN = "Rock, Sand, Mine or Dungeon"
+	ELIF (<TOPOBJ.P.TYPE> == t_sand)
+		LOCAL.TERRAIN = "Sand or Desert"
+	ELIF (<TOPOBJ.P.TYPE> == t_dirt)
+		LOCAL.TERRAIN = "Plantation or Arable"
+	ELIF (<TOPOBJ.P.TYPE> == t_grass)
+		LOCAL.TERRAIN = "Grass or Flower"
+	ELIF (<TOPOBJ.P.TYPE> == t_jungle)
+		LOCAL.TERRAIN = "Jungle"
+	ELIF (<TOPOBJ.P.TYPE> == t_snow)
+		LOCAL.TERRAIN = "Snow"
+	ELSE
+		LOCAL.TERRAIN = "Unknown"
+	ENDIF
+
+	SERV.B @55 A <NAME> has just been killed between: (<DLOCAL.MINX>, <DLOCAL.MINY>) and (<DLOCAL.MAXX>, <DLOCAL.MAXY>). The terrain type was: <LOCAL.TERRAIN> !
+
+ON=@NPCRestock
+	EVENTS +e_mage_spell_attack
+	EVENTS +e_poison_immune
+
+	ITEM=i_gold,{60000 62000}
+	ITEM=i_gold,{60000 62000}
+	ITEM={i_panotrue_w 1 i_panotrue_b 1 i_panotrue_g 1}
+	ITEM={i_panotrue_w 1 i_panotrue_b 1 i_panotrue_g 1},R3
+	ITEM=i_magic_gem,R10
+	ITEM=i_halloween_2018_dye_tub,R10
+	ITEM=i_halloween_2018_bottle_hair_dye,R15
+	ITEM=i_halloween_2018_ethereal_mount_talisman,R150
+	ITEM=random_minor_artic_ogre
+	ITEM=random_minor_artic_ogre
+	ITEM=random_rare_arctic_ogre,R3
+
+[FUNCTION f_halloween_2018_mount_prize]
+IF (<ARGV> != 2)
+	RETURN 1
+ENDIF
+
+LOCAL.ACCOUNT <ARGV[0]>
+LOCAL.POSITION <ARGV[1]>
+REF1 <SERV.ACCOUNT.<LOCAL.ACCOUNT>.CHAR.0>
+
+IF !(<REF1>)
+	RETURN 1
+ENDIF
+
+SERV.LOG Generating prizes of: <DLOCAL.POSITION>. <REF1.NAME>
+
+// FORCONT <REF1.FINDLAYER.layer_bankbox.UID>
+// 	REMOVE
+// ENDFOR
+
+SERV.NEWITEM i_chest_metal
+NEW.COLOR <DEF.HALLOWEEN_2018_COLOR_<R1,<DEF.HALLOWEEN_2018_COLOR_COUNT>>>
+NEW.NAME Halloween 2018 Prize - Place: <DLOCAL.POSITION>
+
+REF2 <NEW.UID>
+REF2.CONT <REF1.FINDLAYER.layer_bankbox.UID>
+
+// maps
+SERV.NEWITEM i_bag
+NEW.NAME Halloween 2018 Prize
+NEW.COLOR <DEF.HALLOWEEN_2018_COLOR_<R1,<DEF.HALLOWEEN_2018_COLOR_COUNT>>>
+
+REF3 <NEW.UID>
+REF3.CONT <REF2.UID>
+
+LOCAL.COUNT <EVAL 10 - (<LOCAL.POSITION> - 1)>
+FOR 1 <LOCAL.COUNT>
+	SERV.NEWITEM i_treasure_map_lvl_6
+	NEW.CONT <REF3.UID>
+ENDFOR
+
+LOCAL.COUNT <EVAL 20 - 2 * (<LOCAL.POSITION> - 1)>
+FOR 1 <LOCAL.COUNT>
+	SERV.NEWITEM i_treasure_map_lvl_5
+	NEW.CONT <REF3.UID>
+ENDFOR
+
+// vips
+LOCAL.AMOUNT <EVAL 300 - 30 * (<LOCAL.POSITION> - 1)>
+add_vip_coins <LOCAL.ACCOUNT>,<DLOCAL.AMOUNT>
+
+// dyes
+LOCAL.AMOUNT <EVAL 10 - (<LOCAL.POSITION> - 1)>
+FOR 1 <DEF.HALLOWEEN_2018_COLOR_COUNT>
+	SERV.NEWITEM i_halloween_2018_dye_tub
+	NEW.EVENTS -t_drop_challenge
+	NEW.COLOR <DEF.HALLOWEEN_2018_COLOR_<DLOCAL._FOR>>
+	NEW.MOREX <LOCAL.AMOUNT>
+	NEW.CONT <REF2.UID>
+ENDFOR
+
+// hair dyes
+IF (<LOCAL.POSITION> <= 5)
+	SERV.NEWITEM i_bag
+	NEW.NAME Halloween 2018 Prize
+	NEW.COLOR <DEF.HALLOWEEN_2018_COLOR_<R1,<DEF.HALLOWEEN_2018_COLOR_COUNT>>>
+
+	REF3 <NEW.UID>
+	REF3.CONT <REF2.UID>
+
+	LOCAL.COUNT <EVAL 5 - (<LOCAL.POSITION> - 1)>
+	FOR X 1 <DEF.HALLOWEEN_2018_COLOR_COUNT>
+		FOR 1 <LOCAL.COUNT>
+			SERV.NEWITEM i_halloween_2018_bottle_hair_dye
+			NEW.EVENTS -t_drop_challenge
+			NEW.COLOR <DEF.HALLOWEEN_2018_COLOR_<DLOCAL.X>>
+			NEW.CONT <REF3.UID>
+		ENDIF
+	ENDFOR
+ENDIF
+
+IF (<LOCAL.POSITION> == 1)
+	SERV.NEWITEM i_halloween_2018_ethereal_mount_talisman
+	NEW.EVENTS -t_drop_challenge
+	NEW.CONT <REF2.UID>
+
+	SERV.NEWITEM i_halloween_2018_jin_baori
+	NEW.CONT <REF2.UID>
+
+//	FOR 1 <DEF.HALLOWEEN_2018_COLOR_COUNT>
+//		SERV.NEWITEM i_halloween_2018_ethereal_mount_talisman
+//		NEW.EVENTS -t_drop_challenge
+//		NEW.COLOR <DEF.HALLOWEEN_2018_COLOR_<DLOCAL._FOR>>
+//		NEW.CONT <REF2.UID>
+//	ENDFOR
+
+//	FOR 1 <DEF.HALLOWEEN_2018_COLOR_COUNT>
+//		SERV.NEWITEM i_halloween_2018_jin_baori
+//		NEW.COLOR <DEF.HALLOWEEN_2018_COLOR_<DLOCAL._FOR>>
+//		NEW.CONT <REF2.UID>
+//	ENDFOR
+ELSEIF (<LOCAL.POSITION> == 2)
+	SERV.NEWITEM i_halloween_2018_ethereal_mount_talisman
+	NEW.EVENTS -t_drop_challenge
+	NEW.CONT <REF2.UID>
+
+	SERV.NEWITEM i_halloween_2018_jin_baori
+	NEW.CONT <REF2.UID>
+ELSEIF (<LOCAL.POSITION> == 3)
+	SERV.NEWITEM i_halloween_2018_ethereal_mount_talisman
+	NEW.EVENTS -t_drop_challenge
+	NEW.CONT <REF2.UID>
+ENDIF
+
+LOCAL.POSITION += 1
+
+[EOF]

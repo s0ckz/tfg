@@ -1,0 +1,65 @@
+[function f_nochars_remove]
+local.remove 0
+			for x 0 <eval <serv.accounts> -1>
+				serv.log acc <dlocal.x> / <eval <serv.accounts> -1>
+				if (<serv.account.<dlocal.x>.chars>==0)
+					local.remove ++
+					serv.writefile Removed_Accounts.txt Conta <serv.account.<dlocal.x>.name> com <serv.account.<dlocal.x>.chars> chars removida!
+					SERV.ACCOUNT <serv.account.<dlocal.x>.name> DELETE
+				endif
+				if (<local.x> >= <eval <serv.accounts> -1>)
+					var0.removed_accounts += <local.remove>
+					serv.writefile Removed_Accounts.txt Loop Interrompido. Neste cliclo <dlocal.remove> contas removidas. Ate aqui <dvar.removed_accounts> contas removidas.
+					serv.log Loop Interrompido. Neste cliclo <dlocal.remove> contas removidas. Ate aqui <dvar.removed_accounts> contas removidas.
+					return 1
+				endif
+			endfor
+	var0.removed_accounts += <local.remove>
+	serv.writefile Removed_Accounts.txt Loop Finalizado. Neste cliclo <dlocal.remove> contas removidas. Ate aqui <dvar.removed_accounts> contas removidas.
+	serv.log Loop Finalizado. Neste ciclo <dlocal.remove> contas removidas. Ate aqui <dvar.removed_accounts> contas removidas.
+return 1
+
+[FUNCTION f_unused_60dias_remove]
+SERV.ACCOUNT UNUSED 60 DELETE
+
+[FUNCTION f_unused_30dias_quarentena]
+SERV.ACCOUNT UNUSED 30 TAG.UNUSED30 1
+f_unused_quarentena_op
+
+[FUNCTION f_unused_quarentena_op]
+local.acc 0
+local.ct 0
+			for x 0 <eval <serv.accounts> -1>
+				serv.log acc <dlocal.x> / <eval <serv.accounts> -1>
+						if (<serv.account.<dlocal.x>.tag0.unused30>)
+							local.acc ++
+							for y 0 <eval <serv.account.<dlocal.x>.chars> -1>
+								local.ct ++
+								ref1 = <serv.account.<dlocal.x>.char.<dlocal.y>>
+								serv.writefile Quarentena.txt O char <ref1.name> (conta <ref1.account.name>, lastconnectdate <ref1.account.lastconnectdate>) foi colocado em quarentena!
+								ref1.goinat
+								ref1.update
+							endfor
+						endif
+						//
+			endfor
+serv.log <dlocal.ct> chars de <dlocal.acc> contas em quarentena!
+serv.writefile Quarentena.txt <dlocal.ct> chars de <dlocal.acc> contas em quarentena!
+return 1
+
+
+[FUNCTION f_tag_worker]
+for x 0 <eval <serv.accounts> -1>
+	for y 0 <eval <serv.account.<dlocal.x>.chars> -1>
+		ref1 = <serv.account.<dlocal.x>.char.<dlocal.y>>
+			if <ref1.tag0.worker>
+				s <ref1.name> worker
+				ref1.tag.worker = 
+			endif
+			if <ref1.tag0.warrior>
+				s <ref1.name> warrior
+				ref1.tag0.warrior = 
+			endif
+	endfor
+endfor
+return 1

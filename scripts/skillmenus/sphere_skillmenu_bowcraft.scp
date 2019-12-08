@@ -1,0 +1,211 @@
+//SKILLMENU Bowcraft
+
+[SKILLMENU sm_BOWCRAFT]
+// knife on wood
+What do you want to carve the wood into?
+//ON=i_bow @0793 Special Bows
+//SKILLMENU=sm_special_bows
+
+ON=i_crossbow_heavy Color Bows
+SKILLMENU=sm_color_bows
+
+ON=i_KINDLING <name> (<resmake>)
+MAKEITEM=i_KINDLING
+
+ON=i_crossbow Exceptional Bows
+SKILLMENU=sm_bows_medium
+
+ON=i_bow Superior Bows
+SKILLMENU=sm_bows_short
+
+ON=i_ARROW_SHAFT Shafts
+SKILLMENU=sm_shafts
+
+ON=i_bow <name> (<resmake>)
+MAKEITEM=i_bow
+
+ON=i_CROSSBOW <name> (<resmake>)
+MAKEITEM=i_CROSSBOW
+
+ON=i_crossbow_heavy <name> (<resmake>)
+MAKEITEM=i_crossbow_heavy
+
+ON=i_bow_elven <name> (<resmake>)
+MAKEITEM=i_bow_elven
+
+
+
+
+
+
+//[SKILLMENU sm_special_bows]
+//Special Bows
+
+//ON=i_bow_fire @0793 <name> (<resmake>)
+//MAKEITEM=i_bow_fire
+
+//ON=i_bow_poison @0795 <name> (<resmake>)
+//MAKEITEM=i_bow_poison
+
+//ON=i_bow_frost @0786 <name> (<resmake>)
+//MAKEITEM=i_bow_frost
+
+
+[SKILLMENU sm_shafts]
+Shafts
+
+ON=i_arrow_shaft 1 Shafts (1 Log)
+MAKEITEM=i_ARROW_SHAFT
+
+ON=i_arrow_shaft 10 Shafts (10 Logs)
+IF !(<RESCOUNT i_log> >= 10)
+RETURN 1
+ELSE
+NEWITEM i_arrow_shaft
+new.amount 10
+new.bounce
+consume 10 i_log
+ENDIF
+
+ON=i_arrow_shaft 100 Shafts (100 Log)
+IF !(<RESCOUNT i_log> >= 100)
+RETURN 1
+ELSE
+NEWITEM i_arrow_shaft
+new.amount 100
+new.bounce
+consume 100 i_log
+ENDIF
+
+[SKILLMENU sm_bolts]
+// combine shafts with feathers.
+Select arrow type
+
+ON=i_xbolt <name> (<resmake>)
+MAKEITEM=i_xbolt
+
+ON=i_arrow <name> (<resmake>)
+MAKEITEM=i_arrow
+
+[SKILLMENU sm_bows_short] // Exceptional Bows
+Superior Bows
+
+ON=i_BOW_SUP <name> (<resmake>)
+MAKEITEM=i_BOW_SUP
+
+ON=i_XBOW_SUP <name> (<resmake>)
+MAKEITEM=i_XBOW_SUP
+
+ON=i_HXBOW_SUP <name> (<resmake>)
+MAKEITEM=i_HXBOW_SUP
+
+
+[SKILLMENU sm_bows_medium] // Exceptional Bows
+Exceptional Bows
+
+
+ON=i_XBOW_EXCEP <name> (<resmake>)
+MAKEITEM=i_XBOW_EXCEP
+
+ON=i_HXBOW_EXCEP <name> (<resmake>)
+MAKEITEM=i_HXBOW_EXCEP
+
+ON=i_BOW_EXCEP <name> (<resmake>)
+MAKEITEM=i_BOW_EXCEP
+
+
+
+
+[SKILLMENU sm_color_bows]
+Color Bows
+
+ON=i_xbow_Copper Copper Bows
+SKILLMENU=sm_Copper_bows
+
+ON=i_xbow_Shadow Shadow Bows
+SKILLMENU=sm_Shadow_bows
+
+ON=i_xbow_Valorite Valorite Bows
+SKILLMENU=sm_Valorite_bows
+
+ON=i_xbow_Verite Verite Bows
+SKILLMENU=sm_Verite_bows
+
+ON=i_xbow_Bloodrock Bloodrock Bows
+SKILLMENU=sm_Bloodrock_bows
+
+ON=i_xbow_blackrock Blackrock Bows
+SKILLMENU=sm_Blackrock_bows
+
+ON=i_xbow_mytheril Mytheril Bows
+SKILLMENU=sm_mytheril_bows
+
+
+[SKILLMENU sm_copper_bows]
+Copper Bows
+
+ON=i_bow_copper <name> (<resmake>)
+MAKEITEM=i_bow_copper
+
+ON=i_xbow_copper <name> (<resmake>)
+MAKEITEM=i_xbow_copper
+
+[SKILLMENU sm_Shadow_bows]
+Shadow Bows
+
+ON=i_bow_shadow <name> (<resmake>)
+MAKEITEM=i_bow_shadow
+
+ON=i_xbow_shadow <name> (<resmake>)
+MAKEITEM=i_xbow_shadow
+
+
+[SKILLMENU sm_Valorite_bows]
+Valorite Bows
+
+ON=i_bow_valorite <name> (<resmake>)
+MAKEITEM=i_bow_valorite
+
+ON=i_xbow_valorite <name> (<resmake>)
+MAKEITEM=i_xbow_valorite
+
+[SKILLMENU sm_Verite_bows]
+Verite Bows
+
+ON=i_bow_verite <name> (<resmake>)
+MAKEITEM=i_bow_verite
+
+ON=i_xbow_verite <name> (<resmake>)
+MAKEITEM=i_xbow_verite
+
+[SKILLMENU sm_Bloodrock_bows]
+Bloodrock Bows
+
+
+ON=i_bow_bloodrock <name> (<resmake>)
+MAKEITEM=i_bow_bloodrock
+
+ON=i_xbow_bloodrock <name> (<resmake>)
+MAKEITEM=i_xbow_bloodrock
+
+[SKILLMENU sm_Blackrock_bows]
+Blackrock Bows
+
+
+
+ON=i_bow_blackrock <name> (<resmake>)
+MAKEITEM=i_bow_blackrock
+
+ON=i_xbow_blackrock <name> (<resmake>)
+MAKEITEM=i_xbow_blackrock
+
+
+[SKILLMENU sm_Mytheril_bows]
+Mytheril Bows
+
+
+ON=i_bow_mytheril <name> (<resmake>)
+MAKEITEM=i_bow_mytheril
+
+ON=i_xbow_mytheril <name> (<resmake>)
+MAKEITEM=i_xbow_mytheril

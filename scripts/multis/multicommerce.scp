@@ -1,0 +1,77 @@
+[MULTIDEF 03e7]
+DEFNAME=m_multi_commerce
+NAME=Commerce Room
+TYPE=T_MULTI
+VALUE=0
+
+MULTIREGION=-15,-17,17,18
+TEVENTS=r_commerce_room
+
+[REGIONTYPE r_commerce_room]
+DEFNAME=r_commerce_room
+
+ON=@Enter
+	SRC.MESSAGE @,,1 Welcome to the Commerce Room
+
+[ITEMDEF i_remove_items_decay]
+ID=i_crystal_ball
+NAME=Remove items on decay [DO NOT REMOVE]
+WEIGHT=200
+TYPE=t_eq_script
+
+ON=@Create
+    ATTR=attr_decay|attr_move_never|attr_invis
+    TAG.RANGE 20
+    TIMER=120
+
+ON=@Timer
+	IF (<TAG0.NO_REMOVE_ITEMS> == 0)
+		FORITEMS <dTAG0.RANGE>
+			IF (<TYPE> != t_spell) && (<TYPE> != t_multi) && (<TYPE> != t_water) && (<TYPE> != t_rock) && (<TYPE> != t_wall) && !(<ATTR> & attr_move_never) && !(<ATTR> & attr_invis) && !(<ATTR> & attr_static)
+				SERV.LOG Removing decayed item <id> <uid> <name> <attr> <type>.
+				REMOVE
+			ENDIF
+		ENDFOR
+	ENDIF
+
+	REF1 <UID>
+
+	IF (<TAG0.REMOVE_MOUNTS>)
+		FORCHARS <dTAG0.RANGE>
+			IF (<REGION.UID> == <REF1.REGION.UID>) && (<BODY> != c_man) && (<BODY> != c_woman)
+				IF (<EVAL <SERV.TIME> - <TAG.REMOVAL_TIMER>> > 600) && (<EVAL <SERV.TIME> - <TAG.REMOVAL_TIMER>> < 1800)
+					SERV.LOG Removing mount <id> <uid> <name> <color>.
+					REMOVE
+				ELSE
+					TAG.REMOVAL_TIMER <SERV.TIME>
+				ENDIF
+			ENDIF
+		ENDFOR
+	ENDIF
+
+	TIMER = 120
+	RETURN 1
+
+
+[ITEMDEF i_tile_commerce]
+NAME=Commerce Entry Checkpoint
+ID=0497
+TYPE=t_normal
+DISPID=0495
+
+ON=@Create
+	ATTR = 090
+	COLOR = 058
+	TIMER = 120
+
+ON=@Step
+	IF !((<SRC.DIR> == 2) || (<SRC.DIR> == 3) || (<SRC.DIR> == 4) || (<SRC.DIR> == 5) || (<SRC.DIR> == 6))
+	    IF ((<SRC.HITS> < <SRC.MAXHITS>) || (<SRC.MANA> < <SRC.INT>) || !(<SRC.ISPLAYER>)) && !(<SRC.ISGM>)
+	    	IF (<SRC.REGION.SAFE>)
+	    		SRC.GO <P.X>,<EVAL <P.Y> + 2>,<P.Z>,<P.MAP>
+	    	ENDIF
+
+	        SRC.SYSMESSAGE @,,1 Voce so pode entrar na commerce com Hits e Mana Full.
+	        RETURN 1
+	    ENDIF
+	ENDIF

@@ -1,0 +1,1747 @@
+/////////////////////////////////
+////////// Wood Weapons /////////
+/////////////////////////////////
+[ITEMDEF i_wood_sword]
+ID=i_sword_viking
+Name=Wood Sword
+RESOURCES=10 i_log
+SKILLMAKE=Carpentry 20.0, t_carpentry
+WEIGHT=2
+TYPE=T_WEAPON_SWORD
+SPEED=90
+FLIP=1
+VALUE=100
+DAM=2,3
+SPEED=90
+SKILL=Swordsmanship
+REQSTR=10
+TWOHANDS=N
+
+CATEGORY=Novos Itens diversos
+SUBSECTION=Armas de madeira
+DESCRIPTION=Wood Sword
+DUPELIST=013ba
+
+ON=@Create
+HITPOINTS=10
+COLOR=444
+
+
+[ITEMDEF i_wood_mace]
+ID=i_maul
+NAME=Wood Mace
+WEIGHT=2
+TYPE=T_WEAPON_MACE_SMITH
+RESOURCES=10 i_log
+SKILLMAKE=Carpentry 20.0, t_carpentry
+FLIP=1
+SPEED=90
+DAM=2,3
+SKILL=Mace Fighting
+REQSTR=20
+TWOHANDS=N
+DUPELIST=0143b
+
+CATEGORY=Novos Itens diversos
+SUBSECTION=Armas de madeira
+DESCRIPTION=Wood Mace
+
+
+ON=@Create
+HITPOINTS=10
+COLOR=444
+
+
+
+[ITEMDEF i_wood_kryss]
+ID=i_kryss
+NAME=Wood Kryss
+RESOURCES=10 i_log
+SKILLMAKE=Carpentry 20.0, t_carpentry
+FLIP=1
+DAM=2,3
+SPEED=90
+WEIGHT=2
+TYPE=T_WEAPON_FENCE
+SKILL=Fencing
+REQSTR=10
+TWOHANDS=N
+DUPELIST=01401
+
+CATEGORY=Novos Itens diversos
+SUBSECTION=Armas de madeira
+DESCRIPTION=Wood Kryss
+
+
+
+
+ON=@Create
+HITPOINTS=10
+COLOR=444
+
+/////////////////////////////////
+////// Blood Weapons ////////////
+/////////////////////////////////
+
+
+[ITEMDEF i_Blood_katana]
+NAME=Magic Blood Katana
+TYPE=t_weapon_sword
+ID=013fe
+WEIGHT=6
+VALUE=36
+REPAIR=1
+SKILL=Swordsmanship
+DAM=10,14
+REQSTR=80
+SPEED=75
+TWOHANDS=N
+tevents=t_blood_weapon
+
+ON=@CREATE
+hitpoints = {40 60}
+COLOR=021
+
+[ITEMDEF i_Blood_axe_exec]
+NAME=Magic Blood Executioner's Axe
+TYPE=t_weapon_sword
+ID=00f45
+WEIGHT=8
+VALUE=32
+REPAIR=1
+SKILL=Swordsmanship
+DAM=12,17
+REQSTR=90
+SPEED=57
+TWOHANDS=Y
+tevents=t_blood_weapon
+
+ON=@CREATE
+COLOR=021
+hitpoints = {40 60}
+
+
+[ITEMDEF i_blood_axe_battle_large]
+NAME=Magic Blood Large Battle Axe
+TYPE=t_weapon_sword
+ID=013fa
+DAM=12,18
+SPEED=55
+REPAIR=1
+SKILL=Swordsmanship
+REQSTR=80
+TWOHANDS=Y
+VALUE=36
+WEIGHT=7
+tevents=t_blood_weapon
+
+ON=@CREATE
+hitpoints = {40 60}
+COLOR=021
+
+
+[ITEMDEF i_blood_mace]
+NAME=Magic Blood Mace
+TYPE=t_weapon_mace_sharp
+ID=0f5d
+DAM=12,18
+SPEED=55
+REPAIR=1
+SKILL=Macefighting
+REQSTR=40
+TWOHANDS=N
+VALUE=36
+WEIGHT=7
+tevents=t_blood_weapon
+
+ON=@CREATE
+hitpoints = {40 60}
+COLOR=021
+
+[ITEMDEF i_blood_kryss]
+NAME=Magic Blood Kryss
+TYPE=t_weapon_fence
+ID=01400
+DAM=11,15
+SPEED=70
+REPAIR=1
+SKILL=Fencing
+REQSTR=95
+TWOHANDS=N
+VALUE=36
+WEIGHT=8
+tevents=t_blood_weapon
+
+ON=@CREATE
+hitpoints = {40 60}
+COLOR=021
+
+
+[ITEMDEF i_blood_mace_war]
+NAME=Magic Blood War Mace
+TYPE=t_weapon_mace_smith
+ID=01406
+DAM=15,18
+SPEED=55
+REPAIR=1
+SKILL=Macefighting
+REQSTR=90
+TWOHANDS=N
+VALUE=32
+WEIGHT=17
+tevents=t_blood_weapon
+
+ON=@CREATE
+COLOR=021
+hitpoints = {40 60}
+
+[ITEMDEF i_blood_hammer_War]
+NAME=Magic Blood War Hammer
+TYPE=t_weapon_mace_smith
+ID=01438
+DAM=13,16
+SPEED=60
+REPAIR=1
+SKILL=Macefighting
+REQSTR=70
+TWOHANDS=Y
+VALUE=24
+WEIGHT=10
+tevents=t_blood_weapon
+
+ON=@CREATE
+COLOR=021
+hitpoints = {40 60}
+
+[ITEMDEF i_blood_pitchfork]
+NAME=Magic Blood Pitchfork
+TYPE=t_weapon_fence
+ID=0e88
+DAM=14,17
+SPEED=55
+REPAIR=1
+SKILL=Fencing
+REQSTR=60
+TWOHANDS=Y
+VALUE=20
+WEIGHT=10
+tevents=t_blood_weapon
+
+ON=@CREATE
+hitpoints = {40 60}
+COLOR=021
+
+
+[ITEMDEF i_blood_bardiche]
+NAME=Magic Blood Bardiche
+TYPE=t_weapon_sword
+ID=0f4e
+DAM=15,18
+SPEED=59
+REPAIR=1
+SKILL=Swordsmanship
+REQSTR=90
+TWOHANDS=Y
+VALUE=58
+WEIGHT=7
+tevents=t_blood_weapon
+
+ON=@CREATE
+COLOR=021
+hitpoints = {40 60}
+
+[ITEMDEF i_blood_halberd]
+NAME=Magic Blood Halberd
+TYPE=t_weapon_sword
+ID=0143f
+DAM=16,19
+SPEED=55
+REPAIR=1
+SKILL=Swordsmanship
+REQSTR=90
+TWOHANDS=Y
+VALUE=64
+WEIGHT=16
+tevents=t_blood_weapon
+
+ON=@CREATE
+COLOR=021
+HITPOINTS=31 80
+
+[ITEMDEF i_blood_spear]
+NAME=Magic Blood Spear
+TYPE=t_weapon_fence
+ID=0F62
+DAM=12,15
+SPEED=55
+REPAIR=1
+SKILL=Fencing
+REQSTR=50
+TWOHANDS=Y
+VALUE=36
+WEIGHT=8
+tevents=t_blood_weapon
+
+ON=@CREATE
+COLOR=021
+hitpoints = {40 60}
+
+[ITEMDEF i_blood_war_fork]
+NAME=Magic Blood War Fork
+TYPE=t_weapon_fence
+ID=i_war_fork
+DAM=14,19
+SPEED=64
+REPAIR=1
+SKILL=Fencing
+REQSTR=75
+TWOHANDS=Y
+VALUE=28
+WEIGHT=9
+tevents=t_blood_weapon
+
+ON=@CREATE
+COLOR=021
+hitpoints = {40 60}
+
+
+[ITEMDEF i_blood_scimitar]
+NAME=Magic Blood Scimitar
+TYPE=t_weapon_sword
+ID=013b5
+DAM=12,14
+SPEED=64
+REPAIR=1
+SKILL=Swordsmanship
+REQSTR=55
+TWOHANDS=N
+VALUE=42
+WEIGHT=5
+tevents=t_blood_weapon
+
+ON=@CREATE
+hitpoints = {40 60}
+COLOR=021
+
+[ITEMDEF i_blood_longsword]
+NAME=Magic Blood Long Sword
+TYPE=t_weapon_sword
+ID=0F60
+DAM=11,14
+SPEED=67
+REPAIR=1
+SKILL=Swordsmanship
+REQSTR=50
+TWOHANDS=N
+VALUE=36
+WEIGHT=5
+tevents=t_blood_weapon
+
+ON=@CREATE
+	hitpoints = {40 60}
+	COLOR=021
+
+[typedef t_blood_weapon]
+on=@equip
+	src.events +e_blood_weapon
+
+on=@unequip
+	src.events -e_blood_weapon
+
+[events e_blood_weapon]
+on=@hit
+	IF (<src.npc> == brain_dragon)
+			argn1 = <eval <argn1>*2>
+		if (<r1,3> == 1)
+			SRC.SOUND=SND_SPELL_POISON
+			src.effect 3,i_fx_glow_spike,1,20,20,0
+		endif
+	endif
+
+[typedef t_silver_weapon]
+on=@equip
+	src.events +e_silver_weapon
+
+on=@unequip
+	src.events -e_silver_weapon
+
+[events e_silver_weapon]
+on=@hit
+	IF (strmatch(*mummy*,<src.baseid>)) || (strmatch(*liche*,<src.baseid>)) || (strmatch(*skeleton*,<src.baseid>)) || (strmatch(*zombie*,<src.baseid>)) || (c_m_ghoul == <src.baseid>) || (c_m_ghost == <src.baseid>) || (c_m_wraith == <src.baseid>) || (c_spectre == <src.baseid>) || (c_rotting_corpse == <src.baseid>) || (c_grim_reaper == <src.baseid>)
+			argn1 = <eval <argn1>*2>
+		if (<r1,3> == 1)
+			SRC.SOUND=SND_SPELL_POISON
+			src.effect 3,i_fx_glow_spike,1,20,20,0
+		endif
+	endif
+
+[ITEMDEF i_silver_katana]
+NAME=Magic Silver Katana
+TYPE=t_weapon_sword
+ID=013fe
+WEIGHT=6
+VALUE=36
+REPAIR=1
+SKILL=Swordsmanship
+DAM=10,14
+REQSTR=80
+SPEED=75
+TWOHANDS=N
+tevents=t_silver_weapon
+
+ON=@CREATE
+hitpoints = {40 60}
+color=0231
+
+[ITEMDEF i_silver_axe_exec]
+NAME=Magic Silver Executioner's Axe
+TYPE=t_weapon_sword
+ID=00f45
+WEIGHT=8
+VALUE=32
+REPAIR=1
+SKILL=Swordsmanship
+DAM=12,17
+REQSTR=90
+SPEED=57
+TWOHANDS=Y
+tevents=t_silver_weapon
+
+ON=@CREATE
+color=0231
+hitpoints = {40 60}
+
+
+[ITEMDEF i_silver_axe_battle_large]
+NAME=Magic Silver Large Battle Axe
+TYPE=t_weapon_sword
+ID=013fa
+DAM=12,18
+SPEED=55
+REPAIR=1
+SKILL=Swordsmanship
+REQSTR=80
+TWOHANDS=Y
+VALUE=36
+WEIGHT=7
+tevents=t_silver_weapon
+
+ON=@CREATE
+hitpoints = {40 60}
+color=0231
+
+
+[ITEMDEF i_silver_mace]
+NAME=Magic Silver Mace
+TYPE=t_weapon_mace_sharp
+ID=0f5d
+DAM=12,18
+SPEED=55
+REPAIR=1
+SKILL=Macefighting
+REQSTR=40
+TWOHANDS=N
+VALUE=36
+WEIGHT=7
+tevents=t_silver_weapon
+
+ON=@CREATE
+hitpoints = {40 60}
+color=0231
+
+[ITEMDEF i_silver_kryss]
+NAME=Magic Silver Kryss
+TYPE=t_weapon_fence
+ID=01400
+DAM=11,15
+SPEED=70
+REPAIR=1
+SKILL=Fencing
+REQSTR=95
+TWOHANDS=N
+VALUE=36
+WEIGHT=8
+tevents=t_silver_weapon
+
+ON=@CREATE
+hitpoints = {40 60}
+color=0231
+
+
+[ITEMDEF i_silver_mace_war]
+NAME=Magic Silver War Mace
+TYPE=t_weapon_mace_smith
+ID=01406
+DAM=15,18
+SPEED=55
+REPAIR=1
+SKILL=Macefighting
+REQSTR=90
+TWOHANDS=N
+VALUE=32
+WEIGHT=17
+tevents=t_silver_weapon
+
+ON=@CREATE
+color=0231
+hitpoints = {40 60}
+
+[ITEMDEF i_silver_hammer_War]
+NAME=Magic Silver War Hammer
+TYPE=t_weapon_mace_smith
+ID=01438
+DAM=13,16
+SPEED=60
+REPAIR=1
+SKILL=Macefighting
+REQSTR=70
+TWOHANDS=Y
+VALUE=24
+WEIGHT=10
+tevents=t_silver_weapon
+
+ON=@CREATE
+color=0231
+hitpoints = {40 60}
+
+[ITEMDEF i_silver_pitchfork]
+NAME=Magic Silver Pitchfork
+TYPE=t_weapon_fence
+ID=0e88
+DAM=14,17
+SPEED=55
+REPAIR=1
+SKILL=Fencing
+REQSTR=60
+TWOHANDS=Y
+VALUE=20
+WEIGHT=10
+tevents=t_silver_weapon
+
+ON=@CREATE
+hitpoints = {40 60}
+color=0231
+
+
+[ITEMDEF i_silver_bardiche]
+NAME=Magic Silver Bardiche
+TYPE=t_weapon_sword
+ID=0f4e
+DAM=15,18
+SPEED=59
+REPAIR=1
+SKILL=Swordsmanship
+REQSTR=90
+TWOHANDS=Y
+VALUE=58
+WEIGHT=7
+tevents=t_silver_weapon
+
+ON=@CREATE
+color=0231
+hitpoints = {40 60}
+
+[ITEMDEF i_silver_halberd]
+NAME=Magic Silver Halberd
+TYPE=t_weapon_sword
+ID=0143f
+DAM=16,19
+SPEED=55
+REPAIR=1
+SKILL=Swordsmanship
+REQSTR=90
+TWOHANDS=Y
+VALUE=64
+WEIGHT=16
+tevents=t_silver_weapon
+
+ON=@CREATE
+color=0231
+HITPOINTS=31 80
+
+[ITEMDEF i_silver_spear]
+NAME=Magic Silver Spear
+TYPE=t_weapon_fence
+ID=0F62
+DAM=12,15
+SPEED=55
+REPAIR=1
+SKILL=Fencing
+REQSTR=50
+TWOHANDS=Y
+VALUE=36
+WEIGHT=8
+tevents=t_silver_weapon
+
+ON=@CREATE
+color=0231
+hitpoints = {40 60}
+
+[ITEMDEF i_silver_war_fork]
+NAME=Magic Silver War Fork
+TYPE=t_weapon_fence
+ID=i_war_fork
+DAM=14,19
+SPEED=64
+REPAIR=1
+SKILL=Fencing
+REQSTR=75
+TWOHANDS=Y
+VALUE=28
+WEIGHT=9
+tevents=t_silver_weapon
+
+ON=@CREATE
+color=0231
+hitpoints = {40 60}
+
+
+[ITEMDEF i_silver_scimitar]
+NAME=Magic Silver Scimitar
+TYPE=t_weapon_sword
+ID=013b5
+DAM=12,14
+SPEED=64
+REPAIR=1
+SKILL=Swordsmanship
+REQSTR=55
+TWOHANDS=N
+VALUE=42
+WEIGHT=5
+tevents=t_silver_weapon
+
+ON=@CREATE
+hitpoints = {40 60}
+color=0231
+
+[ITEMDEF i_silver_longsword]
+NAME=Magic Silver Long Sword
+TYPE=t_weapon_sword
+ID=0F60
+DAM=11,14
+SPEED=67
+REPAIR=1
+SKILL=Swordsmanship
+REQSTR=50
+TWOHANDS=N
+VALUE=36
+WEIGHT=5
+tevents=t_silver_weapon
+
+ON=@CREATE
+	hitpoints = {40 60}
+	color=0231
+
+
+///////////////////////////
+///////// BARDICHES //////
+//////////////////////////
+
+
+[ITEMDEF i_bronze_bardiche]
+ID=i_bardiche
+NAME=Bronze Bardiche
+RESOURCES=18 i_ingot_bronze
+TYPE=T_WEAPON_SWORD
+FLIP=1
+DAM=26,31
+SPEED=40
+SKILL=Swordsmanship
+REQSTR=45
+TWOHANDS=Y
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 83.0
+VALUE=400
+
+ON=@CREATE
+	HITPOINTS 60
+	COLOR Color_o_bronze
+	TAG.BRONZE 1
+
+
+[ITEMDEF i_verite_bardiche]
+ID=i_bardiche
+NAME=Verite Bardiche
+RESOURCES=18 i_ingot_verite
+TYPE=T_WEAPON_SWORD
+FLIP=1
+DAM=26,31
+SPEED=40
+SKILL=Swordsmanship
+REQSTR=45
+TWOHANDS=Y
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 92.0
+VALUE=400
+
+ON=@CREATE
+	HITPOINTS 60
+	COLOR Color_o_verite
+	TAG.VERITE 1
+
+
+[ITEMDEF i_bloodrock_bardiche]
+ID=i_bardiche
+NAME=Blood Rock Bardiche
+RESOURCES=18 i_ingot_bloodrock
+TYPE=T_WEAPON_SWORD
+FLIP=1
+DAM=26,31
+SPEED=40
+SKILL=Swordsmanship
+REQSTR=45
+TWOHANDS=Y
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 97.0
+VALUE=400
+
+ON=@CREATE
+	HITPOINTS 60
+	COLOR Color_o_bloodrock
+	TAG.BLOOD 1
+
+
+[ITEMDEF i_mytheril_bardiche]
+ID=i_bardiche
+NAME=Mytheril Bardiche
+RESOURCES=18 i_ingot_mytheril
+TYPE=T_WEAPON_SWORD
+FLIP=1
+DAM=26,31
+SPEED=40
+SKILL=Swordsmanship
+REQSTR=45
+TWOHANDS=Y
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 100.0
+VALUE=400
+
+ON=@CREATE
+	HITPOINTS 60
+	COLOR Color_o_mytheril
+	TAG.MYTHERIL 1
+
+////////////////////////////
+//////// WAR FORKS /////////
+////////////////////////////
+
+
+
+
+
+[ITEMDEF i_bronze_war_fork]
+ID=i_war_fork
+NAME=Bronze War Fork
+RESOURCES=18 i_ingot_bronze
+TYPE=T_WEAPON_FENCE
+FLIP=1
+DAM=26,31
+SPEED=40
+SKILL=Fencing
+REQSTR=45
+TWOHANDS=Y
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 83.0
+VALUE=400
+
+ON=@CREATE
+	HITPOINTS 60
+	COLOR Color_o_bronze
+	TAG.BRONZE 1
+
+[ITEMDEF i_verite_war_fork]
+ID=i_war_fork
+NAME=Verite War Fork
+RESOURCES=18 i_ingot_verite
+TYPE=T_WEAPON_FENCE
+FLIP=1
+DAM=26,31
+SPEED=40
+SKILL=Fencing
+REQSTR=45
+TWOHANDS=Y
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 92.0
+VALUE=400
+
+ON=@CREATE
+	HITPOINTS 60
+	COLOR Color_o_verite
+	TAG.VERITE 1
+
+
+[ITEMDEF i_bloodrock_war_fork]
+ID=i_war_fork
+NAME=Blood Rock War Fork
+RESOURCES=18 i_ingot_bloodrock
+TYPE=T_WEAPON_FENCE
+FLIP=1
+DAM=26,31
+SPEED=40
+SKILL=Fencing
+REQSTR=45
+TWOHANDS=Y
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 97.0
+VALUE=400
+
+ON=@CREATE
+	HITPOINTS 60
+	COLOR Color_o_bloodrock
+	TAG.BLOOD 1
+
+
+[ITEMDEF i_mytheril_war_fork]
+ID=i_war_fork
+NAME=Mytheril War Fork
+RESOURCES=18 i_ingot_mytheril
+TYPE=T_WEAPON_FENCE
+FLIP=1
+DAM=26,31
+SPEED=40
+SKILL=Fencing
+REQSTR=45
+TWOHANDS=Y
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 100.0
+VALUE=400
+
+ON=@CREATE
+	HITPOINTS 60
+	COLOR Color_o_mytheril
+	TAG.MYTHERIL 1
+
+
+
+////////////////////////////
+/////////// AN AXE /////////
+////////////////////////////
+
+
+
+[ITEMDEF i_bronze_axe]
+ID=i_axe
+NAME=Bronze Axe
+RESOURCES=18 i_ingot_bronze
+TYPE=T_WEAPON_SWORD
+FLIP=1
+DAM=25,30
+SPEED=60
+SKILL=Swordsmanship
+REQSTR=45
+TWOHANDS=Y
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 83.0
+VALUE=400
+
+ON=@CREATE
+	HITPOINTS 60
+	COLOR Color_o_bronze
+	TAG.BRONZE 1
+
+
+[ITEMDEF i_verite_axe]
+ID=i_axe
+NAME=Verite Axe
+RESOURCES=18 i_ingot_verite
+TYPE=T_WEAPON_SWORD
+FLIP=1
+DAM=25,30
+SPEED=60
+SKILL=Swordsmanship
+REQSTR=45
+TWOHANDS=Y
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 92.0
+VALUE=400
+
+ON=@CREATE
+	HITPOINTS 60
+	COLOR Color_o_verite
+	TAG.VERITE 1
+
+
+[ITEMDEF i_bloodrock_axe]
+ID=i_axe
+NAME=Blood Rock Axe
+RESOURCES=18 i_ingot_bloodrock
+TYPE=T_WEAPON_SWORD
+FLIP=1
+DAM=25,30
+SPEED=60
+SKILL=Swordsmanship
+REQSTR=45
+TWOHANDS=Y
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 97.0
+VALUE=400
+
+ON=@CREATE
+	HITPOINTS 60
+	COLOR Color_o_bloodrock
+	TAG.BLOOD 1
+
+
+[ITEMDEF i_mytheril_axe]
+ID=i_axe
+NAME=Mytheril Axe
+RESOURCES=18 i_ingot_mytheril
+TYPE=T_WEAPON_SWORD
+FLIP=1
+DAM=25,30
+SPEED=60
+SKILL=Swordsmanship
+REQSTR=45
+TWOHANDS=Y
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 100.0
+VALUE=400
+
+ON=@CREATE
+	HITPOINTS 60
+	COLOR Color_o_mytheril
+	TAG.MYTHERIL 1
+
+
+
+//////////////////////////////
+///////// Battle Axe /////////
+//////////////////////////////
+
+
+
+[ITEMDEF i_bronze_axe_battle]
+ID=i_axe_battle
+NAME=Bronze Battle Axe
+RESOURCES=18 i_ingot_bronze
+TYPE=T_WEAPON_SWORD
+FLIP=1
+DAM=25,29
+SPEED=53
+SKILL=Swordsmanship
+REQSTR=45
+TWOHANDS=Y
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 83.0
+VALUE=530
+
+ON=@CREATE
+	HITPOINTS 60
+	COLOR Color_o_bronze
+	TAG.BRONZE 1
+
+
+[ITEMDEF i_verite_axe_battle]
+ID=i_axe_battle
+NAME=Verite Battle Axe
+RESOURCES=18 i_ingot_verite
+TYPE=T_WEAPON_SWORD
+FLIP=1
+DAM=25,29
+SPEED=53
+SKILL=Swordsmanship
+REQSTR=45
+TWOHANDS=Y
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 92.0
+VALUE=530
+
+ON=@CREATE
+	HITPOINTS 60
+	COLOR Color_o_verite
+	TAG.VERITE 1
+
+
+[ITEMDEF i_bloodrock_axe_battle]
+ID=i_axe_battle
+NAME=Blood Rock Battle Axe
+RESOURCES=18 i_ingot_bloodrock
+TYPE=T_WEAPON_SWORD
+FLIP=1
+DAM=25,29
+SPEED=53
+SKILL=Swordsmanship
+REQSTR=45
+TWOHANDS=Y
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 97.0
+VALUE=530
+
+ON=@CREATE
+	HITPOINTS 60
+	COLOR Color_o_bloodrock
+	TAG.BLOOD 1
+
+
+[ITEMDEF i_mytheril_axe_battle]
+ID=i_axe_battle
+NAME=Mytheril Battle Axe
+RESOURCES=18 i_ingot_mytheril
+TYPE=T_WEAPON_SWORD
+FLIP=1
+DAM=25,29
+SPEED=53
+SKILL=Swordsmanship
+REQSTR=45
+TWOHANDS=Y
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 100.0
+VALUE=530
+
+ON=@CREATE
+	HITPOINTS 60
+	COLOR Color_o_mytheril
+	TAG.MYTHERIL 1
+
+/////////////////////////////////
+////////// BROADSWORD ///////////
+/////////////////////////////////
+
+
+
+[ITEMDEF i_bronze_sword_broad]
+ID=i_sword_broad
+NAME=Bronze BroadSword
+RESOURCES=18 i_ingot_bronze
+TYPE=T_WEAPON_SWORD
+FLIP=1
+DAM=22,26
+SPEED=70
+SKILL=Swordsmanship
+REQSTR=45
+TWOHANDS=N
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 83.0
+VALUE=400
+
+ON=@CREATE
+	HITPOINTS 60
+	COLOR Color_o_bronze
+	TAG.BRONZE 1
+
+[ITEMDEF i_verite_sword_broad]
+ID=i_sword_broad
+NAME=Verite BroadSword
+RESOURCES=18 i_ingot_verite
+TYPE=T_WEAPON_SWORD
+FLIP=1
+DAM=22,26
+SPEED=70
+SKILL=Swordsmanship
+REQSTR=45
+TWOHANDS=N
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 92.0
+VALUE=400
+
+ON=@CREATE
+	HITPOINTS 60
+	COLOR Color_o_verite
+	TAG.VERITE 1
+
+
+[ITEMDEF i_bloodrock_sword_broad]
+ID=i_sword_broad
+NAME=Blood Rock BroadSword
+RESOURCES=18 i_ingot_bloodrock
+TYPE=T_WEAPON_SWORD
+FLIP=1
+DAM=22,26
+SPEED=70
+SKILL=Swordsmanship
+REQSTR=45
+TWOHANDS=N
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 97.0
+VALUE=400
+
+ON=@CREATE
+	HITPOINTS 60
+	COLOR Color_o_bloodrock
+	TAG.BLOOD 1
+
+
+[ITEMDEF i_mytheril_sword_broad]
+ID=i_sword_broad
+NAME=Mytheril BroadSword
+RESOURCES=18 i_ingot_mytheril
+TYPE=T_WEAPON_SWORD
+FLIP=1
+DAM=22,26
+SPEED=70
+SKILL=Swordsmanship
+REQSTR=45
+TWOHANDS=N
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 100.0
+VALUE=400
+
+ON=@CREATE
+	HITPOINTS 60
+	COLOR Color_o_mytheril
+	TAG.MYTHERIL 1
+
+////////////////////////////////
+/////////// SPEAR //////////////
+////////////////////////////////
+
+[ITEMDEF i_bronze_spear]
+ID=i_spear
+NAME=Bronze Spear
+RESOURCES=18 i_ingot_bronze
+TYPE=T_WEAPON_FENCE
+FLIP=1
+DAM=26,31
+SPEED=40
+SKILL=Fencing
+REQSTR=45
+TWOHANDS=Y
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 83.0
+VALUE=400
+
+ON=@CREATE
+	HITPOINTS 60
+	COLOR Color_o_bronze
+	TAG.BRONZE 1
+
+[ITEMDEF i_verite_spear]
+ID=i_spear
+NAME=Verite Spear
+RESOURCES=18 i_ingot_verite
+TYPE=T_WEAPON_FENCE
+FLIP=1
+DAM=26,31
+SPEED=40
+SKILL=Fencing
+REQSTR=45
+TWOHANDS=Y
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 92.0
+VALUE=400
+
+ON=@CREATE
+	HITPOINTS 60
+	COLOR Color_o_verite
+	TAG.VERITE 1
+
+
+[ITEMDEF i_bloodrock_spear]
+ID=i_spear
+NAME=Blood Rock Spear
+RESOURCES=18 i_ingot_bloodrock
+TYPE=T_WEAPON_FENCE
+FLIP=1
+DAM=26,31
+SPEED=40
+SKILL=Fencing
+REQSTR=45
+TWOHANDS=Y
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 97.0
+VALUE=400
+
+ON=@CREATE
+	HITPOINTS 60
+	COLOR Color_o_bloodrock
+	TAG.BLOOD 1
+
+
+[ITEMDEF i_mytheril_spear]
+ID=i_spear
+NAME=Mytheril Spear
+RESOURCES=18 i_ingot_mytheril
+TYPE=T_WEAPON_FENCE
+FLIP=1
+DAM=26,31
+SPEED=40
+SKILL=Fencing
+REQSTR=45
+TWOHANDS=Y
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 100.0
+VALUE=400
+
+ON=@CREATE
+	HITPOINTS 60
+	COLOR Color_o_mytheril
+	TAG.MYTHERIL 1
+
+///////////////////////////////
+///////// WAR MACE ////////////
+///////////////////////////////
+
+[ITEMDEF i_bronze_mace_war]
+ID=i_mace_war
+NAME=Bronze War Mace
+RESOURCES=18 i_ingot_bronze
+TYPE=T_WEAPON_MACE_SMITH
+FLIP=1
+DAM=26,31
+SPEED=40
+SKILL=Mace Fighting
+REQSTR=45
+TWOHANDS=N
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 83.0
+VALUE=400
+
+ON=@CREATE
+	HITPOINTS 60
+	COLOR Color_o_bronze
+	TAG.BRONZE 1
+
+[ITEMDEF i_verite_mace_war]
+ID=i_mace_war
+NAME=Verite War Mace
+RESOURCES=18 i_ingot_verite
+TYPE=T_WEAPON_MACE_SMITH
+FLIP=1
+DAM=26,31
+SPEED=40
+SKILL=Mace Fighting
+REQSTR=45
+TWOHANDS=N
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 92.0
+VALUE=400
+
+ON=@CREATE
+	HITPOINTS 60
+	COLOR Color_o_verite
+	TAG.VERITE 1
+
+
+[ITEMDEF i_bloodrock_mace_war]
+ID=i_mace_war
+NAME=Blood Rock War Mace
+RESOURCES=18 i_ingot_bloodrock
+TYPE=T_WEAPON_MACE_SMITH
+FLIP=1
+DAM=26,31
+SPEED=40
+SKILL=Mace Fighting
+REQSTR=45
+TWOHANDS=N
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 97.0
+VALUE=400
+
+ON=@CREATE
+	HITPOINTS 60
+	COLOR Color_o_bloodrock
+	TAG.BLOOD 1
+
+
+[ITEMDEF i_mytheril_mace_war]
+ID=i_mace_war
+NAME=Mytheril War Mace
+RESOURCES=18 i_ingot_mytheril
+TYPE=T_WEAPON_MACE_SMITH
+FLIP=1
+DAM=26,31
+SPEED=40
+SKILL=Mace Fighting
+REQSTR=45
+TWOHANDS=N
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 100.0
+VALUE=400
+
+ON=@CREATE
+	HITPOINTS 60
+	COLOR Color_o_mytheril
+	TAG.MYTHERIL 1
+
+
+
+//////////////////////////////
+//////// WAR HAMMER //////////
+//////////////////////////////
+
+
+
+[ITEMDEF i_bronze_hammer_war]
+ID=i_hammer_war
+NAME=Bronze War Hammer
+RESOURCES=18 i_ingot_bronze
+TYPE=T_WEAPON_MACE_SMITH
+FLIP=1
+DAM=23,30
+SPEED=54
+SKILL=Mace Fighting
+REQSTR=45
+TWOHANDS=Y
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 83.0
+VALUE=540
+
+ON=@CREATE
+	HITPOINTS 60
+	COLOR Color_o_bronze
+	TAG.BRONZE 1
+
+
+[ITEMDEF i_verite_hammer_war]
+ID=i_hammer_war
+NAME=Verite War Hammer
+RESOURCES=18 i_ingot_verite
+TYPE=T_WEAPON_MACE_SMITH
+FLIP=1
+DAM=23,30
+SPEED=54
+SKILL=Mace Fighting
+REQSTR=45
+TWOHANDS=Y
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 92.0
+VALUE=540
+
+ON=@CREATE
+	HITPOINTS 60
+	COLOR Color_o_verite
+	TAG.VERITE 1
+
+
+[ITEMDEF i_bloodrock_hammer_war]
+ID=i_hammer_war
+NAME=Blood Rock War Hammer
+RESOURCES=18 i_ingot_bloodrock
+TYPE=T_WEAPON_MACE_SMITH
+FLIP=1
+DAM=23,30
+SPEED=54
+SKILL=Mace Fighting
+REQSTR=45
+TWOHANDS=Y
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 97.0
+VALUE=540
+
+ON=@CREATE
+	HITPOINTS 60
+	COLOR Color_o_bloodrock
+	TAG.BLOOD 1
+
+
+[ITEMDEF i_mytheril_hammer_war]
+ID=i_hammer_war
+NAME=Mytheril War Hammer
+RESOURCES=18 i_ingot_mytheril
+TYPE=T_WEAPON_MACE_SMITH
+FLIP=1
+DAM=23,30
+SPEED=54
+SKILL=Mace Fighting
+REQSTR=45
+TWOHANDS=Y
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 100.0
+VALUE=540
+
+ON=@CREATE
+	HITPOINTS 60
+	COLOR Color_o_mytheril
+	TAG.MYTHERIL 1
+
+[TYPEDEF t_colored_forge]
+ON=@DClick
+	IF (<SRC.BLACKSMITHING> < <TAG.SKILL_NEEDED>)
+		SRC.SYSMESSAGE @,,1 You must have <FVAL <TAG.SKILL_NEEDED>>% of Blacksmithing to coat an weapon with <TAG.ORE_NAME>.
+		RETURN 1
+	ENDIF
+
+	IF (<SRC.FINDLAYER(79).ID>)
+		SRC.SYSMESSAGE @,,1 You are already coating an weapon.
+		SRC.FINDLAYER(79).REMOVE
+		RETURN 1
+	ENDIF
+
+
+	SRC.SYSMESSAGE @,,1 Select the weapon you want to coat with <TAG.ORE_NAME>.
+	SRC.TARGETF f_coat_weapon <UID>
+	RETURN 1
+
+[FUNCTION f_coat_weapon]
+IF (<ARGV> != 1)
+	RETURN 1
+ENDIF
+
+IF (<ARGO.TYPE> != t_weapon_fence) && (<ARGO.TYPE> != t_weapon_axe) && (<ARGO.TYPE> != t_weapon_mace_sharp) && (<ARGO.TYPE> != t_weapon_sword)
+	SRC.SYSMESSAGE @,,1 The item selected is not an weapon.
+	RETURN 1
+ENDIF
+
+IF !(STRMATCH(i_except*,<ARGO.BASEID>))
+	SRC.SYSMESSAGE @,,1 Only Exceptional weapons can be coated.
+	RETURN 1
+ENDIF
+
+IF (<ARGO.COLOR> != 0)
+	SRC.SYSMESSAGE @,,1 This weapon is already coated.
+	RETURN 1
+ENDIF
+
+IF (<ARGO.TOPOBJ> != <SRC.UID>)
+	SRC.SYSMESSAGE @,,1 This weapon must be inside your bag.
+	RETURN 1
+endif
+
+REF1 <ARGV[0]>
+LOCAL.AMOUNT <EVAL (<STRARG <ARGO.RESOURCES>> * 4) / 10>
+
+IF !(<SRC.RESTEST <LOCAL.AMOUNT> <REF1.TAG.RESOURCE_NEEDED>>)
+	SRC.SYSMESSAGE You don't have <DLOCAL.AMOUNT> <REF1.TAG.ORE_NAME> ingots.
+	RETURN 1
+ENDIF
+
+SRC.NEWITEM=i_mem_coating_weapon
+NEW.LINK=<SRC.UID>
+NEW.TAG.WEAPON_UID=<ARGO.UID>
+NEW.TAG.AMOUNT=<LOCAL.AMOUNT>
+NEW.TAG.RESOURCE_NEEDED=<REF1.TAG.RESOURCE_NEEDED>
+NEW.TAG.ORE_NAME=<REF1.TAG.ORE_NAME>
+NEW.TAG.COLOR=<REF1.COLOR>
+NEW.TAG.LEVEL_ATTRIBUTE=<REF1.TAG.LEVEL_ATTRIBUTE>
+NEW.TAG.LEVEL_ATTRIBUTE_BONUS=<REF1.TAG.LEVEL_ATTRIBUTE_BONUS>
+
+NEW.EQUIP
+NEW.TIMER=1
+NEW.ATTR=082
+
+[ITEMDEF i_mem_coating_weapon]
+ID=0181d
+NAME=Coating weapon
+LAYER=79
+TYPE=t_script
+WEIGHT=0
+
+ON=@CREATE
+	ATTR=080
+	TIMER=1
+	LAYER=79
+
+ON=@TIMER
+
+IF ((<LINK.FLAGS>&statf_hidden) || (<LINK.FLAGS>&statf_invisible)) && !(<LINK.ISGM>)
+	LINK.sysmessage You were revealed by coating an weapon.
+	LINK.FLAGS <LINK.FLAGS>&~statf_hidden // tira hid
+	LINK.FLAGS <LINK.FLAGS>&~statf_invisible // tira invis
+ENDIF
+
+If (<LINK.FLAGS> & STATF_WAR)
+	LINK.SYSMESSAGE @,,1 You cant coat while in that state.
+	REMOVE
+	RETURN 0
+ENDIF
+
+REF1 <TAG.WEAPON_UID>
+
+DORAND 4
+  LINK.SAY You are coating <REF1.NAME>
+  LINK.SAY You keep coating <REF1.NAME>
+  LINK.SAY It is too hot to coat <REF1.NAME>
+  LINK.SAY <REF1.NAME> is almost coated
+ENDDO
+
+MORE <MORE>+1
+
+IF <MORE> < <R3,4>
+	TIMER 1
+	RETURN 1
+ENDIF
+
+IF !(<LINK.RESTEST <TAG.AMOUNT> <TAG.RESOURCE_NEEDED>>)
+	LINK.SYSMESSAGE You don't have <DTAG.AMOUNT> <TAG.ORE_NAME> ingots.
+	RETURN 1
+ENDIF
+
+LINK.CONSUME <TAG.AMOUNT> <TAG.RESOURCE_NEEDED>
+REF1.COLOR <TAG.COLOR>
+REF1.TAG.LEVEL_ATTRIBUTE <TAG.LEVEL_ATTRIBUTE>
+REF1.TAG.LEVEL_ATTRIBUTE_BONUS <TAG.LEVEL_ATTRIBUTE_BONUS>
+REF1.NAME <TAG.ORE_NAME> <REF1.NAME>
+
+LINK.SYSMESSAGE @,,1 You finished coating <REF1.NAME>.
+
+RETURN 0
+
+[ITEMDEF i_rusty_forge]
+ID=i_forge
+NAME=Rusty Forge
+TYPE=T_FORGE
+RESOURCES=i_ingot_ceramic 1000, i_ingot_iron 700, i_ingot_rusty 100, i_log 50
+WEIGHT=100
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Rusty Forge
+SKILLMAKE=BLACKSMITHING 76.0
+TEVENTS=t_colored_forge
+TAG.ORE_NAME=Rusty
+TAG.SKILL_NEEDED=420
+TAG.RESOURCE_NEEDED=i_ingot_rusty
+TAG.LEVEL_ATTRIBUTE=DAMAGE
+TAG.LEVEL_ATTRIBUTE_BONUS=1
+
+ON=@CREATE
+	COLOR color_o_rusty
+
+[ITEMDEF i_old_copper_forge]
+ID=i_forge
+NAME=Old Copper Forge
+TYPE=T_FORGE
+RESOURCES=i_ingot_ceramic 1000, i_ingot_iron 700, i_ingot_old_copper 100, i_log 50
+WEIGHT=100
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Old Copper Forge
+SKILLMAKE=BLACKSMITHING 78.0
+TEVENTS=t_colored_forge
+TAG.ORE_NAME=Old Copper
+TAG.SKILL_NEEDED=455
+TAG.RESOURCE_NEEDED=i_ingot_old_copper
+TAG.LEVEL_ATTRIBUTE=DAMAGE
+TAG.LEVEL_ATTRIBUTE_BONUS=2
+
+ON=@CREATE
+	COLOR color_o_oldcopper
+
+[ITEMDEF i_dull_copper_forge]
+ID=i_forge
+NAME=Dull Copper Forge
+TYPE=T_FORGE
+RESOURCES=i_ingot_ceramic 1000, i_ingot_iron 700, i_ingot_dull_copper 100, i_log 50
+WEIGHT=100
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Dull Copper Forge
+SKILLMAKE=BLACKSMITHING 80.0
+TEVENTS=t_colored_forge
+TAG.ORE_NAME=Dull Copper
+TAG.SKILL_NEEDED=450
+TAG.RESOURCE_NEEDED=i_ingot_dull_copper
+TAG.LEVEL_ATTRIBUTE=DAMAGE
+TAG.LEVEL_ATTRIBUTE_BONUS=3
+
+ON=@CREATE
+	COLOR color_o_dullcopper
+
+[ITEMDEF i_copper_forge]
+ID=i_forge
+NAME=Copper Forge
+TYPE=T_FORGE
+RESOURCES=i_ingot_ceramic 1000, i_ingot_iron 700, i_ingot_copper 100, i_log 50
+WEIGHT=100
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Copper Forge
+SKILLMAKE=BLACKSMITHING 82.0
+TEVENTS=t_colored_forge
+TAG.ORE_NAME=Copper
+TAG.SKILL_NEEDED=480
+TAG.RESOURCE_NEEDED=i_ingot_copper
+TAG.LEVEL_ATTRIBUTE=DAMAGE
+TAG.LEVEL_ATTRIBUTE_BONUS=4
+
+ON=@CREATE
+	COLOR color_o_copper
+
+[ITEMDEF i_bronze_forge]
+ID=i_forge
+NAME=Bronze Forge
+TYPE=T_FORGE
+RESOURCES=i_ingot_ceramic 1000, i_ingot_iron 700, i_ingot_bronze 100, i_log 50
+WEIGHT=100
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Bronze Forge
+SKILLMAKE=BLACKSMITHING 84.0
+TEVENTS=t_colored_forge
+TAG.ORE_NAME=Bronze
+TAG.SKILL_NEEDED=500
+TAG.RESOURCE_NEEDED=i_ingot_bronze
+TAG.LEVEL_ATTRIBUTE=DAMAGE
+TAG.LEVEL_ATTRIBUTE_BONUS=5
+
+ON=@CREATE
+	COLOR color_o_bronze
+
+[ITEMDEF i_shadow_forge]
+ID=i_forge
+NAME=Shadow Forge
+TYPE=T_FORGE
+RESOURCES=i_ingot_ceramic 1000, i_ingot_iron 700, i_ingot_shadow 100, i_log 50
+WEIGHT=100
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Shadow Forge
+SKILLMAKE=BLACKSMITHING 86.0
+TEVENTS=t_colored_forge
+TAG.ORE_NAME=Shadow
+TAG.SKILL_NEEDED=515
+TAG.RESOURCE_NEEDED=i_ingot_shadow
+TAG.LEVEL_ATTRIBUTE=DAMAGE
+TAG.LEVEL_ATTRIBUTE_BONUS=6
+
+ON=@CREATE
+	COLOR color_o_shadow
+
+[ITEMDEF i_agapite_forge]
+ID=i_forge
+NAME=Agapite Forge
+TYPE=T_FORGE
+RESOURCES=i_ingot_ceramic 1000, i_ingot_iron 700, i_ingot_agapite 100, i_log 50
+WEIGHT=100
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Agapite Forge
+SKILLMAKE=BLACKSMITHING 88.0
+TEVENTS=t_colored_forge
+TAG.ORE_NAME=Agapite
+TAG.SKILL_NEEDED=545
+TAG.RESOURCE_NEEDED=i_ingot_agapite
+TAG.LEVEL_ATTRIBUTE=DAMAGE
+TAG.LEVEL_ATTRIBUTE_BONUS=7
+
+ON=@CREATE
+	COLOR color_o_agapite
+
+[ITEMDEF i_rose_forge]
+ID=i_forge
+NAME=Rose Forge
+TYPE=T_FORGE
+RESOURCES=i_ingot_ceramic 1000, i_ingot_iron 700, i_ingot_rose 100, i_log 50
+WEIGHT=100
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Rose Forge
+SKILLMAKE=BLACKSMITHING 90.0
+TEVENTS=t_colored_forge
+TAG.ORE_NAME=Rose
+TAG.SKILL_NEEDED=570
+TAG.RESOURCE_NEEDED=i_ingot_rose
+TAG.LEVEL_ATTRIBUTE=DAMAGE
+TAG.LEVEL_ATTRIBUTE_BONUS=8
+
+ON=@CREATE
+	COLOR color_o_rose
+
+[ITEMDEF i_valorite_forge]
+ID=i_forge
+NAME=Valorite Forge
+TYPE=T_FORGE
+RESOURCES=i_ingot_ceramic 1000, i_ingot_iron 700, i_ingot_valorite 100, i_log 50
+WEIGHT=100
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Valorite Forge
+SKILLMAKE=BLACKSMITHING 94.0
+TEVENTS=t_colored_forge
+TAG.ORE_NAME=Valorite
+TAG.SKILL_NEEDED=605
+TAG.RESOURCE_NEEDED=i_ingot_valorite
+TAG.LEVEL_ATTRIBUTE=DAMAGE
+TAG.LEVEL_ATTRIBUTE_BONUS=9
+
+ON=@CREATE
+	COLOR color_o_valorite
+
+[ITEMDEF i_verite_forge]
+ID=i_forge
+NAME=Verite Forge
+TYPE=T_FORGE
+RESOURCES=i_ingot_ceramic 1000, i_ingot_iron 700, i_ingot_verite 100, i_log 50
+WEIGHT=100
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Verite Forge
+SKILLMAKE=BLACKSMITHING 96.0
+TEVENTS=t_colored_forge
+TAG.ORE_NAME=Verite
+TAG.SKILL_NEEDED=625
+TAG.RESOURCE_NEEDED=i_ingot_verite
+TAG.LEVEL_ATTRIBUTE=DAMAGE
+TAG.LEVEL_ATTRIBUTE_BONUS=10
+
+ON=@CREATE
+	COLOR color_o_verite
+
+[ITEMDEF i_bloodrock_forge]
+ID=i_forge
+NAME=Blood Rock Forge
+TYPE=T_FORGE
+RESOURCES=i_ingot_ceramic 1000, i_ingot_iron 700, i_ingot_bloodrock 100, i_log 50
+WEIGHT=100
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Blood Rock Forge
+SKILLMAKE=BLACKSMITHING 100.0
+TEVENTS=t_colored_forge
+TAG.ORE_NAME=Blood Rock
+TAG.SKILL_NEEDED=665
+TAG.RESOURCE_NEEDED=i_ingot_bloodrock
+TAG.LEVEL_ATTRIBUTE=DAMAGE
+TAG.LEVEL_ATTRIBUTE_BONUS=11
+
+ON=@CREATE
+	COLOR color_o_bloodrock
+
+[ITEMDEF i_blackrock_forge]
+ID=i_forge
+NAME=Black Rock Forge
+TYPE=T_FORGE
+RESOURCES=i_ingot_ceramic 1000, i_ingot_iron 700, i_ingot_blackrock 100, i_log 50
+WEIGHT=100
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Black Rock Forge
+SKILLMAKE=BLACKSMITHING 101.0
+TEVENTS=t_colored_forge
+TAG.ORE_NAME=Black Rock
+TAG.SKILL_NEEDED=700
+TAG.RESOURCE_NEEDED=i_ingot_blackrock
+TAG.LEVEL_ATTRIBUTE=DAMAGE
+TAG.LEVEL_ATTRIBUTE_BONUS=13
+
+ON=@CREATE
+	COLOR color_o_blackrock
+
+[ITEMDEF i_mytheril_forge]
+ID=i_forge
+NAME=Mytheril Forge
+TYPE=T_FORGE
+RESOURCES=i_ingot_ceramic 1000, i_ingot_iron 700, i_ingot_mytheril 100, i_log 50
+WEIGHT=100
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Mytheril Forge
+SKILLMAKE=BLACKSMITHING 102.5
+TEVENTS=t_colored_forge
+TAG.ORE_NAME=Mytheril
+TAG.SKILL_NEEDED=850
+TAG.RESOURCE_NEEDED=i_ingot_mytheril
+TAG.LEVEL_ATTRIBUTE=DAMAGE
+TAG.LEVEL_ATTRIBUTE_BONUS=16
+
+ON=@CREATE
+	COLOR color_o_mytheril
+
+[ITEMDEF i_adamantium_forge]
+ID=i_forge
+NAME=Adamantium Forge
+TYPE=T_FORGE
+RESOURCES=i_ingot_ceramic 1000, i_ingot_iron 700, i_ingot_adamantium 100, i_log 50
+WEIGHT=100
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Adamantium Forge
+SKILLMAKE=BLACKSMITHING 105.0
+TEVENTS=t_colored_forge
+TAG.ORE_NAME=Adamantium
+TAG.SKILL_NEEDED=1000
+TAG.RESOURCE_NEEDED=i_ingot_adamantium
+TAG.LEVEL_ATTRIBUTE=DAMAGE
+TAG.LEVEL_ATTRIBUTE_BONUS=20
+
+ON=@CREATE
+	COLOR color_o_adamantium

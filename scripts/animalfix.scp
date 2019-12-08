@@ -1,0 +1,21 @@
+[EVENTS e_animalfix]
+
+ON=@DISMOUNT
+if (<SRC.FLAGS>&statf_hidden) || (<SRC.FLAGS>&statf_invisible)
+	src.sysmessage @,,1 Nao é possivel desmontar do animal enquanto invisível.
+	RETURN 1
+endif
+
+ON=@MOUNT
+if (<SRC.FLAGS>&statf_hidden) || (<SRC.FLAGS>&statf_invisible)
+	src.sysmessage @,,1 Nao é possivel montar em um animal enquanto invisível.
+	RETURN 1
+endif
+
+IF (<ARGO.ISEVENT.E_UNDEAD_MUSTANG_DEAD>)
+	SRC.SYSMESSAGE @,,1 This is not a living creature...
+	RETURN 1
+ENDIF
+
+
+[EOF]

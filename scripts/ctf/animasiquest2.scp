@@ -1,0 +1,108 @@
+[itemdef i_chao_qanimais]
+name=Chao Commerce
+id=i_floor_marble_4
+
+ON=@CLICK
+MESSAGE @0790,0 CHECK POINT
+RETURN 1
+
+ON=@CREATE
+ATTR=010
+COLOR=0790
+
+ON=@STEP
+IF <ISEMPTY <VAR.ANIM_PT>>
+RETURN 1
+ENDIF
+IF (<SRC.BASEID>==c_dog) && ((<SRC.OWNER>) || (<SRC.tag0.owner>))
+if <src.owner>
+	REF1=<SRC.OWNER>
+elif (<SRC.tag0.owner>
+	REF1=<SRC.tag0.owner>
+endif
+REF1.TAG.PT_ANIMAIS += 3
+REGION.ALLCLIENTS SYSMESSAGE @0790,0 <UID.<SRC.OWNER>.NAME> pegou um dog e marcou 3 pontos!
+SRC.REMOVE
+ENDIF
+IF (<SRC.BASEID>==c_cat) && ((<SRC.OWNER>) || (<SRC.tag0.owner>))
+if <src.owner>
+	REF1=<SRC.OWNER>
+elif (<SRC.tag0.owner>
+	REF1=<SRC.tag0.owner>
+endif
+REF1.TAG.PT_ANIMAIS += 2
+REGION.ALLCLIENTS SYSMESSAGE @0790,0 <UID.<SRC.OWNER>.NAME> pegou um cat e marcou 2 pontos! 
+SRC.REMOVE
+ENDIF
+IF (<SRC.BASEID>==c_bird) && ((<SRC.OWNER>) || (<SRC.tag0.owner>))
+if <src.owner>
+	REF1=<SRC.OWNER>
+elif (<SRC.tag0.owner>
+	REF1=<SRC.tag0.owner>
+endif
+REF1.TAG.PT_ANIMAIS += 1
+REGION.ALLCLIENTS SYSMESSAGE @0790,0 <UID.<SRC.OWNER>.NAME> pegou um bird e marcou 1 ponto! 
+SRC.REMOVE
+ENDIF
+IF <REF1>
+ IF (<REF1.TAG.PT_ANIMAIS> > <arrayshow 0,<VAR.ANIM_PT>>)
+  REGION.ALLCLIENTS SYSMESSAGE @0790,0 <REF1.NAME> esta na frente com <dREF1.TAG.PT_ANIMAIS>!
+  VAR.ANIM_PT=<REF1.TAG.PT_ANIMAIS>,<REF1.UID>
+ ELIF (<REF1.TAG.PT_ANIMAIS> == <arrayshow 0,<VAR.ANIM_PT>>)
+  REGION.ALLCLIENTS SYSMESSAGE @0790,0 <REF1.NAME> empatou com <dREF1.TAG.PT_ANIMAIS>!
+  VAR.ANIM_PT=<VAR.ANIM_PT>,<REF1.UID>
+ ENDIF
+ENDIF
+RETURN 1
+
+
+[ITEMDEF i_stone_animaisq]
+ID=i_beeswax
+NAME=CTF Control Stone
+TYPE=t_eq_script
+
+ON=@Create
+  ATTR=090
+  var.anim_pt=0,0
+  color 079a
+  timer 900
+  serv.b @0790 O Evento Caca aos bixos foi iniciado!
+  return 0
+
+ON=@TIMER
+region.allclients sysmessage @0790,0 Tempo Esgotado! Os campeoes foram:
+region.allclients animaisq_anounce <var.anim_pt>
+region.allclients go 3501,1174,20,1
+
+[FUNCTION animaisq_anounce]
+FOR 1 <eval <ARGV> - 1>
+REF1=<arrayshow <dlocal._FOR>,<var.anim_pt>>
+sysmessage @0790,0 <REF1.NAME> com <eval <REF1.TAG.PT_ANIMAIS>> pontos!
+ENDFOR
+RETURN 1
+
+[EVENTS e_questanimais]
+ON=@SpellCast
+If (<ARGN1>==40)
+SRC.SYSMESSAGE @,,1 Magia desabilitada neste evento!
+RETURN 1
+ENDIF
+
+ON=@GETHIT
+RETURN 1
+
+ON=@Attack
+IF <SRC.ISPLAYER>
+RETURN 1
+ENDIF
+
+ON=@CLICK
+MESSAGE @0796,,1 [Taming Race!]
+MESSAGE @0796,,1 [<dTAG.PT_ANIMAIS> pontos]
+
+
+[TYPEDEF t_weapon_mace_crook]
+on=@TARGON_CHAR
+IF <SRC.isevent.e_questanimais>
+	ARGO.TAG.OWNER = <SRC.UID>
+ENDIF

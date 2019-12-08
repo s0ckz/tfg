@@ -1,0 +1,104 @@
+/////////////////////////////////
+//                             //
+//           TYPEDEF           //
+//                             //
+//                             //
+/////////////////////////////////
+
+[TYPEDEF t_sos_bottle]
+ON=@DClick
+	//serv.newitem i_treasure_map_lvl_<dtag.lvl>
+
+
+[TYPEDEF t_treasure_map]
+On=@Click
+	if <src.isgm> && <tag0.decyphered>
+		message @,,1 [<morep>]
+		return 0
+	endif
+
+on=@dclick
+	if <tag0.decyphered>
+		src.sysmessage @,,1 "As coordenadas deste mapa são: <morep>"
+		return 0
+	endif
+	if <src.cartography> < <def.treasure_carto_lvl_<dtag0.map.level>>
+		src.sysmessage @,,1 Você não é habilidoso o suficiente para decifrar esse mapa.
+		return 1
+	endif
+	serv.log Decifrou mapa '<src.account>' char '<src.name>' <src.uid> Mapa:<uid> Level: <dtag0.map.level>
+	args = <f_treasure_randcoords>
+	if <argn1> == 0
+		src.sysmessage @,,1 Você falhou em decifrar o mapa.
+		return 1
+	endif
+	name = deciphered treasure map level <dtag0.map.level>
+	tag.decyphered = 1
+	morep = <args>
+    MORE1=((<MOREX> -180)*010000)+(<MOREY> -180)
+    MORE2=((<MOREX> +180)*010000)+(<MOREY> +180)
+	PIN=152,152
+	src.sysmessage "@,,1 Você decifrou o mapa. Coordenadas: <morep>"
+	return 0
+
+
+[TYPEDEF t_treasure_chest]
+ON=@DClick
+	if (!<tag0.monsters>) && (<tag0.opened>)
+		return 0
+	endif
+	if <tag0.monsters> && <tag0.opened>
+		src.sysmessage @,,1 O baú está selado por seus guardiões.
+		return 1
+	endif
+	tag.opened = 1
+	tag.monsters = <r2,4>
+	for 1 <tag.monsters>
+		serv.newnpc <def.treasure_monsters_lvl_<dtag.map.level>>
+		new.p = <p>
+		new.homedist 6
+		new.tag.chest = <uid>
+		new.events +e_treasure_monster
+		if <dtag.map.level> > 3
+			//new.events +e_poison_immune //imune poison paralyze FICA FODA DEMAIS
+			new.events +e_antibow
+		endif
+		new.updatex
+		new.timerf 1200, remove // removido em 20 minutos
+	endfor
+	IF (<dtag.map.level> > 5)
+		TAG.MONSTERS += 1
+		SERV.NEWNPC c_m_artic_ogre
+		NEW.MAXHITS 12000
+		NEW.HITS <NEW.MAXHITS>
+		NEW.P <P>
+		NEW.HOMEDIST 6
+		NEW.TAG.CHEST = <UID>
+		NEW.EVENTS +E_TREASURE_MONSTER
+		NEW.UPDATEX
+		NEW.TIMERF 1800, REMOVE
+	ELSEIF (<dtag.map.level> > 3)
+		FOR 1 2
+			SERV.NEWNPC c_orc_lord
+			NEW.P <P>
+			NEW.HOMEDIST 6
+			NEW.STR 300
+			NEW.MAXHITS 600
+			NEW.HITS <NEW.MAXHITS>
+			NEW.TAG.CHEST = <UID>
+			//NEW.EVENTS +E_TREASURE_MONSTER
+			NEW.EVENTS +E_POISON_IMMUNE
+			NEW.UPDATEX
+			NEW.TIMERF 1200, REMOVE
+		ENDFOR
+	ENDIF
+	return 1
+
+[EVENTS e_treasure_monster]
+On=@Destroy
+	ref1 = <tag0.chest>
+	if <ref1>
+		ref1.tag.monsters --
+	endif
+
+[eof]

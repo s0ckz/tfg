@@ -1,0 +1,193 @@
+//-------------------------- /////
+////Punish System - by ClouD_BR /////
+//--------------------------
+////E-mail: alexbastos@ism.com.br ////
+//--------------------------
+////ICQ: 133411911 ////
+//--------------------------
+////Note: Edit only the defs, if you're a begginer ////
+//--------------------------
+////Please, do not take this header out :D plz? ////
+//-------------------------- /////
+///Don't mess with it if you're newbie///
+
+[COMMENT brazil_flag]
+----------------
+----------------
+||     /\     ||
+||    /  \    ||
+||   /    \   ||
+||  /      \  ||
+|| /  ____  \ ||   Brazil!
+||/  |    |  \||
+||\  |    |  /||
+|| \ |____| / ||
+||  \      /  ||
+||   \    /   ||
+||    \  /    ||
+||     \/     ||
+----------------
+----------------
+
+/////////Usage .j punish time is_the_time_in_minutes/hours/days
+/////////EX.: .j jail 3 dias
+
+//Punishes are:
+
+// JAIL = Jail the target
+
+// DELETE = deletes the target acc
+
+// BLOCK = block the target's acc permanently
+
+// BAN = block the target's acc for "time"
+
+[FUNCTION J]
+IF (<ISEMPTY <ARGS>>)
+SYSMESSAGE @07a3 Usage:
+SYSMESSAGE @07a1 .j jail time is_the_time_in_minutos/horas/dias
+RETURN 1
+ENDIF
+SYSMESSAGE @07a1 Quem voce quer punir?
+TARGETF J_ <ARGS>
+
+[FUNCTION J_]
+IF (<ARGO.ISITEM>) || !(<ARGO.ISPLAYER>)
+SYSMESSAGE @07a1 Voce so pode punir um player!.
+return 1
+ENDIF
+
+IF (<ARGO.ACCOUNT.PLEVEL> > 1) && !(<ACCOUNT.PLEVEL> > 5)
+SYSMESSAGE @07a1 Vc nao pode punir um membro da Staff!.
+RETURN 1
+ENDIF
+
+LOCAL.TMP=<OBJ>
+OBJ=<ARGO.UID>
+
+IF (STRMATCH("*delete*","<ARGS>"))
+FOR 10 1
+IF (<LOCAL._FOR>!=1)
+TRY VAR.PENA<EVAL <LOCAL._FOR>>=<VAR.PENA<EVAL <LOCAL._FOR>-1>>
+ELSE
+VAR.PENA1=<NAME> deleted the acc of <obj.name>. Date: <rtime.day>/<rtime.month>/<rtime.year>
+ENDIF
+ENDFOR
+SERV.LOG <VAR.PENA1>
+OBJ.ACCOUNT.DELETE
+OBJ=<LOCAL.TMP>
+RETURN 1
+ENDIF
+
+IF (STRMATCH("*BLOCK*","<STRARG <ARGS>>"))
+OBJ.JAIL
+OBJ.ACCOUNT.BLOCK 1
+FOR 10 1
+IF (<LOCAL._FOR>!=1)
+TRY VAR.PENA<EVAL <LOCAL._FOR>>=<VAR.PENA<EVAL <LOCAL._FOR>-1>>
+ELSE
+VAR.PENA1=<NAME> blocked the acc of <obj.name>. Date: <rtime.day>/<rtime.month>/<rtime.year>
+ENDIF
+ENDFOR
+SERV.LOG <VAR.PENA1>
+OBJ=<LOCAL.TMP>
+RETURN 1
+ENDIF
+
+LOCAL.TIME=<strarg <streat <args>>>
+LOCAL.PERIOD=<streat <streat <args>>>
+
+IF !(STRCMPI("secs","<LOCAL.PERIOD>"))
+LOCAL.MULT=1
+ELIF !(STRCMPI("minutos","<LOCAL.PERIOD>"))
+LOCAL.MULT=60
+ELIF !(STRCMPI("horas","<LOCAL.PERIOD>"))
+LOCAL.MULT=<EVAL 60*60>
+ELIF !(STRCMPI("dias","<LOCAL.PERIOD>"))
+LOCAL.MULT=<EVAL 60*60*24>
+ENDIF
+
+IF !(STRCMPI("JAIL","<STRARG <ARGS>>"))
+LOCAL.P=<OBJ.P>
+OBJ.JAIL
+SERV.NEWITEM i_jail_forgive
+NEW.CONT=<OBJ>
+NEW.ATTR=attr_invis|attr_decay
+NEW.TIMER=<EVAL <LOCAL.TIME>*<LOCAL.MULT>>
+NEW.MOREP=<LOCAL.P>
+FOR 10 1
+IF (<LOCAL._FOR>!=1)
+TRY VAR.PENA<EVAL <LOCAL._FOR>>=<VAR.PENA<EVAL <LOCAL._FOR>-1>>
+ELSE
+VAR.PENA1=<NAME> <STRARG <ARGS>>ed <obj.name> for <EVAL <LOCAL.TIME>> <LOCAL.PERIOD>. Date: <rtime.day>/<rtime.month>/<rtime.year>
+ENDIF
+ENDFOR
+SERV.LOG <VAR.PENA1>
+OBJ=<LOCAL.TMP>
+RETURN 1
+ENDIF
+
+IF !(STRCMPI("BAN","<STRARG <ARGS>>"))
+SERV.NEWITEM i_unblock_timer
+NEW.P=<OBJ.P>
+NEW.ATTR=attr_invis|attr_decay|attr_move_never
+NEW.TIMER=<EVAL <LOCAL.TIME>*<LOCAL.MULT>>
+NEW.MORE1=<OBJ.ACCOUNT.PRIV>
+NEW.LINK=<OBJ>
+NEW.NAME=Unblock timer de <obj.name> (<obj.account>,<obj.uid>)
+FOR 10 1
+IF (<LOCAL._FOR>!=1)
+TRY VAR.PENA<EVAL <LOCAL._FOR>>=<VAR.PENA<EVAL <LOCAL._FOR>-1>>
+ELSE
+VAR.PENA1=<NAME> <STRARG <ARGS>>ed <obj.name> for <EVAL <LOCAL.TIME>> <LOCAL.PERIOD>. Date: <rtime.day>/<rtime.month>/<rtime.year>
+ENDIF
+ENDFOR
+SERV.LOG <VAR.PENA1>
+OBJ.ACCOUNT.BLOCK 1
+OBJ=<LOCAL.TMP>
+RETURN 1
+ENDIF
+
+OBJ=<LOCAL.TMP>
+SYSMESSAGE @07a3 Usage:
+SYSMESSAGE @07a3 .j jail time is_the_time_in_minutos/horas/dias
+RETURN 1
+
+//////////////////////////
+
+[ITEMDEF i_jail_forgive]
+NAME=Jail Forgive Timer
+ID=i_memory
+TYPE=t_eq_script
+LAYER=layer_special
+
+ON=@Create
+attr=attr_invis|attr_decay
+
+ON=@Timer
+SERV.LOG <LINK.ACCOUNT> has been forgiven. (<serv.rtime>)
+CONT.FORGIVE
+CONT.F_GO <MOREP>
+REMOVE
+RETURN 1
+
+//////////////////////////
+
+[ITEMDEF I_UNBLOCK_TIMER]
+NAME=Unblock Timer
+ID=049b
+TYPE=t_normal
+
+ON=@Create
+color=07ad
+attr=attr_invis|attr_decay|attr_move_never
+
+ON=@Timer
+SERV.LOG <LINK.ACCOUNT> has been unblocked. (<serv.rtime>)
+LINK.ACCOUNT.BLOCK 0
+LINK.ACCOUNT.PRIVS=<MORE1>
+SERV.SAVE 1
+REMOVE
+RETURN 1
+
+[EOF]

@@ -1,0 +1,204 @@
+[DEFNAME bonus_event_settings]
+BONES_EVENT_VIP_COINS_NEW_ACCOUNTS 0
+BONUS_EVENT_VIP_COINS 100
+BONUS_EVENT_EVENTPOINTS 300
+BONUS_EVENT_SKILLPOINTS 6000
+BONUS_STARTER_LOOT_UID 0400fb620
+
+[FUNCTION bonus_event]
+TARGETF f_bonus_event
+
+[FUNCTION f_bonus_event]
+IF !(<ARGO.ISPLAYER>)
+	SRC.SYSMESSAGE @,,1 This function must be used on players only.
+ELSE
+	f_bonus_event_char_uid <ARGO.UID>
+ENDIF
+
+[FUNCTION f_bonus_event_char_uid]
+IF (<ARGV> != 1)
+	RETURN 1
+ENDIF
+
+REF1 <ARGV[0]>
+
+IF !(<REF1.ISPLAYER>)
+	RETURN 1
+ENDIF
+
+IF (<REF1.FLAGS> & statf_stone) || (<REF1.ACCOUNT.JAIL>) || (<REF1.ACCOUNT.BLOCK>)
+	RETURN 1
+ENDIF
+
+REF1.OSTR 100
+REF1.ODEX 100
+REF1.OINT 100
+
+REF1.HITS <REF1.MAXHITS>
+REF1.STAM <REF1.MAXSTAM>
+REF1.MANA <REF1.MAXMANA>
+
+REF1.TAG.SKILLPOINTS 3500
+
+SERV.NEWITEM i_spellbook
+NEW.MORE1 0ffffffff
+NEW.MORE2 0ffffffff
+NEW.TRIGGER @Click
+NEW.EVENTS +t_bound_item
+NEW.CONT <REF1.findlayer.layer_pack>
+
+REF1.GO 5463,1103
+
+[ITEMDEF i_NEWACC_STONE]
+id=i_gravestone_18
+name=Beginning Stone
+TYPE=t_normal
+
+ON=@CREATE
+ATTR 010
+
+ON=@DCLICK
+
+
+IF !(<SRC.TAG0.SKILLPOINTS>)
+	IF (<VAR0.BONUS_EVENT>) && (<SRC.ACCOUNT.TAG0.GLOBAL>)
+		SRC.TAG.SKILLPOINTS = <DEF.BONUS_EVENT_SKILLPOINTS>
+		SRC.OSTR 100
+		SRC.ODEX 100
+		SRC.OINT 100
+
+		SRC.HITS <SRC.MAXHITS>
+		SRC.STAM <SRC.MAXSTAM>
+		SRC.MANA <SRC.MAXMANA>
+
+		SERV.NEWITEM i_spellbook
+		NEW.MORE1 0ffffffff
+		NEW.MORE2 0ffffffff
+		NEW.TRIGGER @Click
+		NEW.EVENTS +t_bound_item
+		NEW.BOUNCE
+
+		IF (<DEF.BONES_EVENT_VIP_COINS_NEW_ACCOUNTS>)
+			DB.QUERY "SELECT * FROM tfg_vip WHERE IdContaGlobal = '<dSRC.ACCOUNT.TAG.GLOBAL>'"
+			IF (<DB.ROW.NUMROWS> <= 0)
+				SERV.NEWDUPE <DEF.BONUS_STARTER_LOOT_UID>
+				NEW.NAME Starter Loot
+				NEW.BOUNCE
+
+				TRYSRC <SRC> tfg_vip_addcoins <SRC.ACCOUNT.TAG0.GLOBAL>,<DEF.BONUS_EVENT_VIP_COINS>,<SRC.UID>,"Evento de Bonus"
+			ENDIF
+		ENDIF
+
+		IF (<DEF.BONES_EVENT_VIP_COINS_NEW_ACCOUNTS>)
+			SRC.SYSMESSAGE @,,1 Seja bem vindo a TFG ! Como brinde, voce ganhara <dDEF.BONUS_EVENT_SKILLPOINTS> pontos para distribuir, all stats 100, um spellbook full, dois starter loots e <DDEF.BONUS_EVENT_VIP_COINS> TFG Vip Coins para utilizar com o comando .vipshop (os Vip Coins são para todas as suas contas in-game) !
+		ELSE
+			SRC.SYSMESSAGE @,,1 Seja bem vindo a TFG ! Como brinde, voce ganhara <dDEF.BONUS_EVENT_SKILLPOINTS> pontos para distribuir, all stats 100 e um spellbook full !
+		ENDIF
+
+		VAR.ACCOUNT_<SRC.ACCOUNT.TAG0.GLOBAL>.UO_20_YEARS_REWARD 1
+	ELSE
+		SRC.TAG.SKILLPOINTS = 2500
+	ENDIF
+ELSE IF (<SRC.dTAG0.SKILLPOINTS> > 0)
+	SRC.SYSMESSAGE @0481,,1 Voce possui <SRC.dTAG0.SKILLPOINTS> Pontos a serem gastos em algumas skills.
+ENDIF
+
+IF (<SRC.dTAG0.SKILLPOINTS> < 1)
+		SRC.TAG0.SKILLPOINTS
+		SRC.F_GO HELP ROOM
+		RETURN 1
+ENDIF
+
+SRC.MENU NEWACCOUNT
+RETURN 1
+
+
+[MENU NEWACCOUNT]
+Bem vindo a TFG! Selecione uma skill para atribuir pontos.
+
+ON=0 COMBATS
+SRC.MENU SKILLCOMBATS
+
+ON=1 SORCERY & HEALING
+SRC.MENU SKILLMAGE
+
+[MENU SKILLCOMBATS]
+Combats Skills
+
+ON=0 ARCHERY (Voce possui <SRC.31>%)
+F_SKILLADD 31
+
+ON=0 FENCING (Voce possui <SRC.42>%)
+F_SKILLADD 42
+
+ON=0 MACE FIGHTING (Voce possui <SRC.41>%)
+F_SKILLADD 41
+
+ON=0 SWORDSMANSHIP (Voce possui <SRC.40>%)
+F_SKILLADD 40
+
+ON=0 PARRYING (Voce possui <SRC.5>%)
+F_SKILLADD 5
+
+ON=0 TACTICS (Voce possui <SRC.27>%)
+F_SKILLADD 27
+
+ON=0 WRESTLING (Voce possui <SRC.43>%)
+F_SKILLADD 43
+
+[MENU SKILLMAGE]
+Magery & Healing Skills
+
+ON=0 HEALING (Voce possui <SRC.17>%)
+F_SKILLADD 17
+
+ON=0 MAGERY (Voce possui <SRC.25>%)
+F_SKILLADD 25
+
+ON=0 MEDITATION (Voce possui <SRC.46>%)
+F_SKILLADD 46
+
+[FUNCTION F_SKILLADD]
+
+SRC.CTAG0.SKILLTOADD = <ARGN>
+SRC.PROMPTCONSOLE F_SKILLADD2 @0481,,1 Quantos pontos voce gostaria de atribuir a skill <SERV.SKILL.<ARGN>.KEY> (<SRC.<ARGN>>%)? Voce possui <SRC.dTAG0.SKILLPOINTS> Pontos. Note, digitar 100 atribui 10.0% na skill. (Pressione ESC para cancelar)
+
+[FUNCTION F_SKILLADD2]
+
+IF !(STRMATCH(*[0-9]*, <ARGS>))
+	SRC.SYSMESSAGE @0481,,1 Digita apenas Numeros.
+	RETURN 1
+ELIF (<EVAL <SRC.<CTAG0.SKILLTOADD>> + <ARGS>> > 1000)
+	SRC.SYSMESSAGE @0481,,1 Valor muito alto. Sua skill nao pode ultrapassar 100.0% Clique novamente na Pedra.
+	RETURN 1
+ELIF (<FLOATVAL <ARGS>> < 0.1)
+    SRC.SYSMESSAGE @0481,,1 Use numeros positivos. Clique novamente na Pedra.
+	RETURN 1
+ELSE
+	SRC.CTAG0.SKILLTOADDAMOUNT = <ARGS>
+
+	IF (<SRC.CTAG0.SKILLTOADDAMOUNT> > <SRC.TAG0.SKILLPOINTS>)
+		SRC.SYSMESSAGE @0481,,1 A quantia de <FVAL <SRC.dCTAG0.SKILLTOADDAMOUNT>>% informada excede a existente: <FVAL <SRC.dTAG0.SKILLPOINTS>>%.
+		RETURN 1
+	ENDIF
+
+	SRC.MENU CONFIRMASKILL
+ENDIF
+
+[MENU CONFIRMASKILL]
+Deseja adicionar <FVAL <SRC.dCTAG0.SKILLTOADDAMOUNT>>% a <SERV.SKILL.<SRC.dCTAG0.SKILLTOADD>.kEY>?
+
+ON=0 Sim
+ F_SKILLADDCONFIRM
+
+ON=0 Nao
+ SRC.SYSMESSAGE @0481,,1 Operacao cancelada.
+
+[FUNCTION F_SKILLADDCONFIRM]
+	SRC.<CTAG0.SKILLTOADD> += <EVAL <CTAG0.SKILLTOADDAMOUNT>>
+	SRC.TAG0.SKILLPOINTS -= <EVAL <CTAG0.SKILLTOADDAMOUNT>>
+	IF (<SRC.dTAG0.SKILLPOINTS> < 1)
+		SRC.TAG0.SKILLPOINTS
+		SRC.F_GO HELP ROOM
+		RETURN 1
+	ENDIF

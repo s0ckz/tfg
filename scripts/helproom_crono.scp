@@ -1,0 +1,158 @@
+[ITEMDEF i_teleport_delay]
+// Create an object that just is an equipped timer.
+// src.newitem i_teleport_delay
+// src.act.equip		// We must equip this on the char we want to effect.
+// src.act.timer 100	// if we want to change the time
+NAME=Delay Teleport
+ID=i_handr_1
+TYPE=T_EQ_SCRIPT
+
+ON=@Create
+	ATTR=attr_invis|attr_decay
+	MORE1=5
+	MORE2=24
+	MOREP=5451,1196
+
+ON=@Equip
+	IF (<CONT.HITS> < 1)
+		MORE2=6
+        	MORE1=0
+		CONT.SYSMESSAGE @,,1 Você esta morto e o tempo foi reduzido para 30s.
+	ENDIF
+	TIMER=5
+	DIALOG cronohelp 0,<eval <TIMER> * <MORE2>>
+	SRC.EVENTS=+e_wait_hr
+
+ON=@Timer
+IF (<MORE2> > 2)
+MORE2 -= 1
+TIMER 5
+TRYSRC <CONT> DIALOGCLOSE cronohelp
+TRYSRC <CONT> DIALOG cronohelp 0,<eval <TIMER> * <MORE2>>
+RETURN 1
+ENDIF
+TRYSRC <CONT> DIALOGCLOSE cronohelp
+	// Take the effect we would like.
+	if ( <CONT> )
+		if ( <MORE1> )
+			CONT.message @,,1 (Help Room em <eval <MORE1>>)
+			MORE1 -= 1
+			TIMER=1
+			return 1
+		else
+			CONT.f_go <morep>
+			CONT.EVENTS=-e_wait_hr
+				IF (<CONT.HITS>==0)
+					CONT.RESURRECT 1
+  				ENDIF
+		endif
+	endif
+	// normal timer fall through is to delete the item
+	remove
+	return 1
+
+
+
+[DIALOG cronohelp]
+0,0
+noclose
+nomove
+nodispose
+
+page 0
+resizepic 102 33 9300 206 72
+dtext 196 40 32 Help Room
+gumppic 173 38 93
+gumppic 116 44 2529
+gumppic 183 80 41 32
+CALL SETATEMPO
+resizepic 103 108 9300 206 22
+CALL F_TEMPO2 <ARGS>
+dhtmlgump 105 110 200 18 0 0 <DEF.BFONT_RED><DEF.CENTER><LOCAL.TIMER><DEF.CENTERE>
+
+[DIALOG cronohelp button]
+
+
+[FUNCTION SETATEMPO]
+gumppic <eval 177 + <eval <eval <eval 120 - <ARGS>> / 5> * 4>> 71 2086
+
+[FUNCTION f_tempo2]
+LOCAL.TIMER=<ARGS>
+IF (<LOCAL.TIMER> >= 120)
+LOCAL.TIMER=<eval <ARGS> / 60> minutos e <eval <ARGS> - <eval <eval <ARGS> / 60>*60>> segundos.
+ELSEIF (<LOCAL.TIMER> >= 60)
+LOCAL.TIMER=<eval <ARGS> / 60> minuto e <eval <ARGS> - <eval <eval <ARGS> / 60>*60>> segundos.
+ELSE
+LOCAL.TIMER=<eval <ARGS> - <eval <eval <ARGS> / 60>*60>> segundos.
+ENDIF
+
+[EVENTS e_wait_hr]
+On=@GetHit
+IF (<HITS> > 0)
+SYSMESSAGE @,,1 Pedido de Help Room cancelado por recebimento de dano.
+FINDID.i_teleport_delay.REMOVE
+TRYSRC <UID> DIALOGCLOSE cronohelp
+TRYSRC <UID> DIALOG dcancdano
+EVENTS -e_wait_hr
+ENDIF
+
+ON=@UserWarmode
+IF (<HITS> > 0)
+IF (<ARGN1>==0)
+SYSMESSAGE @,,1 Pedido de Help Room cancelado por uso de war-mode.
+CANCELLHELPROOM 2
+ENDIF
+ENDIF
+
+
+[FUNCTION CANCELLHELPROOM]
+SRC.FINDID.i_teleport_delay.REMOVE
+DIALOGCLOSE cronohelp
+IF (<ARGS> == 1)
+DIALOG dcancdano
+ELIF (<ARGS> == 2)
+DIALOG dcancwar
+ENDIF
+EVENTS -e_wait_hr
+
+[DIALOG dcancdano]
+0,0
+page 0
+resizepic 102 33 9300 206 72
+text 196 40 32 0
+gumppic 173 38 93
+gumppic 116 44 2529
+resizepic 103 108 9300 206 22
+text 186 75 32 1
+text 138 109 5 2
+
+[DIALOG dcancdano text]
+Help Room
+CANCELADA
+Recebimento de Dano
+
+[DIALOG dcancdano button]
+
+
+
+[DIALOG dcancwar]
+0,0
+page 0
+resizepic 102 33 9300 206 72
+text 196 40 32 0
+gumppic 173 38 93
+gumppic 116 44 2529
+resizepic 103 108 9300 206 22
+text 186 75 32 1
+text 138 109 5 2
+
+[DIALOG dcancwar text]
+Help Room
+CANCELADA
+Uso de war-mode.
+
+[DIALOG dcancwar button]
+
+
+
+[EOF]

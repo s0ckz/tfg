@@ -1,0 +1,28 @@
+// rodar na placa
+[FUNCTION f_housing_getaccess]
+ref1 = <args> // jogador
+if !<ref1.uid> || (<tag0.waiting_confirm>)
+	return <def.housing.access_none>
+endif
+if (<link.tag0.global> && <ref1.account.tag0.global>)
+	if (<link.tag0.global> == <ref1.account.tag0.global>) || <ref1.isgm>
+		return <def.housing.access_owner>
+	endif
+endif
+//local.maxcoowners = <f_housing_maxcoowners>
+//if <local.maxcoowners>
+//	for 1 <local.maxcoowners>
+//		if <tag0.coowners.<dlocal._for>> == <ref1.uid>
+//			return <def.housing.access_coowner>
+//		endif
+//	endfor
+//endif
+//local.maxfriends = <f_housing_maxfriends>
+//if <local.maxfriends>
+//	for 1 <local.maxfriends>
+//		if <tag0.friends.<dlocal._for>> == <ref1.uid>
+//			return <def.housing.access_friend>
+//		endif
+//	endfor
+//endif
+return <def.housing.access_none>

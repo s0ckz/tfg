@@ -1,0 +1,184 @@
+[function recarrega_puzzle_lock]
+tag.id = <eval <tag0.id> + 1>
+tag.locked 1
+tag.slot1 = <r1,8>
+tag.slot2 = <r1,8>
+tag.slot3 = <r1,8>
+tag.slot4 = <r1,8>
+tag.slot5 = <r1,8>
+for 1 <r20,35>
+	serv.newitem i_gold
+	new.amount = 1000
+	new.cont = <uid>
+endfor
+serv.newitem = <eval { i_treasure_map_lvl_3 4 i_treasure_map_lvl_4 2 i_treasure_map_lvl_5 1 }>
+new.cont = <uid>
+
+dorand 3
+	serv.newitem = i_panotrue_w
+	serv.newitem = i_panotrue_b
+	serv.newitem = i_panotrue_g
+enddo
+new.cont = <uid>
+
+if !(<R5>)
+	dorand 3
+		serv.newitem = i_panotrue_w
+		serv.newitem = i_panotrue_b
+		serv.newitem = i_panotrue_g
+	enddo
+	new.cont = <uid>
+endif
+
+attr = <attr> & ~attr_invis
+
+say @,,1 Recarregado !
+s Bau <name> recarregado.
+return 1
+
+[function seta_puzzle_lock]
+empty
+tag0.locked = 0
+tag0.id = <uid>
+var0.bau_puzzle_lock<eval <args>> = <uid>
+
+[DIALOG d_puzzle_lock]
+0,0
+page 0
+resizepic 0 3 3500 507 459
+dhtmlgump 34 24 168 113 0 0 A Puzzle Lock
+gumppic 35 45 106
+//htmlgump 93 39 98 81 1 0 0
+button 66 164 1896 1895 1 0 1
+resizepic 25 157 5100 35 34
+tilepic 21 169 6249
+button 68 205 1896 1895 1 0 2
+resizepic 27 198 5100 35 34
+tilepic 23 210 6250
+button 69 247 1896 1895 1 0 3
+resizepic 28 240 5100 35 34
+tilepic 24 252 6251
+button 70 288 1896 1895 1 0 4
+resizepic 29 281 5100 35 34
+tilepic 25 293 6252
+button 426 162 1896 1895 1 0 5
+resizepic 451 155 5100 35 34
+tilepic 447 167 6253
+button 426 202 1896 1895 1 0 6
+resizepic 451 195 5100 35 34
+tilepic 447 205 6254
+button 427 243 1896 1895 1 0 7
+resizepic 452 236 5100 35 34
+tilepic 448 246 6255
+button 426 282 1896 1895 1 0 8
+resizepic 451 275 5100 35 34
+tilepic 447 285 6256
+resizepic 93 336 5100 63 63
+resizepic 159 336 5100 63 63
+resizepic 224 336 5100 63 63
+resizepic 289 336 5100 63 63
+resizepic 355 336 5100 63 63
+group 1
+radio 108 409 2151 2154 0 1
+radio 175 408 2151 2154 0 2
+radio 241 407 2151 2154 0 3
+radio 305 406 2151 2154 0 4
+radio 371 407 2151 2154 0 5
+local.slot1 = <eval 6248 + <src.ctag0.puzzle_slot1_temp>>
+local.slot2 = <eval 6248 + <src.ctag0.puzzle_slot2_temp>>
+local.slot3 = <eval 6248 + <src.ctag0.puzzle_slot3_temp>>
+local.slot4 = <eval 6248 + <src.ctag0.puzzle_slot4_temp>>
+local.slot5 = <eval 6248 + <src.ctag0.puzzle_slot5_temp>>
+tilepic 102 363 <dlocal.slot1>
+tilepic 169 361 <dlocal.slot2>
+tilepic 232 363 <dlocal.slot3>
+tilepic 298 362 <dlocal.slot4>
+tilepic 364 361 <dlocal.slot5>
+// acertos
+dhtmlgump 110 289 278 34 0 0 Acertos:
+if (<tag0.slot1> == <src.ctag0.puzzle_slot1>)
+	tilepic 248 301 <eval 6248 + <tag0.slot1>>
+else
+	dhtmlgump 255 301 40 40 0 0 X
+endif
+if (<tag0.slot2> == <src.ctag0.puzzle_slot2>)
+	tilepic 274 301 <eval 6248 + <tag0.slot2>>
+else
+	dhtmlgump 286 301 40 40 0 0 X
+endif
+if (<tag0.slot3> == <src.ctag0.puzzle_slot3>)
+	tilepic 299 301 <eval 6248 + <tag0.slot3>>
+else
+	dhtmlgump 311 301 40 40 0 0 X
+endif
+if (<tag0.slot4> == <src.ctag0.puzzle_slot4>)
+	tilepic 325 301 <eval 6248 + <tag0.slot4>>
+else
+	dhtmlgump 337 301 40 40 0 0 X
+endif
+if (<tag0.slot5> == <src.ctag0.puzzle_slot5>)
+	tilepic 349 301 <eval 6248 + <tag0.slot5>>
+else
+	dhtmlgump 361 301 40 40 0 0 X
+endif
+button 400 400 248 248 1 0 9
+dhtmlgump 210 30 279 100 0 0 Cada casa tem uma cor certa. Cuidado! Todo erro pode ser mortal!
+
+
+[DIALOG d_puzzle_lock button]
+ON=1 8
+local.slot = <eval <ARGCHKID>>
+//s slot <dlocal.slot> = <dargn1>
+src.ctag0.puzzle_slot<dlocal.slot>_temp = <dargn1>
+src.dialogclose d_puzzle_lock
+sdialog d_puzzle_lock
+
+ON=9
+//okay
+local.penality = 0
+if !(<tag0.slot1> == <src.ctag0.puzzle_slot1_temp>)
+	local.penality ++
+endif
+if !(<tag0.slot2> == <src.ctag0.puzzle_slot2_temp>)
+	local.penality ++
+endif
+if !(<tag0.slot3> == <src.ctag0.puzzle_slot3_temp>)
+	local.penality ++
+endif
+if !(<tag0.slot4> == <src.ctag0.puzzle_slot4_temp>)
+	local.penality ++
+endif
+if !(<tag0.slot5> == <src.ctag0.puzzle_slot5_temp>)
+	local.penality ++
+endif
+for 1 5
+	src.ctag0.puzzle_slot<dlocal._for> = <src.ctag0.puzzle_slot<dlocal._for>_temp>
+endfor
+if <local.penality>
+	local.dam = <eval <r15,25> * <local.penality>>
+	// efeito + dar poison
+	SRC.DAMAGE <local.dam>, 02, <UID>
+	SRC.SYSMESSAGE @,,1 Voce recebeu um dano do bau.
+	//s if (<tag0.slot4> == <src.ctag0.puzzle_slot4>)
+	src.dialogclose d_puzzle_lock
+	sdialog d_puzzle_lock
+else
+	SRC.SYSMESSAGE @,,1 Voce destravou o bau.
+	tag.locked = 0
+	dclick
+	local.hour = <serv.rtime.format %H>
+endif
+
+
+[TYPEDEF t_puzzle_lock]
+ON=@DCLICK
+src.clearctags puzzle_
+if !(<src.ctag0.puzzle_last> == <tag0.id>)
+	src.clearctags puzzle_
+	src.ctag0.puzzle_last = <tag0.id>
+endif
+if <tag0.locked>
+	src.dialogclose d_puzzle_lock
+	sdialog d_puzzle_lock
+	return 1
+endif

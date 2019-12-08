@@ -1,0 +1,79 @@
+///skillmenu alchemy
+
+[SKILLMENU sm_alchemy]
+Alchemy Menu
+
+ON=i_potion_Agility <name> (<resmake>)
+MAKEITEM=i_potion_Agility
+ON=i_potion_AgilityGreat <name> (<resmake>)
+MAKEITEM=i_potion_AgilityGreat
+ON=i_potion_CureLess <name> (<resmake>)
+MAKEITEM=i_potion_CureLess
+ON=i_potion_Cure <name> (<resmake>)
+MAKEITEM=i_potion_Cure
+ON=i_potion_CureGreat <name> (<resmake>)
+MAKEITEM=i_potion_CureGreat
+ON=i_potion_ExplosionLess <name> (<resmake>)
+MAKEITEM=i_potion_ExplosionLess
+ON=i_potion_Explosion <name> (<resmake>)
+MAKEITEM=i_potion_Explosion
+ON=i_potion_ExplosionGreat <name> (<resmake>)
+MAKEITEM=i_potion_ExplosionGreat
+ON=i_potion_HealLesser <name> (<resmake>)
+MAKEITEM=i_potion_HealLesser
+ON=i_potion_Heal <name> (<resmake>)
+MAKEITEM=i_potion_Heal
+ON=i_potion_HealGreat <name> (<resmake>)
+MAKEITEM=i_potion_HealGreat
+ON=i_potion_Nightsight <name> (<resmake>)
+MAKEITEM=i_potion_Nightsight
+ON=i_potion_PoisonLess <name> (<resmake>)
+MAKEITEM=i_potion_PoisonLess
+ON=i_potion_Poison <name> (<resmake>)
+MAKEITEM=i_potion_Poison
+ON=i_potion_PoisonGreat <name> (<resmake>)
+MAKEITEM=i_potion_PoisonGreat
+ON=i_potion_PoisonDeadly <name> (<resmake>)
+MAKEITEM=i_potion_PoisonDeadly
+ON=i_potion_Release <name> (<resmake>)
+MAKEITEM=i_potion_Release
+ON=i_potion_Refresh <name> (<resmake>)
+MAKEITEM=i_potion_Refresh
+ON=i_potion_RefreshTotal <name> (<resmake>)
+MAKEITEM=i_potion_RefreshTotal
+ON=i_potion_Strength <name> (<resmake>)
+MAKEITEM=i_potion_Strength
+ON=i_potion_StrengthGreat <name> (<resmake>)
+MAKEITEM=i_potion_StrengthGreat
+ON=i_potion_Shrink <name> (<resmake>)
+MAKEITEM=i_potion_Shrink
+ON=i_potion_Invisibility <name> (<resmake>)
+MAKEITEM=i_potion_Invisibility
+ON=i_potion_Mana <name> (<resmake>)
+MAKEITEM=i_potion_Mana
+ON=i_potion_ManaTotal <name> (<resmake>)
+MAKEITEM=i_potion_ManaTotal
+ON=i_potion_Antidote <name> (<resmake>)
+MAKEITEM=i_potion_Antidote
+ON=i_potion_mana_boost_great Boosts
+skillmenu=sm_boosts
+ON=i_flask1_blue Advanced Alchemy
+IF <SRC.ALCHEMY> < 1000
+  SRC.SYSMESSAGE You lack the skill to make Potion Kegs
+  RETURN 1
+ELSE
+  src.SYSMESSAGE You should use an Advanced Alchemy Kit to create kegs.
+  return 1
+endif
+
+[SKILLMENU sm_boosts]
+Boosts
+
+ON=i_potion_mana_boost_great <name> (<resmake>)
+MAKEITEM=i_potion_mana_boost_great
+ON=i_potion_life_boost_great <name> (<resmake>)
+MAKEITEM=i_potion_life_boost_great
+ON=i_potion_refilling_great <name> (<resmake>)
+MAKEITEM=i_potion_refilling_great
+
+[EOF]

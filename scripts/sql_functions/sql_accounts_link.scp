@@ -1,0 +1,55 @@
+﻿[FUNCTION vermail]
+TARGETF vermail2
+
+[FUNCTION vermail2]
+SRC.SYSMESSAGE @,,1 O email eh <argo.findid.i_cadastro.tag.email>
+return 1
+
+// Aqui é o vinculo de contas
+[function f_vincular_contas_direto]
+IF (<DB.connected>)
+	DB.QUERY "SELECT * FROM requests WHERE type='2'"
+		if <db.row.numrows> > 0
+				for 0 <eval <db.row.numrows> - 1>
+					local.id "<db.row.<dlocal._for>.IdRequest>"
+					local.log "<db.row.<dlocal._for>.Account>"
+					local.coglob "<db.row.<dlocal._for>.new_value3>"
+					IF (<SERV.ACCOUNT.<local.log>>)
+							serv.account <local.log> tag.global <local.coglob>
+							DB.EXECUTE "UPDATE containgame SET Valida='1' WHERE LoginConta='<local.log>'"
+							serv.log Account <local.log> vinculada
+							serv.writefile Vinculo.txt <serv.rtime> Account <local.log> vinculada.
+					ELIF (<f_account_verify_index <local.log>>)
+							serv.account <local.log> tag.global <local.coglob>
+							DB.EXECUTE "UPDATE containgame SET Valida='1' WHERE LoginConta='<local.log>'"
+							serv.log Account <local.log> vinculada
+							serv.writefile Vinculo.txt <serv.rtime> Account <local.log> vinculada.
+					ELSE
+							DB.EXECUTE "INSERT INTO Notificacoes ( Titulo, Texto, IdContaPainel, DataHoraCadastro ) values ( 'Falha de Vinculo!', 'Você solicitou o vinculo da conta <local.log>. Infelizmente esta conta nao existe mais em nosso servidor, você devera criar uma nova conta ou solicitar a recuperaçao. Atenciosamente, Equipe TFG Shard' , <dlocal.coglob>, DATE_FORMAT(str_to_date('<serv.rtime>', "%Y/%m/%d %H:%i:%S"), "%Y-%m-%d %H:%i:%S"))"
+							DB.EXECUTE "DELETE FROM containgame WHERE LoginConta='<local.log>'"
+							serv.log Vinculo da account <local.log> nao funcionou: conta nao existe.
+							serv.writefile Vinculo.txt <serv.rtime> Vinculo da account <local.log> nao funcionou: conta nao existe.
+					ENDIF
+							DB.EXECUTE "DELETE FROM accounts WHERE login='<local.log>'"
+							DB.EXECUTE "DELETE FROM tfg_nao_vinculadas WHERE account='<local.log>'"
+							//DB.EXECUTE "DELETE FROM antigos_cadastros_at WHERE login='<local.log>'"
+							DB.EXECUTE "DELETE FROM requests WHERE IdRequest='<dlocal.id>'"
+							serv.log Finalizado processo de vinculo da conta <local.log>.
+							serv.writefile Vinculo.txt <serv.rtime> Finalizado processo de vinculo da conta <local.log>.
+				endfor
+		else
+			serv.log Nenhum request de vinculos ativo.
+			serv.writefile Vinculo.txt <serv.rtime> Nenhum request de vinculos ativo.
+		endif
+ENDIF
+RETURN 1
+
+[FUNCTION f_account_verify_index]
+for x 0 <eval <serv.accounts> - 1>
+	local.log = <serv.account.<dlocal.x>.name>
+	if STRMATCH( "<args>", "<local.log>" ) 
+		return <dlocal.x>
+	endif
+endfor
+return 0
+

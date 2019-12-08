@@ -1,0 +1,84 @@
+[TEMPLATE tfg_rareloot_1] // ossos
+ITEM={ 01b09 1 01b0a 1 01b0b 1 01b0c 1 01b0d 1 01b0e 1 01b0f 1 01b10 1 01b11 1 01b12 1 01b13 1 01b14 1 01b15 01b16 01b17 1 01b18 1 01b19 1 01b1a 01b1b 1 01b1c 1 0eca 1 0ecb 1 0ecc 1 0ecd 1 0ece 1 0ecd 1 0ece 1 0ecf 1 0cd0 1 0cd1 1 0cd2 1}
+
+[TEMPLATE tfg_rareloot_2] // gravestone
+ITEM={ 01165 1 01166 1 01167 1 01167 1 01168 1 01169 1 0116a 1 0116b 1 0116c 1 0116d 1 0116e 1 0116f 1 01170 1 01171 1 01172 1 01173 1 01174 1 01175 1 01176 1 01177 1 01178 1 01179 1 0117a 1 0117b 1 0117c 1 0117d 1 0117e 1 0117f 1 01180 1 01181 1 01182 1 01183 1 01184 1 0ed4 1 0ed5 1 0ed6 1 0ed7 1 0ed8 1 0ed9 1 0eda 1 0edb 1 0edc 1}
+
+[TEMPLATE tfg_rareloot_3] // esqueletos
+ITEM={ 01a01 1 01a02 1 01a03 1 01a04 1 01ae0 1 01ae1 1 01ae2 1 01ae3 1 01ae4 1 01b1d 1 01b7c 1 01b7d 1 01b7f 1 01b80 1}
+
+[TEMPLATE tfg_rareloot_4] // spider web
+ITEM={ 010d2 1 010d3 1 010d4 1 010d5 1 010d6 1 010d7 1 010d8 1 010d9 1 010da 1 010db 1 010dc 1 010dd 1 0ee3 1 0ee4 1 0ee5 1 0ee6 1}
+
+[TEMPLATE tfg_rareloot_5] // torture
+ITEM={ 01230 1 01245 1 01246 1 01247 1 01249 1 0124a 1 0124b 1 0124c 1 0124d 1 0125e 1 0125f 1 01260 1 01261 1 01262 1 01263 1 01640 1 0166d 1 0166e 1 0166f 1 01a07 1 01a08 1}
+
+[TEMPLATE tfg_rareloot_6] // traps
+ITEM={ 010f5 1 010fc 1 010fd 1 010fe 1 010ff 1 010ff 1 01100 1 01101 1 01102 1 01103 1 01104 1 01105 1 01106 1 01107 1 01108 1 01109 1 0110a 1 0110b 1 0110c 1 0110d 1 0110e 1 0110f 1 01110 1 01111 1 01112 1 01113 1 01114 1 01115 1}
+
+[TEMPLATE tfg_rareloot_7] // traps 2
+ITEM={ 01116 1 01117 1 01118 1 01119 1 0111a 1 0111b 1 0111c 1 0111d 1 0111e 1 0111f 1 01120 1 01121 1 01125 1 01126 1 01127 1 01128 1 01129 1 0112a 1 0112b 1 0112c 1 0112d 1 0112e 1 0112f 1 01130 1 01131 1 01131 1 01132 1 01133 1 01134 1}
+
+[TEMPLATE tfg_rareloot_8] // traps 3
+ITEM={ 01135 1 01136 1 01137 1 01138 1 01139 1 0113a 1 0113b 1 0113c 1 0113d 1 0113e 1 0113f 1 01140 1 01141 1 01142 1 01143 1 01144 1 01145 1 01146 1 01147 1 01148 1 01149 1 0114a 1 0114b 1 0114c 1 0114d 1 0114e 1 0114f 1}
+
+[TEMPLATE tfg_rareloot_9] // broken furniture
+ITEM={ 01bd3 1 01bd4 1 01bd5 1 01bd6 1 01bd7 1 01bd8 1 0c10 1 0c11 1 0c12 1 0c13 1 0c14 1 0c15 1 0c16 1 0c17 1 0c18 1 0c19 1 0c1a 1 0c1b 1 0c1c 1 0c1d 1 0c1e 1 0c1f 1 0c20 1 0c21 1 0c22 1 0c23 1 0c24 1 0c25 1 0c26 1 0c27 1 0c28 1 0c29 1 0c2a 1 0c2b 1 0c2c 1 0c2d 1 0c2e 1 0c2f 1 0c30 1}
+
+[TEMPLATE tfg_rareloot_10] // rede de dormir, peg board, stone bench, stone table
+ITEM={ 011f0 1 011f1 1 011f2 1 011f3 1 011fd 1 011fe 1 011ff 1 01200 1 0c39 1 0c3a 1 03dff 1 03e00 1 01201 1 01202 1 01204 1 01205 1 01dbb 1 01dbc 1 01dbe 1 01dbf 1 01dc1 1 01dc2 1 01dc4 1 01dc5 1}
+
+[TEMPLATE tfg_rareloot_11] // nautical
+ITEM={ 014f7 1 014f9 1 0163d 1 0fc4 1 0fc5 1 0fc6 1 0fc7 1 0fc8 1 0fc9 1 0fca 1 0fcb 1 0fcc 1 0fcd 1 0fce 1 0fcf 1 0fd0 1 0fd1 1 0fd2 1 0fd3 1 0fd4 1 01ed3 1 01ed4 1 01ed5 1 01ed6 1 01ed7 1 01ed8 1 01b6c 1}
+
+[TEMPLATE tfg_rareloot_12] // diversos e estatuas
+ITEM={ 01f2a 1 0139a 1 0139b 1 0139c 1 0139d 1 01223 1 01224 1 01225 1 01226 1 01227 1 01228 1 012ca 1 012cb 1 012d8 1 012d9 1 01f18 1}
+
+[TEMPLATE tfg_rareloot_13] // armor de paredes
+ITEM={ 01560 1 01561 1 01562 1 01563 1 01568 1 01569 1 0156a 1 0156b 1 0155c 1 0155d 1 0155e 1 0155f 1 0156c 1 0156d 1 01634 1 01635 1 01636 1 01637 1 01564 1 01565 1 01566 1 01567 1}
+
+[TEMPLATE tfg_rareloot_14] // alchemy items parte 1
+ITEM={ 01005 1 01006 1 01007 1 01810 1 01811 1 01812 1 01813 1 01814 1 01815 1 01816 1 01817 1 01818 1 01819 1 0181a 1 0181b 1 0181c 1 0181d 1 01829 1 0182a 1 0182b 1 0182c 1 0182d 1 0182e 1 0182f 1 01830 1 01831 1 01832 1 01833 1 01834 1 01835 1 01836 1 01837 1 01838 1 01839 1 0183a 1 0183b 1 0183c 1 0183d 1 0183e 1 0183f 1}
+
+[TEMPLATE tfg_rareloot_15] // alchemy items parte 2
+ITEM={ 01840 1 01841 1 01842 1 01843 1 01844 1 01845 1 01846 1 01847 1 01848 1 01849 1 0184a 1 0184b 1 0184c 1 0184d 1 0184e 1 0184f 1 01850 1 01851 1 01852 1 0185b 1 0185c 1 0185e 1 01865 1 01866 1 0e24 1 0e25 1 0e26 1 0e25 1 0e26 1 0e27 1 0e28 1 0e29 1 0e2a 1 0e2b 1 0e2c 1 0e44 1 0e45 1 0e46 1 0e47 1 0e48 1 0e49 1 0e4a 1}
+
+[TEMPLATE tfg_rareloot_16] // alchemy items parte 3
+ITEM={ 0e4b 1 0e4c 1 0e4d 1 0e4e 1 0e4f 1 0efb 1 0efc 1 0efd 1 0efe 1 0eff 1 0f00 1 0f01 1 0f02 1 0f03 1 0f04 1}
+
+[TEMPLATE tfg_rareloot_17] // profissoes, artist e barkeeper
+ITEM={ 012b3 1 0f65 1 0f66 1 0f67 1 0f68 1 0f69 1 0f6a 1 0f71 1 0f72 1 0f73 1 0f74 1 0f75 1 0f76 1 0fc1 1 010e1 1 010e2 1 01941 101942 101943 1 01e2e 1 01e2f 1 01e30 1 01e31 1 01e32 1 01e33 1 09c4 1 09c5 1 09c6 1 09c7 1 0e12 1 0e13 1 0e14 1 0e15 1 0e16 1 0e17 1 0e18 1 0e19 1 0e1a 1 0e1b 1 0fa2 1 0fa3 1 0fa4 1 0fa5 1 0fa6 1 0fa7 1 0fa8 1 0ffa 1}
+
+[TEMPLATE tfg_rareloot_18] // profissoes, beerkeper blacksmith e carpenteer
+ITEM={ 01420 1 01421 1 01422 1 01423 1 01424 1 01425 1 01426 1 01427 1 01428 1 01429 1 0142a 1 0142b 1 01376 1 01377 1 01378 1 01379 1 0fb6 1 0fb7 1 0fb8 1 01e6f 1 01e70 1 01e71 1 01e72 1 01e73 1 01e74 1 01e75 1 01e76 1 01e77 1 01e78 1 01e79 1 01e7a 1 01e7b 1 01e7c 1 01e7d 1 01e7e 1 01e82 1}
+
+[TEMPLATE tfg_rareloot_19] // profissoes, farmer, fisher, scribe
+ITEM={ 01500 1 01501 1 01502 1 01503 1 01504 1 01505 1 01506 1 01507 1 01e34 1 01e35 1 012a5 1 012a6 1 012a7 1 012a8 1 012a9 1 012aa 1 012ab 1 012ac 1 01e20 1 01e21 1 01e22 1 01e23 1 01e24 1 01e25 1 014e7 1 014e8 1 0107b 1 0107c 1}
+
+[TEMPLATE tfg_rareloot_20] // miscelaneous orc camp
+ITEM={ 01ad4 1 01ad5 1 0e73 1 0e74 1 041f 1 0420 1 0426 1  0427 1 0428 1 0429 1 042a 1 042b 1 0426c 1 042d 1 042e 1 042f 1 01c12 1 01c13 1 01c14 1 01f19 1 01f1a 1 01f1b 1 01f1c 1 01f1d 1 01f1e 1}
+
+[TEMPLATE tfg_rareloot_21]
+ITEM={ tfg_rareloot_1 1 tfg_rareloot_2 1 tfg_rareloot_3 1 tfg_rareloot_4 1 tfg_rareloot_5 1}
+
+[TEMPLATE tfg_rareloot_22]
+ITEM={ tfg_rareloot_6 1 tfg_rareloot_7 1 tfg_rareloot_8 1 tfg_rareloot_9 1 tfg_rareloot_10 1}
+
+[TEMPLATE tfg_rareloot_23]
+ITEM={ tfg_rareloot_11 1 tfg_rareloot_12 1 tfg_rareloot_13 1 tfg_rareloot_14 1 tfg_rareloot_15 1}
+
+[TEMPLATE tfg_rareloot_24]
+ITEM={ tfg_rareloot_16 1 tfg_rareloot_17 1 tfg_rareloot_18 1 tfg_rareloot_19 1 tfg_rareloot_20 1}
+
+[TEMPLATE rareloot_tfg] // item q vai no loot
+ITEM={ tfg_rareloot_21 1 tfg_rareloot_22 1 tfg_rareloot_23 1 tfg_rareloot_24 1}
+
+
+[TEMPLATE reagentes_tfg]
+ITEM={ i_reag_sulfur_ash 1 i_reag_mandrake_root 1 i_reag_ginseng 1 i_reag_black_pearl 1 i_reag_blood_moss 1 i_reag_nightshade 1 i_reag_garlic 1 i_reag_eye_of_newt 1 i_reag_spider_silk 1}
+
+[TEMPLATE reagentes_pagan_tfg]
+ITEM={ i_reag_blood_spawn 1 i_reag_blood_vial 1 i_reag_bone 1 i_reag_brimstone 1 i_reag_daemon_bone 1 i_reag_fertile_dirt 1 i_reag_dragon_blood 1 i_reag_executioners_cap 1 i_reag_obsidian 1 i_reag_pig_iron 1 i_reag_pumice 1 i_reag_serpent_scale 1 i_reag_volcanic_ash 1 i_reag_dead_wood 1 i_reag_worm_heart 1}
+
+
+[EOF]

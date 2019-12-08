@@ -1,0 +1,489 @@
+[ITEMDEF i_coords_announcer]
+ID=i_crystal_ball
+NAME=Rastreador [DO NOT REMOVE]
+WEIGHT=200
+TYPE=t_eq_script
+
+ON=@Create
+    ATTR=attr_decay|attr_invis
+    TIMER=120
+
+ON=@Timer
+	IF (<LINK> != 04fffffff)
+		IF !(STRCMPI("<LINK.NAME>", "0"))
+			REMOVE
+		ELSE
+			SERV.B @55 Existe um <LINK.NAME> localizado em <LINK.REGION.NAME> - <LINK.P> ! Por que nao mata-lo? Bons loots o aguardam.
+			TIMER 120
+			RETURN 1
+		ENDIF
+	ENDIF
+
+[FUNCTION f_create_coords_announcer]
+IF (<ARGV> == 0)
+	RETURN
+ENDIF
+
+REF1=<ARGS>
+SERV.NEWITEM i_coords_announcer
+NEW.P <REF1.P>
+NEW.LINK <REF1.UID>
+
+[CHARDEF c_m_prisma_eventos]
+id=c_daemon
+Name=Prisma Lord (Evento)
+DAM=46,83
+ARMOR=20
+CAN=MT_WALK|MT_RUN|MT_FLY
+AVERSIONS=r_civilization
+
+ON=@Create
+	TIMERF 1,f_create_coords_announcer <UID>
+
+	TAG.LOOTPROPRIO 1
+	MAXHITS=10000
+	DORAND 3
+		COLOR=01
+		COLOR=0481
+		COLOR=0482
+	ENDDO
+	NPC=brain_dragon
+	STR=1000
+	DEX={800 900}
+	INT=300
+	PARRYING={95.0 105.0}
+	MAGERY=6.0
+	MAGICRESISTANCE={60.0 75.0}
+	TACTICS={90.0 100.0}
+	WRESTLING={99.0 100.0}
+	FAME={1000 6000}
+	KARMA=-10000
+	//SPELLCIRCLE=3 5
+	ITEMNEWBIE=i_light_source
+	ITEMNEWBIE=i_spellbook
+	ADDSPELL=s_magic_arrow
+	ADDSPELL=s_fireball
+	ADDSPELL=s_fire_field
+	ADDSPELL=s_explosion
+	ADDSPELL=s_flamestrike
+	ADDSPELL=s_meteor_swarm
+	ADDSPELL=s_fire_bolt
+	EVENTS=+E_ANTIBOW
+
+ON=@Click
+	IF (<COLOR> == 0a23)
+		MESSAGE @0a23,,1 [Paragon]
+	ENDIF
+
+ON=@Destroy
+	FORINSTANCES i_anuncia_prisma
+		TIMER = 1
+	ENDFOR
+
+	FORINSTANCES i_coords_announcer
+		TIMER = 1
+	ENDFOR
+
+ON=@Death
+	NEWITEM=i_fx_explode
+	act.TYPE=T_EXPLOSION
+	act.ATTR=ATTR_MOVE_NEVER | ATTR_DECAY
+	act.LINK=<uid>
+	act.morex=10 // damage
+	act.morey=090 // wFlags DAMAGE_GENERAL
+	act.morez=2 // iDist
+	act.p=<p>
+	act.TIMERD=1 // immediate decay
+	FORINSTANCES i_anuncia_prisma
+		TIMER = 1
+	endif
+	SERV.B @55 O Prisma morreu em <region.name>!
+
+	FORCHARS 200
+		IF (<NPC> == brain_animal) && (<dTAG0.EVENTO> == 1)
+			TAG.EVENTO
+			TAG.REMOVE_INVUL_ON_TAME 1
+			SERV.B @55 <NAME> pronto para ser tamado ! Boa sorte !!!
+		ENDIF
+	ENDFOR
+
+ON=@DeathCorpse
+	loot_prisma_evento 12
+FOR 6
+serv.newitem=i_fire_column
+new.color 0250
+new.p=<p>
+new.move <R12>,<R12>
+new.attr=attr_move_never|attr_decay
+new.timer=10
+ENDFOR
+
+
+[FUNCTION loot_prisma_evento]
+
+IF (<color> == 0a23)
+	FORCLIENTS 20
+		IF (!<REGION.GUARDED>) && !(<FLAGS> & statf_dead)
+			SYSMESSAGE @,,1 Parabens! Voce ganhou power scrolls por ajudar a matar o prisma !
+
+			FOR 1 3
+				SERV.NEWITEM i_power_scroll
+				NEW.CONT <UID>
+			ENDFOR
+		ENDIF
+	ENDFOR
+ENDIF
+
+local.gold = 0
+local.pano = 0
+local.map = 0
+local.kegs = 0
+local.ps = 0
+local.mingold = 12000
+local.maxgold = 25000
+local.minpano = 1
+local.maxpano = 2
+local.minmap = 1
+local.maxmap = 1
+local.maxkegs = 7
+
+if (<color> == 0a23)
+	local.minps = 5
+	local.maxps = 10
+else
+	local.minps = 0
+	local.maxps = 0
+endif
+WHILE ((<local.gold> < <local.mingold>) || (<local.pano> < <local.minpano>) || (<local.map> < <local.minmap>) || (<local.ps> < <local.minps>)) && (<local._while> < 6)
+	LOCAL.CT=0
+	LOCAL.MIN=0
+	LOCAL.MAX=0
+	SERV.NEWNPC c_dog
+	NEW.FLAGS statf_invul|statf_insubstantial
+	NEW.P <P>
+	REF1=<NEW.UID>
+	FOR 0 <eval <ARGS> - 1>
+	LOCAL.MIN --
+	LOCAL.MAX ++
+	LOCAL.CT ++
+	  FOR k <LOCAL.MIN> <LOCAL.MAX>
+	  REF1.P <P>
+	  REF1.MOVE <eval <LOCAL.CT> * -1> <LOCAL.K> 0 0
+	  REF1.FIX
+
+	  local.tries 0
+
+	  while ((<ref1.isstuck>) || (<ref1.region.isevent.r_house_private>) || (<ref1.region.guarded>)) && (<local.tries> < 10)
+		ref1.move <r-5,5>,<r-5,5>
+		ref1.fix
+		local.tries += 1
+	  endwhile
+
+		DORAND 4
+			CALL f_new_gold
+			CALL f_new_pano
+			CALL f_new_map
+			CALL f_new_ps
+		ENDDO
+	  ENDFOR
+	  //
+	  FOR l <eval <LOCAL.MIN> + 1> <LOCAL.MAX>
+	  REF1.P <P>
+	  REF1.MOVE <LOCAL.L> <eval <LOCAL.CT> * -1> 0 0
+	  REF1.FIX
+
+	  local.tries 0
+
+	  while ((<ref1.isstuck>) || (<ref1.region.isevent.r_house_private>) || (<ref1.region.guarded>)) && (<local.tries> < 10)
+		ref1.move <r-5,5>,<r-5,5>
+		ref1.fix
+		local.tries += 1
+	  endwhile
+
+		DORAND 4
+			CALL f_new_gold
+			CALL f_new_pano
+			CALL f_new_map
+			CALL f_new_ps
+		ENDDO
+	  ENDFOR
+	  //
+	  FOR m <eval <LOCAL.MIN> + 1> <LOCAL.MAX>
+	  REF1.P <P>
+	  REF1.MOVE <LOCAL.CT> <LOCAL.m> 0 0
+	  REF1.FIX
+
+	  local.tries 0
+
+	  while ((<ref1.isstuck>) || (<ref1.region.isevent.r_house_private>) || (<ref1.region.guarded>)) && (<local.tries> < 10)
+		ref1.move <r-5,5>,<r-5,5>
+		ref1.fix
+		local.tries += 1
+	  endwhile
+
+		DORAND 4
+			CALL f_new_gold
+			CALL f_new_pano
+			CALL f_new_map
+			CALL f_new_ps
+		ENDDO
+	  ENDFOR
+	  //
+	  FOR n <eval <LOCAL.MIN> + 1> <eval <LOCAL.MAX> - 1>
+	  REF1.P <P>
+	  REF1.MOVE <LOCAL.N> <LOCAL.CT> 0 0
+	  REF1.FIX
+
+	  local.tries 0
+
+	  while ((<ref1.isstuck>) || (<ref1.region.isevent.r_house_private>) || (<ref1.region.guarded>)) && (<local.tries> < 10)
+		ref1.move <r-5,5>,<r-5,5>
+		ref1.fix
+		local.tries += 1
+	  endwhile
+
+		DORAND 4
+			CALL f_new_gold
+			CALL f_new_pano
+			CALL f_new_map
+			CALL f_new_ps
+		ENDDO
+	  ENDFOR
+	ENDFOR
+	REF1.REMOVE
+ENDWHILE
+if (<local.pano> < <local.minpano>)
+		dorand 3
+			serv.newitem i_panotrue_b
+			serv.newitem i_panotrue_w
+			serv.newitem i_panotrue_g
+		enddo
+		new.amount 1
+		new.events +t_drop_challenge
+		new.p <ref1.p>
+		new.move <r10>,<r10>
+		new.fix
+
+		local.tries 0
+		ref1.p <new.p>
+		while ((<ref1.isstuck>) || (<ref1.region.isevent.r_house_private>) || (<ref1.region.guarded>)) && (<local.tries> < 10)
+			ref1.move <r-5,5>,<r-5,5>
+			ref1.fix
+			local.tries += 1
+		endwhile
+
+endif
+if (<local.map> < <local.minmap>)
+		serv.newitem i_treasure_map_lvl_<r2,3>
+		new.events +t_drop_challenge
+		new.amount 1
+		new.p <ref1.p>
+		new.move <r10>,<r10>
+		new.fix
+
+		local.tries 0
+		ref1.p <new.p>
+		while ((<ref1.isstuck>) || (<ref1.region.isevent.r_house_private>) || (<ref1.region.guarded>)) && (<local.tries> < 10)
+			ref1.move <r-5,5>,<r-5,5>
+			ref1.fix
+			local.tries += 1
+		endwhile
+endif
+if (<local.ps> < <local.minps>)
+		serv.newitem i_power_scroll
+		new.amount 1
+		new.events +t_drop_challenge
+		new.p <ref1.p>
+		new.move <r10>,<r10>
+		new.fix
+
+		local.tries 0
+		ref1.p <new.p>
+		while ((<ref1.isstuck>) || (<ref1.region.isevent.r_house_private>) || (<ref1.region.guarded>)) && (<local.tries> < 10)
+			ref1.move <r-5,5>,<r-5,5>
+			ref1.fix
+			local.tries += 1
+		endwhile
+endif
+
+REF1.REMOVE
+
+RETURN 0
+
+[FUNCTION f_new_gold]
+if !<ref1.isneartype t_water 0>
+	if <local.gold> < <local.maxgold>
+		if <r0,1>
+		serv.newitem i_gold
+		new.amount 1000
+		new.p <ref1.p>
+		new.fix
+		local.gold += 1000
+		endif
+	endif
+	if <local.kegs> < <local.maxkegs>
+		if !<r0,50>
+			DORAND 3
+				SERV.NEWITEM i_keg_glb1
+				SERV.NEWITEM i_keg_gmb1
+				SERV.NEWITEM i_keg_grf1
+			ENDDO
+			new.events +t_drop_challenge
+			new.p <ref1.p>
+			new.fix
+			local.kegs += 1
+		endif
+	endif
+endif
+
+[FUNCTION f_new_pano]
+if !<ref1.isneartype t_water 0>
+	if <local.pano> < <local.maxpano>
+		if !<r0,50>
+			dorand 3
+				serv.newitem i_panotrue_b
+				serv.newitem i_panotrue_w
+				serv.newitem i_panotrue_g
+			enddo
+			new.events +t_drop_challenge
+			new.amount 1
+			new.p <ref1.p>
+			new.fix
+			local.pano += 1
+		endif
+	endif
+endif
+
+[FUNCTION f_new_map]
+if !<ref1.isneartype t_water 0>
+	if <local.map> < <local.maxmap>
+		if !<r0,50>
+		serv.newitem i_treasure_map_lvl_<eval <r2,3>>
+		new.events +t_drop_challenge
+		new.amount 1
+		new.p <ref1.p>
+		new.fix
+		local.map += 1
+		endif
+	endif
+endif
+
+[FUNCTION f_new_ps]
+if !<ref1.isneartype t_water 0>
+	if <local.ps> < <local.maxps>
+		if !<r0,50>
+		serv.newitem i_power_scroll
+		new.events +t_drop_challenge
+		new.amount 1
+		new.p <ref1.p>
+		new.fix
+		local.map += 1
+		endif
+	endif
+endif
+
+[FUNCTION novoprismaevento]
+if !(<args>)
+src.smsg digite um timer apos comando. em segundos.
+return 1
+endif
+
+IF (<ARGV> >= 4)
+	LOCAL.TEMPO = <ARGV[0]>
+	LOCAL.POSICAO = <ARGV[1]>,<ARGV[2]>,<ARGV[3]>
+
+	IF (<ARGV> == 5)
+		LOCAL.PARAGON = <ARGV[4]>
+	ELSE
+		LOCAL.PARAGON = 0
+	ENDIF
+ELSE
+	LOCAL.TEMPO = <EVAL <ARGS>>
+	LOCAL.POSICAO = <SRC.P>
+	LOCAL.PARAGON = 0
+
+	IF (<ARGV> == 2)
+		LOCAL.PARAGON = <ARGV[1]>
+	ELSE
+		LOCAL.PARAGON = 0
+	ENDIF
+ENDIF
+
+SERV.NEWITEM i_worldgem_bit
+NEW.P <LOCAL.POSICAO>
+// force the respawn to always work
+NEW.SECTOR.FLAGS secf_nosleep
+NEW.ATTR 0b0
+NEW.TYPE t_spawn_char
+NEW.MORE1 c_m_prisma_eventos
+NEW.MOREP 9999,9999,5
+NEW.EVENTS +t_prismarespevento
+NEW.TAG.PARAGON=<LOCAL.PARAGON>
+NEW.TIMER <dLOCAL.TEMPO>
+REF1=<new>
+SERV.NEWITEM i_anuncia_prisma
+NEW.P <LOCAL.POSICAO>
+NEW.LINK=<ref1>
+
+IF (<LOCAL.PARAGON>)
+	SERV.B @55 Um Daemon Magico PARAGON nascera em <new.region.name> em <timeformat 1,<ref1.timer>>
+ELSE
+	SERV.B @55 Um Daemon Magico nascera em <new.region.name> em <timeformat 1,<ref1.timer>>
+ENDIF
+return 1
+
+[TYPEDEF t_prismarespevento]
+ON=@TIMER
+	FORINSTANCES i_anuncia_prisma
+		TIMER = 1
+	ENDFOR
+
+[ITEMDEF i_anuncia_prisma]
+ID=i_crystal_ball
+NAME=Anuncio Prisma [DO NOT REMOVE]
+WEIGHT=200
+TYPE=t_eq_script
+
+ON=@Create
+    ATTR=attr_decay|attr_invis
+    TIMER=20
+
+ON=@Destroy
+	SECTOR.FLAGS 0
+
+ON=@TIMER
+if <tag0.nasceu>
+	if (<link.more2> < 1)
+		SERV.B @55 Evento Daemon Magico Finalizado. O Prisma foi removido pois o tempo acabou.
+	endif
+	s removendo o assassino
+
+	link.remove
+	remove
+	return 1
+endif
+
+if (<link.timer> > 600) || (<link.timer> < 1)
+  SERV.B @55 Um Daemon Magico nasceu em <region.name>. Se nao for morto em 1 hora sera removido.
+  TIMER = 3600
+  TAG.NASCEU = 1
+
+  IF (<LINK.TAG0.PARAGON>)
+  	FORINSTANCES c_m_prisma_eventos
+  		COLOR 0a23
+  		MAXHITS *= 3
+  		HITS = <MAXHITS>
+  	ENDFOR
+  ENDIF
+else
+  IF (<LINK.TAG0.PARAGON>)
+    SERV.B @55 Um Daemon Magico PARAGON nascera em <region.name> em <timeformat 1,<link.timer>>
+  ELSE
+    SERV.B @55 Um Daemon Magico nascera em <region.name> em <timeformat 1,<link.timer>>
+  ENDIF
+  TIMER 30
+endif
+
+RETURN 1
+
+[EOF]

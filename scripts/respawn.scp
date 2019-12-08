@@ -1,0 +1,78 @@
+[FUNCTION resp] 
+DIALOG d_addrespawn 
+
+
+[DIALOG d_addrespawn] 
+20, 20 
+PAGE 0 
+text 05 0 152 1 
+text 05 0 152 2 
+text 05 0 152 3 
+text 05 0 152 4 
+text 05 0 152 5 
+resizepic 0 0 5054 295 244 
+text 209 0 152 0 
+resizepic 8 24 3000 280 210 
+text 18 54 162 6 
+text 17 82 162 7 
+text 14 109 162 8 
+text 14 136 162 9 
+text 17 163 162 10 
+gumppic 154 55 2445 
+textentry 164 57 96 16 1152 0 1 
+gumppic 154 82 2445 
+textentry 164 84 96 16 1152 1 2 
+gumppic 154 110 2445 
+textentry 164 112 96 16 1152 2 3 
+gumppic 154 136 2445 
+textentry 164 138 96 16 1152 3 4 
+gumppic 154 163 2445 
+textentry 164 165 96 16 1152 4 5 
+text 82 2 152 11
+button 206 206 2311 2312 1 0 1 
+text 18 209 1152 12 
+text 18 230 1152 13 
+text 18 250 1152 14 
+
+[DIALOG d_addrespawn TEXT] 
+<VAR.BLANKLINE> 
+<SRC.TAG.ARGTXT0> 
+<EVAL <SRC.TAG.ARGTXT1>> 
+<EVAL <SRC.TAG.ARGTXT2>> 
+<EVAL <SRC.TAG.ARGTXT3>> 
+<EVAL <SRC.TAG.ARGTXT4>> 
+Id da criatura 
+Qts bixos? 
+Tempo minimo 
+Tempo Maximo 
+Distancia 
+Add Respawns 
+obs tempo em minutos. 
+<VAR.BLANKLINE> 
+<VAR.BLANKLINE> 
+
+
+[DIALOG d_addrespawn BUTTON] 
+on=1 
+SRC.TAG.argtxt0=<ARGTXT[0]> 
+SRC.TAG.argtxt1=<ARGTXT[1]> 
+SRC.TAG.argtxt2=<ARGTXT[2]> 
+SRC.TAG.argtxt3=<ARGTXT[3]> 
+SRC.TAG.argtxt4=<ARGTXT[4]> 
+
+SRC.NEWITEM=01ea7 
+SRC.ACT.BOUNCE 
+SRC.ACT.DROP 
+SRC.SYSMESSAGE ACT.TYPE 34 
+SRC.ACT.TYPE 34 
+SRC.SYSMESSAGE ACT.MORE <ARGTXT[0]> 
+SRC.ACT.MORE <ARGTXT[0]> 
+SRC.SYSMESSAGE ACT.AMOUNT <ARGTXT[1]> 
+SRC.ACT.AMOUNT <ARGTXT[1]> 
+SRC.SYSMESSAGE ACT.ATTR 0b0 
+SRC.ACT.ATTR 0b0 
+SRC.SYSMESSAGE ACT.MOREP <ARGTXT[2]> <ARGTXT[3]> <ARGTXT[4]> 
+SRC.ACT.MOREP <ARGTXT[2]> <ARGTXT[3]> <ARGTXT[4]> 
+SRC.SYSMESSAGE ACT.TIMER 1 
+SRC.ACT.TIMER 1 
+SRC.SYSMESSAGE RESPAWN CRIADO

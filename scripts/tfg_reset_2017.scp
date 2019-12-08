@@ -1,0 +1,798 @@
+//[FUNCTION randomizer]
+//LOCAL.LOOPZ <eval <SERV.ACCOUNTS> -1>
+//FOR 0 <dLOCAL.LOOPZ>
+//REF69 <SERV.ACCOUNT.<dLOCAL._FOR>.LASTCHARUID>
+//REF69.PASSWORD <R11111111,99999999>
+//endfor
+
+//[Function RemoveBadSpawn]
+//src.badspawn
+//While (<act.uid>)
+//act.remove
+//act 0
+//src.badspawn
+//EndWhile
+
+[DEFNAME track_account]
+txtfile	accounts2.txt
+
+[FUNCTION f_track_accts]
+LOCAL.LOOPZ <eval <SERV.ACCOUNTS> -1>
+
+FOR 0 <dLOCAL.LOOPZ>
+	REF69 <SERV.ACCOUNT.<dLOCAL._FOR>.LASTCHARUID>
+	IF <REF69.SKILLTOTAL> > 40000
+	IF !(<FILE.INUSE>)
+		FILE.MODE.APPEND=1
+		IF (<FILE.OPEN  accounts2.txt>)
+			FILE.WRITELINE Skill Total: <REF69.SKILLTOTAL>
+			FILE.WRITELINE Last Connect: <REF69.ACCOUNT.LASTCONNECTDATE>
+			FILE.WRITELINE Account Name: <REF69.Account>
+			FILE.WRITELINE Char Name: <REF69.NAME>
+			FILE.WRITELINE Account Password: <REF69.Account.password>
+			IF <ISNUM <REF69.ACCOUNT.TAG0.SECPASS>>
+				FILE.WRITELINE Account Securepass: <eval <REF69.ACCOUNT.TAG0.SECPASS>>
+			ELSE
+				FILE.WRITELINE Account Securepass: <REF69.ACCOUNT.TAG0.SECPASS>
+			ENDIF
+			FILE.WRITELINE -
+			FILE.WRITELINE -
+			FILE.WRITELINE -
+			FILE.CLOSE
+		ENDIF
+	ENDIF
+	ENDIF
+ENDFOR
+FILE.CLOSE
+
+
+
+
+/////////////////
+//// ANTI CS ////
+/////////////////
+
+
+[function misterio]
+targetf F_misterio
+
+
+[function F_misterio]
+forcont <argo.uid>
+src.bounce <uid>
+endfor
+
+
+[DIALOG d_test_textentry]
+100,100
+page 0
+resizepic 0 0 5100 240 120
+resizepic 30 120 5100 175 40
+button 120 126 <eval g_btn_gray_apply> <eval g_btn_gray_apply_press> 1 0 901
+button 40 126 5200 5201 1 0 900
+text 10 10 1152 1
+resizepic 70 55 2620 90 35
+textentry 80 61 90 20 1152 1 0 // 4 text fields now
+
+[DIALOG d_test_textentry TEXT]
+<VAR.BLANKLINE>
+Selecione o seu SecurePass
+
+[DIALOG d_test_textentry BUTTON]
+ONBUTTON=901 // The apply button
+IF !(<eval (STRLEN(<ARGTXT[1]>))> == 6
+SYSMESSAGE Seu secure pass deve possuir 6 caracteres.
+ELSE
+TAG.SECPASS <ARGTXT[1]>
+IF (<isnum <TAG.SECPASS>>)
+SYSMESSAGE EH NUMERO
+SYSMESSAGE <eval <TAG.SECPASS>>
+ELSE
+SYSMESSAGE <TAG.SECPASS>
+ENDIF
+ENDIF
+
+
+[FUNCTION showsec]
+SYSMESSAGE Selecione o alvo.
+targetf f_showsec
+
+[FUNCTION f_showsec]
+REF69 <ARGO.UID>
+IF <ISNUM <REF69.ACCOUNT.TAG0.SECPASS>>
+SYSMESSAGE Securepass: <eval <REF69.ACCOUNT.TAG0.SECPASS>>
+ELSE
+SYSMESSAGE Securepass: <REF69.ACCOUNT.TAG0.SECPASS>
+ENDIF
+
+
+
+[itemdef i_antics_coin]
+id=i_gold
+name=anti cs
+
+
+ON=@create
+attr 090
+MORE=30
+
+ON=@TIMER
+IF <MORE>
+	IF ((<eval <LINK.P.X> - <TAG0.X>> > 12) || (<eval <LINK.P.X> - <TAG0.X>> < -12) || (<eval <LINK.P.Y> - <TAG0.Y>> > 12) || (<eval <LINK.P.Y> - <TAG0.Y>> < -12))
+		IF !((<eval <LINK.P.Y> - <TAG0.Y>> < -30) || (<eval <LINK.P.Y> - <TAG0.Y>> > 30) || (<eval <LINK.P.X> - <TAG0.X>> > 30) || (<eval <LINK.P.X> - <TAG0.X>> < -30))
+			V <link.name> Possivel Uso de Speed Hack !!!
+
+		ENDIF
+	ENDIF
+	TAG.X <LINK.P.X>
+	TAG.Y <LINK.P.Y>
+	MORE -=1
+	TIMERD 10
+	RETURN 1
+ELSE
+	LINK.TAG.ANTICS
+	REMOVE
+	RETURN 0
+ENDIF
+
+[function delcs]
+foritems 6000
+IF <BASEID>==i_antics_coin
+REMOVE
+ENDIF
+ENDFOR
+
+
+[function antics]
+TAG.ANTICS 1
+SERV.NEWITEM i_antics_coin
+NEW.LINK <UID>
+NEW.P <P>
+NEW.TIMERD 1
+
+
+[FUNCTION f_tracking_char]
+REF69=<uid>
+FORCHARS 25
+IF !(<isgm>)
+  IF (<uid> != <src.uid>)
+    local.x=(-(<src.p.x> - <p.x>))
+    local.y=((<src.p.y> - <p.y>))
+    local.tracking_x = <eval ((<local.x> + <local.y>) / 2)>
+    local.tracking_y = <eval ((<local.y> - <local.x>) / 2)>
+    local.distancefactor = <eval ((100*sqrt(<eval ((<local.x>@2)+(<local.y>@2))>))/sqrt(<eval ((<local.tracking_x>@2)+(<local.tracking_y>@2))>))>
+    local.tracking_x = <eval (<local.tracking_x>*<local.distancefactor>)>
+    local.tracking_y = <eval (<local.tracking_y>*<local.distancefactor>)>
+    //Rescale and position
+    local.tracking_x=<eval (((<local.tracking_x>)/30)+235)>
+    local.tracking_y=<eval (((-<local.tracking_y>)/30)+235)>
+
+    try REF69.tag.tempx_<eval <REF69.morex>>=<eval (<local.tracking_x>)>
+    try REF69.tag.tempy_<eval <REF69.morex>>=<eval (<local.tracking_y>)>
+IF (<npc> == brain_vendor) || (<npc> == brain_banker) || (<npc> == brain_healer) || (<npc> == brain_animal_trainer)
+    try REF69.tag.brain_<eval <REF69.morex>>=2362
+    ELSEIF (<isplayer>)
+    try REF69.tag.brain_<eval <REF69.morex>>=2361
+    ELSE
+    try REF69.tag.brain_<eval <REF69.morex>>=2360
+   ENDIF
+    try REF69.tag.name_<eval <REF69.morex>>=<name>
+    REF69.morex += 1
+  ENDIF
+ENDIF
+ENDFOR
+
+[function f_draw_dots]
+IF <morex> < 1
+  return 0
+ENDIF
+FOR 0 (<morex>-1)
+  dtext <eval (<tag.tempx_<eval <local._for>>>-20)> <eval (<tag.tempy_<eval <local._for>>>-20)> 20 <tag.name_<eval <local._for>>>
+      gumppic <eval (<tag.tempx_<eval <local._for>>>)> <eval (<tag.tempy_<eval <local._for>>>)> <tag.brain_<eval <local._for>>>
+ENDFOR
+
+[FUNCTION track]
+dialogclose d_tracking
+serv.newitem i_tracking_mem
+new.equip
+
+[itemdef i_tracking_mem]
+id=i_handr_1
+type=t_eq_script
+name=tracking memory
+
+on=@equip
+  f_tracking_char
+  DIALOG d_tracking
+
+[DIALOG d_tracking]
+0,0
+gumppic 100 100 5011
+gumppic 235 235 2362
+f_draw_dots
+
+[DIALOG d_tracking BUTTON]
+on=0
+  src.findid.i_tracking_mem.remove
+
+
+
+///////////// Controlador p/ evitar excesso de pages ////////////
+[FUNCTION ASCII]
+SAY <asc <ARGS>>
+
+
+[FUNCTION PAGE]
+RETURN 0
+
+
+[FUNCTION controladorpage]
+src.newitem i_controlador_page
+src.act.equip
+
+[Itemdef i_controlador_page]
+NAME=Controle de pages [NAO REMOVER]
+ID=i_handr_1
+TYPE=T_EQ_SCRIPT
+
+ON=@Create
+	ATTR=attr_invis|attr_decay
+ON=@EQUIP
+IF !(0<SRC.TAG.PAGE>)
+    SRC.SYSMESSAGE Use bem sua page. Voce soh podera mandar outra depois de 10 minutos.
+    TIMER=600
+    SRC.TAG.PAGE=1
+    LINK=<SRC.UID>
+    SRC.PAGEA
+ELSE
+    SRC.SYSMESSAGE Voce nao pode mandar page ainda. Espere alguns minutos.
+    REMOVE
+    RETURN 0
+ENDIF
+RETURN 1
+
+ON=@Timer
+    LINK.TAG.PAGE=0
+    TIMER=-1
+    REMOVE
+RETURN 0
+
+
+////////////////////////////////
+////////////////////////////////
+
+
+[DEFNAME httpmsgs]
+http_msg_1
+http_msg_2
+
+[ITEMDEF i_pedra_bcast]
+NAME=Pedrinha de Broadcast
+ID=i_gravestone_7
+TYPE=t_normal
+
+
+ON=@CREATE
+ATTR 010
+COLOR 0bb7
+
+
+
+
+ON=@CLICK
+IF !(<TAG0.ATIVADA>)
+MESSAGE DESATIVADA
+ELSE
+MESSAGE ATIVADA
+ENDIF
+
+
+
+ON=@DCLICK
+IF !(<TAG0.ATIVADA>)
+TAG.ATIVADA 1
+TIMER 450
+SRC.SYSMESSAGE Pedra de broadcast ATIVADA.
+ELSE
+TIMER -1
+SRC.SYSMESSAGE Pedra de broadcast DESATIVADA.
+TAG.ATIVADA
+ENDIF
+RETURN 1
+
+
+
+ON=@TIMER
+DORAND 11
+    SERV.ALLCLIENTS sysmessage @0113 Facam download dos NOVOS MULS no site para ver as Novas Casas e ARENAS!.
+    SERV.ALLCLIENTS sysmessage @0113 Nesse final de semana Update para novas Casas e Itens.
+    SERV.ALLCLIENTS sysmessage @0113 Jogue sempre o lixo no lixo. A Staff agradece.
+    SERV.ALLCLIENTS sysmessage @0113 Tem duvidas ? Ninguem consegue ajuda-lo ? Abra o menu de help e mande-nos um page detalhado. A ajuda chegara assim que possivel.
+    SERV.ALLCLIENTS sysmessage @0113 Skill BEGGING funcionando perfeitamente. Teste-a.
+    SERV.ALLCLIENTS sysmessage @0113 Para subir STR ate 100, utilize a skill Wrestling.
+    SERV.ALLCLIENTS sysmessage @0113 Para subir DEX ate 100, utilize as skills Hiding ou Stealth.
+    SERV.ALLCLIENTS sysmessage @0113 Para subir INT ate 100, utilize as skills Meditation, Magery, Inscription ou Tinkering.
+    SERV.ALLCLIENTS sysmessage @0113 Para facilitar a venda de itens de macro, opte por fazer itens acumulaveis (Springs, Shaped Iron, boards).
+    SERV.ALLCLIENTS sysmessage @0113 Todas as Dungeons estao povoadas ! Aproveite-as !!
+    SERV.ALLCLIENTS sysmessage @0113 Nao se aproveite de BUGS ! Buggers sao punidos. Aqueles que nos relatam bugs, sao recompensados ! Faca a escolha certa.
+    BEGIN
+        SERV.ALLCLIENTS sysmessage @0113 Para viajar para outras cidades, utilize os NPCS Gate Master. Eles ficam perto dos BANKS, sempre em um PENTAGRAMA.
+        SERV.ALLCLIENTS sysmessage @0113 diga a eles o nome da cidade que deseja ir, e talvez eles possam te ajudar.
+    END
+ENDDO
+TIMER 450
+RETURN
+
+[DIALOG d_ingot_mix]
+50,71
+dialogclose d_ingot_mix
+page 0
+resizepic 0 0 2620 280 197
+//gumppictiled 5 5 240 385 2604
+//gumppictiled 5 5 640 25 2624
+gumppictiled 5 170 270 22 2624
+//gumppictiled 5 35 640 330 2624
+checkertrans 5 5 640 387
+dtext 85 7 0466 Ingot Mixing Menu
+if <TAG0.INGOT1>
+button 15 34  4005 4006 1 0 1
+dtext 60 35 0c1 Blue Steel Ingot
+endif
+if <TAG0.INGOT2>
+button 15 59  4005 4006 1 0 2
+dtext 60 60 0c1 Chaos Ingot
+endif
+if <TAG0.INGOT3>
+button 15 84  4005 4006 1 0 3
+dtext 60 85 0c1 Order Ingot
+endif
+if <TAG0.INGOT4>
+button 15 109  4005 4006 1 0 4
+dtext 60 110 0c1 Kryptonite Ingot
+endif
+if <TAG0.INGOT5>
+button 15 134  4005 4006 1 0 5
+dtext 60 135 0c1 Titanium Ingot
+endif
+
+
+[DIALOG d_ingot_mix BUTTON]
+ON=1
+dialog d_bsteel
+ON=2
+dialog d_chaos
+ON=3
+dialog d_order
+on=4
+dialog d_kryptonite
+ON=5
+dialog d_titanium
+
+[DIALOG d_bsteel]
+50,71
+page 0
+resizepic 0 0 2620 280 197
+gumppictiled 5 170 270 22 2624
+checkertrans 5 5 640 387
+dtext 85 7 0466 Blue Steel Ingot
+dtext 20 35 0c1 Ingots Necessarios:
+dtext 20 53 0481 Old Copper, Valorite, Verite
+dtext 20 75 0c1 Quantia a ser feita:
+button 15 104  4005 4006 1 0 1
+dtext 60 105 0c1 5 Blue Steel Ingots
+button 15 129  4005 4006 1 0 2
+dtext 60 130 0c1 25 Blue Steel Ingots
+button 15 154  4005 4006 1 0 3
+dtext 60 155 0c1 50 Blue Steel Ingots
+
+[DIALOG d_bsteel BUTTON]
+ON=0
+dialog d_ingot_mix
+ON=1
+if (<RESCOUNT(i_ingot_old_copper)> > 4) && (<RESCOUNT(i_ingot_valorite)> > 4) && (<RESCOUNT(i_ingot_verite)> > 4)
+CONSUME 5 i_ingot_old_copper
+CONSUME 5 i_ingot_valorite
+CONSUME 5 i_ingot_verite
+NEWITEM i_ingot_bsteel
+NEW.AMOUNT 5
+NEW.CONT <UID>
+ENDIF
+
+ON=2
+if (<RESCOUNT(i_ingot_old_copper)> > 24) && (<RESCOUNT(i_ingot_valorite)> > 24) && (<RESCOUNT(i_ingot_verite)> > 24)
+CONSUME 25 i_ingot_old_copper
+CONSUME 25 i_ingot_valorite
+CONSUME 25 i_ingot_verite
+NEWITEM i_ingot_bsteel
+NEW.AMOUNT 25
+NEW.CONT <UID>
+ENDIF
+
+ON=3
+if (<RESCOUNT(i_ingot_old_copper)> > 49) && (<RESCOUNT(i_ingot_valorite)> > 49) && (<RESCOUNT(i_ingot_verite)> > 49)
+CONSUME 50 i_ingot_old_copper
+CONSUME 50 i_ingot_valorite
+CONSUME 50 i_ingot_verite
+NEWITEM i_ingot_bsteel
+NEW.AMOUNT 50
+NEW.CONT <UID>
+ENDIF
+
+[DIALOG d_chaos]
+50,71
+page 0
+resizepic 0 0 2620 280 197
+gumppictiled 5 170 270 22 2624
+checkertrans 5 5 640 387
+dtext 85 7 0466 Chaos Ingot
+dtext 20 35 0c1 Ingots Necessarios:
+dtext 20 53 0481 Bronze, Shadow, Blood Rock
+dtext 20 75 0c1 Quantia a ser feita:
+button 15 104  4005 4006 1 0 1
+dtext 60 105 0c1 5 Chaos Ingots
+button 15 129  4005 4006 1 0 2
+dtext 60 130 0c1 25 Chaos Ingots
+button 15 154  4005 4006 1 0 3
+dtext 60 155 0c1 50 Chaos Ingots
+
+[DIALOG d_chaos BUTTON]
+ON=0
+dialog d_ingot_mix
+ON=1
+if (<RESCOUNT(i_ingot_bronze)> > 4) && (<RESCOUNT(i_ingot_shadow)> > 4) && (<RESCOUNT(i_ingot_bloodrock)> > 4)
+CONSUME 5 i_ingot_bronze
+CONSUME 5 i_ingot_shadow
+CONSUME 5 i_ingot_bloodrock
+NEWITEM i_ingot_chaos
+NEW.AMOUNT 5
+NEW.CONT <UID>
+ENDIF
+
+ON=2
+if (<RESCOUNT(i_ingot_bronze)> > 24) && (<RESCOUNT(i_ingot_shadow)> > 24) && (<RESCOUNT(i_ingot_bloodrock)> > 24)
+CONSUME 25 i_ingot_bronze
+CONSUME 25 i_ingot_shadow
+CONSUME 25 i_ingot_bloodrock
+NEWITEM i_ingot_chaos
+NEW.AMOUNT 25
+NEW.CONT <UID>
+ENDIF
+
+ON=3
+if (<RESCOUNT(i_ingot_bronze)> > 49) && (<RESCOUNT(i_ingot_shadow)> > 49) && (<RESCOUNT(i_ingot_bloodrock)> > 49)
+CONSUME 50 i_ingot_bronze
+CONSUME 50 i_ingot_shadow
+CONSUME 50 i_ingot_bloodrock
+NEWITEM i_ingot_chaos
+NEW.AMOUNT 50
+NEW.CONT <UID>
+ENDIF
+
+
+[DIALOG d_order]
+50,71
+page 0
+resizepic 0 0 2620 280 197
+gumppictiled 5 170 270 22 2624
+checkertrans 5 5 640 387
+dtext 85 7 0466 Order Ingot
+dtext 20 35 0c1 Ingots Necessarios:
+dtext 20 53 0481 Agapite, Gold, Black Rock
+dtext 20 75 0c1 Quantia a ser feita:
+button 15 104  4005 4006 1 0 1
+dtext 60 105 0c1 5 Order Ingots
+button 15 129  4005 4006 1 0 2
+dtext 60 130 0c1 25 Order Ingots
+button 15 154  4005 4006 1 0 3
+dtext 60 155 0c1 50 Order Ingots
+
+[DIALOG d_order BUTTON]
+ON=0
+dialog d_ingot_mix
+ON=1
+if (<RESCOUNT(i_ingot_agapite)> > 4) && (<RESCOUNT(i_ingot_gold)> > 4) && (<RESCOUNT(i_ingot_blackrock)> > 4)
+CONSUME 5 i_ingot_agapite
+CONSUME 5 i_ingot_gold
+CONSUME 5 i_ingot_blackrock
+NEWITEM i_ingot_order
+NEW.AMOUNT 5
+NEW.CONT <UID>
+ENDIF
+
+
+ON=2
+if (<RESCOUNT(i_ingot_agapite)> > 24) && (<RESCOUNT(i_ingot_gold)> > 24) && (<RESCOUNT(i_ingot_blackrock)> > 24)
+CONSUME 25 i_ingot_agapite
+CONSUME 25 i_ingot_gold
+CONSUME 25 i_ingot_blackrock
+NEWITEM i_ingot_order
+NEW.AMOUNT 25
+NEW.CONT <UID>
+ENDIF
+
+ON=3
+if (<RESCOUNT(i_ingot_agapite)> > 49) && (<RESCOUNT(i_ingot_gold)> > 49) && (<RESCOUNT(i_ingot_blackrock)> > 49)
+CONSUME 50 i_ingot_agapite
+CONSUME 50 i_ingot_gold
+CONSUME 50 i_ingot_blackrock
+NEWITEM i_ingot_order
+NEW.AMOUNT 50
+NEW.CONT <UID>
+ENDIF
+
+[DIALOG d_kryptonite]
+50,71
+page 0
+resizepic 0 0 2620 280 197
+gumppictiled 5 170 270 22 2624
+checkertrans 5 5 640 387
+dtext 85 7 0466 Kryptonite Ingot
+dtext 20 35 0c1 Ingots Necessarios:
+dtext 20 53 0481 Rusty, Copper, Verite, Gold, Mytheril
+dtext 20 75 0c1 Quantia a ser feita:
+button 15 104  4005 4006 1 0 1
+dtext 60 105 0c1 5 Kryptonite Ingots
+button 15 129  4005 4006 1 0 2
+dtext 60 130 0c1 25 Kryptonite Ingots
+button 15 154  4005 4006 1 0 3
+dtext 60 155 0c1 50 Kryptonite Ingots
+
+[DIALOG d_Kryptonite BUTTON]
+ON=0
+dialog d_ingot_mix
+ON=1
+if (<RESCOUNT(i_ingot_rusty)> > 4) && (<RESCOUNT(i_ingot_copper)> > 4) && (<RESCOUNT(i_ingot_verite)> > 4)  && (<RESCOUNT(i_ingot_gold)> > 4)  && (<RESCOUNT(i_ingot_mytheril)> > 4)
+CONSUME 5 i_ingot_rusty
+CONSUME 5 i_ingot_copper
+CONSUME 5 i_ingot_verite
+CONSUME 5 i_ingot_gold
+CONSUME 5 i_ingot_mytheril
+NEWITEM i_ingot_kryptonite
+NEW.AMOUNT 5
+NEW.CONT <UID>
+ENDIF
+
+ON=2
+if (<RESCOUNT(i_ingot_rusty)> > 24) && (<RESCOUNT(i_ingot_copper)> > 24) && (<RESCOUNT(i_ingot_verite)> > 24)  && (<RESCOUNT(i_ingot_gold)> > 24)  && (<RESCOUNT(i_ingot_mytheril)> > 24)
+CONSUME 25 i_ingot_rusty
+CONSUME 25 i_ingot_copper
+CONSUME 25 i_ingot_verite
+CONSUME 25 i_ingot_gold
+CONSUME 25 i_ingot_mytheril
+NEWITEM i_ingot_kryptonite
+NEW.AMOUNT 25
+NEW.CONT <UID>
+ENDIF
+
+ON=3
+if (<RESCOUNT(i_ingot_rusty)> > 49) && (<RESCOUNT(i_ingot_copper)> > 49) && (<RESCOUNT(i_ingot_verite)> > 49)  && (<RESCOUNT(i_ingot_gold)> > 49)  && (<RESCOUNT(i_ingot_mytheril)> > 49)
+CONSUME 50 i_ingot_rusty
+CONSUME 50 i_ingot_copper
+CONSUME 50 i_ingot_verite
+CONSUME 50 i_ingot_gold
+CONSUME 50 i_ingot_mytheril
+NEWITEM i_ingot_kryptonite
+NEW.AMOUNT 50
+NEW.CONT <UID>
+ENDIF
+
+[DIALOG d_titanium]
+50,71
+page 0
+resizepic 0 0 2620 280 197
+gumppictiled 5 170 270 22 2624
+checkertrans 5 5 640 387
+dtext 85 7 0466 Titanium Ingot
+dtext 20 35 0c1 Ingots Necessarios:
+dtext 20 53 0481 Blue Steel, Order, Chaos, Kryptonite
+dtext 20 75 0c1 Quantia a ser feita:
+button 15 104  4005 4006 1 0 1
+dtext 60 105 0c1 5 Titanium Ingots
+button 15 129  4005 4006 1 0 2
+dtext 60 130 0c1 25 Titanium Ingots
+button 15 154  4005 4006 1 0 3
+dtext 60 155 0c1 50 Titanium Ingots
+
+[DIALOG d_titanium BUTTON]
+ON=0
+dialog d_ingot_mix
+ON=1
+if (<RESCOUNT(i_ingot_bsteel)> > 4) && (<RESCOUNT(i_ingot_chaos)> > 4) && (<RESCOUNT(i_ingot_order)> > 4)  && (<RESCOUNT(i_ingot_kryptonite)> > 4)
+CONSUME 5 i_ingot_bsteel
+CONSUME 5 i_ingot_chaos
+CONSUME 5 i_ingot_order
+CONSUME 5 i_ingot_kryptonite
+NEWITEM i_ingot_titanium
+NEW.AMOUNT 5
+NEW.CONT <UID>
+ENDIF
+
+ON=2
+if (<RESCOUNT(i_ingot_bsteel)> > 24) && (<RESCOUNT(i_ingot_chaos)> > 24) && (<RESCOUNT(i_ingot_order)> > 24)  && (<RESCOUNT(i_ingot_kryptonite)> > 24)
+CONSUME 25 i_ingot_bsteel
+CONSUME 25 i_ingot_chaos
+CONSUME 25 i_ingot_order
+CONSUME 25 i_ingot_kryptonite
+NEWITEM i_ingot_titanium
+NEW.AMOUNT 25
+NEW.CONT <UID>
+ENDIF
+
+ON=3
+if (<RESCOUNT(i_ingot_bsteel)> > 49) && (<RESCOUNT(i_ingot_chaos)> > 49) && (<RESCOUNT(i_ingot_order)> > 49)  && (<RESCOUNT(i_ingot_kryptonite)> > 49)
+CONSUME 50 i_ingot_bsteel
+CONSUME 50 i_ingot_chaos
+CONSUME 50 i_ingot_order
+CONSUME 50 i_ingot_kryptonite
+NEWITEM i_ingot_titanium
+NEW.AMOUNT 50
+NEW.CONT <UID>
+ENDIF
+
+
+
+
+//////////////////////////
+///// INGOTS /////////////
+//////////////////////////
+
+
+[ITEMDEF i_ingot_bsteel]
+NAME=Blue Steel Ingot
+ID=i_ingot_iron
+//RESOURCES=i_ore_rusty
+SKILLMAKE=MINING 400.0
+TDATA1=409.0
+TDATA2=509.0
+
+ON=@Create
+	COLOR 0f9b
+
+[ITEMDEF i_ingot_kryptonite]
+NAME=Kryptonite Ingot
+ID=i_ingot_iron
+//RESOURCES=i_ore_rusty
+SKILLMAKE=MINING 400.0
+TDATA1=409.0
+TDATA2=509.0
+
+ON=@Create
+	COLOR 0f95
+
+[ITEMDEF i_ingot_titanium]
+NAME=Titanium Ingot
+ID=i_ingot_iron
+//RESOURCES=i_ore_rusty
+SKILLMAKE=MINING 400.0
+TDATA1=409.0
+TDATA2=509.0
+
+ON=@Create
+	COLOR 0f9a
+
+
+
+[ITEMDEF i_scroll_bsteel]
+id=i_map_rolled
+NAME=Blue Steel Scroll
+RESOURCES= 10 i_log
+VALUE=300000
+
+ON=@CREATE
+COLOR 0f9b
+
+ON=@DCLICK
+IF !(<CONT.UID>==<SRC.FINDLAYER.21.UID>)
+SRC.SYSMESSAGE A Scroll deve estar em sua bag
+RETURN 1
+ENDIF
+
+IF <SRC.TAG0.INGOT1>
+SRC.SYSMESSAGE Voce ja possui a receita do Blue Steel Ingot
+ELSE
+SRC.EFFECT 3, i_fx_heal_effect 1, 20, 20, 0
+SRC.SYSMESSAGE Voce utilizou a scroll !!
+SRC.TAG.INGOT1 1
+REMOVE
+ENDIF
+RETURN 1
+
+[ITEMDEF i_scroll_chaos]
+id=i_map_rolled
+NAME=Chaos Scroll
+RESOURCES= 10 i_log
+VALUE=10
+
+ON=@CREATE
+COLOR 0f9c
+
+ON=@DCLICK
+IF !(<CONT.UID>==<SRC.FINDLAYER.21.UID>)
+SRC.SYSMESSAGE A Scroll deve estar em sua bag
+RETURN 1
+ENDIF
+
+IF <SRC.TAG0.INGOT2>
+SRC.SYSMESSAGE Voce ja possui a receita do Chaos Ingot
+ELSE
+SRC.EFFECT 3, i_fx_heal_effect 1, 20, 20, 0
+SRC.SYSMESSAGE Voce utilizou a scroll !!
+SRC.TAG.INGOT2 1
+REMOVE
+ENDIF
+RETURN 1
+
+[ITEMDEF i_scroll_order]
+id=i_map_rolled
+NAME=Order Scroll
+RESOURCES= 10 i_log
+VALUE=10
+
+ON=@CREATE
+COLOR 0b96
+
+ON=@DCLICK
+IF !(<CONT.UID>==<SRC.FINDLAYER.21.UID>)
+SRC.SYSMESSAGE A Scroll deve estar em sua bag
+RETURN 1
+ENDIF
+
+IF <SRC.TAG0.INGOT3>
+SRC.SYSMESSAGE Voce ja possui a receita do Order Ingot
+ELSE
+SRC.EFFECT 3, i_fx_heal_effect 1, 20, 20, 0
+SRC.SYSMESSAGE Voce utilizou a scroll !!
+SRC.TAG.INGOT3 1
+REMOVE
+ENDIF
+RETURN 1
+
+[ITEMDEF i_scroll_kryptonite]
+id=i_map_rolled
+NAME=Kryptonite Scroll
+RESOURCES= 10 i_log
+VALUE=10
+
+ON=@CREATE
+COLOR 0f95
+
+ON=@DCLICK
+IF !(<CONT.UID>==<SRC.FINDLAYER.21.UID>)
+SRC.SYSMESSAGE A Scroll deve estar em sua bag
+RETURN 1
+ENDIF
+
+IF <SRC.TAG0.INGOT4>
+SRC.SYSMESSAGE Voce ja possui a receita do Kryptonite Ingot
+ELSE
+SRC.EFFECT 3, i_fx_heal_effect 1, 20, 20, 0
+SRC.SYSMESSAGE Voce utilizou a scroll !!
+SRC.TAG.INGOT4 1
+REMOVE
+ENDIF
+RETURN 1
+
+[ITEMDEF i_scroll_titanium]
+id=i_map_rolled
+NAME=Titanium Scroll
+RESOURCES= 10 i_log
+VALUE=10
+
+ON=@CREATE
+COLOR 0f9a
+
+ON=@DCLICK
+IF !(<CONT.UID>==<SRC.FINDLAYER.21.UID>)
+SRC.SYSMESSAGE A Scroll deve estar em sua bag
+RETURN 1
+ENDIF
+
+IF <SRC.TAG0.INGOT5>
+SRC.SYSMESSAGE Voce ja possui a receita do Titanium Ingot
+ELSE
+SRC.EFFECT 3, i_fx_heal_effect 1, 20, 20, 0
+SRC.SYSMESSAGE Voce utilizou a scroll !!
+SRC.TAG.INGOT5 1
+REMOVE
+ENDIF
+RETURN 1

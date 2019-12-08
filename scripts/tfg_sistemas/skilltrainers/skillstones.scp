@@ -1,0 +1,48 @@
+[Function f_criar_skill_stone]
+local.level <argv[0]>
+local.skill <argv[1]>
+
+serv.newitem i_skill_stone
+new.name <serv.skill.<dlocal.skill>.name> Stone
+new.tag.skill <dlocal.skill>
+new.tag.level <dlocal.level>
+new.dispid i_virtstone_<eval <local.level>+1>
+new.cont <src>
+
+[TYPEDEF T_skill_stone]
+
+[itemdef i_skill_stone]
+id=I_VIRTUESTONE_BLACK
+name=Blank Skill Stone
+Weight=1
+Type=T_skill_stone
+
+on=@click
+    message @,,1 [Level: <dtag.level>]
+
+on=@Dclick
+    src.sysmessage You notice that this stone might do powerful things...
+
+// =i_virtstone_1
+// 2=I_VIRTUESTONE_BLACK
+
+// =i_virtstone_2
+// 2=I_VIRTUESTONE_BLUE
+
+// =i_virtstone_3
+// 2=I_VIRTUESTONE_GREEN
+
+// =i_virtstone_4
+// 2=I_VIRTUESTONE_ORANGE
+
+// =i_virtstone_5
+// 2=I_VIRTUESTONE_PURPLE
+
+// =i_virtstone_6
+// 2=I_VIRTUESTONE_RED
+
+// =i_virtstone_7
+// 2=I_VIRTUESTONE_AQUA
+
+// =i_virtstone_8
+// 2=I_VIRTUESTONE_YELLOW

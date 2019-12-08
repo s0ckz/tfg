@@ -1,0 +1,84 @@
+[ITEMDEF i_pack_backpack]
+id=i_backpack
+NAME=Incomplete Pack Animal Backpack
+RESOURCES=100 i_hides_cut
+TYPE=T_NORMAL
+TDATA2=03c
+FLIP=1
+DYE=1
+WEIGHT=3
+CATEGORY=Provisions - Miscellaneous
+SUBSECTION=Containers
+DESCRIPTION=Backpack
+SKILLMAKE=TAILORING 35.0, t_sewing_kit
+
+on=@CREATE
+    color 0750
+
+[ITEMDEF i_pack_ring]
+NAME=Pack Animal Ring
+id=i_key_ring
+TYPE=t_normal
+WEIGHT=1
+CATEGORY=Provisions - Miscellaneous
+SUBSECTION=Containers
+DESCRIPTION=Backpack
+RESOURCES=30 i_ingot_copper
+SKILLMAKE=TINKERING 30.0,t_tinker_tools
+
+ON=@CREATE
+    color=0641
+
+ON=@DCLICK
+	SRC.MESSAGE This item is used to build something else...
+    return 1
+
+[ITEMDEF i_pack_backpack_full]
+id=i_backpack
+NAME=Complete Pack Animal Backpack
+RESOURCES=1 i_pack_ring, 1 i_pack_backpack
+TYPE=T_NORMAL
+TDATA2=03c
+FLIP=1
+DYE=1
+WEIGHT=3
+CATEGORY=Provisions - Miscellaneous
+SUBSECTION=Containers
+DESCRIPTION=Backpack
+SKILLMAKE=TAILORING 35.0, TINKERING 30.0, t_tinker_tools
+
+on=@CREATE
+    color 0749
+
+on=@DCLICK
+    Target Choose the horse to become a pack horse...
+    Return 1
+
+ON=@TARGON_CHAR
+    IF (<SRC.TARG.ISMYPET>) && (<strmatch(c_horse*,<src.targ.baseid>))
+        SRC.SYSMESSAGE @,,1 <src.targ.name> became a Pack Horse.
+        src.targ.remove
+        remove
+        serv.newitem i_pet_horse_pack
+        src.bounce <new>
+        RETURN 1
+    ELIF (<SRC.TARG.ISMYPET>) && (<strmatch(c_llama,<src.targ.baseid>))
+        SRC.SYSMESSAGE @,,1 <src.targ.name> became a Pack Llama.
+        src.targ.remove
+        remove
+        serv.newitem i_pet_llama_pack
+        src.bounce <new>
+        RETURN 1
+    else
+        src.smsg @,,1 That animal will not become that...
+        return 1
+    endif
+
+ON=@TARGON_ITEM
+    return 1
+
+ON=@TARGON_GROUND
+    return 1
+
+[eof]
+

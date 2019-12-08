@@ -1,0 +1,10 @@
+[FUNCTION setplevel]
+SERV.ACCOUNT <account.name> PLEVEL <ARGS>
+
+[FUNCTION f_lootiar]
+FORCONT <uid>
+	if <baseid>==i_potion_explosionless
+	cont = <args>
+	updatex
+	endif
+ENDFOR

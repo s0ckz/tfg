@@ -1,0 +1,123 @@
+[ITEMDEF i_UNDEAD_shovel]
+ID=i_shovel
+NAME=Undead Burial Shovel
+TYPE=t_undead_shovel
+RESOURCES=15 I_INGOT_BRASS
+SKILLMAKE=BLACKSMITHING 100.0, TINKERING 100.0, MINING 100.0, T_TINKER_TOOLS
+
+ON=@CREATE
+	COLOR=0810
+	HITS={45 50}
+ON=@Dclick
+SRC.SYSMESSAGE @,,1 This item doesnt work far from the dead...
+RETURN 1
+
+ON=@TargOn_Ground
+if (<src.region.defname>==a_cityhe_dead_1)
+	if (<src.targp.type>==t_rock)
+		args = <src.targp>
+		if ((<argv[0]> > 5200) || (<ARGV[0]> < 5204)) && ((<argv[1]> < 3668) || (<ARGV[1]> > 3663))
+				src.message @31,,1 *You have unburied an undead creature...*
+				src.move 2
+				serv.newitem 02166
+				new.p 6070,2390,24
+				new.attr 010
+				new.timerf 7,remove
+				serv.newitem 02167
+				new.p 6070,2389,25
+				new.attr 010
+				new.timerf 7,remove
+				serv.newitem i_tile_telepad
+				new.p 6071,2390,24
+				new.morep 6068,2390,10
+				new.attr 090
+				new.timerf 7,remove
+				serv.newitem i_tile_telepad
+				new.p 6071,2389,24
+				new.morep 6068,2389,10
+				new.attr 090
+				new.timerf 7,remove
+		elif <src.isneartype t_quest_unknown_llama 10>
+			src.Message @31,,1 *Tem algo de estranho por aqui...*
+		endif
+	endif
+endif
+
+[TYPEDEF t_undead_dirt]
+
+[TYPEDEF t_undead_shovel]
+ON=@Dclick 
+if !<isempty <src.ctag.treasure_shovel_use>>
+	src.sysmessage @,,1 Voce ja esta ocupado escavando outro tesouro.
+	return 1
+endif
+TARGETG
+return 1
+
+ON=@TargOn_Ground
+if !<isempty <src.ctag.treasure_shovel_use>>
+	src.sysmessage @,,1 Voce ja esta ocupado escavando outro tesouro.
+	return 1
+endif
+if ((<baseid> == i_undead_shovel)
+    serv.newitem i_worldgem_bit
+    new.p = <src.targp>
+    new.attr = attr_move_never | attr_invis
+	if <src.distance <new.uid>> > 2
+		new.remove
+		src.sysmessage That is too far away.
+		return 1
+	endif
+    new.remove
+    ref1=<src.findlayer.21.uid>
+    local.map = <ref1.f_isitmytreasure <src.targp>>
+    ref2 = <local.map>
+	if <src.mining> < <def.treasure_mining_lvl_<ref2.dtag.map.level>>
+		src.sysmessage @,,1 Você não possui habilidade com mineração suficiente para escavar aqui.
+		return 1
+	endif
+	if <local.map>
+		src.f_gettreasure <ref2.tag.map.level>,<uid>,<local.map>,<src.targp>
+		return 1
+	endif
+	src.sysmessage @,,1 Você nao encontrou nada aqui.
+	return 1
+else
+ src.sysmessage @,,1 Voce não possui nenhum mapa em sua bag.
+ return 1
+endif
+
+[ITEMDEF I_PLAYER_BLOOD]
+DEFNAME=I_PLAYER_BLOOD
+NAME=Player's blood //'
+TYPE=T_POTION
+TDATA1=i_bottle_empty
+RESOURCES=i_bottle_empty
+WEIGHT=1
+DESCRIPTION=Potion (Yellow)(Heal)
+SUBSECTION=Potions
+CATEGORY=Provisions - Alchemy & Magic
+
+ON=@Dclick
+TARGET
+RETURN 1
+
+ON=@TargOn_Item
+SRC.SYSMESSAGE @,,1 Items can not be part of this ritual...
+RETURN 1
+
+ON=@TargOn_Char
+IF <ARGO.ISEVENT.E_UNDEAD_MUSTANG_DEAD>
+	IF (<ARGO.TAG0.SANGUEDONO> == 0)
+		AMOUNT -= 1
+		IF <AMOUNT> <= 0
+			remove
+		ENDIF
+		ARGO.TAG.SANGUEDONO = 1
+		SERV.newitem i_bottle_empty,1,<SRC>
+		RETURN 1
+	else
+		SRC.SYSMESSAGE @,,1 That creature has blood on it already...
+		RETURN 1
+	ENDIF
+ENDIF

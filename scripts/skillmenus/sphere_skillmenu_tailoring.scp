@@ -1,0 +1,728 @@
+//Tailoring SKILLMENU
+
+[SKILLMENU sm_tailor_leather]
+Leather
+
+ON=i_LEATHER_TUNIC Monster Leather Armours
+SKILLMENU=sm_monster_leather_armor
+
+ON=i_BOOTS_CALF Footwear
+SKILLMENU=sm_leather_footwear
+
+ON=i_LEATHER_TUNIC Leather Armour
+SKILLMENU=sm_leather_armor
+
+ON=i_STUDDED_TUNIC Studded Armour
+SKILLMENU=sm_leather_studded_armor
+
+ON=i_ARMOR_FEMALE_BUSTIER Female Armour
+SKILLMENU=sm_leather_female_armor
+
+ON=i_BACKPACK Misc
+SKILLMENU=sm_leather_misc
+
+[SKILLMENU sm_monster_leather_armor]
+Monster Leather Armours
+
+ON=i_LEATHER_TUNIC Ogre Lord Leather Armour
+SKILLMENU=sm_ogre_leather_armor
+
+ON=i_LEATHER_TUNIC Drake Leather Armour
+SKILLMENU=sm_drake_leather_armor
+
+ON=i_LEATHER_TUNIC Dragon Leather Armours
+SKILLMENU=sm_dragon_leather_armor
+
+ON=i_LEATHER_TUNIC Wyrm Leather Armours
+SKILLMENU=sm_wyrm_leather_armor
+
+[SKILLMENU sm_ogre_leather_armor]
+Ogre Lord Leather Armour
+
+ON=i_LEATHER_CAP_ogre <name> (<resmake>)
+MAKEITEM=i_LEATHER_CAP_ogre
+
+ON=i_LEATHER_GORGET_ogre <name> (<resmake>)
+MAKEITEM=i_LEATHER_GORGET_ogre
+
+ON=i_LEATHER_GLOVES_ogre <name> (<resmake>)
+MAKEITEM=i_LEATHER_GLOVES_ogre
+
+ON=i_LEATHER_SLEEVES_ogre <name> (<resmake>)
+MAKEITEM=i_LEATHER_SLEEVES_ogre
+
+ON=i_LEATHER_LEGGINGS_ogre <name> (<resmake>)
+MAKEITEM=i_LEATHER_LEGGINGS_ogre
+
+ON=i_LEATHER_TUNIC_ogre <name> (<resmake>)
+MAKEITEM=i_LEATHER_TUNIC_ogre
+
+
+
+
+[SKILLMENU sm_drake_leather_armor]
+Drake Leather Armour
+
+ON=i_LEATHER_CAP_Drake <name> (<resmake>)
+MAKEITEM=i_LEATHER_CAP_Drake
+
+ON=i_LEATHER_GORGET_Drake <name> (<resmake>)
+MAKEITEM=i_LEATHER_GORGET_Drake
+
+ON=i_LEATHER_GLOVES_Drake <name> (<resmake>)
+MAKEITEM=i_LEATHER_GLOVES_Drake
+
+ON=i_LEATHER_SLEEVES_Drake <name> (<resmake>)
+MAKEITEM=i_LEATHER_SLEEVES_Drake
+
+ON=i_LEATHER_LEGGINGS_Drake <name> (<resmake>)
+MAKEITEM=i_LEATHER_LEGGINGS_Drake
+
+ON=i_LEATHER_TUNIC_Drake <name> (<resmake>)
+MAKEITEM=i_LEATHER_TUNIC_Drake
+
+
+
+
+[SKILLMENU sm_Dragon_leather_armor]
+Dragon Leather Armour
+
+ON=i_LEATHER_CAP_Dragon <name> (<resmake>)
+MAKEITEM=i_LEATHER_CAP_Dragon
+
+ON=i_LEATHER_GORGET_Dragon <name> (<resmake>)
+MAKEITEM=i_LEATHER_GORGET_Dragon
+
+ON=i_LEATHER_GLOVES_Dragon <name> (<resmake>)
+MAKEITEM=i_LEATHER_GLOVES_Dragon
+
+ON=i_LEATHER_SLEEVES_Dragon <name> (<resmake>)
+MAKEITEM=i_LEATHER_SLEEVES_Dragon
+
+ON=i_LEATHER_LEGGINGS_Dragon <name> (<resmake>)
+MAKEITEM=i_LEATHER_LEGGINGS_Dragon
+
+ON=i_LEATHER_TUNIC_Dragon <name> (<resmake>)
+MAKEITEM=i_LEATHER_TUNIC_Dragon
+
+
+
+[SKILLMENU sm_Wyrm_leather_armor]
+Wyrm Leather Armour
+
+ON=i_LEATHER_CAP_Wyrm <name> (<resmake>)
+MAKEITEM=i_LEATHER_CAP_Wyrm
+
+ON=i_LEATHER_GORGET_Wyrm <name> (<resmake>)
+MAKEITEM=i_LEATHER_GORGET_Wyrm
+
+ON=i_LEATHER_GLOVES_Wyrm <name> (<resmake>)
+MAKEITEM=i_LEATHER_GLOVES_Wyrm
+
+ON=i_LEATHER_SLEEVES_Wyrm <name> (<resmake>)
+MAKEITEM=i_LEATHER_SLEEVES_Wyrm
+
+ON=i_LEATHER_LEGGINGS_Wyrm <name> (<resmake>)
+MAKEITEM=i_LEATHER_LEGGINGS_Wyrm
+
+ON=i_LEATHER_TUNIC_Wyrm <name> (<resmake>)
+MAKEITEM=i_LEATHER_TUNIC_Wyrm
+
+
+
+
+
+[SKILLMENU sm_tailor_cloth]
+Cloth
+
+
+ON=i_cloth_box <NAME> (<RESMAKE>)
+MAKEITEM i_cloth_box
+
+ON=i_shirt_fancy Shirts
+SKILLMENU=sm_cloth_shirts
+
+ON=i_pants_long Pants
+SKILLMENU=sm_cloth_legwear
+
+ON=i_hat_floppy Headwear
+SKILLMENU=sm_cloth_headwear
+
+ON=i_apron_half Misc.
+SKILLMENU=sm_cloth_misc
+
+ON=i_spellbook Magic Items
+SKILLMENU=sm_cloth_magic
+
+ON=i_robe True Color Clothes
+SKILLMENU=sm_true_cloth
+
+ON=0160d Curtains
+SKILLMENU=sm_cortina
+
+ON=015d8 Banners
+SKILLMENU=sm_banner
+
+
+
+[SKILLMENU sm_true_cloth]
+True Color Clothes
+
+ON=i_robe True Color Robes
+SKILLMENU=sm_true_robes
+
+ON=i_robe Bound True Color Robes
+SKILLMENU=sm_bound_true_robes
+
+ON=i_hat_wizards True Color Headwear
+SKILLMENU=sm_true_hats
+
+ON=i_hat_wizards Bound True Color Headwear
+SKILLMENU=sm_bound_true_hats
+
+ON=i_sandals True Color Footwear
+SKILLMENU=sm_true_sandals
+
+ON=i_sandals Bound True Color Footwear
+SKILLMENU=sm_bound_true_sandals
+
+//ON=i_kilt Misc. True Clothes
+//SKILLMENU=sm_true_misc
+
+
+[SKILLMENU sm_true_robes]
+True Color Robes
+
+ON=i_robe_true_white <name> (<resmake>)
+MAKEITEM=i_robe_true_white
+
+ON=i_true_black_robe <name> (<resmake>)
+MAKEITEM=i_true_black_robe
+
+ON=i_true_gray_robe <name> (<resmake>)
+MAKEITEM=i_true_gray_robe
+
+[SKILLMENU sm_bound_true_robes]
+Bound True Color Robes
+
+ON=i_bound_robe_true_white <name> (<resmake>)
+MAKEITEM=i_bound_robe_true_white
+
+ON=i_bound_true_black_robe <name> (<resmake>)
+MAKEITEM=i_bound_true_black_robe
+
+ON=i_bound_true_gray_robe <name> (<resmake>)
+MAKEITEM=i_bound_true_gray_robe
+
+[SKILLMENU sm_true_hats]
+True Color Headwear
+
+ON=i_true_white_hat <name> (<resmake>)
+MAKEITEM=i_true_white_hat
+
+ON=i_true_black_hat <name> (<resmake>)
+MAKEITEM=i_true_black_hat
+
+ON=i_true_gray_hat <name> (<resmake>)
+MAKEITEM=i_true_gray_hat
+
+[SKILLMENU sm_bound_true_hats]
+Bound True Color Headwear
+
+ON=i_bound_true_white_hat <name> (<resmake>)
+MAKEITEM=i_bound_true_white_hat
+
+ON=i_bound_true_black_hat <name> (<resmake>)
+MAKEITEM=i_bound_true_black_hat
+
+ON=i_bound_true_gray_hat <name> (<resmake>)
+MAKEITEM=i_bound_true_gray_hat
+
+[SKILLMENU sm_true_sandals]
+True Color Footwear
+
+ON=i_true_white_dexterity_sandals <name> (<resmake>)
+MAKEITEM=i_true_white_dexterity_sandals
+
+ON=i_true_black_dexterity_sandals <name> (<resmake>)
+MAKEITEM=i_true_black_dexterity_sandals
+
+ON=i_true_gray_dexterity_sandals <name> (<resmake>)
+MAKEITEM=i_true_gray_dexterity_sandals
+
+[SKILLMENU sm_bound_true_sandals]
+Bound True Color Footwear
+
+ON=i_bound_true_white_dexterity_sandals <name> (<resmake>)
+MAKEITEM=i_bound_true_white_dexterity_sandals
+
+ON=i_bound_true_black_dexterity_sandals <name> (<resmake>)
+MAKEITEM=i_bound_true_black_dexterity_sandals
+
+ON=i_bound_true_gray_dexterity_sandals <name> (<resmake>)
+MAKEITEM=i_bound_true_gray_dexterity_sandals
+
+[SKILLMENU sm_banner]
+Banners
+
+ON=015ae <name> (<resmake>)
+MAKEITEM 015ae
+
+ON=015af <name> (<resmake>)
+MAKEITEM 015af
+
+ON=015b2 <name> (<resmake>)
+MAKEITEM 015b2
+
+ON=015b3 <name> (<resmake>)
+MAKEITEM 015b3
+
+ON=015b4 <name> (<resmake>)
+MAKEITEM 015b4
+
+ON=015b5 <name> (<resmake>)
+MAKEITEM 015b5
+
+ON=015b6 <name> (<resmake>)
+MAKEITEM 015b6
+
+ON=015b7 <name> (<resmake>)
+MAKEITEM 015b7
+
+ON=015b8 <name> (<resmake>)
+MAKEITEM 015b8
+
+ON=015b9 <name> (<resmake>)
+MAKEITEM 015b9
+
+ON=015ba <name> (<resmake>)
+MAKEITEM 015ba
+
+ON=015bb <name> (<resmake>)
+MAKEITEM 015bb
+
+ON=015bc <name> (<resmake>)
+MAKEITEM 015bc
+
+ON=015bd <name> (<resmake>)
+MAKEITEM 015bd
+
+ON=015be <name> (<resmake>)
+MAKEITEM 015be
+
+ON=015bf <name> (<resmake>)
+MAKEITEM 015bf
+
+ON=015c0 <name> (<resmake>)
+MAKEITEM 015c0
+
+ON=015c1 <name> (<resmake>)
+MAKEITEM 015c1
+
+ON=015c2 <name> (<resmake>)
+MAKEITEM 015c2
+
+ON=015c3 <name> (<resmake>)
+MAKEITEM 015c3
+
+ON=015c4 <name> (<resmake>)
+MAKEITEM 015c4
+
+ON=015c5 <name> (<resmake>)
+MAKEITEM 015c5
+
+ON=015c6 <name> (<resmake>)
+MAKEITEM 015c6
+
+ON=015c7 <name> (<resmake>)
+MAKEITEM 015c7
+
+ON=015c8 <name> (<resmake>)
+MAKEITEM 015c8
+
+ON=015c9 <name> (<resmake>)
+MAKEITEM 015c9
+
+ON=015ca <name> (<resmake>)
+MAKEITEM 015ca
+
+ON=015cb <name> (<resmake>)
+MAKEITEM 015cb
+
+ON=015cc <name> (<resmake>)
+MAKEITEM 015cc
+
+ON=015cd <name> (<resmake>)
+MAKEITEM 015cd
+
+ON=015ce <name> (<resmake>)
+MAKEITEM 015ce
+
+ON=015cf <name> (<resmake>)
+MAKEITEM 015cf
+
+ON=015d0 <name> (<resmake>)
+MAKEITEM 015d0
+
+ON=015d1 <name> (<resmake>)
+MAKEITEM 015d1
+
+ON=015d2 <name> (<resmake>)
+MAKEITEM 015d2
+
+ON=015d3 <name> (<resmake>)
+MAKEITEM 015d3
+
+ON=015d4 <name> (<resmake>)
+MAKEITEM 015d4
+
+ON=015d5 <name> (<resmake>)
+MAKEITEM 015d5
+
+ON=015d6 <name> (<resmake>)
+MAKEITEM 015d6
+
+ON=015d7 <name> (<resmake>)
+MAKEITEM 015d7
+
+ON=015d8 <name> (<resmake>)
+MAKEITEM 015d8
+
+ON=015d9 <name> (<resmake>)
+MAKEITEM 015d9
+
+ON=015da <name> (<resmake>)
+MAKEITEM 015da
+
+ON=015db <name> (<resmake>)
+MAKEITEM 015db
+
+ON=015dc <name> (<resmake>)
+MAKEITEM 015dc
+
+ON=015dd <name> (<resmake>)
+MAKEITEM 015dd
+
+ON=015de <name> (<resmake>)
+MAKEITEM 015de
+
+ON=015df <name> (<resmake>)
+MAKEITEM 015df
+
+ON=015e0 <name> (<resmake>)
+MAKEITEM 015e0
+
+ON=015e1 <name> (<resmake>)
+MAKEITEM 015e1
+
+ON=015e2 <name> (<resmake>)
+MAKEITEM 015e2
+
+ON=015e3 <name> (<resmake>)
+MAKEITEM 015e3
+
+ON=015e4 <name> (<resmake>)
+MAKEITEM 015e4
+
+ON=015e5 <name> (<resmake>)
+MAKEITEM 015e5
+
+ON=015e6 <name> (<resmake>)
+MAKEITEM 015e6
+
+ON=015e7 <name> (<resmake>)
+MAKEITEM 015e7
+
+ON=015e8 <name> (<resmake>)
+MAKEITEM 015e8
+
+ON=015e9 <name> (<resmake>)
+MAKEITEM 015e9
+
+ON=015ea <name> (<resmake>)
+MAKEITEM 015ea
+
+ON=015eb <name> (<resmake>)
+MAKEITEM 015eb
+
+ON=015ec <name> (<resmake>)
+MAKEITEM 015ec
+
+ON=015ed <name> (<resmake>)
+MAKEITEM 015ed
+
+ON=015ee <name> (<resmake>)
+MAKEITEM 015ee
+
+ON=015ef <name> (<resmake>)
+MAKEITEM 015ef
+
+ON=015f0 <name> (<resmake>)
+MAKEITEM 015f0
+
+ON=015f1 <name> (<resmake>)
+MAKEITEM 015f1
+
+ON=015f2 <name> (<resmake>)
+MAKEITEM 015f2
+
+ON=015f3 <name> (<resmake>)
+MAKEITEM 015f3
+
+ON=015f4 <name> (<resmake>)
+MAKEITEM 015f4
+
+ON=015f5 <name> (<resmake>)
+MAKEITEM 015f5
+
+[SKILLMENU sm_cortina]
+Cortinas
+
+[SKILLMENU sm_cloth_magic]
+Magic Items
+
+ON=i_ghealsash Greater Heal 30 MR-GI-GA-SS
+makeitem=i_ghealsash
+
+ON=i_magic_mask_tribal Tribal Mask 50 cloth 50 MR 50 GA + mask
+makeitem=i_magic_mask_tribal
+
+ON=i_magic_mask_orc Orc Mask 50 cloth 50 MR 50 GA + mask
+makeitem=i_magic_mask_orc
+
+
+ON=i_magic_helm_orc Orc Helm 100 cloth 100 MR 100 GA + mask
+makeitem=i_magic_helm_orc
+
+
+ON=i_magic_mask_deer Deer Mask 50 cloth 50 MR 50 GA + mask
+makeitem=i_magic_mask_deer
+
+
+ON=i_magic_mask Magic Mask 50 cloth 50 MR 50 GA
+makeitem=i_magic_mask
+
+ON=0154b Trap Mask 200 cloth + 50 NS
+MAKEITEM=i_trap_mask
+
+ON=0154b Plague Mask 200 cloth + 50 NS
+MAKEITEM=i_plague_mask
+
+ON=i_magic_mask_bear Bear Mask 50 cloth 50 MR 50 GA + mask
+makeitem=i_magic_mask_bear
+
+ON=i_magic_mask_bear_polar Polar Bear Mask 50 cloth 50 MR 50 GA + mask
+makeitem=i_magic_mask_bear_polar
+
+
+ON=i_magic_mask_bear_black Black Bear Mask 50 cloth 50 MR 50 GA + mask
+makeitem i_magic_mask_bear_black
+
+ON=i_robe_of_cure Cure Robe 50 GA
+MAKEITEM i_robe_of_cure
+
+ON=i_dress_of_cure Cure Robe 50 GA
+MAKEITEM i_dress_of_cure
+
+ON=i_bless_robe Bless 100 MR-GA
+makeitem i_bless_robe
+
+ON=i_bless_dress_plain Blessed Dress 100 MR-GA
+makeitem i_bless_dress_plain
+
+ON=i_bless_dress_full Blessed Dress 100 MR-GA
+makeitem i_bless_dress_full
+
+ON=i_mage_robe Mage Robe 50 cloth
+makeitem i_mage_robe
+
+
+
+[SKILLMENU sm_leather_footwear]
+Footwear
+
+ON=i_SANDALS <name> (<resmake>)
+MAKEITEM=i_SANDALS
+
+ON=i_SHOES_PLAIN <name> (<resmake>)
+MAKEITEM=i_SHOES_PLAIN
+
+ON=i_BOOTS_CALF <name> (<resmake>)
+MAKEITEM=i_BOOTS_CALF
+
+ON=i_BOOTS_THIGH <name> (<resmake>)
+MAKEITEM=i_BOOTS_THIGH
+
+[SKILLMENU sm_leather_armor]
+Leather Armour
+
+ON=i_LEATHER_CAP <name> (<resmake>)
+MAKEITEM=i_LEATHER_CAP
+
+ON=i_LEATHER_GORGET <name> (<resmake>)
+MAKEITEM=i_LEATHER_GORGET
+
+ON=i_LEATHER_GLOVES <name> (<resmake>)
+MAKEITEM=i_LEATHER_GLOVES
+
+ON=i_LEATHER_SLEEVES <name> (<resmake>)
+MAKEITEM=i_LEATHER_SLEEVES
+
+ON=i_LEATHER_LEGGINGS <name> (<resmake>)
+MAKEITEM=i_LEATHER_LEGGINGS
+
+ON=i_LEATHER_TUNIC <name> (<resmake>)
+MAKEITEM=i_LEATHER_TUNIC
+
+[SKILLMENU sm_leather_studded_armor]
+Studded Armour
+
+ON=i_STUDDED_GORGET <name> (<resmake>)
+MAKEITEM=i_STUDDED_GORGET
+
+ON=i_STUDDED_GLOVES <name> (<resmake>)
+MAKEITEM=i_STUDDED_GLOVES
+
+ON=i_STUDDED_SLEEVES <name> (<resmake>)
+MAKEITEM=i_STUDDED_SLEEVES
+
+ON=i_STUDDED_LEGGINGS <name> (<resmake>)
+MAKEITEM=i_STUDDED_LEGGINGS
+
+ON=i_STUDDED_TUNIC <name> (<resmake>)
+MAKEITEM=i_STUDDED_TUNIC
+
+[SKILLMENU sm_leather_female_armor]
+Female Armour
+
+ON=i_armor_female_shorts <name> (<resmake>)
+MAKEITEM=i_armor_female_shorts
+
+ON=i_armor_female_bustier <name> (<resmake>)
+MAKEITEM=i_armor_female_bustier
+
+ON=i_armor_female_bustier_studded <name> (<resmake>)
+MAKEITEM=i_armor_female_bustier_studded
+
+ON=i_armor_female_studded <name> (<resmake>)
+MAKEITEM=i_armor_female_studded
+
+ON=i_armor_female_skirt <name> (<resmake>)
+MAKEITEM=i_armor_female_skirt
+
+ON=i_armor_female_LEATHER <name> (<resmake>)
+MAKEITEM=i_armor_female_LEATHER
+
+[SKILLMENU sm_leather_misc]
+Packs
+
+ON=i_backpack <name> (<resmake>)
+MAKEITEM=i_backpack
+
+ON=i_pack_backpack <name> (<resmake>)
+MAKEITEM=i_pack_backpack
+
+ON=i_bag <name> (<resmake>)
+MAKEITEM=i_bag
+
+ON=i_pouch <name> (<resmake>)
+MAKEITEM=i_pouch
+
+ON=i_bag Trap Bag 20 SA 5 Hides
+makeitem=i_trap_bag
+
+[SKILLMENU sm_cloth_shirts]
+Shirts
+
+ON=i_shirt_plain <name> (<resmake>)
+MAKEITEM=i_shirt_plain
+
+ON=i_shirt_fancy <name> (<resmake>)
+MAKEITEM=i_shirt_fancy
+
+ON=i_doublet <name> (<resmake>)
+MAKEITEM=i_doublet
+
+ON=i_dress_plain <name> (<resmake>)
+MAKEITEM=i_dress_plain
+
+ON=i_dress_full <name> (<resmake>)
+MAKEITEM=i_dress_full
+
+ON=i_robe <name> (<resmake>)
+MAKEITEM=i_robe
+
+ON=i_cape <name> (<resmake>)
+MAKEITEM=i_cape
+
+ON=i_jester_suit <name> (<resmake>)
+MAKEITEM=i_jester_suit
+
+ON=i_tunic <name> (<resmake>)
+MAKEITEM=i_tunic
+
+ON=i_surcoat <name> (<resmake>)
+MAKEITEM=i_surcoat
+
+[SKILLMENU sm_cloth_legwear]
+Legwear
+
+ON=i_pants_short <name> (<resmake>)
+MAKEITEM=i_pants_short
+
+ON=i_pants_long <name> (<resmake>)
+MAKEITEM=i_pants_long
+
+ON=i_skirt_long <name> (<resmake>)
+MAKEITEM=i_skirt_long
+
+ON=i_kilt <name> (<resmake>)
+MAKEITEM=i_kilt
+
+[SKILLMENU sm_cloth_headwear]
+Headwear
+
+ON=i_bandana <name> (<resmake>)
+MAKEITEM=i_bandana
+
+ON=i_SKULL_CAP <name> (<resmake>)
+MAKEITEM=i_SKULL_CAP
+
+ON=i_hat_floppy <name> (<resmake>)
+MAKEITEM=i_hat_floppy
+
+ON=i_hat_wide_brim <name> (<resmake>)
+MAKEITEM=i_hat_wide_brim
+
+ON=i_hat_feather <name> (<resmake>)
+MAKEITEM=i_hat_feather
+
+ON=i_hat_tricorne <name> (<resmake>)
+MAKEITEM=i_hat_tricorne
+
+ON=i_hat_straw_tall <name> (<resmake>)
+MAKEITEM=i_hat_straw_tall
+
+ON=i_hat_straw <name> (<resmake>)
+MAKEITEM=i_hat_straw
+
+ON=i_bonnet <name> (<resmake>)
+MAKEITEM=i_bonnet
+
+ON=i_hat_jester <name> (<resmake>)
+MAKEITEM=i_hat_jester
+
+ON=i_hat_wizards <name> (<resmake>)
+MAKEITEM=i_hat_wizards
+
+[SKILLMENU sm_cloth_misc]
+Misc.
+
+ON=i_SASH <name> (<resmake>)
+MAKEITEM=i_SASH
+
+ON=i_apron_half <name> (<resmake>)
+MAKEITEM=i_apron_half
+
+ON=i_apron_full <name> (<resmake>)
+MAKEITEM=i_apron_full

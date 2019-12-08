@@ -1,0 +1,194 @@
+[DEFNAME random_maps]
+random_map1_3 {i_treasure_map_lvl_1 4 i_treasure_map_lvl_2 4 i_treasure_map_lvl_3 1}
+random_map2_3 {i_treasure_map_lvl_2 4 i_treasure_map_lvl_3 2}
+random_map2_4 {i_treasure_map_lvl_2 5 i_treasure_map_lvl_3 9 i_treasure_map_lvl_4 1}
+random_map3_4 {i_treasure_map_lvl_3 7 i_treasure_map_lvl_4 1}
+true_cloth {i_panotrue_w 1 i_panotrue_b 1 i_panotrue_g 1}
+
+[TEMPLATE T_GRAVE_DIGGER_MAP]
+ITEM={i_treasure_map_lvl_4 2 i_treasure_map_lvl_5 1}
+
+[TEMPLATE T_TREAS_MAPS_1a3]
+item={i_treasure_map_lvl_1 70 i_treasure_map_lvl_2 25 i_treasure_map_lvl_3 5}
+
+[TEMPLATE T_TREAS_MAPS_3a5]
+item={i_treasure_map_lvl_3 70 i_treasure_map_lvl_4 25 i_treasure_map_lvl_5 5}
+
+[TEMPLATE T_TREAS_MAPS_1a4]
+item={i_treasure_map_lvl_1 45 i_treasure_map_lvl_2 35 i_treasure_map_lvl_3 15 i_treasure_map_lvl_4 10}
+
+[TEMPLATE t_ruin_weapon]
+ITEM={i_ruin_axe_battle 1 i_ruin_pitchfork 1 i_ruin_axe_exec 1 i_ruin_axe 1 i_ruin_Crossbow 1 i_ruin_katana 1 i_ruin_kryss 1 i_ruin_viking 1 i_ruin_halberd 1 i_ruin_bardiche 1 i_ruin_war_fork 1 i_ruin_mace_war 1 i_ruin_axe_war 1 i_ruin_bow 1}
+
+[TEMPLATE t_might_weapon]
+ITEM={i_might_axe_battle 1 i_might_pitchfork 1 i_might_axe_exec 1 i_might_axe 1 i_might_Crossbow 1 i_might_katana 1 i_might_kryss 1 i_might_viking 1 i_might_halberd 1 i_might_bardiche 1 i_might_war_fork 1 i_might_mace_war 1 i_might_axe_war 1 i_might_bow 1}
+
+[TEMPLATE t_force_weapon]
+ITEM={i_force_axe_battle 1 i_force_pitchfork 1 i_force_axe_exec 1 i_force_axe 1 i_force_Crossbow 1 i_force_katana 1 i_force_kryss 1 i_force_viking 1 i_force_halberd 1 i_force_bardiche 1 i_force_war_fork 1 i_force_mace_war 1 i_force_axe_war 1 i_force_bow 1}
+
+[TEMPLATE t_power_weapon]
+ITEM={i_power_axe_battle 1 i_power_pitchfork 1 i_power_axe_exec 1 i_power_axe 1 i_power_Crossbow 1 i_power_katana 1 i_power_kryss 1 i_power_viking 1 i_power_halberd 1 i_power_bardiche 1 i_power_war_fork 1 i_power_mace_war 1 i_power_axe_war 1 i_power_bow 1}
+
+[TEMPLATE t_vanquish_weapon]
+ITEM={i_vanquish_axe_battle 1 i_vanquish_pitchfork 1 i_vanquish_axe_exec 1 i_vanquish_axe 1 i_vanquish_Crossbow 1 i_vanquish_katana 1 i_vanquish_kryss 1 i_vanquish_viking 1 i_vanquish_halberd 1 i_vanquish_bardiche 1 i_vanquish_war_fork 1 i_vanquish_mace_war 1 i_vanquish_axe_war 1 i_vanquish_bow 1}
+
+[TEMPLATE t_blood_weapon_template]
+ITEM={i_Blood_katana 1 i_Blood_axe_exec 1 i_blood_axe_battle_large 1 i_blood_mace 1 i_blood_kryss 1 i_blood_mace_war 1 i_blood_hammer_War 1 i_blood_pitchfork 1 i_blood_bardiche 1 i_blood_halberd 1 i_blood_spear 1 i_blood_war_fork 1 i_blood_scimitar 1 i_blood_longsword 1 }
+
+[Template t_silver_weapon_template]
+ITEM={i_silver_katana 1 i_silver_axe_exec 1 i_silver_axe_battle_large 1 i_silver_mace 1 i_silver_kryss 1 i_silver_mace_war 1 i_silver_hammer_War 1 i_silver_pitchfork 1 i_silver_bardiche 1 i_silver_halberd 1 i_silver_spear 1 i_silver_war_fork 1 i_silver_scimitar 1 i_silver_longsword 1 }
+
+[TEMPLATE random_deco]
+ITEM={ i_pillow 1 i_pillow_2 1 i_pillow_large 1 i_pillow_9 1 i_pillow_10 1 i_pillow_11 1 i_pillow_3 1 i_pillow_4 1 i_pillow_5 1 i_pillow_6 1 i_pillow_7 1 i_pillow_8 1 i_portrait_1 1 i_portrait_2 1 i_portrait_3 1 i_portrait_4 1 i_portrait_5 1 i_portrait_6 1 i_portrait_7 1 i_portrait_big 1 i_painting_ruined 1 i_lamppost3_lit 1 i_pot_of_wax 1 i_plant_potted_small 1 i_flower_potted_small 1 i_tree_small_potted_2 1 i_tree_large_potted 1 i_tree_small_potted 1 }
+
+[TEMPLATE tm_treasure_chest_lvl_1]
+CATEGORY=Item Templates
+SUBSECTION=Treasure Hunting
+DESCRIPTION=Treasure Chest Level #1
+CONTAINER=i_chest_metal_brass
+ITEM=i_gold,{8000 12000}
+ITEM=i_reag_black_pearl,{40}
+ITEM=i_reag_blood_moss,{40}
+ITEM=i_reag_garlic,{40}
+ITEM=i_reag_ginseng,{40}
+ITEM=i_reag_mandrake_root,{40}
+ITEM=i_reag_nightshade,{40}
+ITEM=i_reag_sulfur_ash,{40}
+ITEM=i_reag_spider_silk,{40}
+ITEM=i_reag_batwing,{40}
+ITEM=i_reag_eye_of_newt,{40}
+ITEM=i_reag_worm_heart,{40}
+ITEM=t_ruin_weapon
+ITEM=i_treasure_map_lvl_2
+
+[TEMPLATE tm_treasure_chest_lvl_2]
+CATEGORY=Item Templates
+SUBSECTION=Treasure Hunting
+DESCRIPTION=Treasure Chest Level #2
+CONTAINER=i_chest_metal_brass
+ITEM=i_gold,{12000 16000}
+ITEM=i_reag_black_pearl,{60}
+ITEM=i_reag_blood_moss,{60}
+ITEM=i_reag_garlic,{60}
+ITEM=i_reag_ginseng,{60}
+ITEM=i_reag_mandrake_root,{60}
+ITEM=i_reag_nightshade,{60}
+ITEM=i_reag_sulfur_ash,{60}
+ITEM=i_reag_spider_silk,{60}
+ITEM=i_reag_batwing,{60}
+ITEM=i_reag_eye_of_newt,{60}
+ITEM=i_reag_worm_heart,{60}
+ITEM=t_might_weapon,R2
+ITEM=i_treasure_map_lvl_3,R2
+
+[TEMPLATE tm_treasure_chest_lvl_3]
+CATEGORY=Item Templates
+SUBSECTION=Treasure Hunting
+DESCRIPTION=Treasure Chest Level #3
+CONTAINER=i_chest_metal_brass
+ITEM=i_gold,{16000 20000}
+ITEM=i_reag_black_pearl,{80}
+ITEM=i_reag_blood_moss,{80}
+ITEM=i_reag_garlic,{80}
+ITEM=i_reag_ginseng,{80}
+ITEM=i_reag_mandrake_root,{80}
+ITEM=i_reag_nightshade,{80}
+ITEM=i_reag_sulfur_ash,{80}
+ITEM=i_reag_spider_silk,{80}
+ITEM=i_reag_batwing,{80}
+ITEM=i_reag_eye_of_newt,{80}
+ITEM=i_reag_wOrm_heart,{80}
+ITEM=t_force_weapon,R2
+ITEM=i_treasure_map_lvl_4,R3
+
+[TEMPLATE tm_treasure_chest_lvl_4]
+CATEGORY=Item Templates
+SUBSECTION=Treasure Hunting
+DESCRIPTION=Treasure Chest Level #4
+CONTAINER=i_chest_metal_brass
+ITEM=i_gold,{20000 30000}
+ITEM=i_reag_black_pearl,{120}
+ITEM=i_reag_blood_moss,{120}
+ITEM=i_reag_garlic,{120}
+ITEM=i_reag_ginseng,{120}
+ITEM=i_reag_mandrake_root,{120}
+ITEM=i_reag_nightshade,{120}
+ITEM=i_reag_sulfur_ash,{120}
+ITEM=i_reag_spider_silk,{120}
+ITEM=i_reag_batwing,{120}
+ITEM=i_reag_eye_of_newt,{120}
+ITEM=i_reag_worm_heart,{120}
+ITEM=i_gem_star_sapphire,{5}
+ITEM=i_gem_emerald,{5}
+ITEM=i_gem_sapphire,{5}
+ITEM=i_gem_ruby,{5}
+ITEM=i_gem_citrine,{5}
+ITEM=i_gem_amethyst,{5}
+ITEM=i_gem_tourmaline,{5}
+ITEM=i_gem_amber,{5}
+ITEM=i_gem_diamond,{5}
+ITEM=t_power_weapon
+ITEM=i_treasure_map_lvl_5,R4
+
+[TEMPLATE tm_treasure_chest_lvl_5]
+CATEGORY=Item Templates
+SUBSECTION=Treasure Hunting
+DESCRIPTION=Treasure Chest Level #5
+CONTAINER=i_chest_metal_brass
+ITEM=i_gold,{30000 40000}
+ITEM=i_reag_black_pearl,{160}
+ITEM=i_reag_blood_moss,{160}
+ITEM=i_reag_garlic,{160}
+ITEM=i_reag_ginseng,{160}
+ITEM=i_reag_mandrake_root,{160}
+ITEM=i_reag_nightshade,{160}
+ITEM=i_reag_sulfur_ash,{160}
+ITEM=i_reag_spider_silk,{160}
+ITEM=i_reag_batwing,{160}
+ITEM=i_reag_eye_of_newt,{160}
+ITEM=i_reag_worm_heart,{160}
+ITEM=i_gem_star_sapphire,{10}
+ITEM=i_gem_emerald,{10}
+ITEM=i_gem_sapphire,{10}
+ITEM=i_gem_ruby,{10}
+ITEM=i_gem_citrine,{10}
+ITEM=i_gem_amethyst,{10}
+ITEM=i_gem_tourmaline,{10}
+ITEM=i_gem_amber,{10}
+ITEM=i_gem_diamond,{10}
+ITEM=t_vanquish_weapon
+ITEM=random_deco
+ITEM=i_treasure_map_lvl_6,R4
+
+[TEMPLATE tm_treasure_chest_lvl_6]
+CATEGORY=Item Templates
+SUBSECTION=Treasure Hunting
+DESCRIPTION=Treasure Chest Level #6
+CONTAINER=i_chest_metal_brass
+ITEM=i_gold,{50000 60000}
+ITEM=i_reag_black_pearl,{240}
+ITEM=i_reag_blood_moss,{240}
+ITEM=i_reag_garlic,{240}
+ITEM=i_reag_ginseng,{240}
+ITEM=i_reag_mandrake_root,{240}
+ITEM=i_reag_nightshade,{240}
+ITEM=i_reag_sulfur_ash,{240}
+ITEM=i_reag_spider_silk,{240}
+ITEM=i_reag_batwing,{240}
+ITEM=i_reag_eye_of_newt,{240}
+ITEM=i_reag_worm_heart,{240}
+ITEM=i_gem_star_sapphire,{15}
+ITEM=i_gem_emerald,{15}
+ITEM=i_gem_sapphire,{15}
+ITEM=i_gem_ruby,{15}
+ITEM=i_gem_citrine,{15}
+ITEM=i_gem_amethyst,{15}
+ITEM=i_gem_tourmaline,{15}
+ITEM=i_gem_amber,{15}
+ITEM=i_gem_diamond,{15}
+ITEM=t_vanquish_weapon
+ITEM=t_vanquish_weapon
+ITEM=random_deco
+ITEM=random_deco
+
+[eof]

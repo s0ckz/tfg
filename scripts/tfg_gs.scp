@@ -1,0 +1,53 @@
+
+[ITEMDEF i_deed_gs]
+ID=i_deed
+NAME=Deed to a Guildstone
+RESOURCES=i_deed,i_guild_stone
+
+CATEGORY=Provisions - Deeds
+SUBSECTION=Guild and Town Stones
+DESCRIPTION=Guild Stone
+
+ON=@Create
+MORE=i_guild_stone
+
+ON=@Targon_Item
+	RETURN 1
+
+ON=@Targon_Char
+	RETURN 1
+
+ON=@Targon_Ground
+//IF (<SRC.REGION.FLAGS> & 04000)
+//	SRC.MESSAGE Voce nao pode colocar uma Guild Stone na protecao.
+//	RETURN 1
+//ENDIF
+IF (<SRC.REGION.FLAGS> & 02000)
+	SRC.MESSAGE Voce nao pode colocar uma Guild Stone em safe area.
+	RETURN 1
+ENDIF
+
+[ITEMDEF i_guild_stone]
+// Guild Stone
+ID=i_guildstone
+NAME=Guildstone
+TYPE=T_STONE_GUILD
+CATEGORY=Provisions - Deeds
+SUBSECTION=Guild and Town Stones
+DESCRIPTION=Guild Stone
+VALUE=500000
+
+ON=@CREATE
+COLOR=0455
+ATTR=010
+
+ON=@DCLICK
+COLOR=0455
+ATTR=010
+
+CATEGORY=Provisions - Deeds
+SUBSECTION=Guild and Town Stones
+DESCRIPTION=Guild Stone
+
+
+[EOF]

@@ -1,0 +1,4660 @@
+
+
+
+
+
+
+
+
+
+//----------------Arena NPC com Compenentes----------------//
+//Mult da Arena NPC, já ocm os componentes todos, só       //
+//setar TYPE 38 na ank e colocar a Pedra(i_pedranpc)       //
+//emcima do bloco.                                         //
+//---------------------------------------------------------//
+[ITEMDEF 04055]
+DEFNAME=i_Arena_NPC
+NAME=Arena NPC
+TYPE=T_MULTI
+VALUE=999999999
+MULTIREGION=-16,-11,16,11
+//COMPONENT=1900,10,-1 // Pilar p/ Pedra
+//COMPONENT=4650,10,-1,5 // Blood
+//COMPONENT=7040,11,0 // Esqueleto
+COMPONENT=7772,-10,-8,4 // Ank Setar TYPE=38
+COMPONENT=7773,-11,-8,4 // Ank Setar TYPE=38
+//COMPONENT=7572,-13,-7 // Blood
+//COMPONENT=7572,-13,-5 // Blood
+//COMPONENT=7412,-10,-7,5  // Blood
+//COMPONENT=7410,-11,-7,5  // Blood
+CATEGORY=MULTIS
+SUBSECTION=Custom Structures
+DESCRIPTION=Arena NPC
+
+//---------------------------------------------------------//
+
+
+//----------------Deed da Arena NPC----------------//
+[ITEMDEF i_deed_Arena_NPC]
+DEFNAME=i_deed_Arena_NPC
+NAME=Deed to a Arena NPC
+ID=i_Deed
+RESOURCES=i_deed, i_Arena_NPC
+
+ON=@Create
+MORE=04055
+
+CATEGORY=Provisons - Deeds
+SUBSECTION=Custom Deeds
+DESCRIPTION=Deed to Arena NPC
+
+on=@timer
+return=0
+
+//------------------------------------------------//
+
+
+//-----------------Setando Regiao-----------------//
+//Tem que colocar essa AREA pra setar as FLAGS,   //
+//se quiser colocar um ON=@ENTER pra falar        //
+//Bem Vindo a Arena NPC tb pode, isso é o de menos//
+//------------------------------------------------//
+//[AREA Arenas NPC]
+//FLAGS=0c86 // Veja as que eu setei, pra mim assim ta bom, mais pode mudar tb
+//RECT=6128,525,6092,1258 // Esse retangulo tem q pegar TODAS as 20 arenas
+//P=6109,965
+//------------------------------------------------//
+
+
+//----------------Item Ticket----------------//
+[ITEMDEF i_L00]
+DEFNAME=i_L00
+NAME=Ticket Arena Concluida
+ID=3607
+ON=@Create
+COLOR=0022
+
+on=@timer
+return=0
+
+[ITEMDEF i_L2]
+DEFNAME=i_L2
+NAME=Ticket Arena LVL2
+ID=3607
+ON=@Create
+COLOR=0022
+
+on=@timer
+return=0
+
+[ITEMDEF i_L3]
+DEFNAME=i_L3
+NAME=Ticket Arena LVL3
+ID=3607
+ON=@Create
+COLOR=0022
+
+on=@timer
+return=0
+
+[ITEMDEF i_L4]
+DEFNAME=i_L4
+NAME=Ticket Arena LVL4
+ID=3607
+ON=@Create
+COLOR=0022
+
+on=@timer
+return=0
+
+[ITEMDEF i_L5]
+DEFNAME=i_L5
+NAME=Ticket Arena LVL5
+ID=3607
+ON=@Create
+COLOR=0022
+
+on=@timer
+return=0
+
+[ITEMDEF i_L6]
+DEFNAME=i_L6
+NAME=Ticket Arena LVL6
+ID=3607
+ON=@Create
+COLOR=0022
+
+on=@timer
+return=0
+
+[ITEMDEF i_L7]
+DEFNAME=i_L7
+NAME=Ticket Arena LVL7
+ID=3607
+ON=@Create
+COLOR=0022
+
+on=@timer
+return=0
+
+[ITEMDEF i_L8]
+DEFNAME=i_L8
+NAME=Ticket Arena LVL8
+ID=3607
+ON=@Create
+COLOR=0022
+
+on=@timer
+return=0
+
+[ITEMDEF i_L9]
+DEFNAME=i_L9
+NAME=Ticket Arena LVL9
+ID=3607
+ON=@Create
+COLOR=0022
+
+on=@timer
+return=0
+
+[ITEMDEF i_L10]
+DEFNAME=i_L10
+NAME=Ticket Arena LVL10
+ID=3607
+ON=@Create
+COLOR=0022
+
+on=@timer
+return=0
+
+[ITEMDEF i_L11]
+DEFNAME=i_L11
+NAME=Ticket Arena LVL11
+ID=3607
+ON=@Create
+COLOR=0022
+
+on=@timer
+return=0
+
+[ITEMDEF i_L12]
+DEFNAME=i_L12
+NAME=Ticket Arena LVL12
+ID=3607
+ON=@Create
+COLOR=0022
+
+on=@timer
+return=0
+
+[ITEMDEF i_L13]
+DEFNAME=i_L13
+NAME=Ticket Arena LVL13
+ID=3607
+ON=@Create
+COLOR=0022
+
+on=@timer
+return=0
+
+[ITEMDEF i_L14]
+DEFNAME=i_L14
+NAME=Ticket Arena LVL14
+ID=3607
+ON=@Create
+COLOR=0022
+
+on=@timer
+return=0
+
+[ITEMDEF i_L15]
+DEFNAME=i_L15
+NAME=Ticket Arena LVL15
+ID=3607
+ON=@Create
+COLOR=0022
+
+on=@timer
+return=0
+
+[ITEMDEF i_L16]
+DEFNAME=i_L16
+NAME=Ticket Arena LVL16
+ID=3607
+ON=@Create
+COLOR=0022
+
+on=@timer
+return=0
+
+[ITEMDEF i_L17]
+DEFNAME=i_L17
+NAME=Ticket Arena LVL17
+ID=3607
+ON=@Create
+COLOR=0022
+
+on=@timer
+return=0
+
+[ITEMDEF i_L18]
+DEFNAME=i_L18
+NAME=Ticket Arena LVL18
+ID=3607
+ON=@Create
+COLOR=0022
+
+on=@timer
+return=0
+
+[ITEMDEF i_L19]
+DEFNAME=i_L19
+NAME=Ticket Arena LVL19
+ID=3607
+ON=@Create
+COLOR=0022
+
+on=@timer
+return=0
+
+[ITEMDEF i_L20]
+DEFNAME=i_L20
+NAME=Ticket Arena LVL20
+ID=3607
+ON=@Create
+COLOR=0022
+
+on=@timer
+return=0
+
+//-------------------------------------------//
+
+
+//Os NPCs foram divididos em 4 leveis de magia, 1-5, 6-10, 11-15, 16-20. Cada levels 
+//desses 4 muda a cor da plate, mais isso só pra enfeite mesmo, e o ultimo alme de ser 
+//o unico com uma plate cor de mytheril ele tb ta com um order shield e é Lord tb.
+//Outra coisa que tive que mudar é o loot, eu tinha colocado o ticket no loot, mais
+//lembrei que da pra ressar o NPC e vem outro ticket no loot, imagina alguem com 
+//1 ticket lvl20, só vai ressando o NPC lvl20 qtas vezes quiser...fica rico...
+//Então eu coloquei ele conjured pro body dele sumir ao morrer, e coloquei um
+//ON=@DEATH pro ticket aparece no chao onde ele morreu. Acho que assim é impossivel
+//de bugar.
+//-----------------------------------NPC Lvl 1-----------------------------------//
+[CHARDEF n_arena_lvl1]
+DEFNAME=n_arena_lvl1
+NAME=#NAMES_HUMANMALE LEVEL 1
+ID=C_MAN
+icon=020f8
+ANIM=07bc7f
+DAM=10
+ARMOR=10
+
+ON=@CREATE
+FLAGS=004000000
+STR=150
+MAXHITS=300
+DEX=200
+INT=10
+
+PARRYING=200.0 
+FENCING=200.0 
+MAGERY=200.0 200.0
+MAGICRESISTANCE=200.0 
+TACTICS=200.0 
+SWORDSMANSHIP=200.0 
+
+FAME=1 
+KARMA=-3000
+NPC=brain_monster
+
+ITEMNEWBIE=i_spellbook
+ADDCIRCLE 8,5
+ITEMNEWBIE=i_npcplate_gorget
+ITEMNEWBIE=i_npcplate_platemail
+ITEMNEWBIE=i_npcplate_arms
+ITEMNEWBIE=i_npcplate_leggings
+ITEMNEWBIE=i_npcplate_shield
+ITEMNEWBIE=i_npcplate_gloves
+ITEMNEWBIE=i_npcplate_kryss
+ITEMNEWBIE=i_npcplate_helm
+
+ON=@Death
+NEWITEM=i_L2
+ACT.P=<P>
+
+[CHARDEF n_arena_lvl2]
+DEFNAME=n_arena_lvl2
+NAME=#NAMES_HUMANMALE LEVEL 2
+ID=C_MAN
+icon=020f8
+ANIM=07bc7f
+DAM=11
+ARMOR=11
+
+ON=@CREATE
+FLAGS=004000000
+STR=200
+MAXHITS=400
+DEX=200
+INT=10
+
+PARRYING=200.0 
+FENCING=200.0 
+MAGERY=200.0 200.0
+MAGICRESISTANCE=200.0 
+TACTICS=200.0 
+SWORDSMANSHIP=200.0 
+
+FAME=1 
+KARMA=-3000
+NPC=brain_monster
+
+ITEMNEWBIE=i_spellbook
+ADDCIRCLE 8,5
+ITEMNEWBIE=i_npcplate_gorget
+ITEMNEWBIE=i_npcplate_platemail
+ITEMNEWBIE=i_npcplate_arms
+ITEMNEWBIE=i_npcplate_leggings
+ITEMNEWBIE=i_npcplate_shield
+ITEMNEWBIE=i_npcplate_gloves
+ITEMNEWBIE=i_npcplate_kryss
+ITEMNEWBIE=i_npcplate_helm
+
+ON=@Death
+NEWITEM=i_L3
+ACT.P=<P>
+
+[CHARDEF n_arena_lvl3]
+DEFNAME=n_arena_lvl3
+NAME=#NAMES_HUMANMALE LEVEL 3
+ID=C_MAN
+icon=020f8
+ANIM=07bc7f
+DAM=12
+ARMOR=12
+
+ON=@CREATE
+FLAGS=004000000
+STR=250
+MAXHITS=500
+DEX=200
+INT=10
+
+PARRYING=200.0 
+FENCING=200.0 
+MAGERY=200.0 200.0
+MAGICRESISTANCE=200.0 
+TACTICS=200.0 
+SWORDSMANSHIP=200.0 
+
+FAME=1 
+KARMA=-3000
+NPC=brain_monster
+
+ITEMNEWBIE=i_spellbook
+ADDCIRCLE 8,5
+ITEMNEWBIE=i_npcplate_gorget
+ITEMNEWBIE=i_npcplate_platemail
+ITEMNEWBIE=i_npcplate_arms
+ITEMNEWBIE=i_npcplate_leggings
+ITEMNEWBIE=i_npcplate_shield
+ITEMNEWBIE=i_npcplate_gloves
+ITEMNEWBIE=i_npcplate_kryss
+ITEMNEWBIE=i_npcplate_helm
+
+ON=@Death
+NEWITEM=i_L4
+ACT.P=<P>
+
+[CHARDEF n_arena_lvl4]
+DEFNAME=n_arena_lvl4
+NAME=#NAMES_HUMANMALE LEVEL 4
+ID=C_MAN
+icon=020f8
+ANIM=07bc7f
+DAM=13 
+ARMOR=13
+
+ON=@CREATE
+FLAGS=004000000
+STR=300
+MAXHITS=600
+DEX=200
+INT=10
+
+PARRYING=200.0 
+FENCING=200.0 
+MAGERY=200.0 200.0
+MAGICRESISTANCE=200.0 
+TACTICS=200.0 300.0 
+SWORDSMANSHIP=200.0 
+
+FAME=1 
+KARMA=-3000
+NPC=brain_monster
+
+ITEMNEWBIE=i_spellbook
+ADDCIRCLE 8,5
+ITEMNEWBIE=i_npcplate_gorget
+ITEMNEWBIE=i_npcplate_platemail
+ITEMNEWBIE=i_npcplate_arms
+ITEMNEWBIE=i_npcplate_leggings
+ITEMNEWBIE=i_npcplate_shield
+ITEMNEWBIE=i_npcplate_gloves
+ITEMNEWBIE=i_npcplate_kryss
+ITEMNEWBIE=i_npcplate_helm
+
+ON=@Death
+NEWITEM=i_L5
+ACT.P=<P>
+
+[CHARDEF n_arena_lvl5]
+DEFNAME=n_arena_lvl5
+NAME=#NAMES_HUMANMALE LEVEL 5
+ID=C_MAN
+icon=020f8
+ANIM=07bc7f
+DAM=14
+ARMOR=14
+
+ON=@CREATE
+FLAGS=004000000
+STR=350
+MAXHITS=700
+DEX=200
+INT=10
+
+PARRYING=200.0 
+FENCING=200.0 
+MAGERY=200.0 200.0
+MAGICRESISTANCE=200.0 
+TACTICS=200.0 
+SWORDSMANSHIP=200.0 
+
+FAME=1 
+KARMA=-3000
+NPC=brain_monster
+
+ITEMNEWBIE=i_spellbook
+ADDCIRCLE 8,5
+ITEMNEWBIE=i_npcplate_gorget
+ITEMNEWBIE=i_npcplate_platemail
+ITEMNEWBIE=i_npcplate_arms
+ITEMNEWBIE=i_npcplate_leggings
+ITEMNEWBIE=i_npcplate_shield
+ITEMNEWBIE=i_npcplate_gloves
+ITEMNEWBIE=i_npcplate_kryss
+ITEMNEWBIE=i_npcplate_helm
+
+ON=@Death
+NEWITEM=i_L6
+ACT.P=<P>
+//-------------------------------------------------------------------------------//
+
+//-----------------------------------NPC Lvl 2-----------------------------------//
+[CHARDEF n_arena_lvl6]
+DEFNAME=n_arena_lvl6
+NAME=#NAMES_HUMANMALE LEVEL 6
+ID=C_MAN
+icon=020f8
+ANIM=07bc7f
+DAM=15
+ARMOR=15
+
+ON=@CREATE
+FLAGS=004000000
+STR=400
+MAXHITS=800
+DEX=300
+INT=10
+
+PARRYING=300.0 
+FENCING=300.0
+MAGERY=400.0 400.0
+MAGICRESISTANCE=300.0 
+TACTICS=300.0 
+SWORDSMANSHIP=300.0 
+
+FAME=1 
+KARMA=-3000
+NPC=brain_monster
+
+ITEMNEWBIE=i_spellbook
+ADDCIRCLE 8,5
+ITEMNEWBIE=i_npcplate_gorget
+COLOR=045e
+ITEMNEWBIE=i_npcplate_platemail
+COLOR=045e
+ITEMNEWBIE=i_npcplate_arms
+COLOR=045e
+ITEMNEWBIE=i_npcplate_leggings
+COLOR=045e
+ITEMNEWBIE=i_npcplate_shield
+COLOR=045e
+ITEMNEWBIE=i_npcplate_gloves
+COLOR=045e
+ITEMNEWBIE=i_npcplate_kryss
+COLOR=045e
+ITEMNEWBIE=i_npcplate_helm
+COLOR=045e
+
+ON=@Death
+NEWITEM=i_L7
+ACT.P=<P>
+
+[CHARDEF n_arena_lvl7]
+DEFNAME=n_arena_lvl7
+NAME=#NAMES_HUMANMALE LEVEL 7
+ID=C_MAN
+icon=020f8
+ANIM=07bc7f
+DAM=16
+ARMOR=16
+
+ON=@CREATE
+FLAGS=004000000
+STR=450
+MAXHITS=900
+DEX=300
+INT=10
+
+PARRYING=300.0 
+FENCING=300.0 
+MAGERY=400.0 400.0
+MAGICRESISTANCE=300.0 
+TACTICS=300.0 
+SWORDSMANSHIP=300.0 
+
+FAME=1 
+KARMA=-3000
+NPC=brain_monster
+
+ITEMNEWBIE=i_spellbook
+ADDCIRCLE 8,5
+ITEMNEWBIE=i_npcplate_gorget
+COLOR=045e
+ITEMNEWBIE=i_npcplate_platemail
+COLOR=045e
+ITEMNEWBIE=i_npcplate_arms
+COLOR=045e
+ITEMNEWBIE=i_npcplate_leggings
+COLOR=045e
+ITEMNEWBIE=i_npcplate_shield
+COLOR=045e
+ITEMNEWBIE=i_npcplate_gloves
+COLOR=045e
+ITEMNEWBIE=i_npcplate_kryss
+COLOR=045e
+ITEMNEWBIE=i_npcplate_helm
+COLOR=045e
+
+ON=@Death
+NEWITEM=i_L8
+ACT.P=<P>
+
+[CHARDEF n_arena_lvl8]
+DEFNAME=n_arena_lvl8
+NAME=#NAMES_HUMANMALE LEVEL 8
+ID=C_MAN
+icon=020f8
+ANIM=07bc7f
+DAM=17
+ARMOR=17
+
+ON=@CREATE
+FLAGS=004000000
+STR=500
+MAXHITS=1000
+DEX=300
+INT=10
+
+PARRYING=300.0 
+FENCING=300.0 
+MAGERY=400.0 400.0
+MAGICRESISTANCE=300.0 
+TACTICS=300.0 
+SWORDSMANSHIP=300.0 
+
+FAME=1 
+KARMA=-3000
+NPC=brain_monster
+
+ITEMNEWBIE=i_spellbook
+ADDCIRCLE 8,5
+ITEMNEWBIE=i_npcplate_gorget
+COLOR=045e
+ITEMNEWBIE=i_npcplate_platemail
+COLOR=045e
+ITEMNEWBIE=i_npcplate_arms
+COLOR=045e
+ITEMNEWBIE=i_npcplate_leggings
+COLOR=045e
+ITEMNEWBIE=i_npcplate_shield
+COLOR=045e
+ITEMNEWBIE=i_npcplate_gloves
+COLOR=045e
+ITEMNEWBIE=i_npcplate_kryss
+COLOR=045e
+ITEMNEWBIE=i_npcplate_helm
+COLOR=045e
+
+ON=@Death
+NEWITEM=i_L9
+ACT.P=<P>
+
+[CHARDEF n_arena_lvl9]
+DEFNAME=n_arena_lvl9
+NAME=#NAMES_HUMANMALE LEVEL 9
+ID=C_MAN
+icon=020f8
+ANIM=07bc7f
+DAM=18
+ARMOR=18
+
+ON=@CREATE
+FLAGS=004000000
+STR=550
+MAXHITS=1100
+DEX=300
+INT=10
+
+PARRYING=300.0 
+FENCING=300.0 
+MAGERY=400.0 400.0
+MAGICRESISTANCE=300.0 
+TACTICS=300.0 
+SWORDSMANSHIP=300.0 
+
+FAME=1 
+KARMA=-3000
+NPC=brain_monster
+
+ITEMNEWBIE=i_spellbook
+ADDCIRCLE 8,5
+ITEMNEWBIE=i_npcplate_gorget
+COLOR=045e
+ITEMNEWBIE=i_npcplate_platemail
+COLOR=045e
+ITEMNEWBIE=i_npcplate_arms
+COLOR=045e
+ITEMNEWBIE=i_npcplate_leggings
+COLOR=045e
+ITEMNEWBIE=i_npcplate_shield
+COLOR=045e
+ITEMNEWBIE=i_npcplate_gloves
+COLOR=045e
+ITEMNEWBIE=i_npcplate_kryss
+COLOR=045e
+ITEMNEWBIE=i_npcplate_helm
+COLOR=045e
+
+ON=@Death
+NEWITEM=i_L10
+ACT.P=<P>
+
+[CHARDEF n_arena_lvl10]
+DEFNAME=n_arena_lvl10
+NAME=#NAMES_HUMANMALE LEVEL 10
+ID=C_MAN
+icon=020f8
+ANIM=07bc7f
+DAM=19
+ARMOR=19
+
+ON=@CREATE
+FLAGS=004000000
+STR=600
+MAXHITS=1200
+DEX=300
+INT=10
+
+PARRYING=300.0 
+FENCING=300.0 
+MAGERY=400.0 400.0
+MAGICRESISTANCE=300.0 
+TACTICS=300.0 
+SWORDSMANSHIP=300.0 
+
+FAME=1 
+KARMA=-3000
+NPC=brain_monster
+
+ITEMNEWBIE=i_spellbook
+ADDCIRCLE 8,5
+ITEMNEWBIE=i_npcplate_gorget
+COLOR=045e
+ITEMNEWBIE=i_npcplate_platemail
+COLOR=045e
+ITEMNEWBIE=i_npcplate_arms
+COLOR=045e
+ITEMNEWBIE=i_npcplate_leggings
+COLOR=045e
+ITEMNEWBIE=i_npcplate_shield
+COLOR=045e
+ITEMNEWBIE=i_npcplate_gloves
+COLOR=045e
+ITEMNEWBIE=i_npcplate_kryss
+COLOR=045e
+ITEMNEWBIE=i_npcplate_helm
+COLOR=045e
+
+ON=@Death
+NEWITEM=i_L11
+ACT.P=<P>
+//-------------------------------------------------------------------------------//
+
+//-----------------------------------NPC Lvl 3-----------------------------------//
+[CHARDEF n_arena_lvl11]
+DEFNAME=n_arena_lvl11
+NAME=#NAMES_HUMANMALE LEVEL 11
+ID=C_MAN
+icon=020f8
+ANIM=07bc7f
+DAM=20
+ARMOR=20
+
+ON=@CREATE
+FLAGS=004000000
+STR=650
+MAXHITS=1300
+DEX=400
+INT=10
+
+PARRYING=400.0 
+FENCING=400.0 
+MAGERY=500.0 500.0
+MAGICRESISTANCE=400.0 
+TACTICS=400.0 
+SWORDSMANSHIP=400.0 
+
+FAME=1 
+KARMA=-3000
+NPC=brain_monster
+
+ITEMNEWBIE=i_spellbook
+ADDCIRCLE 8,5
+ITEMNEWBIE=i_npcplate_gorget
+COLOR=04c2
+ITEMNEWBIE=i_npcplate_platemail
+COLOR=04c2
+ITEMNEWBIE=i_npcplate_arms
+COLOR=04c2
+ITEMNEWBIE=i_npcplate_leggings
+COLOR=04c2
+ITEMNEWBIE=i_npcplate_shield
+COLOR=04c2
+ITEMNEWBIE=i_npcplate_gloves
+COLOR=04c2
+ITEMNEWBIE=i_npcplate_kryss
+COLOR=04c2
+ITEMNEWBIE=i_npcplate_helm
+COLOR=04c2
+
+ON=@Death
+NEWITEM=i_L12
+ACT.P=<P>
+
+[CHARDEF n_arena_lvl12]
+DEFNAME=n_arena_lvl12
+NAME=#NAMES_HUMANMALE LEVEL 12
+ID=C_MAN
+icon=020f8
+ANIM=07bc7f
+DAM=25
+ARMOR=25
+
+ON=@CREATE
+FLAGS=004000000
+STR=700
+MAXHITS=1400
+DEX=400
+INT=10
+
+PARRYING=400.0 
+FENCING=400.0 
+MAGERY=500.0 500.0
+MAGICRESISTANCE=400.0 
+TACTICS=400.0 
+SWORDSMANSHIP=400.0 
+
+FAME=1 
+KARMA=-3000
+NPC=brain_monster
+
+ITEMNEWBIE=i_spellbook
+ADDCIRCLE 8,5
+ITEMNEWBIE=i_npcplate_gorget
+COLOR=04c2
+ITEMNEWBIE=i_npcplate_platemail
+COLOR=04c2
+ITEMNEWBIE=i_npcplate_arms
+COLOR=04c2
+ITEMNEWBIE=i_npcplate_leggings
+COLOR=04c2
+ITEMNEWBIE=i_npcplate_shield
+COLOR=04c2
+ITEMNEWBIE=i_npcplate_gloves
+COLOR=04c2
+ITEMNEWBIE=i_npcplate_kryss
+COLOR=04c2
+ITEMNEWBIE=i_npcplate_helm
+COLOR=04c2
+
+ON=@Death
+NEWITEM=i_L13
+ACT.P=<P>
+
+[CHARDEF n_arena_lvl13]
+DEFNAME=n_arena_lvl13
+NAME=#NAMES_HUMANMALE LEVEL 13
+ID=C_MAN
+icon=020f8
+ANIM=07bc7f
+DAM=30
+ARMOR=30
+
+ON=@CREATE
+FLAGS=004000000
+STR=750
+MAXHITS=1500
+DEX=400
+INT=10
+
+PARRYING=400.0 
+FENCING=400.0 
+MAGERY=500.0 500.0
+MAGICRESISTANCE=400.0 
+TACTICS=400.0 
+SWORDSMANSHIP=400.0 
+
+FAME=1 
+KARMA=-3000
+NPC=brain_monster
+
+ITEMNEWBIE=i_spellbook
+ADDCIRCLE 8,5
+ITEMNEWBIE=i_npcplate_gorget
+COLOR=04c2
+ITEMNEWBIE=i_npcplate_platemail
+COLOR=04c2
+ITEMNEWBIE=i_npcplate_arms
+COLOR=04c2
+ITEMNEWBIE=i_npcplate_leggings
+COLOR=04c2
+ITEMNEWBIE=i_npcplate_shield
+COLOR=04c2
+ITEMNEWBIE=i_npcplate_gloves
+COLOR=04c2
+ITEMNEWBIE=i_npcplate_kryss
+COLOR=04c2
+ITEMNEWBIE=i_npcplate_helm
+COLOR=04c2
+
+ON=@Death
+NEWITEM=i_L14
+ACT.P=<P>
+
+[CHARDEF n_arena_lvl14]
+DEFNAME=n_arena_lvl14
+NAME=#NAMES_HUMANMALE LEVEL 14
+ID=C_MAN
+icon=020f8
+ANIM=07bc7f
+DAM=35
+ARMOR=35
+
+ON=@CREATE
+FLAGS=004000000
+STR=800
+MAXHITS=1600
+DEX=400
+INT=10
+
+PARRYING=400.0 
+FENCING=400.0 
+MAGERY=500.0 500.0
+MAGICRESISTANCE=400.0 
+TACTICS=400.0 
+SWORDSMANSHIP=400.0 
+
+FAME=1 
+KARMA=-3000
+NPC=brain_monster
+
+ITEMNEWBIE=i_spellbook
+ADDCIRCLE 8,5
+ITEMNEWBIE=i_npcplate_gorget
+COLOR=04c2
+ITEMNEWBIE=i_npcplate_platemail
+COLOR=04c2
+ITEMNEWBIE=i_npcplate_arms
+COLOR=04c2
+ITEMNEWBIE=i_npcplate_leggings
+COLOR=04c2
+ITEMNEWBIE=i_npcplate_shield
+COLOR=04c2
+ITEMNEWBIE=i_npcplate_gloves
+COLOR=04c2
+ITEMNEWBIE=i_npcplate_kryss
+COLOR=04c2
+ITEMNEWBIE=i_npcplate_helm
+COLOR=04c2
+
+ON=@Death
+NEWITEM=i_L15
+ACT.P=<P>
+
+[CHARDEF n_arena_lvl15]
+DEFNAME=n_arena_lvl15
+NAME=#NAMES_HUMANMALE LEVEL 15
+ID=C_MAN
+icon=020f8
+ANIM=07bc7f
+DAM=36
+ARMOR=36
+
+ON=@CREATE
+FLAGS=004000000
+STR=850
+MAXHITS=1700
+DEX=400
+INT=10
+
+PARRYING=400.0 
+FENCING=400.0 
+MAGERY=500.0 500.0
+MAGICRESISTANCE=400.0 
+TACTICS=400.0 
+SWORDSMANSHIP=400.0 
+
+FAME=1 
+KARMA=-3000
+NPC=brain_monster
+
+ITEMNEWBIE=i_spellbook
+ADDCIRCLE 8,5
+ITEMNEWBIE=i_npcplate_gorget
+COLOR=04c2
+ITEMNEWBIE=i_npcplate_platemail
+COLOR=04c2
+ITEMNEWBIE=i_npcplate_arms
+COLOR=04c2
+ITEMNEWBIE=i_npcplate_leggings
+COLOR=04c2
+ITEMNEWBIE=i_npcplate_shield
+COLOR=04c2
+ITEMNEWBIE=i_npcplate_gloves
+COLOR=04c2
+ITEMNEWBIE=i_npcplate_kryss
+COLOR=04c2
+ITEMNEWBIE=i_npcplate_helm
+COLOR=04c2
+
+ON=@Death
+NEWITEM=i_L16
+ACT.P=<P>
+//-------------------------------------------------------------------------------//
+
+//-----------------------------------NPC Lvl 4-----------------------------------//
+[CHARDEF n_arena_lvl16]
+DEFNAME=n_arena_lvl16
+NAME=#NAMES_HUMANMALE LEVEL 16
+ID=C_MAN
+icon=020f8
+ANIM=07bc7f
+DAM=37
+ARMOR=37
+
+ON=@CREATE
+FLAGS=004000000
+STR=900
+MAXHITS=1800
+DEX=500
+INT=10
+
+PARRYING=500.0
+FENCING=500.0
+MAGERY=600.0 600.0
+MAGICRESISTANCE=500.0
+TACTICS=500.0
+SWORDSMANSHIP=500.0
+
+FAME=1 
+KARMA=-3000
+NPC=brain_monster
+
+ITEMNEWBIE=i_spellbook
+ADDCIRCLE 8,5
+ITEMNEWBIE=i_npcplate_gorget
+COLOR=0455
+ITEMNEWBIE=i_npcplate_platemail
+COLOR=0455
+ITEMNEWBIE=i_npcplate_arms
+COLOR=0455
+ITEMNEWBIE=i_npcplate_leggings
+COLOR=0455
+ITEMNEWBIE=i_npcplate_shield
+COLOR=0455
+ITEMNEWBIE=i_npcplate_gloves
+COLOR=0455
+ITEMNEWBIE=i_npcplate_kryss
+COLOR=0455
+ITEMNEWBIE=i_npcplate_helm
+COLOR=0455
+
+ON=@Death
+NEWITEM=i_L17
+ACT.P=<P>
+
+[CHARDEF n_arena_lvl17]
+DEFNAME=n_arena_lvl17
+NAME=#NAMES_HUMANMALE LEVEL 17
+ID=C_MAN
+icon=020f8
+ANIM=07bc7f
+DAM=38
+ARMOR=38
+
+ON=@CREATE
+FLAGS=004000000
+STR=950
+MAXHITS=1900
+DEX=500
+INT=10
+
+PARRYING=500.0
+FENCING=500.0
+MAGERY=600.0 600.0
+MAGICRESISTANCE=500.0
+TACTICS=500.0
+SWORDSMANSHIP=500.0
+
+FAME=1 
+KARMA=-3000
+NPC=brain_monster
+
+ITEMNEWBIE=i_spellbook
+ADDCIRCLE 8,5
+ITEMNEWBIE=i_npcplate_gorget
+COLOR=0455
+ITEMNEWBIE=i_npcplate_platemail
+COLOR=0455
+ITEMNEWBIE=i_npcplate_arms
+COLOR=0455
+ITEMNEWBIE=i_npcplate_leggings
+COLOR=0455
+ITEMNEWBIE=i_npcplate_shield
+COLOR=0455
+ITEMNEWBIE=i_npcplate_gloves
+COLOR=0455
+ITEMNEWBIE=i_npcplate_kryss
+COLOR=0455
+ITEMNEWBIE=i_npcplate_helm
+COLOR=0455
+
+ON=@Death
+NEWITEM=i_L18
+ACT.P=<P>
+
+[CHARDEF n_arena_lvl18]
+DEFNAME=n_arena_lvl18
+NAME=#NAMES_HUMANMALE LEVEL 18
+ID=C_MAN
+icon=020f8
+ANIM=07bc7f
+DAM=39
+ARMOR=39
+
+ON=@CREATE
+FLAGS=004000000
+STR=1000
+MAXHITS=2000
+DEX=500
+INT=10
+
+PARRYING=500.0
+FENCING=500.0
+MAGERY=600.0 600.0
+MAGICRESISTANCE=500.0
+TACTICS=500.0
+SWORDSMANSHIP=500.0
+
+FAME=1 
+KARMA=-3000
+NPC=brain_monster
+
+ITEMNEWBIE=i_spellbook
+ADDCIRCLE 8,5
+ITEMNEWBIE=i_npcplate_gorget
+COLOR=0455
+ITEMNEWBIE=i_npcplate_platemail
+COLOR=0455
+ITEMNEWBIE=i_npcplate_arms
+COLOR=0455
+ITEMNEWBIE=i_npcplate_leggings
+COLOR=0455
+ITEMNEWBIE=i_npcplate_shield
+COLOR=0455
+ITEMNEWBIE=i_npcplate_gloves
+COLOR=0455
+ITEMNEWBIE=i_npcplate_kryss
+COLOR=0455
+ITEMNEWBIE=i_npcplate_helm
+COLOR=0455
+
+ON=@Death
+NEWITEM=i_L19
+ACT.P=<P>
+
+[CHARDEF n_arena_lvl19]
+DEFNAME=n_arena_lvl19
+NAME=#NAMES_HUMANMALE LEVEL 19
+ID=C_MAN
+icon=020f8
+ANIM=07bc7f
+DAM=40
+ARMOR=40
+
+ON=@CREATE
+FLAGS=004000000
+STR=1100
+MAXHITS=2200
+DEX=500
+INT=10
+
+PARRYING=500.0
+FENCING=500.0
+MAGERY=600.0 600.0
+MAGICRESISTANCE=500.0
+TACTICS=500.0
+SWORDSMANSHIP=500.0
+
+FAME=1 
+KARMA=-3000
+NPC=brain_monster
+
+ITEMNEWBIE=i_spellbook
+ADDCIRCLE 8,5
+ITEMNEWBIE=i_npcplate_gorget
+COLOR=0455
+ITEMNEWBIE=i_npcplate_platemail
+COLOR=0455
+ITEMNEWBIE=i_npcplate_arms
+COLOR=0455
+ITEMNEWBIE=i_npcplate_leggings
+COLOR=0455
+ITEMNEWBIE=i_npcplate_shield
+COLOR=0455
+ITEMNEWBIE=i_npcplate_gloves
+COLOR=0455
+ITEMNEWBIE=i_npcplate_kryss
+COLOR=0455
+ITEMNEWBIE=i_npcplate_helm
+COLOR=0455
+
+ON=@Death
+NEWITEM=i_L20
+ACT.P=<P>
+
+[CHARDEF n_arena_lvl20]
+DEFNAME=n_arena_lvl20
+NAME=#NAMES_HUMANMALE LEVEL 20
+ID=C_MAN
+icon=020f8
+ANIM=07bc7f
+DAM=50
+ARMOR=50
+
+ON=@CREATE
+FLAGS=004000000
+STR=1200
+MAXHITS=2500
+DEX=500
+INT=10
+
+PARRYING=500.0
+FENCING=500.0
+MAGERY=800.0 800.0
+MAGICRESISTANCE=500.0
+TACTICS=500.0
+SWORDSMANSHIP=500.0
+
+FAME=10000
+KARMA=-10000
+NPC=brain_monster
+
+ITEMNEWBIE=i_spellbook
+ADDCIRCLE 8,5
+ITEMNEWBIE=i_npcplate_gorget
+COLOR=052d
+ITEMNEWBIE=i_npcplate_platemail
+COLOR=052d
+ITEMNEWBIE=i_npcplate_arms
+COLOR=052d
+ITEMNEWBIE=i_npcplate_leggings
+COLOR=052d
+ITEMNEWBIE=i_npcplate_chaos
+ITEMNEWBIE=i_npcplate_gloves
+COLOR=052d
+ITEMNEWBIE=i_npcplate_kryss
+COLOR=052d
+ITEMNEWBIE=i_npcplate_helm
+COLOR=052d
+
+ON=@Death
+NEWITEM=i_L00
+ACT.P=<P>
+//-------------------------------------------------------------------------------//
+
+
+//Plate normal, unica, que some ao equipar eu clicar pra evitar qualquer coisa
+//se alguem pega, oq eu acho mto dificil, pq alem disso tudo o npc é conjured 
+//ainda. Mais sabe-se lá né? Player arruma jeito pra tudo hehe
+//------------------------------------Plates-----------------------------------//
+[ITEMDEF i_npcplate_gorget]
+//NPC Platemail Gorget
+NAME=NPC Platemail Gorget
+ID=01413
+TYPE=10
+armor=1
+REPAIR=1
+REQSTR=90
+VALUE=1000
+//sellVALUE=100
+WEIGHT=4
+
+ON=@CREATE
+COLOR=03DA
+HITPOINTS=3000
+
+ON=@EQUIP
+REMOVE
+RETURN=1
+
+
+on=@timer
+return=0
+
+
+[ITEMDEF i_npcplate_platemail]
+//NPC Platemail
+NAME=NPC Platemail
+ID=01415
+TYPE=10
+armor=1
+REPAIR=1
+REQSTR=90
+VALUE=1000
+//sellVALUE=180
+WEIGHT=4
+
+ON=@CREATE
+COLOR=03DA
+HITPOINTS=3000
+
+ON=@EQUIP
+REMOVE
+RETURN=1
+
+on=@timer
+return=0
+
+
+
+[ITEMDEF i_npcplate_arms]
+//NPC Platemail Arms
+NAME=NPC Platemail Arms
+ID=01417
+TYPE=10
+armor=1
+REPAIR=1
+REQSTR=90
+VALUE=1000
+//sellVALUE=160
+WEIGHT=4
+
+ON=@CREATE
+COLOR=03DA
+HITPOINTS=3000
+
+ON=@EQUIP
+RETURN=1
+
+
+on=@timer
+return=0
+
+
+[ITEMDEF i_npcplate_leggings]
+//NPC Platemail Leggings
+NAME=NPC Platemail Leggings
+ID=0141a
+TYPE=10
+armor=1
+REPAIR=1
+REQSTR=90
+VALUE=1000
+//sellVALUE=160
+WEIGHT=4
+
+ON=@CREATE
+HITPOINTS=3000
+COLOR=03DA
+
+ON=@EQUIP
+REMOVE
+RETURN=1
+
+
+on=@timer
+return=0
+
+
+[ITEMDEF i_npcplate_shield]
+//NPC Heater Shield
+NAME=NPC Heater Shield
+ID=01b76
+TYPE=t_shield
+ARMOR=1
+REPAIR=1
+REQSTR=90
+VALUE=1000
+//sellVALUE=160
+WEIGHT=4
+
+ON=@CREATE
+COLOR=03DA
+HITPOINTS=3000
+
+ON=@EQUIP
+REMOVE
+RETURN=1
+
+
+on=@timer
+return=0
+
+
+[ITEMDEF i_npcplate_gloves]
+NAME=NPC Gloves
+ID=01418
+TYPE=10
+ARMOR=1
+REPAIR=1
+REQSTR=90
+VALUE=1000
+//sellVALUE=140
+WEIGHT=4
+
+ON=@CREATE
+HITPOINTS=3000
+COLOR=03DA
+
+ON=@EQUIP
+REMOVE
+RETURN=1
+
+
+on=@timer
+return=0
+
+
+[ITEMDEF i_npcplate_viking]
+//Viking Sword
+NAME=NPC Viking Sword
+ID=013b9
+TYPE=t_weapon_sword
+SPEED=55
+SKILL=Swordsmanship
+REPAIR=1
+REQSTR=8
+TWOHANDS=N
+VALUE=56-80
+//sellVALUE=28-40
+WEIGHT=6
+DAM=26 35
+
+ON=@CREATE
+HITPOINTS=3000
+
+ON=@EQUIP
+RETURN=1
+
+
+on=@timer
+return=0
+
+
+[ITEMDEF i_npcplate_kryss]
+//Kryss
+NAME=NPC Kryss
+ID=01400
+TYPE=t_weapon_fence
+SPEED=70
+SKILL=Fencing
+REPAIR=1
+REQSTR=90
+TWOHANDS=N
+VALUE=36-48
+//sellVALUE=18-24
+WEIGHT=6
+DAM=12 14
+
+ON=@CREATE
+HITPOINTS=3000
+
+ON=@EQUIP
+REMOVE
+RETURN=1
+
+
+on=@timer
+return=0
+
+
+[ITEMDEF i_npcplate_helm]
+//NPC Close Helm
+NAME=NPC Close Helmet
+ID=01408
+TYPE=10
+armor=1
+REPAIR=1
+REQSTR=90
+VALUE=1000
+//sellVALUE=100
+WEIGHT=4
+
+ON=@CREATE
+COLOR=03DA
+HITPOINTS=3000
+
+ON=@EQUIP
+REMOVE
+RETURN=1
+
+
+on=@timer
+return=0
+
+
+[ITEMDEF i_npcplate_chaos]
+//NPC Chaos Shield
+NAME=NPC Chaos Shield
+ID=01bc3
+TYPE=10
+armor=1
+REPAIR=1
+REQSTR=90
+VALUE=1000
+//sellVALUE=100
+WEIGHT=4
+
+ON=@CREATE
+HITPOINTS=3000
+
+ON=@EQUIP
+REMOVE
+RETURN=1
+
+on=@timer
+return=0
+
+
+//-----------------------------------------------------------------------------//
+
+
+//Essa é a capetosa que queimo 1/3 dos meu neurônios hehe. Essa é a pedra
+//que fica dentro da arena, onde libera os NPCs, pega a recompensa pelo ticket
+//tranca e destranca a arena, e sai da arena. Agora vo falar 1 por 1 dessas 
+//opções.
+//Liberar NPC: Só libera 1 por vez, antes eu tinha feito pra qdo soltar 1 
+//nao solta mais nenhum até oq soltou morrer. Mas eu tive quer mudar, pq
+//pensei na possibilidade e darem LOGOUT lá dentro e coisas do tipo, achei mais 
+//viável por pra apagar o npc que tava solto qdo soltar outro. Assim sempre 
+//vai ter só 1 na arena. Antes era assim: qdo alguem desse logout lá dentro
+//e nao terminasse de matar o npc, o npc ficava lá, e nao poderia soltar outro
+//até ele morrer, entao se vier outro player vai ter q matar esse NPC q ta solto 
+//lá dentro deixado por outro player. 
+//Recompensa Tickets: Acho que isso nem precisa comentar não, consome o ticket 
+//na bag e vai de 500gp até 80kgp pra quem fechar a arena.
+//Trancar a Arena: O Player pode trancar a Arena, se quiser! Tranca nuam "bolinhas"
+//que fica vermelha qdo ta trancada e verde qdo ta destrancada. Qdo tranca ela 
+//fica trancada por 30 minutos, depois disso vem uma SYSMSG dizendo que ta destrancada
+//depois é só ir na pedra e trancar denovo. Esse timer de 30min é pra caso tranquem
+//a arena e desloguem lah dentro, daí a arena ficava presa, entao essa é a função do timer.
+//Sair da Arena: Sai pela pedra, BRIT ou SH. Tem 2 condições pra sair, SE o player
+//que soltou o NPC sair da arena, o NPC some. SE algum player que tiver lah dentro e foi oq
+//NAO solto o MPC o NPC nao some. Por exemplo, vao de 2 lá matar os NPC, um dos players
+//solta o NPC, esse que soltou se sair da arena o NPC some, mesmo que o outro continue na arena,
+//mais oq nao soltou pode sair avontade, voltar se quiser(se a arena tiver destrancada).
+//Acho que é isso dessa pedra.
+//--------------------------------Pedra NPC-----------------------------//
+[ITEMDEF i_pedranpc] 
+DEFNAME=i_pedranpc
+ID=4483
+NAME=Pedra Arena NPC
+TYPE=T_SCRIPT
+
+ON=@Create
+COLOR=0793
+ATTR=08010
+MORE=2361
+TIMER=-1
+
+ON=@TIMER
+TIMER=-1
+RETURN 1
+
+ON=@DCLICK
+
+src.region.flags 01000c
+src.tag.arenap=<src.p.x>
+
+
+IF (<SRC.HITS> < <SRC.MAXHITS>)
+  SRC.SYSMESSAGE @0481@ Voce não pode usar a pedra com hits down!
+  return 1
+ENDIF
+
+LINK=<TAG.ARENA>
+LINK.REGION.FLAGS=00094
+LINK=04fffffff
+IF (<VAR.NPCLVL1>=00)
+   VAR.NPCLVL1=00
+ENDIF
+IF (<VAR.NPCLVL2>=00)
+   VAR.NPCLVL2=00
+ENDIF
+IF (<VAR.NPCLVL3>=00)
+   VAR.NPCLVL3=00
+ENDIF
+IF (<VAR.NPCLVL4>=00)
+   VAR.NPCLVL4=00
+ENDIF
+IF (<VAR.NPCLVL5>=00)
+   VAR.NPCLVL5=00
+ENDIF
+IF (<VAR.NPCLVL6>=00)
+   VAR.NPCLVL6=00
+ENDIF
+IF (<VAR.NPCLVL7>=00)
+   VAR.NPCLVL7=00
+ENDIF
+IF (<VAR.NPCLVL8>=00)
+   VAR.NPCLVL8=00
+ENDIF
+IF (<VAR.NPCLVL9>=00)
+   VAR.NPCLVL9=00
+ENDIF
+IF (<VAR.NPCLVL10>=00)
+   VAR.NPCLVL10=00
+ENDIF
+IF (<VAR.NPCLVL11>=00)
+   VAR.NPCLVL11=00
+ENDIF
+IF (<VAR.NPCLVL12>=00)
+   VAR.NPCLVL12=00
+ENDIF
+IF (<VAR.NPCLVL13>=00)
+   VAR.NPCLVL13=00
+ENDIF
+IF (<VAR.NPCLVL14>=00)
+   VAR.NPCLVL14=00
+ENDIF
+IF (<VAR.NPCLVL15>=00)
+   VAR.NPCLVL15=00
+ENDIF
+IF (<VAR.NPCLVL16>=00)
+   VAR.NPCLVL16=00
+ENDIF
+IF (<VAR.NPCLVL17>=00)
+   VAR.NPCLVL17=00
+ENDIF
+IF (<VAR.NPCLVL18>=00)
+   VAR.NPCLVL18=00
+ENDIF
+IF (<VAR.NPCLVL19>=00)
+   VAR.NPCLVL19=00
+ENDIF
+IF (<VAR.NPCLVL20>=00)
+   VAR.NPCLVL20=00
+ENDIF
+
+IF (<SRC.TAG.ARENA>=01)&&(<VAR.NPCLVL1>=1)
+   MORE=2360
+ELSEIF <SRC.TAG.ARENA>=01 
+   MORE=2361
+ENDIF
+IF (<SRC.TAG.ARENA>=02)&&(<VAR.NPCLVL2>=1)
+   MORE=2360
+ELSEIF <SRC.TAG.ARENA>=02
+   MORE=2361
+ENDIF
+IF (<SRC.TAG.ARENA>=03)&&(<VAR.NPCLVL3>=1)
+   MORE=2360
+ELSEIF <SRC.TAG.ARENA>=03
+   MORE=2361
+ENDIF
+IF (<SRC.TAG.ARENA>=04)&&(<VAR.NPCLVL4>=1)
+   MORE=2360
+ELSEIF <SRC.TAG.ARENA>=04
+   MORE=2361
+ENDIF
+IF (<SRC.TAG.ARENA>=05)&&(<VAR.NPCLVL5>=1)
+   MORE=2360
+ELSEIF <SRC.TAG.ARENA>=05
+   MORE=2361
+ENDIF
+IF (<SRC.TAG.ARENA>=06)&&(<VAR.NPCLVL6>=1)
+   MORE=2360
+ELSEIF <SRC.TAG.ARENA>=06
+   MORE=2361
+ENDIF
+IF (<SRC.TAG.ARENA>=07)&&(<VAR.NPCLVL7>=1)
+   MORE=2360
+ELSEIF <SRC.TAG.ARENA>=07
+   MORE=2361
+ENDIF
+IF (<SRC.TAG.ARENA>=08)&&(<VAR.NPCLVL8>=1)
+   MORE=2360
+ELSEIF <SRC.TAG.ARENA>=08
+   MORE=2361
+ENDIF
+IF (<SRC.TAG.ARENA>=09)&&(<VAR.NPCLVL9>=1)
+   MORE=2360
+ELSEIF <SRC.TAG.ARENA>=09
+   MORE=2361
+ENDIF
+IF (<SRC.TAG.ARENA>=0a)&&(<VAR.NPCLVL10>=1)
+   MORE=2360
+ELSEIF <SRC.TAG.ARENA>=0a
+   MORE=2361
+ENDIF
+IF (<SRC.TAG.ARENA>=0b)&&(<VAR.NPCLVL11>=1)
+   MORE=2360
+ELSEIF <SRC.TAG.ARENA>=0b
+   MORE=2361
+ENDIF
+IF (<SRC.TAG.ARENA>=0c)&&(<VAR.NPCLVL12>=1)
+   MORE=2360
+ELSEIF <SRC.TAG.ARENA>=0c
+   MORE=2361
+ENDIF
+IF (<SRC.TAG.ARENA>=0d)&&(<VAR.NPCLVL13>=1)
+   MORE=2360
+ELSEIF <SRC.TAG.ARENA>=0d
+   MORE=2361
+ENDIF
+IF (<SRC.TAG.ARENA>=0e)&&(<VAR.NPCLVL14>=1)
+   MORE=2360
+ELSEIF <SRC.TAG.ARENA>=0e
+   MORE=2361
+ENDIF
+IF (<SRC.TAG.ARENA>=0f)&&(<VAR.NPCLVL15>=1)
+   MORE=2360
+ELSEIF <SRC.TAG.ARENA>=0f
+   MORE=2361
+ENDIF
+IF (<SRC.TAG.ARENA>=010)&&(<VAR.NPCLVL16>=1)
+   MORE=2360
+ELSEIF <SRC.TAG.ARENA>=010
+   MORE=2361
+ENDIF
+IF (<SRC.TAG.ARENA>=011)&&(<VAR.NPCLVL17>=1)
+   MORE=2360
+ELSEIF <SRC.TAG.ARENA>=011
+   MORE=2361
+ENDIF
+IF (<SRC.TAG.ARENA>=012)&&(<VAR.NPCLVL18>=1)
+   MORE=2360
+ELSEIF <SRC.TAG.ARENA>=012
+   MORE=2361
+ENDIF
+IF (<SRC.TAG.ARENA>=013)&&(<VAR.NPCLVL19>=1)
+   MORE=2360
+ELSEIF <SRC.TAG.ARENA>=013
+   MORE=2361
+ENDIF
+IF (<SRC.TAG.ARENA>=014)&&(<VAR.NPCLVL20>=1)
+   MORE=2360
+ELSEIF (<SRC.TAG.ARENA>=014)
+   MORE=2361
+ENDIF
+
+IF <SRC.RESTEST i_L2>
+   MOREZ=2
+ELSEIF <SRC.RESTEST i_L3>
+   MOREZ=3
+ELSEIF <SRC.RESTEST i_L4>
+   MOREZ=4
+ELSEIF <SRC.RESTEST i_L5>
+   MOREZ=5
+ELSEIF <SRC.RESTEST i_L6>
+   MOREZ=6
+ELSEIF <SRC.RESTEST i_L7>
+   MOREZ=7
+ELSEIF <SRC.RESTEST i_L8>
+   MOREZ=8
+ELSEIF <SRC.RESTEST i_L9>
+   MOREZ=9
+ELSEIF <SRC.RESTEST i_L10>
+   MOREZ=10
+ELSEIF <SRC.RESTEST i_L11>
+   MOREZ=11
+ELSEIF <SRC.RESTEST i_L12>
+   MOREZ=12
+ELSEIF <SRC.RESTEST i_L13>
+   MOREZ=13
+ELSEIF <SRC.RESTEST i_L14>
+   MOREZ=14
+ELSEIF <SRC.RESTEST i_L15>
+   MOREZ=15
+ELSEIF <SRC.RESTEST i_L16>
+   MOREZ=16
+ELSEIF <SRC.RESTEST i_L17>
+   MOREZ=17
+ELSEIF <SRC.RESTEST i_L18>
+   MOREZ=18
+ELSEIF <SRC.RESTEST i_L19>
+   MOREZ=19
+ELSEIF <SRC.RESTEST i_L20>
+   MOREZ=20
+ELSE
+   MOREZ=1
+ENDIF
+DIALOG d_pedranpc
+RETURN 1
+
+[DIALOG d_pedranpc] 
+0,0 
+NOMOVE
+gumppic 0 0 1416
+gumppic 109 0 1416
+gumppic 0 353 1416
+gumppic 109 353 1416
+gumppic 0 20 1800
+gumppic 20 75 50529
+gumppic 20 75 50527
+gumppic 20 75 50528
+gumppic 20 75 50530
+gumppic 20 75 50531
+gumppic 20 75 50630
+gumppic 20 75 60928
+gumppic 20 75 60993
+gumppic 23 453 96
+gumppic 23 473 96
+gumppic 23 0 96
+gumppic 23 19 96
+text 20 0 878 0
+text 50 380 100 1
+text 50 405 100 2
+text 50 430 100 3
+text 70 455 83 4
+text 60 340 100 5
+button 30 383 1209 1210 1 0 1 
+button 30 408 1209 1210 1 0 2
+button 30 433 1209 1210 1 0 3
+button 215 0 2708 2709 1 0 4
+button 65 330 <MORE> <MORE> 1 0 5
+button 85 330 <MORE> <MORE> 1 0 5
+button 105 330 <MORE> <MORE> 1 0 5
+button 125 330 <MORE> <MORE> 1 0 5
+button 145 330 <MORE> <MORE> 1 0 5
+button 65 360 <MORE> <MORE> 1 0 5
+button 85 360 <MORE> <MORE> 1 0 5
+button 105 360 <MORE> <MORE> 1 0 5
+button 125 360 <MORE> <MORE> 1 0 5
+button 145 360 <MORE> <MORE> 1 0 5
+
+[DIALOG d_pedranpc TEXT] 
+MENU DA ARENA NPC
+Liberar NPC Level <MOREZ>
+Pegar Recompensa
+Sair da Arena
+Fusion Shard
+Trancar Arena
+
+[DIALOG d_pedranpc BUTTON] 
+ON=0
+ON=1
+
+IF <SRC.TAG.ARENAP> != <SRC.P.X>
+  SRC.SYSMESSAGE @0481@ Voce se afastou da pedra, tente novamente.
+  RETURN 1
+ENDIF
+
+//LINK=<TAG.NPC1> 
+//LINK.REMOVE
+//LINK=<TAG.NPC2> 
+//LINK.REMOVE
+//LINK=<TAG.NPC3> 
+//LINK.REMOVE
+//LINK=<TAG.NPC4> 
+//LINK.REMOVE
+//LINK=04fffffff
+IF <SRC.RESTEST i_L2>
+   SRC.CONSUME=i_L2
+   SERV.NEWNPC n_arena_lvl2
+   NEW.P <SRC.P>
+   TAG.NPC1=<NEW.UID>
+   SERV.NEWNPC 018
+   NEW.P <SRC.P>
+   TAG.NPC2=<NEW.UID>
+   SERV.NEWNPC 038
+   NEW.P <SRC.P>
+   TAG.NPC3=<NEW.UID>
+   SRC.SYSMESSAGE NPC Level 2 Liberado, Boa Sorte
+ELSEIF <SRC.RESTEST i_L3>
+   SRC.CONSUME=i_L3
+   SERV.NEWNPC n_arena_lvl3
+   NEW.P <SRC.P>
+   TAG.NPC1=<NEW.UID>
+   SERV.NEWNPC 018
+   NEW.P <SRC.P>
+   TAG.NPC2=<NEW.UID>
+   SERV.NEWNPC 038
+   NEW.P <SRC.P>
+   TAG.NPC3=<NEW.UID>
+   SRC.SYSMESSAGE NPC Level 3 Liberado, Boa Sorte
+ELSEIF <SRC.RESTEST i_L4>
+   SRC.CONSUME=i_L4
+   SERV.NEWNPC n_arena_lvl4
+   NEW.P <SRC.P>
+   TAG.NPC1=<NEW.UID>
+   SERV.NEWNPC 018
+   NEW.P <SRC.P>
+   TAG.NPC2=<NEW.UID>
+   SERV.NEWNPC 018
+   NEW.P <SRC.P>
+   TAG.NPC3=<NEW.UID>
+   SERV.NEWNPC 038
+   NEW.P <SRC.P>
+   TAG.NPC4=<NEW.UID>
+   SRC.SYSMESSAGE NPC Level 4 Liberado, Boa Sorte
+ELSEIF <SRC.RESTEST i_L5>
+   SRC.CONSUME=i_L5
+   SERV.NEWNPC n_arena_lvl5
+   NEW.P <SRC.P>
+   TAG.NPC1=<NEW.UID>
+   SERV.NEWNPC 018
+   NEW.P <SRC.P>
+   TAG.NPC2=<NEW.UID>
+   SERV.NEWNPC 018
+   NEW.P <SRC.P>
+   TAG.NPC3=<NEW.UID>
+   SERV.NEWNPC 01022
+   NEW.P <SRC.P>
+   TAG.NPC4=<NEW.UID>
+   SRC.SYSMESSAGE NPC Level 5 Liberado, Boa Sorte
+ELSEIF <SRC.RESTEST i_L6>
+   SRC.CONSUME=i_L6
+   SERV.NEWNPC n_arena_lvl6
+   NEW.P <SRC.P>
+   TAG.NPC1=<NEW.UID>
+   SERV.NEWNPC 018
+   NEW.P <SRC.P>
+   TAG.NPC2=<NEW.UID>
+   SERV.NEWNPC 018
+   NEW.P <SRC.P>
+   TAG.NPC3=<NEW.UID>
+   SERV.NEWNPC 04190
+   NEW.P <SRC.P>
+   TAG.NPC4=<NEW.UID>
+   SRC.SYSMESSAGE NPC Level 6 Liberado, Boa Sorte
+ELSEIF <SRC.RESTEST i_L7>
+   SRC.CONSUME=i_L7
+   SERV.NEWNPC n_arena_lvl7
+   NEW.P <SRC.P>
+   TAG.NPC1=<NEW.UID>
+   SERV.NEWNPC 018
+   NEW.P <SRC.P>
+   TAG.NPC2=<NEW.UID>
+   SERV.NEWNPC 018
+   NEW.P <SRC.P>
+   TAG.NPC3=<NEW.UID>
+   SERV.NEWNPC 01041
+   NEW.P <SRC.P>
+   TAG.NPC4=<NEW.UID>
+   SRC.SYSMESSAGE NPC Level 7 Liberado, Boa Sorte
+ELSEIF <SRC.RESTEST i_L8>
+   SRC.CONSUME=i_L8
+   SERV.NEWNPC n_arena_lvl8
+   NEW.P <SRC.P>
+   TAG.NPC1=<NEW.UID>
+   SERV.NEWNPC 01041
+   NEW.P <SRC.P>
+   TAG.NPC2=<NEW.UID>
+   SERV.NEWNPC 018
+   NEW.P <SRC.P>
+   TAG.NPC3=<NEW.UID>
+   SERV.NEWNPC 018
+   NEW.P <SRC.P>
+   TAG.NPC4=<NEW.UID>
+   SRC.SYSMESSAGE NPC Level 8 Liberado, Boa Sorte
+ELSEIF <SRC.RESTEST i_L9>
+   SRC.CONSUME=i_L9
+   SERV.NEWNPC n_arena_lvl9
+   NEW.P <SRC.P>
+   TAG.NPC1=<NEW.UID>
+   SERV.NEWNPC 01041
+   NEW.P <SRC.P>
+   TAG.NPC2=<NEW.UID>
+   SERV.NEWNPC 02
+   NEW.P <SRC.P>
+   TAG.NPC3=<NEW.UID>
+   SERV.NEWNPC 02
+   NEW.P <SRC.P>
+   TAG.NPC4=<NEW.UID>
+   SRC.SYSMESSAGE NPC Level 9 Liberado, Boa Sorte
+ELSEIF <SRC.RESTEST i_L10>
+   SRC.CONSUME=i_L10
+   SERV.NEWNPC n_arena_lvl10
+   NEW.P <SRC.P>
+   TAG.NPC1=<NEW.UID>
+   SERV.NEWNPC 01041
+   NEW.P <SRC.P>
+   TAG.NPC2=<NEW.UID>
+   SERV.NEWNPC 01124
+   NEW.P <SRC.P>
+   TAG.NPC3=<NEW.UID>
+   SERV.NEWNPC 037
+   NEW.P <SRC.P>
+   TAG.NPC4=<NEW.UID>
+   SRC.SYSMESSAGE NPC Level 10 Liberado, Boa Sorte
+ELSEIF <SRC.RESTEST i_L11>
+   SRC.CONSUME=i_L11
+   SERV.NEWNPC n_arena_lvl11
+   NEW.P <SRC.P>
+   TAG.NPC1=<NEW.UID>
+   SERV.NEWNPC 01041
+   NEW.P <SRC.P>
+   TAG.NPC2=<NEW.UID>
+   SERV.NEWNPC 037
+   NEW.P <SRC.P>
+   TAG.NPC3=<NEW.UID>
+   NEW.P <SRC.P>
+   SERV.NEWNPC 035
+   NEW.P <SRC.P>
+   TAG.NPC4=<NEW.UID>
+   SRC.SYSMESSAGE NPC Level 11 Liberado, Boa Sorte
+ELSEIF <SRC.RESTEST i_L12>
+   SRC.CONSUME=i_L12
+   SERV.NEWNPC n_arena_lvl12
+   NEW.P <SRC.P>
+   TAG.NPC1=<NEW.UID>
+   SERV.NEWNPC 01041
+   NEW.P <SRC.P>
+   TAG.NPC2=<NEW.UID>
+   SERV.NEWNPC 012
+   NEW.P <SRC.P>
+   TAG.NPC3=<NEW.UID>
+   SERV.NEWNPC 01128
+   NEW.P <SRC.P>
+   TAG.NPC4=<NEW.UID>
+   SRC.SYSMESSAGE NPC Level 12 Liberado, Boa Sorte
+ELSEIF <SRC.RESTEST i_L13>
+   SRC.CONSUME=i_L13
+   SERV.NEWNPC n_arena_lvl13
+   NEW.P <SRC.P>
+   TAG.NPC1=<NEW.UID>
+   SERV.NEWNPC 01041
+   NEW.P <SRC.P>
+   TAG.NPC2=<NEW.UID>
+   SERV.NEWNPC 0e
+   NEW.P <SRC.P>
+   TAG.NPC3=<NEW.UID>
+   SERV.NEWNPC 0d
+   NEW.P <SRC.P>
+   TAG.NPC4=<NEW.UID>
+   SRC.SYSMESSAGE NPC Level 13 Liberado, Boa Sorte
+ELSEIF <SRC.RESTEST i_L14>
+   SRC.CONSUME=i_L14
+   SERV.NEWNPC n_arena_lvl14
+   NEW.P <SRC.P>
+   TAG.NPC1=<NEW.UID>
+   SERV.NEWNPC 01041
+   NEW.P <SRC.P>
+   TAG.NPC2=<NEW.UID>
+   SERV.NEWNPC 01012
+   NEW.P <SRC.P>
+   TAG.NPC3=<NEW.UID>
+   SERV.NEWNPC 010
+   NEW.P <SRC.P>
+   TAG.NPC4=<NEW.UID>
+   SRC.SYSMESSAGE NPC Level 14 Liberado, Boa Sorte
+ELSEIF <SRC.RESTEST i_L15>
+   SRC.CONSUME=i_L15
+   SERV.NEWNPC n_arena_lvl15
+   TAG.NPC1=<NEW.UID>
+   NEW.P <SRC.P>
+   SERV.NEWNPC 01041
+   NEW.P <SRC.P>
+   TAG.NPC2=<NEW.UID>
+   SERV.NEWNPC 01043
+   NEW.P <SRC.P>
+   TAG.NPC3=<NEW.UID>
+   SERV.NEWNPC 01038
+   NEW.P <SRC.P>
+   TAG.NPC4=<NEW.UID>
+   SRC.SYSMESSAGE NPC Level 15 Liberado, Boa Sorte
+ELSEIF <SRC.RESTEST i_L16>
+   SRC.CONSUME=i_L16
+   SERV.NEWNPC n_arena_lvl16
+   NEW.P <SRC.P>
+   TAG.NPC1=<NEW.UID>
+   SERV.NEWNPC 01041
+   NEW.P <SRC.P>
+   TAG.NPC2=<NEW.UID>
+   SERV.NEWNPC 01033
+   NEW.P <SRC.P>
+   TAG.NPC3=<NEW.UID>
+   SERV.NEWNPC 01028
+   NEW.P <SRC.P>
+   TAG.NPC4=<NEW.UID>
+   SRC.SYSMESSAGE NPC Level 16 Liberado, Boa Sorte
+ELSEIF <SRC.RESTEST i_L17>
+   SRC.CONSUME=i_L17
+   SERV.NEWNPC n_arena_lvl17
+   NEW.P <SRC.P>
+   TAG.NPC1=<NEW.UID>
+   SERV.NEWNPC 01041
+   NEW.P <SRC.P>
+   TAG.NPC2=<NEW.UID>
+   SERV.NEWNPC 01094
+   NEW.P <SRC.P>
+   TAG.NPC3=<NEW.UID>
+   SERV.NEWNPC 01034
+   NEW.P <SRC.P>
+   TAG.NPC4=<NEW.UID>
+   SRC.SYSMESSAGE NPC Level 17 Liberado, Boa Sorte
+ELSEIF <SRC.RESTEST i_L18>
+   SRC.CONSUME=i_L18
+   SERV.NEWNPC n_arena_lvl18
+   NEW.P <SRC.P>
+   TAG.NPC1=<NEW.UID>
+   SERV.NEWNPC 01041
+   NEW.P <SRC.P>
+   TAG.NPC2=<NEW.UID>
+   SERV.NEWNPC 01020
+   NEW.P <SRC.P>
+   TAG.NPC3=<NEW.UID>
+   SERV.NEWNPC 04085
+   NEW.P <SRC.P>
+   TAG.NPC4=<NEW.UID>
+   SRC.SYSMESSAGE NPC Level 18 Liberado, Boa Sorte
+ELSEIF <SRC.RESTEST i_L19>
+   SRC.CONSUME=i_L19
+   SERV.NEWNPC n_arena_lvl19
+   NEW.P <SRC.P>
+   TAG.NPC1=<NEW.UID>
+   SERV.NEWNPC 01041
+   NEW.P <SRC.P>
+   TAG.NPC2=<NEW.UID>
+   SERV.NEWNPC 04096
+   NEW.P <SRC.P>
+   TAG.NPC3=<NEW.UID>
+   SERV.NEWNPC 03d
+   NEW.P <SRC.P>
+   TAG.NPC4=<NEW.UID>
+   SRC.SYSMESSAGE NPC Level 19 Liberado, Boa Sorte
+ELSEIF <SRC.RESTEST i_L20>
+   SRC.CONSUME=i_L20
+   SERV.NEWNPC n_arena_lvl20
+   NEW.P <SRC.P>
+   TAG.NPC1=<NEW.UID>
+   SERV.NEWNPC 04087
+   NEW.P <SRC.P>
+   TAG.NPC2=<NEW.UID>
+   SERV.NEWNPC 01041
+   NEW.P <SRC.P>
+   TAG.NPC3=<NEW.UID>
+   SERV.NEWNPC 04096
+   NEW.P <SRC.P>
+   TAG.NPC4=<NEW.UID>
+   SRC.SYSMESSAGE NPC Level 20 Liberado, Boa Sorte
+ELSEIF (<TAG.LIBER>!=1)
+   SERV.NEWNPC n_arena_lvl1
+   TAG.NPC1=<NEW.UID>
+   SERV.NEWNPC 018
+   NEW.P <SRC.P>
+   TAG.NPC2=<NEW.UID>
+   SERV.NEWNPC 03
+   NEW.P <SRC.P>
+   TAG.NPC3=<NEW.UID>
+   SRC.SYSMESSAGE NPC Level 1 Liberado, Boa Sorte
+   TAG.LIBER=1
+ENDIF
+ON=2
+IF <SRC.RESTEST i_L2>
+   SRC.CONSUME=i_L2
+   SRC.NEWGOLD 1200
+ELSEIF <SRC.RESTEST i_L3>
+   SRC.CONSUME=i_L3
+   SRC.NEWGOLD 2500
+ELSEIF <SRC.RESTEST i_L4>
+   SRC.CONSUME=i_L4
+   SRC.NEWGOLD 5000
+ELSEIF <SRC.RESTEST i_L5>
+   SRC.CONSUME=i_L5
+   SRC.NEWGOLD 8500
+ELSEIF <SRC.RESTEST i_L6>
+   SRC.CONSUME=i_L6
+   SRC.NEWGOLD 11200
+ELSEIF <SRC.RESTEST i_L7>
+   SRC.CONSUME=i_L7
+   SRC.NEWGOLD 15000
+ELSEIF <SRC.RESTEST i_L8>
+   SRC.CONSUME=i_L8
+   SRC.NEWGOLD 20000
+ELSEIF <SRC.RESTEST i_L9>
+   SRC.CONSUME=i_L9
+   SRC.NEWITEM=i_gold
+   SRC.NEWGOLD 27000
+ELSEIF <SRC.RESTEST i_L10>
+   SRC.CONSUME=i_L10
+   SRC.NEWGOLD 35000
+ELSEIF <SRC.RESTEST i_L11>
+   SRC.CONSUME=i_L11
+   SRC.NEWGOLD 44000
+ELSEIF <SRC.RESTEST i_L12>
+   SRC.CONSUME=i_L12
+   SRC.NEWGOLD 55000
+ELSEIF <SRC.RESTEST i_L13>
+   SRC.CONSUME=i_L13
+   SRC.NEWGOLD 60000
+ELSEIF <SRC.RESTEST i_L14>
+   SRC.CONSUME=i_L14
+   SRC.NEWGOLD 65000
+ELSEIF <SRC.RESTEST i_L15>
+   SRC.CONSUME=i_L15
+   SRC.NEWGOLD 70000
+ELSEIF <SRC.RESTEST i_L16>
+   SRC.CONSUME=i_L16
+   SRC.NEWGOLD 75000
+ELSEIF <SRC.RESTEST i_L17>
+   SRC.CONSUME=i_L17
+   SRC.NEWGOLD 80000
+ELSEIF <SRC.RESTEST i_L18>
+   SRC.CONSUME=i_L18
+   SRC.NEWGOLD 90000
+ELSEIF <SRC.RESTEST i_L19>
+   SRC.CONSUME=i_L19
+   SRC.NEWGOLD 100000
+ELSEIF <SRC.RESTEST i_L20>
+   SRC.CONSUME=i_L20
+   SRC.NEWGOLD 120000
+ELSEIF <SRC.RESTEST i_L00>
+   SRC.CONSUME=i_L00
+   SRC.NEWGOLD 200000
+ENDIF
+ON=3
+IF <SRC.TAG.ARENAP> != <SRC.P.X>
+  SRC.SYSMESSAGE @0481@ Voce se afastou da pedra, tente novamente.
+  RETURN 1
+ENDIF
+IF <SRc.HITS> < <SRc.MAXHITS>
+	SRC.SYSMESSAGE @0481@ Voce nao pode sair da arena com Hits down.
+	RETURN 1
+ENDIF
+
+src.tag.arenap
+SRC.GO 5452,1193
+TAG.LIBER=2
+MORE=2361
+MOREX=0
+LINK=<TAG.MEMORY>
+LINK.TIMER 0
+LINK=<TAG.NPC1> 
+LINK.REMOVE
+LINK=<TAG.NPC2> 
+LINK.REMOVE
+LINK=<TAG.NPC3> 
+LINK.REMOVE
+LINK=<TAG.NPC4> 
+LINK.REMOVE
+LINK=04fffffff
+IF (<SRC.TAG.ARENA>==01)
+      VAR.NPCLVL1=0
+   ELSEIF (<SRC.TAG.ARENA>==02)
+      VAR.NPCLVL2=0
+   ELSEIF (<SRC.TAG.ARENA>==03)
+      VAR.NPCLVL3=0
+   ELSEIF (<SRC.TAG.ARENA>==04)
+      VAR.NPCLVL4=0
+   ELSEIF (<SRC.TAG.ARENA>==05)
+      VAR.NPCLVL5=0
+   ELSEIF (<SRC.TAG.ARENA>==06)
+      VAR.NPCLVL6=0
+   ELSEIF (<SRC.TAG.ARENA>==07)
+      VAR.NPCLVL7=0
+   ELSEIF (<SRC.TAG.ARENA>==08)
+      VAR.NPCLVL8=0
+   ELSEIF (<SRC.TAG.ARENA>==09)
+      VAR.NPCLVL9=0
+   ELSEIF (<SRC.TAG.ARENA>==0a)
+      VAR.NPCLVL10=0
+   ELSEIF (<SRC.TAG.ARENA>==0b)
+      VAR.NPCLVL11=0
+   ELSEIF (<SRC.TAG.ARENA>==0c)
+      VAR.NPCLVL12=0
+   ELSEIF (<SRC.TAG.ARENA>==0d)
+      VAR.NPCLVL13=0
+   ELSEIF (<SRC.TAG.ARENA>==0e)
+      VAR.NPCLVL14=0
+   ELSEIF (<SRC.TAG.ARENA>==0f)
+      VAR.NPCLVL15=0
+   ELSEIF (<SRC.TAG.ARENA>==010)
+      VAR.NPCLVL16=0
+   ELSEIF (<SRC.TAG.ARENA>==011)
+      VAR.NPCLVL17=0
+   ELSEIF (<SRC.TAG.ARENA>==012)
+      VAR.NPCLVL18=0
+   ELSEIF (<SRC.TAG.ARENA>==013)
+      VAR.NPCLVL19=0
+   ELSEIF (<SRC.TAG.ARENA>==014)
+      VAR.NPCLVL20=0
+ENDIF   
+RETURN 1
+ON=4
+RETURN 1
+ON=5
+IF <MORE>==2361
+   MORE=2360
+   IF (<SRC.TAG.ARENA>==01)
+      VAR.NPCLVL1=1
+   ELSEIF (<SRC.TAG.ARENA>==02)
+      VAR.NPCLVL2=1
+   ELSEIF (<SRC.TAG.ARENA>==03)
+      VAR.NPCLVL3=1
+   ELSEIF (<SRC.TAG.ARENA>==04)
+      VAR.NPCLVL4=1
+   ELSEIF (<SRC.TAG.ARENA>==05)
+      VAR.NPCLVL5=1
+   ELSEIF (<SRC.TAG.ARENA>==06)
+      VAR.NPCLVL6=1
+   ELSEIF (<SRC.TAG.ARENA>==07)
+      VAR.NPCLVL7=1
+   ELSEIF (<SRC.TAG.ARENA>==08)
+      VAR.NPCLVL8=1
+   ELSEIF (<SRC.TAG.ARENA>==09)
+      VAR.NPCLVL9=1
+   ELSEIF (<SRC.TAG.ARENA>==0a)
+      VAR.NPCLVL10=1
+   ELSEIF (<SRC.TAG.ARENA>==0b)
+      VAR.NPCLVL11=1
+   ELSEIF (<SRC.TAG.ARENA>==0c)
+      VAR.NPCLVL12=1
+   ELSEIF (<SRC.TAG.ARENA>==0d)
+      VAR.NPCLVL13=1
+   ELSEIF (<SRC.TAG.ARENA>==0e)
+      VAR.NPCLVL14=1
+   ELSEIF (<SRC.TAG.ARENA>==0f)
+      VAR.NPCLVL15=1
+   ELSEIF (<SRC.TAG.ARENA>==010)
+      VAR.NPCLVL16=1
+   ELSEIF (<SRC.TAG.ARENA>==011)
+      VAR.NPCLVL17=1
+   ELSEIF (<SRC.TAG.ARENA>==012)
+      VAR.NPCLVL18=1
+   ELSEIF (<SRC.TAG.ARENA>==013)
+      VAR.NPCLVL19=1
+   ELSEIF (<SRC.TAG.ARENA>==014)
+      VAR.NPCLVL20=1
+   ELSE
+      RETURN 1
+   ENDIF   
+   DIALOG d_pedranpc
+   SRC.TAG.TRANCA=1
+   SRC.MESSAGE @0481 Trancada por 30 minutos
+   SRC.NEWITEM=i_memory_arena
+   TAG.MEMORY=<SRC.ACT.UID>
+   SRC.ACT.TAG.ARENA=<SRC.TAG.ARENA>
+   SRC.ACT.LINK=<SRC.UID>
+   SRC.ACT.P=<SRC.P>
+   SRC.ACT.TIMER 1800
+ELSEIF <MORE>==2360
+   MORE=2361
+   IF (<SRC.TAG.ARENA>==01)
+      VAR.NPCLVL1=0
+   ELSEIF (<SRC.TAG.ARENA>==02)
+      VAR.NPCLVL2=0
+   ELSEIF (<SRC.TAG.ARENA>==03)
+      VAR.NPCLVL3=0
+   ELSEIF (<SRC.TAG.ARENA>==04)
+      VAR.NPCLVL4=0
+   ELSEIF (<SRC.TAG.ARENA>==05)
+      VAR.NPCLVL5=0
+   ELSEIF (<SRC.TAG.ARENA>==06)
+      VAR.NPCLVL6=0
+   ELSEIF (<SRC.TAG.ARENA>==07)
+      VAR.NPCLVL7=0
+   ELSEIF (<SRC.TAG.ARENA>==08)
+      VAR.NPCLVL8=0
+   ELSEIF (<SRC.TAG.ARENA>==09)
+      VAR.NPCLVL9=0
+   ELSEIF (<SRC.TAG.ARENA>==0a)
+      VAR.NPCLVL10=0
+   ELSEIF (<SRC.TAG.ARENA>==0b)
+      VAR.NPCLVL11=0
+   ELSEIF (<SRC.TAG.ARENA>==0c)
+      VAR.NPCLVL12=0
+   ELSEIF (<SRC.TAG.ARENA>==0d)
+      VAR.NPCLVL13=0
+   ELSEIF (<SRC.TAG.ARENA>==0e)
+      VAR.NPCLVL14=0
+   ELSEIF (<SRC.TAG.ARENA>==0f)
+      VAR.NPCLVL15=0
+   ELSEIF (<SRC.TAG.ARENA>==010)
+      VAR.NPCLVL16=0
+   ELSEIF (<SRC.TAG.ARENA>==011)
+      VAR.NPCLVL17=0
+   ELSEIF (<SRC.TAG.ARENA>==012)
+      VAR.NPCLVL18=0
+   ELSEIF (<SRC.TAG.ARENA>==013)
+      VAR.NPCLVL19=0
+   ELSEIF (<SRC.TAG.ARENA>==014)
+      VAR.NPCLVL20=0
+   ELSE
+      RETURN 1
+   ENDIF   
+   DIALOG d_pedranpc
+   SRC.TAG.TRANCA=0
+   SRC.MESSAGE @0481@ Arena Destrancada
+   LINK=<TAG.MEMORY>
+   LINK.TIMER 0
+   LINK=04fffffff
+ENDIF
+RETURN 1
+
+[DIALOG d_arenasai]
+260,160
+NOMOVE
+resizepic 0 0 3600 208 150
+text 73 18 83 0
+text 43 50 878 1
+text 43 70 878 2
+text 63 117 83 3
+gumppic 15 15 96
+gumppic 15 35 96
+gumppic 15 115 96
+gumppic 15 135 96
+button 25 53 1209 1210 1 0 1
+button 25 73 1209 1210 1 0 2
+
+[DIALOG d_arenasai TEXT]
+Ir Para:
+Help Room
+Commerce Room
+Fusion Shard
+
+[DIALOG d_arenasai BUTTON]
+ON=1
+IF <SRC.TAG.ARENAP> != <SRC.P.X>
+  SRC.SYSMESSAGE @0481@ Voce se afastou da pedra, tente novamente.
+  RETURN 1
+ENDIF
+src.tag.arenap
+SRC.GO Help Room
+TAG.LIBER=2
+MORE=2361
+MOREX=0
+LINK=<TAG.MEMORY>
+LINK.TIMER 0
+LINK=<TAG.NPC1> 
+LINK.REMOVE
+LINK=<TAG.NPC2> 
+LINK.REMOVE
+LINK=<TAG.NPC3> 
+LINK.REMOVE
+LINK=<TAG.NPC4> 
+LINK.REMOVE
+LINK=04fffffff
+IF (<SRC.TAG.ARENA>==01)
+      VAR.NPCLVL1=0
+   ELSEIF (<SRC.TAG.ARENA>==02)
+      VAR.NPCLVL2=0
+   ELSEIF (<SRC.TAG.ARENA>==03)
+      VAR.NPCLVL3=0
+   ELSEIF (<SRC.TAG.ARENA>==04)
+      VAR.NPCLVL4=0
+   ELSEIF (<SRC.TAG.ARENA>==05)
+      VAR.NPCLVL5=0
+   ELSEIF (<SRC.TAG.ARENA>==06)
+      VAR.NPCLVL6=0
+   ELSEIF (<SRC.TAG.ARENA>==07)
+      VAR.NPCLVL7=0
+   ELSEIF (<SRC.TAG.ARENA>==08)
+      VAR.NPCLVL8=0
+   ELSEIF (<SRC.TAG.ARENA>==09)
+      VAR.NPCLVL9=0
+   ELSEIF (<SRC.TAG.ARENA>==0a)
+      VAR.NPCLVL10=0
+   ELSEIF (<SRC.TAG.ARENA>==0b)
+      VAR.NPCLVL11=0
+   ELSEIF (<SRC.TAG.ARENA>==0c)
+      VAR.NPCLVL12=0
+   ELSEIF (<SRC.TAG.ARENA>==0d)
+      VAR.NPCLVL13=0
+   ELSEIF (<SRC.TAG.ARENA>==0e)
+      VAR.NPCLVL14=0
+   ELSEIF (<SRC.TAG.ARENA>==0f)
+      VAR.NPCLVL15=0
+   ELSEIF (<SRC.TAG.ARENA>==010)
+      VAR.NPCLVL16=0
+   ELSEIF (<SRC.TAG.ARENA>==011)
+      VAR.NPCLVL17=0
+   ELSEIF (<SRC.TAG.ARENA>==012)
+      VAR.NPCLVL18=0
+   ELSEIF (<SRC.TAG.ARENA>==013)
+      VAR.NPCLVL19=0
+   ELSEIF (<SRC.TAG.ARENA>==014)
+      VAR.NPCLVL20=0
+ENDIF   
+RETURN 1
+ON=2
+IF <SRC.TAG.ARENAP> != <SRC.P.X>
+  SRC.SYSMESSAGE @0481@ Voce se afastou da pedra, tente novamente.
+  RETURN 1
+ENDIF
+src.tag.arenap
+SRC.GO Commerce Room
+TAG.LIBER=2
+MORE=2361
+MOREX=0
+LINK=<TAG.MEMORY>
+LINK.TIMER 0
+LINK=<TAG.NPC1> 
+LINK.REMOVE
+LINK=<TAG.NPC2> 
+LINK.REMOVE
+LINK=<TAG.NPC3> 
+LINK.REMOVE
+LINK=<TAG.NPC4> 
+LINK.REMOVE
+LINK=04fffffff
+IF (<SRC.TAG.ARENA>==01)
+      VAR.NPCLVL1=0
+   ELSEIF (<SRC.TAG.ARENA>==02)
+      VAR.NPCLVL2=0
+   ELSEIF (<SRC.TAG.ARENA>==03)
+      VAR.NPCLVL3=0
+   ELSEIF (<SRC.TAG.ARENA>==04)
+      VAR.NPCLVL4=0
+   ELSEIF (<SRC.TAG.ARENA>==05)
+      VAR.NPCLVL5=0
+   ELSEIF (<SRC.TAG.ARENA>==06)
+      VAR.NPCLVL6=0
+   ELSEIF (<SRC.TAG.ARENA>==07)
+      VAR.NPCLVL7=0
+   ELSEIF (<SRC.TAG.ARENA>==08)
+      VAR.NPCLVL8=0
+   ELSEIF (<SRC.TAG.ARENA>==09)
+      VAR.NPCLVL9=0
+   ELSEIF (<SRC.TAG.ARENA>==0a)
+      VAR.NPCLVL10=0
+   ELSEIF (<SRC.TAG.ARENA>==0b)
+      VAR.NPCLVL11=0
+   ELSEIF (<SRC.TAG.ARENA>==0c)
+      VAR.NPCLVL12=0
+   ELSEIF (<SRC.TAG.ARENA>==0d)
+      VAR.NPCLVL13=0
+   ELSEIF (<SRC.TAG.ARENA>==0e)
+      VAR.NPCLVL14=0
+   ELSEIF (<SRC.TAG.ARENA>==0f)
+      VAR.NPCLVL15=0
+   ELSEIF (<SRC.TAG.ARENA>==010)
+      VAR.NPCLVL16=0
+   ELSEIF (<SRC.TAG.ARENA>==011)
+      VAR.NPCLVL17=0
+   ELSEIF (<SRC.TAG.ARENA>==012)
+      VAR.NPCLVL18=0
+   ELSEIF (<SRC.TAG.ARENA>==013)
+      VAR.NPCLVL19=0
+   ELSEIF (<SRC.TAG.ARENA>==014)
+      VAR.NPCLVL20=0
+ENDIF   
+RETURN 1
+//----------------------------------------------------------------------//
+
+
+//Pedra pra Ir pra Arena, normal, um gumpzinho que mostra quais as arenas estão trancadas
+//no gump mesmo. Não vai pra arenas trancadas, e... e... acho que só mesmo :)
+//--------------------------------Pedra p/ Ir NPC-----------------------------//
+[ITEMDEF i_pedraarena] 
+DEFNAME=i_pedraarena
+ID=4483
+NAME=Pedra Arena NPC
+
+ON=@Create
+COLOR=0003d
+ATTR=08050
+VAR.NPCLVL1=0
+VAR.NPCLVL2=0
+VAR.NPCLVL3=0
+VAR.NPCLVL4=0
+VAR.NPCLVL5=0
+VAR.NPCLVL6=0
+VAR.NPCLVL7=0
+VAR.NPCLVL8=0
+VAR.NPCLVL9=0
+VAR.NPCLVL10=0
+VAR.NPCLVL11=0
+VAR.NPCLVL12=0
+VAR.NPCLVL13=0
+VAR.NPCLVL14=0
+VAR.NPCLVL15=0
+VAR.NPCLVL16=0
+VAR.NPCLVL17=0
+VAR.NPCLVL18=0
+VAR.NPCLVL19=0
+VAR.NPCLVL20=0
+
+ON=@DCLICK
+
+src.tag.arenap=<src.p.x> //mexi
+
+IF (<VAR.NPCLVL1>=00)
+   VAR.NPCLVL1=00
+ENDIF
+IF (<VAR.NPCLVL2>=00)
+   VAR.NPCLVL2=00
+ENDIF
+IF (<VAR.NPCLVL3>=00)
+   VAR.NPCLVL3=00
+ENDIF
+IF (<VAR.NPCLVL4>=00)
+   VAR.NPCLVL4=00
+ENDIF
+IF (<VAR.NPCLVL5>=00)
+   VAR.NPCLVL5=00
+ENDIF
+IF (<VAR.NPCLVL6>=00)
+   VAR.NPCLVL6=00
+ENDIF
+IF (<VAR.NPCLVL7>=00)
+   VAR.NPCLVL7=00
+ENDIF
+IF (<VAR.NPCLVL8>=00)
+   VAR.NPCLVL8=00
+ENDIF
+IF (<VAR.NPCLVL9>=00)
+   VAR.NPCLVL9=00
+ENDIF
+IF (<VAR.NPCLVL10>=00)
+   VAR.NPCLVL10=00
+ENDIF
+IF (<VAR.NPCLVL11>=00)
+   VAR.NPCLVL11=00
+ENDIF
+IF (<VAR.NPCLVL12>=00)
+   VAR.NPCLVL12=00
+ENDIF
+IF (<VAR.NPCLVL13>=00)
+   VAR.NPCLVL13=00
+ENDIF
+IF (<VAR.NPCLVL14>=00)
+   VAR.NPCLVL14=00
+ENDIF
+IF (<VAR.NPCLVL15>=00)
+   VAR.NPCLVL15=00
+ENDIF
+IF (<VAR.NPCLVL16>=00)
+   VAR.NPCLVL16=00
+ENDIF
+IF (<VAR.NPCLVL17>=00)
+   VAR.NPCLVL17=00
+ENDIF
+IF (<VAR.NPCLVL18>=00)
+   VAR.NPCLVL18=00
+ENDIF
+IF (<VAR.NPCLVL19>=00)
+   VAR.NPCLVL19=00
+ENDIF
+IF (<VAR.NPCLVL20>=00)
+   VAR.NPCLVL20=00
+ENDIF
+DIALOG d_pedrarena
+RETURN 1
+
+
+on=@timer
+return=0
+
+
+[DIALOG d_pedrarena] 
+110,10 
+resizepic 0 0 3600 430 410
+gumppic 15 14 96
+gumppic 100 14 96
+gumppic 237 14 96
+gumppic 15 35 96
+gumppic 100 35 96
+gumppic 237 35 96
+gumppic 207 38 3603
+gumppic 207 105 3603
+text 64 15 82 2
+text 44 50 875 3
+text 44 85 875 4
+text 44 120 875 5
+text 44 155 875 6
+text 44 190 875 7
+text 44 225 875 8
+text 44 260 875 9
+text 44 295 875 10
+text 44 330 875 11
+text 44 365 875 12
+text 245 50 875 13
+text 245 85 875 14
+text 245 120 875 15
+text 245 155 875 16
+text 245 190 875 17
+text 245 225 875 18
+text 245 260 875 19
+text 245 295 875 20
+text 245 330 875 21
+text 245 365 875 22
+text 260 15 022 23
+text 109 50 54 <VAR.NPCLVL1>
+text 109 85 54 <VAR.NPCLVL2>
+text 109 120 54 <VAR.NPCLVL3>
+text 109 155 54 <VAR.NPCLVL4>
+text 109 190 54 <VAR.NPCLVL5>
+text 109 225 54 <VAR.NPCLVL6>
+text 109 260 54 <VAR.NPCLVL7>
+text 109 295 54 <VAR.NPCLVL8>
+text 109 330 54 <VAR.NPCLVL9>
+text 109 365 54 <VAR.NPCLVL10>
+text 318 50 54 <VAR.NPCLVL11>
+text 318 85 54 <VAR.NPCLVL12>
+text 318 120 54 <VAR.NPCLVL13>
+text 318 155 54 <VAR.NPCLVL14>
+text 318 190 54 <VAR.NPCLVL15>
+text 318 225 54 <VAR.NPCLVL16>
+text 318 260 54 <VAR.NPCLVL17>
+text 318 295 54 <VAR.NPCLVL18>
+text 318 330 54 <VAR.NPCLVL19>
+text 318 365 54 <VAR.NPCLVL20>
+button 396 16 2708 2709 1 0 0
+button 20 50 5540 5541 5542 0 1 
+button 20 85 5540 5541 5542 0 2
+button 20 120 5540 5541 5542 0 3 
+button 20 155 5540 5541 5542 0 4
+button 20 190 5540 5541 5542 0 5 
+button 20 225 5540 5541 5542 0 6
+button 20 260 5540 5541 5542 0 7 
+button 20 295 5540 5541 5542 0 8
+button 20 330 5540 5541 5542 0 9 
+button 20 365 5540 5541 5542 0 10
+button 223 50 5540 5541 5542 0 11 
+button 223 85 5540 5541 5542 0 12
+button 223 120 5540 5541 5542 0 13 
+button 223 155 5540 5541 5542 0 14
+button 223 190 5540 5541 5542 0 15 
+button 223 225 5540 5541 5542 0 16
+button 223 260 5540 5541 5542 0 17 
+button 223 295 5540 5541 5542 0 18
+button 223 330 5540 5541 5542 0 19 
+button 223 365 5540 5541 5542 0 20
+
+[DIALOG d_pedrarena TEXT] 
+- Destrancada
+- Trancada
+ARENA NPC
+Arena 1 
+Arena 2 
+Arena 3 
+Arena 4 
+Arena 5 
+Arena 6 
+Arena 7 
+Arena 8 
+Arena 9 
+Arena 10 
+Arena 11 
+Arena 12 
+Arena 13 
+Arena 14 
+Arena 15 
+Arena 16 
+Arena 17 
+Arena 18 
+Arena 19 
+Arena 20 
+ARENA NPC
+
+[DIALOG d_pedrarena BUTTON] 
+ON=0
+RETURN 1
+ON=1
+
+IF <SRC.TAG.ARENAP> != <SRC.P.X>
+  SRC.SYSMESSAGE @0481@ Voce se afastou da pedra, tente novamente.
+  RETURN 1
+ENDIF
+
+IF (<VAR.NPCLVL1>==0)
+   SRC.TAG.ARENA=1
+   SRC.GO 6112,538
+   RETURN 1
+ELSE
+   SRC.SYSMESSAGE Arena Trancada
+   DIALOG d_pedrarena
+   RETURN 1
+ENDIF
+ON=2
+
+IF <SRC.TAG.ARENAP> != <SRC.P.X>
+  SRC.SYSMESSAGE @0481@ Voce se afastou da pedra, tente novamente.
+  RETURN 1
+ENDIF
+
+IF (<VAR.NPCLVL2>==0)
+   SRC.TAG.ARENA=2
+   SRC.GO 6112,574
+   RETURN 1
+ELSE
+   SRC.SYSMESSAGE Arena Trancada
+   DIALOG d_pedrarena
+   RETURN 1
+ENDIF
+ON=3
+
+IF <SRC.TAG.ARENAP> != <SRC.P.X>
+  SRC.SYSMESSAGE @0481@ Voce se afastou da pedra, tente novamente.
+  RETURN 1
+ENDIF
+
+IF (<VAR.NPCLVL3>==0)
+   SRC.TAG.ARENA=3
+   SRC.GO 6112,611
+   RETURN 1
+ELSE
+   SRC.SYSMESSAGE Arena Trancada
+   DIALOG d_pedrarena
+   RETURN 1
+ENDIF
+ON=4
+
+IF <SRC.TAG.ARENAP> != <SRC.P.X>
+  SRC.SYSMESSAGE @0481@ Voce se afastou da pedra, tente novamente.
+  RETURN 1
+ENDIF
+
+IF (<VAR.NPCLVL4>==0)
+   SRC.TAG.ARENA=4
+   SRC.GO 6112,649
+   RETURN 1
+ELSE
+   SRC.SYSMESSAGE Arena Trancada
+   DIALOG d_pedrarena
+   RETURN 1
+ENDIF
+ON=5
+
+IF <SRC.TAG.ARENAP> != <SRC.P.X>
+  SRC.SYSMESSAGE @0481@ Voce se afastou da pedra, tente novamente.
+  RETURN 1
+ENDIF
+
+IF (<VAR.NPCLVL5>==0)
+   SRC.TAG.ARENA=5
+   SRC.GO 6112,686
+   RETURN 1
+ELSE
+   SRC.SYSMESSAGE Arena Trancada
+   DIALOG d_pedrarena
+   RETURN 1
+ENDIF
+ON=6
+
+IF <SRC.TAG.ARENAP> != <SRC.P.X>
+  SRC.SYSMESSAGE @0481@ Voce se afastou da pedra, tente novamente.
+  RETURN 1
+ENDIF
+
+IF (<VAR.NPCLVL6>==0)
+   SRC.TAG.ARENA=6
+   SRC.GO 6112,724
+   RETURN 1
+ELSE
+   SRC.SYSMESSAGE Arena Trancada
+   DIALOG d_pedrarena
+   RETURN 1
+ENDIF
+ON=7
+
+IF <SRC.TAG.ARENAP> != <SRC.P.X>
+  SRC.SYSMESSAGE @0481@ Voce se afastou da pedra, tente novamente.
+  RETURN 1
+ENDIF
+
+IF (<VAR.NPCLVL7>==0)
+   SRC.TAG.ARENA=7
+   SRC.GO 6112,761
+   RETURN 1
+ELSE
+   SRC.SYSMESSAGE Arena Trancada
+   DIALOG d_pedrarena
+   RETURN 1
+ENDIF
+ON=8
+
+IF <SRC.TAG.ARENAP> != <SRC.P.X>
+  SRC.SYSMESSAGE @0481@ Voce se afastou da pedra, tente novamente.
+  RETURN 1
+ENDIF
+
+IF (<VAR.NPCLVL8>==0)
+   SRC.TAG.ARENA=8
+   SRC.GO 6112,798
+   RETURN 1
+ELSE
+   SRC.SYSMESSAGE Arena Trancada
+   DIALOG d_pedrarena
+   RETURN 1
+ENDIF
+ON=9
+
+IF <SRC.TAG.ARENAP> != <SRC.P.X>
+  SRC.SYSMESSAGE @0481@ Voce se afastou da pedra, tente novamente.
+  RETURN 1
+ENDIF
+
+IF (<VAR.NPCLVL9>==0)
+   SRC.TAG.ARENA=9
+   SRC.GO 6112,835
+   RETURN 1
+ELSE
+   SRC.SYSMESSAGE Arena Trancada
+   DIALOG d_pedrarena
+   RETURN 1
+ENDIF
+ON=10
+
+IF <SRC.TAG.ARENAP> != <SRC.P.X>
+  SRC.SYSMESSAGE @0481@ Voce se afastou da pedra, tente novamente.
+  RETURN 1
+ENDIF
+
+IF (<VAR.NPCLVL10>==0)
+   SRC.TAG.ARENA=10
+   SRC.GO 6112,872
+   RETURN 1
+ELSE
+   SRC.SYSMESSAGE Arena Trancada
+   DIALOG d_pedrarena
+   RETURN 1
+ENDIF
+ON=11
+
+IF <SRC.TAG.ARENAP> != <SRC.P.X>
+  SRC.SYSMESSAGE @0481@ Voce se afastou da pedra, tente novamente.
+  RETURN 1
+ENDIF
+
+IF (<VAR.NPCLVL11>==0)
+   SRC.TAG.ARENA=11
+   SRC.GO 6112,909
+   RETURN 1
+ELSE
+   SRC.SYSMESSAGE Arena Trancada
+   DIALOG d_pedrarena
+   RETURN 1
+ENDIF
+ON=12
+
+IF <SRC.TAG.ARENAP> != <SRC.P.X>
+  SRC.SYSMESSAGE @0481@ Voce se afastou da pedra, tente novamente.
+  RETURN 1
+ENDIF
+
+IF (<VAR.NPCLVL12>==0)
+   SRC.TAG.ARENA=12
+   SRC.GO 6112,947
+   RETURN 1
+ELSE
+   SRC.SYSMESSAGE Arena Trancada
+   DIALOG d_pedrarena
+   RETURN 1
+ENDIF
+ON=13
+
+IF <SRC.TAG.ARENAP> != <SRC.P.X>
+  SRC.SYSMESSAGE @0481@ Voce se afastou da pedra, tente novamente.
+  RETURN 1
+ENDIF
+
+IF (<VAR.NPCLVL13>==0)
+   SRC.TAG.ARENA=13
+   SRC.GO 6112,984
+   RETURN 1
+ELSE
+   SRC.SYSMESSAGE Arena Trancada
+   DIALOG d_pedrarena
+   RETURN 1
+ENDIF
+ON=14
+
+IF <SRC.TAG.ARENAP> != <SRC.P.X>
+  SRC.SYSMESSAGE @0481@ Voce se afastou da pedra, tente novamente.
+  RETURN 1
+ENDIF
+
+IF (<VAR.NPCLVL14>==0)
+   SRC.TAG.ARENA=14
+   SRC.GO 6112,1021
+   RETURN 1
+ELSE
+   SRC.SYSMESSAGE Arena Trancada
+   DIALOG d_pedrarena
+   RETURN 1
+ENDIF
+ON=15
+
+IF <SRC.TAG.ARENAP> != <SRC.P.X>
+  SRC.SYSMESSAGE @0481@ Voce se afastou da pedra, tente novamente.
+  RETURN 1
+ENDIF
+
+IF (<VAR.NPCLVL15>==0)
+   SRC.TAG.ARENA=15
+   SRC.GO 6112,1058
+   RETURN 1
+ELSE
+   SRC.SYSMESSAGE Arena Trancada
+   DIALOG d_pedrarena
+   RETURN 1
+ENDIF
+ON=16
+
+IF <SRC.TAG.ARENAP> != <SRC.P.X>
+  SRC.SYSMESSAGE @0481@ Voce se afastou da pedra, tente novamente.
+  RETURN 1
+ENDIF
+
+IF (<VAR.NPCLVL16>==0)
+   SRC.TAG.ARENA=16
+   SRC.GO 6112,1095
+   RETURN 1
+ELSE
+   SRC.SYSMESSAGE Arena Trancada
+   DIALOG d_pedrarena
+   RETURN 1
+ENDIF
+ON=17
+
+IF <SRC.TAG.ARENAP> != <SRC.P.X>
+  SRC.SYSMESSAGE @0481@ Voce se afastou da pedra, tente novamente.
+  RETURN 1
+ENDIF
+
+IF (<VAR.NPCLVL17>==0)
+   SRC.TAG.ARENA=17
+   SRC.GO 6112,1132
+   RETURN 1
+ELSE
+   SRC.SYSMESSAGE Arena Trancada
+   DIALOG d_pedrarena
+   RETURN 1
+ENDIF
+ON=18
+
+IF <SRC.TAG.ARENAP> != <SRC.P.X>
+  SRC.SYSMESSAGE @0481@ Voce se afastou da pedra, tente novamente.
+  RETURN 1
+ENDIF
+
+IF (<VAR.NPCLVL18>==0)
+   SRC.TAG.ARENA=18
+   SRC.GO 6112,1169
+   RETURN 1
+ELSE
+   SRC.SYSMESSAGE Arena Trancada
+   DIALOG d_pedrarena
+   RETURN 1
+ENDIF
+ON=19
+
+IF <SRC.TAG.ARENAP> != <SRC.P.X>
+  SRC.SYSMESSAGE @0481@ Voce se afastou da pedra, tente novamente.
+  RETURN 1
+ENDIF
+
+IF (<VAR.NPCLVL19>==0)
+   SRC.TAG.ARENA=19
+   SRC.GO 6112,1207
+   RETURN 1
+ELSE
+   SRC.SYSMESSAGE Arena Trancada
+   DIALOG d_pedrarena
+   RETURN 1
+ENDIF
+ON=20
+
+IF <SRC.TAG.ARENAP> != <SRC.P.X>
+  SRC.SYSMESSAGE @0481@ Voce se afastou da pedra, tente novamente.
+  RETURN 1
+ENDIF
+
+IF (<VAR.NPCLVL20>==0)
+   SRC.TAG.ARENA=20
+   SRC.GO 6112,1244
+   RETURN 1
+ELSE
+   SRC.SYSMESSAGE Arena Trancada
+   DIALOG d_pedrarena
+   RETURN 1
+ENDIF
+//---------------------------------------------------------------------------//
+
+
+//--------------------------------Pedra Painel de Controle-------------------//
+[ITEMDEF i_pedrapainel] 
+DEFNAME=i_pedrapainel
+ID=4483
+NAME=Pedra Painel de Controle
+TYPE=T_SCRIPT
+
+ON=@Create
+TAG.LINK=0
+COLOR=234
+ATTR=08050
+
+ON=@DCLICK
+DIALOG d_pedractrl
+RETURN 1
+
+ON=@TARGON_ITEM
+SRC.TARG.TAG.ARENA=<TAG.LINK>
+SRC.SYSMESSAGE Pedra linkada a <TAG.LINK>
+RETURN 1
+
+
+on=@timer
+return=0
+
+
+[DIALOG d_pedractrl] 
+110,0 
+resizepic 0 0 3600 430 480
+gumppic 15 14 96
+gumppic 100 14 96
+gumppic 237 14 96
+gumppic 15 35 96
+gumppic 100 35 96
+gumppic 237 35 96
+gumppic 207 38 3603
+gumppic 207 105 3603
+gumppic 13 390 3601
+gumppic 125 390 3601
+gumppic 230 390 3601
+gumppic 293 390 3601
+text 160 15 84 2
+text 44 50 875 3
+text 44 85 875 4
+text 44 120 875 5
+text 44 155 875 6
+text 44 190 875 7
+text 44 225 875 8
+text 44 260 875 9
+text 44 295 875 10
+text 44 330 875 11
+text 44 365 875 12
+text 245 50 875 13
+text 245 85 875 14
+text 245 120 875 15
+text 245 155 875 16
+text 245 190 875 17
+text 245 225 875 18
+text 245 260 875 19
+text 245 295 875 20
+text 245 330 875 21
+text 245 365 875 22
+text 109 50 54 <VAR.NPCLVL1>
+text 109 85 54 <VAR.NPCLVL2>
+text 109 120 54 <VAR.NPCLVL3>
+text 109 155 54 <VAR.NPCLVL4>
+text 109 190 54 <VAR.NPCLVL5>
+text 109 225 54 <VAR.NPCLVL6>
+text 109 260 54 <VAR.NPCLVL7>
+text 109 295 54 <VAR.NPCLVL8>
+text 109 330 54 <VAR.NPCLVL9>
+text 109 365 54 <VAR.NPCLVL10>
+text 318 50 54 <VAR.NPCLVL11>
+text 318 85 54 <VAR.NPCLVL12>
+text 318 120 54 <VAR.NPCLVL13>
+text 318 155 54 <VAR.NPCLVL14>
+text 318 190 54 <VAR.NPCLVL15>
+text 318 225 54 <VAR.NPCLVL16>
+text 318 260 54 <VAR.NPCLVL17>
+text 318 295 54 <VAR.NPCLVL18>
+text 318 330 54 <VAR.NPCLVL19>
+text 318 365 54 <VAR.NPCLVL20>
+text 40 410 54 23
+text 40 440 54 24
+button 396 16 2708 2709 1 0 0
+button 20 50 5540 5541 5542 0 1 
+button 20 85 5540 5541 5542 0 2
+button 20 120 5540 5541 5542 0 3 
+button 20 155 5540 5541 5542 0 4
+button 20 190 5540 5541 5542 0 5 
+button 20 225 5540 5541 5542 0 6
+button 20 260 5540 5541 5542 0 7 
+button 20 295 5540 5541 5542 0 8
+button 20 330 5540 5541 5542 0 9 
+button 20 365 5540 5541 5542 0 10
+button 223 50 5540 5541 5542 0 11 
+button 223 85 5540 5541 5542 0 12
+button 223 120 5540 5541 5542 0 13 
+button 223 155 5540 5541 5542 0 14
+button 223 190 5540 5541 5542 0 15 
+button 223 225 5540 5541 5542 0 16
+button 223 260 5540 5541 5542 0 17 
+button 223 295 5540 5541 5542 0 18
+button 223 330 5540 5541 5542 0 19 
+button 223 365 5540 5541 5542 0 20
+button 20 410 5540 5541 5542 0 21
+button 20 440 5540 5541 5542 0 22
+
+[DIALOG d_pedractrl TEXT] 
+- Destrancada
+- Trancada
+ARENA NPC
+Arena 1 
+Arena 2 
+Arena 3 
+Arena 4 
+Arena 5 
+Arena 6 
+Arena 7 
+Arena 8 
+Arena 9 
+Arena 10 
+Arena 11 
+Arena 12 
+Arena 13 
+Arena 14 
+Arena 15 
+Arena 16 
+Arena 17 
+Arena 18 
+Arena 19 
+Arena 20 
+UID da Arena: <TAG.LINK>
+Linkar
+
+[DIALOG d_pedractrl BUTTON] 
+ON=0
+RETURN 1
+ON=1
+   SRC.TAG.ARENA=1
+   SRC.GO 6112,538
+   RETURN 1
+ON=2
+   SRC.TAG.ARENA=2
+   SRC.GO 6112,574
+   RETURN 1
+ON=3
+   SRC.TAG.ARENA=3
+   SRC.GO 6112,611
+   RETURN 1
+ON=4
+   SRC.TAG.ARENA=4
+   SRC.GO 6112,649
+   RETURN 1
+ON=5
+   SRC.TAG.ARENA=5
+   SRC.GO 6112,686
+   RETURN 1
+ON=6
+   SRC.TAG.ARENA=6
+   SRC.GO 6112,724
+   RETURN 1
+ON=7
+   SRC.TAG.ARENA=7
+   SRC.GO 6112,761
+   RETURN 1
+ON=8
+   SRC.TAG.ARENA=8
+   SRC.GO 6112,798
+   RETURN 1
+ON=9
+   SRC.TAG.ARENA=9
+   SRC.GO 6112,835
+   RETURN 1
+ON=10
+   SRC.TAG.ARENA=10
+   SRC.GO 6112,872
+   RETURN 1
+ON=11
+   SRC.TAG.ARENA=11
+   SRC.GO 6112,909
+   RETURN 1
+ON=12
+   SRC.TAG.ARENA=12
+   SRC.GO 6112,947
+   RETURN 1
+ON=13
+   SRC.TAG.ARENA=13
+   SRC.GO 6112,984
+   RETURN 1
+ON=14
+   SRC.TAG.ARENA=14
+   SRC.GO 6112,1021
+   RETURN 1
+ON=15
+   SRC.TAG.ARENA=15
+   SRC.GO 6112,1058
+   RETURN 1
+ON=16
+   SRC.TAG.ARENA=16
+   SRC.GO 6112,1095
+   RETURN 1
+ON=17
+   SRC.TAG.ARENA=17
+   SRC.GO 6112,1132
+   RETURN 1
+ON=18
+   SRC.TAG.ARENA=18
+   SRC.GO 6112,1169
+   RETURN 1
+ON=19
+   SRC.TAG.ARENA=19
+   SRC.GO 6112,1207
+   RETURN 1
+ON=20
+   SRC.TAG.ARENA=20
+   SRC.GO 6112,1244
+   RETURN 1
+ON=21
+   TRYP 1 INPDLG=TAG.LINK 30
+   RETURN 1
+ON=22
+   TARGET Selecione a Pedra da Arena  
+   RETURN 1
+//---------------------------------------------------------------------------//
+
+
+//Itemzinho pra gravar o TIMER de 30 minutos pra destrancar a arena
+//sem mta complicação :D
+//----------------------------Item de Memoria-------------------------//
+
+[ITEMDEF i_memory_arena]
+NAME=Arena NPC Memory [DO NOT REMOVE]
+ID=i_memory
+TYPE=T_EQ_SCRIPT
+
+ON=@TIMER
+LINK.TAG.TRANCA=0
+LINK.SYSMESSAGE @0481@ Tempo de Tranca Terminado
+LINK.SYSMESSAGE @0481@ Arena Destrancada
+IF (<TAG.ARENA>==01)
+   VAR.NPCLVL1=0
+return=0
+ELSEIF (<TAG.ARENA>==02)
+   VAR.NPCLVL2=0
+return=0
+ELSEIF (<TAG.ARENA>==03)
+   VAR.NPCLVL3=0
+return=0
+ELSEIF (<TAG.ARENA>==04)
+   VAR.NPCLVL4=0
+return=0
+ELSEIF (<TAG.ARENA>==05)
+   VAR.NPCLVL5=0
+return=0
+ELSEIF (<TAG.ARENA>==06)
+   VAR.NPCLVL6=0
+return=0
+ELSEIF (<TAG.ARENA>==07)
+   VAR.NPCLVL7=0
+return=0
+ELSEIF (<TAG.ARENA>==08)
+   VAR.NPCLVL8=0
+return=0
+ELSEIF (<TAG.ARENA>==09)
+   VAR.NPCLVL9=0
+return=0
+ELSEIF (<TAG.ARENA>==0a)
+   VAR.NPCLVL10=0
+return=0
+ELSEIF (<TAG.ARENA>==0b)
+   VAR.NPCLVL11=0
+return=0
+ELSEIF (<TAG.ARENA>==0c)
+   VAR.NPCLVL12=0
+return=0
+ELSEIF (<TAG.ARENA>==0d)
+   VAR.NPCLVL13=0
+return=0
+ELSEIF (<TAG.ARENA>==0e)
+   VAR.NPCLVL14=0
+return=0
+ELSEIF (<TAG.ARENA>==0f)
+   VAR.NPCLVL15=0
+return=0
+ELSEIF (<TAG.ARENA>==010)
+   VAR.NPCLVL16=0
+return=0
+ELSEIF (<TAG.ARENA>==011)
+   VAR.NPCLVL17=0
+return=0
+ELSEIF (<TAG.ARENA>==012)
+   VAR.NPCLVL18=0
+return=0
+ELSEIF (<TAG.ARENA>==013)
+   VAR.NPCLVL19=0
+return=0
+ELSEIF (<TAG.ARENA>==014)
+   VAR.NPCLVL20=0
+return=0
+ENDIF   
+RETURN 0
+
+
+//-----------------------------------Respaw Quest-----------------------------------//
+
+[ITEMDEF i_vb00]
+DEFNAME=i_vb00
+NAME=Vale Brind Premium
+ID=3607
+ON=@Create
+COLOR=077a
+
+on=@timer
+return=0
+
+[CHARDEF n_quest_lvl1]
+DEFNAME=n_quest_lvl1
+NAME=#NAMES_HUMANMALE LEVEL 1
+ID=C_MAN
+icon=020f8
+ANIM=07bc7f
+DAM=50
+ARMOR=50
+
+ON=@CREATE
+//FLAGS=004000000
+STR=1500
+DEX=500
+INT=12
+
+PARRYING=500.0
+FENCING=500.0
+//MAGERY=500.0 500.0
+MAGICRESISTANCE=500.0
+TACTICS=500.0
+SWORDSMANSHIP=500.0
+
+FAME=10000
+KARMA=-10000
+NPC=brain_monster
+
+ITEM=i_SPELLBOOK 
+MORE1=0811
+MORE2=01
+attr=0004
+ITEMNEWBIE=i_qstplate_gorget
+ITEMNEWBIE=i_qstplate_platemail
+ITEMNEWBIE=i_qstplate_arms
+ITEMNEWBIE=i_qstplate_leggings
+ITEMNEWBIE=i_qstplate_shield
+ITEMNEWBIE=i_qstplate_gloves
+ITEMNEWBIE=i_qstplate_kryss
+ITEMNEWBIE=i_qstplate_helm
+ITEM=i_GOLD
+AMOUNT={20000 25000}
+
+ON=@Death
+NEWNPC n_quest_lvl2
+SRC.ACT.HOME=<SRC.HOME>
+SRC.ACT.HOMEDIST=3
+
+[CHARDEF n_quest_lvl2]
+DEFNAME=n_quest_lvl2
+NAME=#NAMES_HUMANMALE LEVEL 2
+ID=C_MAN
+icon=020f8
+ANIM=07bc7f
+DAM=50
+ARMOR=60
+
+ON=@CREATE
+//FLAGS=004000000
+STR=1600
+DEX=500
+INT=12
+
+PARRYING=600.0
+FENCING=600.0
+//MAGERY=600.0 600.0
+MAGICRESISTANCE=600.0
+TACTICS=600.0
+SWORDSMANSHIP=600.0
+
+FAME=10000
+KARMA=-10000
+NPC=brain_monster
+
+//ITEM=i_SPELLBOOK 
+//MORE1=0811
+//MORE2=01
+//attr=0004
+ITEMNEWBIE=i_qstplate_gorget
+ITEMNEWBIE=i_qstplate_platemail
+ITEMNEWBIE=i_qstplate_arms
+ITEMNEWBIE=i_qstplate_leggings
+ITEMNEWBIE=i_qstplate_shield
+ITEMNEWBIE=i_qstplate_gloves
+ITEMNEWBIE=i_qstplate_kryss
+ITEMNEWBIE=i_qstplate_helm
+ITEM=i_GOLD
+AMOUNT={20000 25000}
+
+ON=@Death
+NEWNPC n_quest_lvl3
+SRC.ACT.HOME=<SRC.HOME>
+SRC.ACT.HOMEDIST=3
+
+[CHARDEF n_quest_lvl3]
+DEFNAME=n_quest_lvl3
+NAME=#NAMES_HUMANMALE LEVEL 3
+ID=C_MAN
+icon=020f8
+ANIM=07bc7f
+DAM=50
+ARMOR=70
+
+ON=@CREATE
+//FLAGS=004000000
+STR=1700
+DEX=500
+INT=12
+
+PARRYING=700.0
+FENCING=700.0
+//MAGERY=700.0 700.0
+MAGICRESISTANCE=700.0
+TACTICS=700.0
+SWORDSMANSHIP=700.0
+
+FAME=10000
+KARMA=-10000
+NPC=brain_monster
+
+ITEM=i_SPELLBOOK 
+MORE1=0811
+MORE2=01
+attr=0004
+ITEMNEWBIE=i_qstplate_gorget
+ITEMNEWBIE=i_qstplate_platemail
+ITEMNEWBIE=i_qstplate_arms
+ITEMNEWBIE=i_qstplate_leggings
+ITEMNEWBIE=i_qstplate_shield
+ITEMNEWBIE=i_qstplate_gloves
+ITEMNEWBIE=i_qstplate_kryss
+ITEMNEWBIE=i_qstplate_helm
+ITEM=i_GOLD
+AMOUNT={20000 25000}
+
+ON=@Death
+NEWNPC n_quest_lvl4
+SRC.ACT.HOME=<SRC.HOME>
+SRC.ACT.HOMEDIST=3
+
+[CHARDEF n_quest_lvl4]
+DEFNAME=n_quest_lvl4
+NAME=#NAMES_HUMANMALE LEVEL 4
+ID=C_MAN
+icon=020f8
+ANIM=07bc7f
+DAM=50
+ARMOR=80
+
+ON=@CREATE
+//FLAGS=004000000
+STR=1800
+DEX=500
+INT=12
+
+PARRYING=800.0
+FENCING=800.0
+//MAGERY=800.0 800.0
+MAGICRESISTANCE=800.0
+TACTICS=800.0
+SWORDSMANSHIP=800.0
+
+FAME=10000
+KARMA=-10000
+NPC=brain_monster
+
+//ITEM=i_SPELLBOOK 
+//MORE1=0811
+//MORE2=01
+//attr=0004
+ITEMNEWBIE=i_qstplate_gorget
+ITEMNEWBIE=i_qstplate_platemail
+ITEMNEWBIE=i_qstplate_arms
+ITEMNEWBIE=i_qstplate_leggings
+ITEMNEWBIE=i_qstplate_shield
+ITEMNEWBIE=i_qstplate_gloves
+ITEMNEWBIE=i_qstplate_kryss
+ITEMNEWBIE=i_qstplate_helm
+ITEM=i_GOLD
+AMOUNT={20000 25000}
+
+ON=@Death
+NEWNPC n_quest_lvl5
+SRC.ACT.HOME=<SRC.HOME>
+SRC.ACT.HOMEDIST=3
+
+[CHARDEF n_quest_lvl5]
+DEFNAME=n_quest_lvl5
+NAME=#NAMES_HUMANMALE LEVEL 5
+ID=C_MAN
+icon=020f8
+ANIM=07bc7f
+DAM=60
+ARMOR=90
+
+ON=@CREATE
+//FLAGS=004000000
+STR=1900
+DEX=500
+INT=12
+
+PARRYING=900.0
+FENCING=900.0
+//MAGERY=900.0 900.0
+MAGICRESISTANCE=900.0
+TACTICS=900.0
+SWORDSMANSHIP=900.0
+
+FAME=10000
+KARMA=-10000
+NPC=brain_monster
+
+ITEM=i_SPELLBOOK 
+MORE1=0811
+MORE2=01
+attr=0004
+ITEMNEWBIE=i_qstplate_gorget
+ITEMNEWBIE=i_qstplate_platemail
+ITEMNEWBIE=i_qstplate_arms
+ITEMNEWBIE=i_qstplate_leggings
+ITEMNEWBIE=i_qstplate_shield
+ITEMNEWBIE=i_qstplate_gloves
+ITEMNEWBIE=i_qstplate_kryss
+ITEMNEWBIE=i_qstplate_helm
+ITEM=i_GOLD
+AMOUNT={20000 25000}
+
+ON=@Death
+NEWNPC n_quest_lvl6
+SRC.ACT.HOME=<SRC.HOME>
+SRC.ACT.HOMEDIST=3
+
+[CHARDEF n_quest_lvl6]
+DEFNAME=n_quest_lvl6
+NAME=#NAMES_HUMANMALE LEVEL 6
+ID=C_MAN
+icon=020f8
+ANIM=07bc7f
+DAM=60
+ARMOR=100
+
+ON=@CREATE
+//FLAGS=004000000
+STR=2000
+DEX=500
+INT=12
+
+PARRYING=1000.0
+FENCING=1000.0
+//MAGERY=1000.0 1000.0
+MAGICRESISTANCE=1000.0
+TACTICS=1000.0
+SWORDSMANSHIP=1000.0
+
+FAME=10000
+KARMA=-10000
+NPC=brain_monster
+
+//ITEM=i_SPELLBOOK 
+//MORE1=02c080000
+//MORE2=0420
+//attr=0004
+ITEMNEWBIE=i_qstplate_gorget
+COLOR=045e
+ITEMNEWBIE=i_qstplate_platemail
+COLOR=045e
+ITEMNEWBIE=i_qstplate_arms
+COLOR=045e
+ITEMNEWBIE=i_qstplate_leggings
+COLOR=045e
+ITEMNEWBIE=i_qstplate_shield
+COLOR=045e
+ITEMNEWBIE=i_qstplate_gloves
+COLOR=045e
+ITEMNEWBIE=i_qstplate_kryss
+COLOR=045e
+ITEMNEWBIE=i_qstplate_helm
+COLOR=045e
+ITEM=i_GOLD
+AMOUNT={25000 30000}
+
+ON=@Death
+NEWNPC n_quest_lvl7
+SRC.ACT.HOME=<SRC.HOME>
+SRC.ACT.HOMEDIST=3
+
+[CHARDEF n_quest_lvl7]
+DEFNAME=n_quest_lvl7
+NAME=#NAMES_HUMANMALE LEVEL 7
+ID=C_MAN
+icon=020f8
+ANIM=07bc7f
+DAM=60
+ARMOR=110
+
+ON=@CREATE
+//FLAGS=004000000
+STR=2100
+DEX=500
+INT=12
+
+PARRYING=1100.0
+FENCING=1100.0
+//MAGERY=1100.0 1100.0
+MAGICRESISTANCE=1100.0
+TACTICS=1100.0
+SWORDSMANSHIP=1100.0
+
+FAME=10000
+KARMA=-10000
+NPC=brain_monster
+
+ITEM=i_SPELLBOOK 
+MORE1=02c080000
+MORE2=0420
+attr=0004
+ITEMNEWBIE=i_qstplate_gorget
+COLOR=045e
+ITEMNEWBIE=i_qstplate_platemail
+COLOR=045e
+ITEMNEWBIE=i_qstplate_arms
+COLOR=045e
+ITEMNEWBIE=i_qstplate_leggings
+COLOR=045e
+ITEMNEWBIE=i_qstplate_shield
+COLOR=045e
+ITEMNEWBIE=i_qstplate_gloves
+COLOR=045e
+ITEMNEWBIE=i_qstplate_kryss
+COLOR=045e
+ITEMNEWBIE=i_qstplate_helm
+COLOR=045e
+ITEM=i_GOLD
+AMOUNT={25000 30000}
+
+ON=@Death
+NEWNPC n_quest_lvl8
+SRC.ACT.HOME=<SRC.HOME>
+SRC.ACT.HOMEDIST=3
+
+[CHARDEF n_quest_lvl8]
+DEFNAME=n_quest_lvl8
+NAME=#NAMES_HUMANMALE LEVEL 8
+ID=C_MAN
+icon=020f8
+ANIM=07bc7f
+DAM=60
+ARMOR=120
+
+ON=@CREATE
+//FLAGS=004000000
+STR=2200
+DEX=500
+INT=12
+
+PARRYING=2000.0
+FENCING=2000.0
+//MAGERY=2000.0 2000.0
+MAGICRESISTANCE=2000.0
+TACTICS=2000.0
+SWORDSMANSHIP=2000.0
+
+FAME=10000
+KARMA=-10000
+NPC=brain_monster
+
+//ITEM=i_SPELLBOOK 
+//MORE1=02c080000
+//MORE2=0420
+//attr=0004
+ITEMNEWBIE=i_qstplate_gorget
+COLOR=045e
+ITEMNEWBIE=i_qstplate_platemail
+COLOR=045e
+ITEMNEWBIE=i_qstplate_arms
+COLOR=045e
+ITEMNEWBIE=i_qstplate_leggings
+COLOR=045e
+ITEMNEWBIE=i_qstplate_shield
+COLOR=045e
+ITEMNEWBIE=i_qstplate_gloves
+COLOR=045e
+ITEMNEWBIE=i_qstplate_kryss
+COLOR=045e
+ITEMNEWBIE=i_qstplate_helm
+COLOR=045e
+ITEM=i_GOLD
+AMOUNT={25000 30000}
+
+ON=@Death
+NEWNPC n_quest_lvl9
+SRC.ACT.HOME=<SRC.HOME>
+SRC.ACT.HOMEDIST=3
+
+[CHARDEF n_quest_lvl9]
+DEFNAME=n_quest_lvl9
+NAME=#NAMES_HUMANMALE LEVEL 9
+ID=C_MAN
+icon=020f8
+ANIM=07bc7f
+DAM=70
+ARMOR=130
+
+ON=@CREATE
+//FLAGS=004000000
+STR=2300
+DEX=500
+INT=12
+
+PARRYING=1300.0
+FENCING=1300.0
+//MAGERY=1300.0 1300.0
+MAGICRESISTANCE=1300.0
+TACTICS=1300.0
+SWORDSMANSHIP=1300.0
+
+FAME=10000
+KARMA=-10000
+NPC=brain_monster
+
+ITEM=i_SPELLBOOK 
+MORE1=02c080000
+MORE2=0420
+attr=0004
+ITEMNEWBIE=i_qstplate_gorget
+COLOR=045e
+ITEMNEWBIE=i_qstplate_platemail
+COLOR=045e
+ITEMNEWBIE=i_qstplate_arms
+COLOR=045e
+ITEMNEWBIE=i_qstplate_leggings
+COLOR=045e
+ITEMNEWBIE=i_qstplate_shield
+COLOR=045e
+ITEMNEWBIE=i_qstplate_gloves
+COLOR=045e
+ITEMNEWBIE=i_qstplate_kryss
+COLOR=045e
+ITEMNEWBIE=i_qstplate_helm
+COLOR=045e
+ITEM=i_GOLD
+AMOUNT={25000 30000}
+
+ON=@Death
+NEWNPC n_quest_lvl10
+SRC.ACT.HOME=<SRC.HOME>
+SRC.ACT.HOMEDIST=3
+
+[CHARDEF n_quest_lvl10]
+DEFNAME=n_quest_lvl10
+NAME=#NAMES_HUMANMALE LEVEL 10
+ID=C_MAN
+icon=020f8
+ANIM=07bc7f
+DAM=70
+ARMOR=140
+
+ON=@CREATE
+//FLAGS=004000000
+STR=2400
+DEX=500
+INT=12
+
+PARRYING=1400.0
+FENCING=1400.0
+//MAGERY=1400.0 1400.0
+MAGICRESISTANCE=1400.0
+TACTICS=1400.0
+SWORDSMANSHIP=1400.0
+
+FAME=10000
+KARMA=-10000
+NPC=brain_monster
+
+//ITEM=i_SPELLBOOK 
+//MORE1=02c080000
+//MORE2=0420
+//attr=0004
+ITEMNEWBIE=i_qstplate_gorget
+COLOR=045e
+ITEMNEWBIE=i_qstplate_platemail
+COLOR=045e
+ITEMNEWBIE=i_qstplate_arms
+COLOR=045e
+ITEMNEWBIE=i_qstplate_leggings
+COLOR=045e
+ITEMNEWBIE=i_qstplate_shield
+COLOR=045e
+ITEMNEWBIE=i_qstplate_gloves
+COLOR=045e
+ITEMNEWBIE=i_qstplate_kryss
+COLOR=045e
+ITEMNEWBIE=i_qstplate_helm
+COLOR=045e
+ITEM=i_GOLD
+AMOUNT={25000 30000}
+
+ON=@Death
+NEWNPC n_quest_lvl11
+SRC.ACT.HOME=<SRC.HOME>
+SRC.ACT.HOMEDIST=3
+
+[CHARDEF n_quest_lvl11]
+DEFNAME=n_quest_lvl11
+NAME=#NAMES_HUMANMALE LEVEL 11
+ID=C_MAN
+icon=020f8
+ANIM=07bc7f
+DAM=70
+ARMOR=150
+
+ON=@CREATE
+//FLAGS=004000000
+STR=2500
+DEX=500
+INT=12
+
+PARRYING=1500.0
+FENCING=1500.0
+//MAGERY=1500.0 1500.0
+MAGICRESISTANCE=1500.0
+TACTICS=1500.0
+SWORDSMANSHIP=1500.0
+
+FAME=10000
+KARMA=-10000
+NPC=brain_monster
+
+ITEM=i_SPELLBOOK 
+MORE1=040000000
+MORE2=042000222
+attr=0004
+ITEMNEWBIE=i_qstplate_gorget
+COLOR=04c2
+ITEMNEWBIE=i_qstplate_platemail
+COLOR=04c2
+ITEMNEWBIE=i_qstplate_arms
+COLOR=04c2
+ITEMNEWBIE=i_qstplate_leggings
+COLOR=04c2
+ITEMNEWBIE=i_qstplate_shield
+COLOR=04c2
+ITEMNEWBIE=i_qstplate_gloves
+COLOR=04c2
+ITEMNEWBIE=i_qstplate_kryss
+COLOR=04c2
+ITEMNEWBIE=i_qstplate_helm
+COLOR=04c2
+ITEM=i_GOLD
+AMOUNT={30000 35000}
+
+ON=@Death
+NEWNPC n_quest_lvl12
+SRC.ACT.HOME=<SRC.HOME>
+SRC.ACT.HOMEDIST=3
+
+[CHARDEF n_quest_lvl12]
+DEFNAME=n_quest_lvl12
+NAME=#NAMES_HUMANMALE LEVEL 12
+ID=C_MAN
+icon=020f8
+ANIM=07bc7f
+DAM=70
+ARMOR=160
+
+ON=@CREATE
+//FLAGS=004000000
+STR=2600
+DEX=500
+INT=12
+
+PARRYING=1600.0
+FENCING=1600.0
+//MAGERY=1600.0 1600.0
+MAGICRESISTANCE=1600.0
+TACTICS=1600.0
+SWORDSMANSHIP=1600.0
+
+FAME=10000
+KARMA=-10000
+NPC=brain_monster
+
+//ITEM=i_SPELLBOOK 
+//MORE1=040000000
+//MORE2=042000222
+//attr=0004
+ITEMNEWBIE=i_qstplate_gorget
+COLOR=04c2
+ITEMNEWBIE=i_qstplate_platemail
+COLOR=04c2
+ITEMNEWBIE=i_qstplate_arms
+COLOR=04c2
+ITEMNEWBIE=i_qstplate_leggings
+COLOR=04c2
+ITEMNEWBIE=i_qstplate_shield
+COLOR=04c2
+ITEMNEWBIE=i_qstplate_gloves
+COLOR=04c2
+ITEMNEWBIE=i_qstplate_kryss
+COLOR=04c2
+ITEMNEWBIE=i_qstplate_helm
+COLOR=04c2
+ITEM=i_GOLD
+AMOUNT={30000 35000}
+
+ON=@Death
+NEWNPC n_quest_lvl13
+SRC.ACT.HOME=<SRC.HOME>
+SRC.ACT.HOMEDIST=3
+
+[CHARDEF n_quest_lvl13]
+DEFNAME=n_quest_lvl13
+NAME=#NAMES_HUMANMALE LEVEL 13
+ID=C_MAN
+icon=020f8
+ANIM=07bc7f
+DAM=70
+ARMOR=170
+
+ON=@CREATE
+//FLAGS=004000000
+STR=2700
+DEX=500
+INT=12
+
+PARRYING=1700.0
+FENCING=1700.0
+//MAGERY=1700.0 1700.0
+MAGICRESISTANCE=1700.0
+TACTICS=1700.0
+SWORDSMANSHIP=1700.0
+
+FAME=10000
+KARMA=-10000
+NPC=brain_monster
+
+ITEM=i_SPELLBOOK 
+MORE1=040000000
+MORE2=042000222
+attr=0004
+ITEMNEWBIE=i_qstplate_gorget
+COLOR=04c2
+ITEMNEWBIE=i_qstplate_platemail
+COLOR=04c2
+ITEMNEWBIE=i_qstplate_arms
+COLOR=04c2
+ITEMNEWBIE=i_qstplate_leggings
+COLOR=04c2
+ITEMNEWBIE=i_qstplate_shield
+COLOR=04c2
+ITEMNEWBIE=i_qstplate_gloves
+COLOR=04c2
+ITEMNEWBIE=i_qstplate_kryss
+COLOR=04c2
+ITEMNEWBIE=i_qstplate_helm
+COLOR=04c2
+ITEM=i_GOLD
+AMOUNT={30000 35000}
+
+ON=@Death
+NEWNPC n_quest_lvl14
+SRC.ACT.HOME=<SRC.HOME>
+SRC.ACT.HOMEDIST=3
+
+[CHARDEF n_quest_lvl14]
+DEFNAME=n_quest_lvl14
+NAME=#NAMES_HUMANMALE LEVEL 14
+ID=C_MAN
+icon=020f8
+ANIM=07bc7f
+DAM=70
+ARMOR=180
+
+ON=@CREATE
+//FLAGS=004000000
+STR=2800
+DEX=500
+INT=12
+
+PARRYING=1800.0
+FENCING=1800.0
+//MAGERY=1800.0 1800.0
+MAGICRESISTANCE=1800.0
+TACTICS=1800.0
+SWORDSMANSHIP=1800.0
+
+FAME=10000
+KARMA=-10000
+NPC=brain_monster
+
+//ITEM=i_SPELLBOOK 
+//MORE1=040000000
+//MORE2=042000222
+//attr=0004
+ITEMNEWBIE=i_qstplate_gorget
+COLOR=04c2
+ITEMNEWBIE=i_qstplate_platemail
+COLOR=04c2
+ITEMNEWBIE=i_qstplate_arms
+COLOR=04c2
+ITEMNEWBIE=i_qstplate_leggings
+COLOR=04c2
+ITEMNEWBIE=i_qstplate_shield
+COLOR=04c2
+ITEMNEWBIE=i_qstplate_gloves
+COLOR=04c2
+ITEMNEWBIE=i_qstplate_kryss
+COLOR=04c2
+ITEMNEWBIE=i_qstplate_helm
+COLOR=04c2
+ITEM=i_GOLD
+AMOUNT={30000 35000}
+
+ON=@Death
+NEWNPC n_quest_lvl15
+SRC.ACT.HOME=<SRC.HOME>
+SRC.ACT.HOMEDIST=3
+
+[CHARDEF n_quest_lvl15]
+DEFNAME=n_quest_lvl15
+NAME=#NAMES_HUMANMALE LEVEL 15
+ID=C_MAN
+icon=020f8
+ANIM=07bc7f
+DAM=70
+ARMOR=190
+
+ON=@CREATE
+//FLAGS=004000000
+STR=2900
+DEX=500
+INT=12
+
+PARRYING=1900.0
+FENCING=1900.0
+//MAGERY=1900.0 1900.0
+MAGICRESISTANCE=1900.0
+TACTICS=1900.0
+SWORDSMANSHIP=1900.0
+
+FAME=10000
+KARMA=-10000
+NPC=brain_monster
+
+ITEM=i_SPELLBOOK 
+MORE1=040000000
+MORE2=042000222
+attr=0004
+ITEMNEWBIE=i_qstplate_gorget
+COLOR=04c2
+ITEMNEWBIE=i_qstplate_platemail
+COLOR=04c2
+ITEMNEWBIE=i_qstplate_arms
+COLOR=04c2
+ITEMNEWBIE=i_qstplate_leggings
+COLOR=04c2
+ITEMNEWBIE=i_qstplate_shield
+COLOR=04c2
+ITEMNEWBIE=i_qstplate_gloves
+COLOR=04c2
+ITEMNEWBIE=i_qstplate_kryss
+COLOR=04c2
+ITEMNEWBIE=i_qstplate_helm
+COLOR=04c2
+ITEM=i_GOLD
+AMOUNT={30000 35000}
+
+ON=@Death
+NEWNPC n_quest_lvl16
+SRC.ACT.HOME=<SRC.HOME>
+SRC.ACT.HOMEDIST=3
+
+[CHARDEF n_quest_lvl16]
+DEFNAME=n_quest_lvl16
+NAME=#NAMES_HUMANMALE LEVEL 16
+ID=C_MAN
+icon=020f8
+ANIM=07bc7f
+DAM=85
+ARMOR=200
+
+ON=@CREATE
+//FLAGS=004000000
+STR=2000
+DEX=500
+INT=12
+
+PARRYING=2000.0
+FENCING=2000.0
+//MAGERY=2000.0 2000.0
+MAGICRESISTANCE=2000.0
+TACTICS=2000.0
+SWORDSMANSHIP=2000.0
+
+FAME=10000
+KARMA=-10000
+NPC=brain_monster
+
+//ITEM=i_SPELLBOOK 
+//MORE1=00
+//MORE2=0174120
+//attr=0004
+ITEMNEWBIE=i_qstplate_gorget
+COLOR=0455
+ITEMNEWBIE=i_qstplate_platemail
+COLOR=0455
+ITEMNEWBIE=i_qstplate_arms
+COLOR=0455
+ITEMNEWBIE=i_qstplate_leggings
+COLOR=0455
+ITEMNEWBIE=i_qstplate_shield
+COLOR=0455
+ITEMNEWBIE=i_qstplate_gloves
+COLOR=0455
+ITEMNEWBIE=i_qstplate_kryss
+COLOR=0455
+ITEMNEWBIE=i_qstplate_helm
+COLOR=0455
+ITEM=i_GOLD
+AMOUNT={40000 45000}
+
+ON=@Death
+NEWNPC n_quest_lvl17
+SRC.ACT.HOME=<SRC.HOME>
+SRC.ACT.HOMEDIST=3
+
+[CHARDEF n_quest_lvl17]
+DEFNAME=n_quest_lvl17
+NAME=#NAMES_HUMANMALE LEVEL 17
+ID=C_MAN
+icon=020f8
+ANIM=07bc7f
+DAM=85
+ARMOR=220
+
+ON=@CREATE
+//FLAGS=004000000
+STR=2200
+DEX=500
+INT=12
+
+PARRYING=2200.0
+FENCING=2200.0
+//MAGERY=2200.0 2200.0
+MAGICRESISTANCE=2200.0
+TACTICS=2200.0
+SWORDSMANSHIP=2200.0
+
+FAME=10000
+KARMA=-10000
+NPC=brain_monster
+
+ITEM=i_SPELLBOOK 
+MORE1=00
+MORE2=0174120
+attr=0004
+ITEMNEWBIE=i_qstplate_gorget
+COLOR=0455
+ITEMNEWBIE=i_qstplate_platemail
+COLOR=0455
+ITEMNEWBIE=i_qstplate_arms
+COLOR=0455
+ITEMNEWBIE=i_qstplate_leggings
+COLOR=0455
+ITEMNEWBIE=i_qstplate_shield
+COLOR=0455
+ITEMNEWBIE=i_qstplate_gloves
+COLOR=0455
+ITEMNEWBIE=i_qstplate_kryss
+COLOR=0455
+ITEMNEWBIE=i_qstplate_helm
+COLOR=0455
+ITEM=i_GOLD
+AMOUNT={40000 45000}
+
+ON=@Death
+NEWNPC n_quest_lvl18
+SRC.ACT.HOME=<SRC.HOME>
+SRC.ACT.HOMEDIST=3
+
+[CHARDEF n_quest_lvl18]
+DEFNAME=n_quest_lvl18
+NAME=#NAMES_HUMANMALE LEVEL 18
+ID=C_MAN
+icon=020f8
+ANIM=07bc7f
+DAM=90
+ARMOR=240
+
+ON=@CREATE
+//FLAGS=004000000
+STR=2400
+DEX=500
+INT=12
+
+PARRYING=2400.0
+FENCING=2400.0
+//MAGERY=2400.0 2400.0
+MAGICRESISTANCE=2400.0
+TACTICS=2400.0
+SWORDSMANSHIP=2400.0
+
+FAME=10000
+KARMA=-10000
+NPC=brain_monster
+
+//ITEM=i_SPELLBOOK 
+//MORE1=00
+//MORE2=0174120
+//attr=0004
+ITEMNEWBIE=i_qstplate_gorget
+COLOR=0455
+ITEMNEWBIE=i_qstplate_platemail
+COLOR=0455
+ITEMNEWBIE=i_qstplate_arms
+COLOR=0455
+ITEMNEWBIE=i_qstplate_leggings
+COLOR=0455
+ITEMNEWBIE=i_qstplate_shield
+COLOR=0455
+ITEMNEWBIE=i_qstplate_gloves
+COLOR=0455
+ITEMNEWBIE=i_qstplate_kryss
+COLOR=0455
+ITEMNEWBIE=i_qstplate_helm
+COLOR=0455
+ITEM=i_GOLD
+AMOUNT={40000 55000}
+
+
+ON=@Death
+NEWNPC n_quest_lvl19
+SRC.ACT.HOME=<SRC.HOME>
+SRC.ACT.HOMEDIST=3
+
+[CHARDEF n_quest_lvl19]
+DEFNAME=n_quest_lvl19
+NAME=#NAMES_HUMANMALE LEVEL 19
+ID=C_MAN
+icon=020f8
+ANIM=07bc7f
+DAM=90
+ARMOR=260
+
+ON=@CREATE
+//FLAGS=004000000
+STR=2600
+DEX=500
+INT=12
+
+PARRYING=2600.0
+FENCING=2600.0
+//MAGERY=2600.0 2600.0
+MAGICRESISTANCE=2600.0
+TACTICS=2600.0
+SWORDSMANSHIP=2600.0
+
+FAME=10000
+KARMA=-10000
+NPC=brain_monster
+
+ITEM=i_SPELLBOOK 
+MORE1=00
+MORE2=0174120
+attr=0004
+ITEMNEWBIE=i_qstplate_gorget
+COLOR=052d
+ITEMNEWBIE=i_qstplate_platemail
+COLOR=052d
+ITEMNEWBIE=i_qstplate_arms
+COLOR=052d
+ITEMNEWBIE=i_qstplate_leggings
+COLOR=052d
+ITEMNEWBIE=i_qstplate_shield
+COLOR=052d
+ITEMNEWBIE=i_qstplate_gloves
+COLOR=052d
+ITEMNEWBIE=i_qstplate_kryss
+COLOR=052d
+ITEMNEWBIE=i_qstplate_helm
+COLOR=052d
+ITEM=i_GOLD
+AMOUNT={40000 55000}
+
+ON=@Death
+NEWNPC n_quest_lvl20
+SRC.ACT.HOME=<SRC.HOME>
+SRC.ACT.HOMEDIST=3
+
+[CHARDEF n_quest_lvl20]
+DEFNAME=n_quest_lvl20
+NAME=#NAMES_HUMANMALE LEVEL 20
+ID=C_MAN
+icon=020f8
+ANIM=07bc7f
+DAM=100
+ARMOR=280
+
+ON=@CREATE
+//FLAGS=004000000
+STR=2800
+DEX=500
+INT=12
+
+PARRYING=2800.0
+FENCING=2800.0
+//MAGERY=2800.0 2800.0
+MAGICRESISTANCE=2800.0
+TACTICS=2800.0
+SWORDSMANSHIP=2800.0
+
+FAME=10000
+KARMA=-10000
+NPC=brain_monster
+
+//ITEM=i_SPELLBOOK 
+//MORE1=00
+//MORE2=0174120
+//attr=0004
+ITEMNEWBIE=i_qstplate_gorget
+COLOR=0227
+ITEMNEWBIE=i_qstplate_platemail
+COLOR=0227
+ITEMNEWBIE=i_qstplate_arms
+COLOR=0227
+ITEMNEWBIE=i_qstplate_leggings
+COLOR=0227
+ITEMNEWBIE=i_qstplate_chaos
+COLOR=0227
+ITEMNEWBIE=i_qstplate_gloves
+COLOR=0227
+ITEMNEWBIE=i_qstplate_kryss
+COLOR=0227
+ITEMNEWBIE=i_qstplate_helm
+COLOR=0227
+ITEM=i_vb00
+ITEM=i_GOLD
+AMOUNT={55000 65000}
+
+ON=@Death
+NEWNPC n_quest_lvl1
+SRC.ACT.HOME=<SRC.HOME>
+SRC.ACT.HOMEDIST=3
+
+//-------------------------------Quest itens-----------------------------------//
+[ITEMDEF i_qstplate_gorget]
+//NPC Platemail Gorget
+NAME=NPC Platemail Gorget
+ID=01413
+TYPE=10
+armor=100
+REPAIR=1
+REQSTR=90
+VALUE=1000
+//sellVALUE=100
+WEIGHT=4
+
+ON=@CREATE
+COLOR=03DA
+HITPOINTS=3000
+
+ON=@EQUIP
+REMOVE
+RETURN=1
+
+
+on=@timer
+return=0
+
+
+[ITEMDEF i_qstplate_platemail]
+//NPC Platemail
+NAME=NPC Platemail
+ID=01415
+TYPE=10
+armor=100
+REPAIR=1
+REQSTR=90
+VALUE=1000
+//sellVALUE=180
+WEIGHT=4
+
+ON=@CREATE
+COLOR=03DA
+HITPOINTS=3000
+
+ON=@EQUIP
+REMOVE
+RETURN=1
+
+on=@timer
+return=0
+
+
+
+[ITEMDEF i_qstplate_arms]
+//NPC Platemail Arms
+NAME=NPC Platemail Arms
+ID=01417
+TYPE=10
+armor=100
+REPAIR=1
+REQSTR=90
+VALUE=1000
+//sellVALUE=160
+WEIGHT=4
+
+ON=@CREATE
+COLOR=03DA
+HITPOINTS=3000
+
+ON=@EQUIP
+RETURN=1
+
+
+on=@timer
+return=0
+
+
+[ITEMDEF i_qstplate_leggings]
+//NPC Platemail Leggings
+NAME=NPC Platemail Leggings
+ID=0141a
+TYPE=10
+armor=100
+REPAIR=1
+REQSTR=90
+VALUE=1000
+//sellVALUE=160
+WEIGHT=4
+
+ON=@CREATE
+HITPOINTS=3000
+COLOR=03DA
+
+ON=@EQUIP
+REMOVE
+RETURN=1
+
+
+on=@timer
+return=0
+
+
+[ITEMDEF i_qstplate_shield]
+//NPC Heater Shield
+NAME=NPC Heater Shield
+ID=01b76
+TYPE=t_shield
+ARMOR=60
+REPAIR=1
+REQSTR=90
+VALUE=1000
+//sellVALUE=160
+WEIGHT=4
+
+ON=@CREATE
+COLOR=03DA
+HITPOINTS=3000
+
+ON=@EQUIP
+REMOVE
+RETURN=1
+
+
+on=@timer
+return=0
+
+
+[ITEMDEF i_qstplate_gloves]
+NAME=NPC Gloves
+ID=01418
+TYPE=10
+ARMOR=100
+REPAIR=1
+REQSTR=90
+VALUE=1000
+//sellVALUE=140
+WEIGHT=4
+
+ON=@CREATE
+HITPOINTS=3000
+COLOR=03DA
+
+ON=@EQUIP
+REMOVE
+RETURN=1
+
+
+on=@timer
+return=0
+
+
+[ITEMDEF i_qstplate_viking]
+//Viking Sword
+NAME=NPC Viking Sword
+ID=013b9
+TYPE=t_weapon_sword
+SPEED=75
+SKILL=Swordsmanship
+REPAIR=1
+REQSTR=8
+TWOHANDS=N
+VALUE=56-80
+//sellVALUE=28-40
+WEIGHT=2
+DAM=26 35
+
+ON=@CREATE
+HITPOINTS=3000
+
+ON=@EQUIP
+RETURN=1
+
+
+on=@timer
+return=0
+
+
+[ITEMDEF i_qstplate_kryss]
+//Kryss
+NAME=NPC Kryss
+ID=01400
+TYPE=t_weapon_fence
+SPEED=70
+SKILL=Fencing
+REPAIR=1
+REQSTR=90
+TWOHANDS=N
+VALUE=36-48
+//sellVALUE=18-24
+WEIGHT=2
+DAM=15 24
+
+ON=@CREATE
+HITPOINTS=3000
+
+ON=@EQUIP
+REMOVE
+RETURN=1
+
+
+on=@timer
+return=0
+
+
+[ITEMDEF i_qstplate_helm]
+//NPC Close Helm
+NAME=NPC Close Helmet
+ID=01408
+TYPE=10
+armor=100
+REPAIR=1
+REQSTR=90
+VALUE=1000
+//sellVALUE=100
+WEIGHT=4
+
+ON=@CREATE
+COLOR=03DA
+HITPOINTS=3000
+
+ON=@EQUIP
+REMOVE
+RETURN=1
+
+
+on=@timer
+return=0
+
+
+[ITEMDEF i_qstplate_chaos]
+//NPC Chaos Shield
+NAME=NPC Chaos Shield
+ID=01bc3
+TYPE=10
+armor=100
+REPAIR=1
+REQSTR=90
+VALUE=1000
+//sellVALUE=100
+WEIGHT=4
+
+ON=@CREATE
+HITPOINTS=3000
+
+ON=@EQUIP
+REMOVE
+RETURN=1
+
+on=@timer
+return=0
+
+
+
+[EOF]

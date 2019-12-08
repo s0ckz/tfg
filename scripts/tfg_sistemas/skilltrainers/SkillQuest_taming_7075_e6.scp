@@ -1,0 +1,155 @@
+[CHARDEF c_diana_alchemist]
+NAME=Diana the Alchemist
+ID=C_WOMAN
+DESIRES=i_gold,e_notoriety,t_magic
+AVERSIONS=t_TRAP,t_eerie_stuff
+TSPEECH=spk_human_prime
+TSPEECH=jobalchemist
+TSPEECH=spk_shopkeep
+TSPEECH=spk_diana_alchemist
+TEVENTS=e_Human_HearUnk
+TEVENTS=e_Human_Needs
+TEVENTS=e_Human_ConvInit
+TEVENTS=e_Human_Greet
+TEVENTS=e_Human_Space
+TEVENTS=e_Human_Refuse
+TEVENTS=e_Human_Environ
+
+ON=@Create
+	tag.name.hue=0481
+	NPC=brain_vendor
+	COLOR=colors_skin
+	STR={36 50}
+	DEX={36 50}
+	INT={51 65}
+	ALCHEMY={99.0 99.0}
+	TasteID={55.0 78.0}
+	WRESTLING={15.0 38.0}
+	MAGICRESISTANCE={99.0 99.0}
+	TACTICS={15.0 38.0}
+	POISONING={99.0 99.0}
+	ITEMNEWBIE=random_female_hair
+	COLOR=colors_hair
+
+ON=@NPCRestock
+	ITEM=RANDOM_LIGHT
+	ITEM=i_shirt_plain
+	COLOR=colors_all
+	ITEM=random_pants
+	COLOR=colors_all
+	ITEM=i_robe
+	COLOR=colors_red
+	ITEM=random_shoes
+	COLOR=colors_neutral
+	ITEM=random_coin_purse
+	SELL=VENDOR_S_ALCHEMIST
+	BUY=VENDOR_B_ALCHEMIST
+
+[speech spk_diana_alchemist]
+
+on=*michelle*
+on=*michele*
+on=*quest*
+on=*elixir*
+
+if (<src.tag0.tam75e6> == 1) && (<src.tag0.tam75e5> == 2)
+    message @,,1 Hey there, <src.name>. Michelle? Really? Hahaha let her suffer for a while. She's always so arrogant and a smartass..
+    message @,,1 She wont't have my Elixir.
+endif
+
+if (<src.tag0.tam75e6> == 2) && (<src.tag0.tam75e5> == 2) && !((<src.tag0.dragonheart> >= <ddef.quest_taming_7075_dragon_heart>) && (<src.tag0.lizardtail> >= <ddef.quest_taming_7075_lizard_tail>))
+    message @,,1 Hmmm, so you shall do something for me...Im needing <ddef.quest_taming_7075_lizard_tail> Lizard Tails and <ddef.quest_taming_7075_dragon_heart> Dragon Hearts to fill my stock.
+    message @,,1 Bring it to me and I shall sell you some Elixir.
+    src.smsg @,,1 Go kill some Lizards and Dragons...
+endif
+
+if (<src.tag0.tam75e6> == 2) && (<src.tag0.tam75e5> == 2) && ((<src.tag0.dragonheart> >= <ddef.quest_taming_7075_dragon_heart>) && (<src.tag0.lizardtail> >= <ddef.quest_taming_7075_lizard_tail>)) 
+    if (<src.rescount i_dragon_heart> >= <ddef.quest_taming_7075_dragon_heart>) && (<src.rescount i_lizard_tail> >= <ddef.quest_taming_7075_lizard_tail>)
+        src.consume <ddef.quest_taming_7075_dragon_heart> i_dragon_heart
+        src.consume <ddef.quest_taming_7075_lizard_tail> i_lizard_tail
+        message @,,1 I'm glad you brought all I asked <src.name>! Thanks. //' 
+        message @,,1 Now, the elixir costs 50k, will you want that? Hahaha. 
+        src.tag0.quest75diana50k = 1
+    else
+        message @,,1 I need <ddef.quest_taming_7075_dragon_heart> Dragon Hearts and <ddef.quest_taming_7075_lizard_tail> Lizard Tails...
+        message @,,1 Come back when you have it.
+    endif
+endif
+
+on=*yes*
+on=*sim*
+on=*quero*
+    if (<Src.tag0.quest75diana50k>)
+        if (<src.gold> >= 50000)
+            src.gold -= 50000
+            message @,,1 Thanks for your business <src.name>. Here is your Elixir.
+            serv.newitem i_diana_elixir
+            src.bounce <new>
+            src.tag0.quest75diana50k
+            src.tag0.tam75e6 3
+        else
+            message @,,1 You dont have enough gold.
+        endif
+    endif
+
+
+on=*please* 
+on=*por favor*
+    if (<src.tag0.tam75e6> == 1) && (<src.tag0.tam75e5> == 2)
+        message @,,1 Hmmm, so you shall do something for me...Im needing <ddef.quest_taming_7075_lizard_tail> Lizard Tails and <ddef.quest_taming_7075_dragon_heart> Dragon Hearts to fill my stock.
+        message @,,1 Bring it to me and I shall sell you some Elixir.
+        src.tag0.tam75e6 = 2
+        src.smsg @,,1 Go kill some Lizards and Dragons...
+    endif
+
+
+[events e_quest_taming_7075_dragon_target]
+ON=@DeathCorpse
+
+    ref1 <argo.more2>
+    if (<ref1.dtag0.dragonheart> < <ddef.quest_taming_7075_dragon_heart>)
+        if (<r1,100> > 10)
+            serv.newitem i_dragon_heart
+            ref1.tag0.dragonheart += 1
+            ref1.bounce <new>
+        endif
+    else
+        ref1.smsg @,,1 Seems like you already got enought Dragon Hearts.
+    endif
+
+[events e_quest_taming_7075_lizard_target]
+On=@DeathCorpse
+
+    ref1 <argo.more2>
+    if (<ref1.dtag0.lizardtail> < <ddef.quest_taming_7075_lizard_tail>)
+        if (<r1,100> > 10)
+            serv.newitem i_lizard_tail
+            ref1.tag0.lizardtail += 1
+            ref1.bounce <new>
+        endif
+    else
+        ref1.smsg @,,1 Seems like you already got enought Lizard Tails.
+    endif
+
+[itemdef i_dragon_heart]
+id=0f91
+name=Dragon Heart
+weight=0.1
+
+on=@Create
+    color 32
+
+[itemdef i_lizard_tail]
+id=02847
+name=Lizard Tail
+weight=0.1
+
+[itemdef i_diana_elixir]
+id=i_bottle_empty
+name=Diana's Elixir
+
+on=@Create
+    color 0a23
+    attr attr_newbie|attr_move_never
+
+[EOF]

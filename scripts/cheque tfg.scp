@@ -1,0 +1,156 @@
+[DIALOG d_cheque_gump]
+100,100
+page 0
+local.tax = <eval (<SRC.CTAG.VALORCHEQUE> * 6) / 100>
+resizepic 21 21 9200 229 220
+// dhtmlgump 30 49 210 158 1 0 <def.center><def.BFONT_DRED>Valor do cheque: <pontuanumero <dSRC.CTAG.VALORCHEQUE>> gp's<DEF.BR><DEF.BR>Taxas: 6%<DEF.BR>( <pontuanumero <dlocal.tax>> ) <DEF.BR><def.BR><def.B>Voce deseja mesmo criar este cheque?
+dhtmlgump 30 49 210 158 1 0 <def.center><def.BFONT_DRED>Valor do cheque: <pontuanumero <dSRC.CTAG.VALORCHEQUE>> gp's<DEF.BR><DEF.BR><DEF.BR><DEF.BR><def.BR><def.B>Voce deseja mesmo criar este cheque?
+button 30 212 4005 4006 1 0 1
+dtext 65 214 32 Confirmar
+button 210 212 4014 4015 1 0 0
+dtext 155 214 32 Cancelar
+dtext 75 27 32 Sistema de Cheques
+
+[DIALOG d_cheque_gump text]
+HtmlGump id.0
+Confirmar
+Cancelar
+CHEQUE
+
+[DIALOG d_cheque_gump button]
+ON=0
+SRC.SYSMESSAGE @,,1 Voce nao criou nenhum cheque.
+SRC.CTAG.VALORCHEQUE=
+
+ON=1
+IF (<SRC.DISTANCE> > 5)
+REF1.SYSMESSAGE @,,1 Seu cheque nao foi criado pois voce esta muito longe do banqueiro.
+REF1.CTAG.VALORCHEQUE=
+ELSE
+// local.tax = <eval (<SRC.CTAG.VALORCHEQUE> * 6) / 100>
+local.tax = 0
+local.valor = <eval <SRC.CTAG.VALORCHEQUE> + <local.tax>>
+IF (<SRC.GOLD> >= <local.valor>)
+TIMERF <r1,3>,CRIACHEQUE <SRC.UID>
+SAY @,,1 <SRC.NAME>, aguarde enquanto eu estou criando seu cheque! 
+ELSE
+SAY @,,1 Desculpe <src.name>, mas voce nao possui dinheiro suficiente em sua conta para pagar este cheque com todas as suas taxas.
+SRC.CTAG.VALORCHEQUE=
+ENDIF
+ENDIF
+
+[FUNCTION CRIACHEQUE]
+REF1=<ARGS>
+IF (<REF1.DISTANCE> > 5)
+REF1.SYSMESSAGE @,,1 Seu cheque nao foi criado pois voce esta muito longe do banqueiro.
+REF1.CTAG.VALORCHEQUE=
+ELSE
+// local.tax = <eval (<REF1.CTAG.VALORCHEQUE> * 6) / 100>
+local.tax = 0
+local.valor = <eval <REF1.CTAG.VALORCHEQUE> + <local.tax>>
+IF (<REF1.GOLD> >= <local.valor>)
+SERV.NEWITEM i_deed_cheque
+NEW.TAG.VALOR=<ref1.CTAG.VALORCHEQUE>
+NEW.CONT=<REF1.FINDLAYER.21>
+NEW.UPDATEX
+L_CHEQUE CRIACAO[<NEW.UID>]: <REF1.NAME> criou um cheque de <dNEW.TAG.VALOR> gp's.
+REF1.GOLD -= <local.valor>
+SAY @,,1 <ref1.NAME>, aqui esta seu cheque!
+REF1.CTAG.VALORCHEQUE=
+ELSE
+SAY @,,1 Desculpe <ref1.name>, mas voce nao possui dinheiro suficiente em sua conta para pagar este cheque com todas as suas taxas.
+REF1.CTAG.VALORCHEQUE=
+ENDIF
+ENDIF
+
+[ITEMDEF i_deed_cheque]
+ID=i_deed
+NAME=Cheque
+
+ON=@CREATE
+COLOR=253
+ATTR=04
+
+On=@CLICK
+MESSAGE @,,1 Cheque: <pontuanumero <dTAG.VALOR>> gp's
+RETURN 1
+
+ON=@DCLICK
+IF (<CONT.UID>==<SRC.FINDLAYER.29.UID>)
+SERV.NEWITEM i_bag
+NEW.NAME Deposito de Cheque
+NEW.COLOR 253
+NEW.CONT <SRC.FINDLAYER.29.UID>
+NEW.UPDATEX
+LOCAL.CONT=<NEW.UID>
+LOCAL.MONTES=<EVAL <TAG.VALOR>/60000>
+LOCAL.EXTRA=<EVAL <TAG.VALOR>%60000>
+IF (<LOCAL.MONTES> > 0)
+ FOR 1 <LOCAL.MONTES> 
+  SERV.NEWITEM i_gold
+  NEW.AMOUNT 60000
+  NEW.CONT <LOCAL.CONT>
+  NEW.UPDATEX
+ ENDFOR
+ENDIF
+  SERV.NEWITEM i_gold
+  NEW.AMOUNT <LOCAL.EXTRA>
+  NEW.CONT <LOCAL.CONT>
+  NEW.UPDATEX
+SRC.SYSMESSAGE @,,1 Voce depositou <pontuanumero <EVAL (<LOCAL.MONTES>*60000) + <LOCAL.EXTRA>>> gp's em sua conta.
+L_CHEQUE DEPOSITO[<UID>]: <SRC.NAME> depositou <dTAG.VALOR> gp's.
+REMOVE
+ELSE
+SRC.SYSMESSAGE @,,1 Voce deve depositar o cheque dentro de seu bank box.
+ENDIF
+RETURN 1
+
+ON=@DROPON_CHAR
+IF (<ARGO.BASEID>==c_h_banker) || (<ARGO.BASEID>==c_h_banker_f)
+SRC.GOLD += <dTAG.VALOR>
+SRC.SYSMESSAGE @,,1 Voce depositou <pontuanumero <dTAG.VALOR>> gp's em sua conta.
+L_CHEQUE DEPOSITO[<UID>]: <SRC.NAME> depositou <dTAG.VALOR> gp's.
+REMOVE
+RETURN 1
+ENDIF
+
+[FUNCTION L_CHEQUE]
+local.ws_id_file=logs/cheques/cheques_<SERV.RTIME.FORMAT %d>_<SERV.RTIME.FORMAT %m>.txt
+IF (<FILE.INUSE>)
+FILE.CLOSE
+ENDIF
+FILE.MODE.SETDEFAULT
+FILE.MODE.CREATE=1
+FILE.MODE.WRITE=1
+FILE.MODE.READLFLAG=1
+FILE.MODE.APPEND=1
+if (<FILE.OPEN <local.ws_id_file>>)
+FILE.WRITELINE <ARGS>
+FILE.CLOSE
+ENDIF
+
+[FUNCTION pontuanumero]
+LOCAL.PONTOS=<eval <eval STRLEN(<ARGS>)> / 3>
+IF <eval STRLEN(<dARGS>)> > 3
+FOR 1 <eval <LOCAL.PONTOS> + 1>
+IF (<dLOCAL._FOR>==1)
+LOCAL.RETURN=<STRSUB <eval <eval STRLEN(<ARGS>)> - 3> 3 <ARGS>>y
+ELIF (<dLOCAL._FOR>==<eval <LOCAL.PONTOS> + 1>)
+IF <eval <eval STRLEN(<ARGS>)> - (<LOCAL.PONTOS>*3)> > 0
+LOCAL.RETURN=<STRSUB 0 <eval <eval STRLEN(<ARGS>)> - (<LOCAL.PONTOS>*3)> <ARGS>>.<LOCAL.RETURN>
+ENDIF
+LOCAL.RETURN=<STRSUB 0 <eval <eval STRLEN(<LOCAL.RETURN>)> - 1> <LOCAL.RETURN>>
+ELSE
+IF <eval <eval STRLEN(<dARGS>)> - (<LOCAL.PONTOS>*3)> > 0 
+LOCAL.RETURN=<STRSUB <eval <eval STRLEN(<ARGS>)> - (3*<dLOCAL._FOR>)> 3 <ARGS>>.<LOCAL.RETURN>
+ELSE
+LOCAL.RETURN=<STRSUB <eval <eval STRLEN(<ARGS>)> - (3*<dLOCAL._FOR>)> 3 <ARGS>>.<LOCAL.RETURN>
+ENDIF
+ENDIF
+ENDFOR
+ELSE
+RETURN <ARGS>
+ENDIF
+RETURN <LOCAL.RETURN>
+
+[EOF]

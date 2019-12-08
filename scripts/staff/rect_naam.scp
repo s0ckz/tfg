@@ -1,0 +1,67 @@
+[function RECTFG17]
+if <src.account.plevel> < 7
+    return 1
+endif
+SERV.WRITEFILE Recuperacoes_Artha.txt 1 Andre recuperou em ACC: <ACCOUNT>, NICK: <NAME>  DATA: <SERV.RTIME>
+tag0.recuperada "artha 18-04"
+S <account> recuperada por <src.account>
+
+OSTR=100
+OINT=100
+ODEX=100
+Alchemy=1000
+Anatomy=1000
+AnimalLore=1000
+ItemID=1000
+ArmsLore=1000
+Parrying=1000
+Begging=200
+Blacksmithing=1000
+Bowcraft=1000
+Peacemaking=1000
+Camping=1000
+Carpentry=1000
+Cartography=1000
+Cooking=1000
+DetectingHidden=1000
+Enticement=230
+EvaluatingIntel=1000
+Healing=1000
+Fishing=1000
+Forensics=1000
+Herding=1000
+Hiding=1000
+Provocation=1000
+Inscription=1000
+LockPicking=230
+Magery=1000
+MagicResistance=1000
+Tactics=1000
+Snooping=1000
+Musicianship=1000
+Poisoning=1000
+Archery=1000
+SpiritSpeak=1000
+Stealing=1000
+Tailoring=1000
+Taming=1000
+TasteID=1000
+Tinkering=1000
+Tracking=1000
+Veterinary=1000
+Swordsmanship=1000
+Macefighting=1000
+Fencing=1000
+Wrestling=1000
+Lumberjacking=1000
+Mining=1000
+Meditation=1000
+Stealth=1000
+RemoveTrap=1000
+
+
+for <def.work_min> <def.work_max> //somente works
+        local.skillatual <i.<def0.work<dLOCAL._FOR>>>
+	    local.result <eval (<local.skillatual>*7)/10>
+        i.<def0.work<dLOCAL._FOR>> = <dlocal.result>
+endfor

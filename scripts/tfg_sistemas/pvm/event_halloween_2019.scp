@@ -1,0 +1,373 @@
+[DEFNAME HALLOWEEN_2019_SETTINGS]
+HALLOWEEN_2019_COLOR_1 080e
+HALLOWEEN_2019_COLOR_2 0bb2
+HALLOWEEN_2019_COLOR_COUNT 2
+HALLOWEEN_2019_INVASION_LOCATION_1 1297,1789,10 // Britain
+HALLOWEEN_2019_INVASION_LOCATION_2 4442,1218 // Moonglow
+HALLOWEEN_2019_INVASION_LOCATION_3 2275,1208 // Cove
+HALLOWEEN_2019_INVASION_LOCATION_4 3025,3386,15 // Serpent's Hold
+HALLOWEEN_2019_INVASION_LOCATION_5 2769,867 // Vesper
+HALLOWEEN_2019_INVASION_LOCATION_6 1288,3723 // Jhelom
+HALLOWEEN_2019_INVASION_LOCATION_7 3670,1168 // Nujelm
+HALLOWEEN_2019_INVASION_LOCATION_COUNT 7
+
+[FUNCTION start_halloween_2019_invasion]
+f_start_city_invasion <DEF.HALLOWEEN_2019_INVASION_LOCATION_<R1,<DEF.HALLOWEEN_2019_INVASION_LOCATION_COUNT>>>
+
+[ITEMDEF i_halloween_2019_ticket]
+ID=i_cards
+NAME=Halloween 2019 Ticket
+
+ON=@Create
+	MOREX=5
+	COLOR=<DEF.HALLOWEEN_2019_COLOR_<R1,<DEF.HALLOWEEN_2019_COLOR_COUNT>>>
+	VAR0.HALLOWEEN_2019_TICKET_NUMBER += 1
+	TAG.TICKET_NUMBER = <VAR0.HALLOWEEN_2019_TICKET_NUMBER>
+
+ON=@Click
+	MESSAGE @,,1 [Number: <DTAG.TICKET_NUMBER>]
+
+ON=@DClick
+	SRC.SYSMESSAGE @,,1 Wait for the prizes coming at the end of the event...
+
+	RETURN 1
+[FUNCTION cuuu]
+FORINSTANCES i_halloween_2019_pumpkin
+
+REMOVE
+ENDFOR
+
+FORINSTANCES c_halloween_2019_witch
+REMOVE
+ENDFOR
+[ITEMDEF i_halloween_2019_pumpkin]
+name=Halloween 2019 Pumpkin
+id=i_fruit_pumpkin
+weight=1
+
+ON=@Create
+	COLOR=<DEF.HALLOWEEN_2019_COLOR_<R1,<DEF.HALLOWEEN_2019_COLOR_COUNT>>>
+	TIMERF 1,ATTR attr_newbie|attr_move_never
+
+ON=@DClick
+	SRC.TAG0.HALLOWEEN_2019_PUMPKINS_FOUND += 1
+	SRC.SYSMESSAGE @,,1 Congratulations! You found a Halloween 2019 Pumpkin. Your score now is: <DSRC.TAG0.HALLOWEEN_2019_PUMPKINS_FOUND>.
+
+	LOCAL.MINX <EVAL ((<P.X> / 1000) - 1) * 1000>
+	LOCAL.MINY <EVAL ((<P.Y> / 1000) - 1) * 1000>
+	LOCAL.MAXX <EVAL ((<P.X> / 1000) + 1) * 1000>
+	LOCAL.MAXY <EVAL ((<P.Y> / 1000) + 1) * 1000>
+
+	IF (<LOCAL.MINX> < 0)
+		LOCAL.MINX 0
+	ENDIF
+
+	IF (<LOCAL.MINY> < 0)
+		LOCAL.MINY 0
+	ENDIF
+
+	IF (<LOCAL.MAXX> > 6144)
+		LOCAL.MAXX 6144
+	ENDIF
+
+	IF (<LOCAL.MAXY> > 6144)
+		LOCAL.MAXY 6144
+	ENDIF
+
+	IF (<TOPOBJ.P.TYPE> == t_forest)
+		LOCAL.TERRAIN = "Forest"
+	ELIF (<TOPOBJ.P.TYPE> == t_water)
+		LOCAL.TERRAIN = "Water"
+	ELIF (<TOPOBJ.P.TYPE> == t_normal)
+		LOCAL.TERRAIN = "Terrain or Building"
+	ELIF (<TOPOBJ.P.TYPE> == t_swamp)
+		LOCAL.TERRAIN = "Swamp"
+	ELIF (<TOPOBJ.P.TYPE> == t_rock)
+		LOCAL.TERRAIN = "Rock, Sand, Mine or Dungeon"
+	ELIF (<TOPOBJ.P.TYPE> == t_sand)
+		LOCAL.TERRAIN = "Sand or Desert"
+	ELIF (<TOPOBJ.P.TYPE> == t_dirt)
+		LOCAL.TERRAIN = "Plantation or Arable"
+	ELIF (<TOPOBJ.P.TYPE> == t_grass)
+		LOCAL.TERRAIN = "Grass or Flower"
+	ELIF (<TOPOBJ.P.TYPE> == t_jungle)
+		LOCAL.TERRAIN = "Jungle"
+	ELIF (<TOPOBJ.P.TYPE> == t_snow)
+		LOCAL.TERRAIN = "Snow"
+	ELSE
+		LOCAL.TERRAIN = "Unknown"
+	ENDIF
+
+	SERV.B @55 A <NAME> has just been found between: (<DLOCAL.MINX>, <DLOCAL.MINY>) and (<DLOCAL.MAXX>, <DLOCAL.MAXY>). The terrain type was: <LOCAL.TERRAIN> !
+
+	REMOVE
+
+	RETURN 1
+
+[FUNCTION f_halloween_2019_announce_hint]
+f_halloween_2019_announce_pumpkin_hint
+f_halloween_2019_announce_monster_hint
+
+[FUNCTION f_halloween_2019_announce_pumpkin_hint]
+LOCAL.TOTAL 0
+FORINSTANCES i_halloween_2019_pumpkin
+	LOCAL.TOTAL += 1
+ENDIF
+
+LOCAL.CURRENT 1
+LOCAL.TARGET <R1,<LOCAL.TOTAL>>
+
+FORINSTANCES i_halloween_2019_pumpkin
+	IF (<LOCAL.TARGET> == <LOCAL.CURRENT>)
+		LOCAL.MINX <EVAL ((<P.X> / 1000) - 1) * 1000>
+		LOCAL.MINY <EVAL ((<P.Y> / 1000) - 1) * 1000>
+		LOCAL.MAXX <EVAL ((<P.X> / 1000) + 1) * 1000>
+		LOCAL.MAXY <EVAL ((<P.Y> / 1000) + 1) * 1000>
+
+		IF (<LOCAL.MINX> < 0)
+			LOCAL.MINX 0
+		ENDIF
+
+		IF (<LOCAL.MINY> < 0)
+			LOCAL.MINY 0
+		ENDIF
+
+		IF (<LOCAL.MAXX> > 6144)
+			LOCAL.MAXX 6144
+		ENDIF
+
+		IF (<LOCAL.MAXY> > 6144)
+			LOCAL.MAXY 6144
+		ENDIF
+
+		IF (<TOPOBJ.P.TYPE> == t_forest)
+			LOCAL.TERRAIN = "Forest"
+		ELIF (<TOPOBJ.P.TYPE> == t_water)
+			LOCAL.TERRAIN = "Water"
+		ELIF (<TOPOBJ.P.TYPE> == t_normal)
+			LOCAL.TERRAIN = "Terrain or Building"
+		ELIF (<TOPOBJ.P.TYPE> == t_swamp)
+			LOCAL.TERRAIN = "Swamp"
+		ELIF (<TOPOBJ.P.TYPE> == t_rock)
+			LOCAL.TERRAIN = "Rock, Sand, Mine or Dungeon"
+		ELIF (<TOPOBJ.P.TYPE> == t_sand)
+			LOCAL.TERRAIN = "Sand or Desert"
+		ELIF (<TOPOBJ.P.TYPE> == t_dirt)
+			LOCAL.TERRAIN = "Plantation or Arable"
+		ELIF (<TOPOBJ.P.TYPE> == t_grass)
+			LOCAL.TERRAIN = "Grass or Flower"
+		ELIF (<TOPOBJ.P.TYPE> == t_jungle)
+			LOCAL.TERRAIN = "Jungle"
+		ELIF (<TOPOBJ.P.TYPE> == t_snow)
+			LOCAL.TERRAIN = "Snow"
+		ELSE
+			LOCAL.TERRAIN = "Unknown"
+		ENDIF
+
+		SERV.B @55 There's a Halloween 2019 Pumpkin somewhere between: (<DLOCAL.MINX>, <DLOCAL.MINY>) and (<DLOCAL.MAXX>, <DLOCAL.MAXY>) ! Why don't you try to find it?? The terrain type is: <LOCAL.TERRAIN>. Total of pumpkins around the world: <DLOCAL.TOTAL>.
+		RETURN
+	ENDIF
+
+	LOCAL.CURRENT += 1
+ENDFOR
+
+SERV.B @55 A new Halloween 2019 Pumpkin will be spawned somewhere in the next hour.
+RETURN
+
+[FUNCTION f_halloween_2019_announce_monster_hint]
+LOCAL.TOTAL 0
+FORINSTANCES c_halloween_2019_witch
+	LOCAL.TOTAL += 1
+ENDIF
+
+LOCAL.CURRENT 1
+LOCAL.TARGET <R1,<LOCAL.TOTAL>>
+
+FORINSTANCES c_halloween_2019_witch
+	IF (<LOCAL.TARGET> == <LOCAL.CURRENT>)
+		LOCAL.MINX <EVAL ((<P.X> / 1000) - 1) * 1000>
+		LOCAL.MINY <EVAL ((<P.Y> / 1000) - 1) * 1000>
+		LOCAL.MAXX <EVAL ((<P.X> / 1000) + 1) * 1000>
+		LOCAL.MAXY <EVAL ((<P.Y> / 1000) + 1) * 1000>
+
+		IF (<LOCAL.MINX> < 0)
+			LOCAL.MINX 0
+		ENDIF
+
+		IF (<LOCAL.MINY> < 0)
+			LOCAL.MINY 0
+		ENDIF
+
+		IF (<LOCAL.MAXX> > 6144)
+			LOCAL.MAXX 6144
+		ENDIF
+
+		IF (<LOCAL.MAXY> > 6144)
+			LOCAL.MAXY 6144
+		ENDIF
+
+		IF (<TOPOBJ.P.TYPE> == t_forest)
+			LOCAL.TERRAIN = "Forest"
+		ELIF (<TOPOBJ.P.TYPE> == t_water)
+			LOCAL.TERRAIN = "Water"
+		ELIF (<TOPOBJ.P.TYPE> == t_normal)
+			LOCAL.TERRAIN = "Terrain or Building"
+		ELIF (<TOPOBJ.P.TYPE> == t_swamp)
+			LOCAL.TERRAIN = "Swamp"
+		ELIF (<TOPOBJ.P.TYPE> == t_rock)
+			LOCAL.TERRAIN = "Rock, Sand, Mine or Dungeon"
+		ELIF (<TOPOBJ.P.TYPE> == t_sand)
+			LOCAL.TERRAIN = "Sand or Desert"
+		ELIF (<TOPOBJ.P.TYPE> == t_dirt)
+			LOCAL.TERRAIN = "Plantation or Arable"
+		ELIF (<TOPOBJ.P.TYPE> == t_grass)
+			LOCAL.TERRAIN = "Grass or Flower"
+		ELIF (<TOPOBJ.P.TYPE> == t_jungle)
+			LOCAL.TERRAIN = "Jungle"
+		ELIF (<TOPOBJ.P.TYPE> == t_snow)
+			LOCAL.TERRAIN = "Snow"
+		ELSE
+			LOCAL.TERRAIN = "Unknown"
+		ENDIF
+
+		SERV.B @55 There's a Halloween 2019 Witch somewhere between: (<DLOCAL.MINX>, <DLOCAL.MINY>) and (<DLOCAL.MAXX>, <DLOCAL.MAXY>) ! Why don't you try to find it?? The terrain type is: <LOCAL.TERRAIN>. Total of witches around the world: <DLOCAL.TOTAL>.
+		RETURN
+	ENDIF
+
+	LOCAL.CURRENT += 1
+ENDFOR
+
+SERV.B @55 A new Halloween 2019 Witch will be spawned somewhere in the next hour.
+RETURN
+
+[FUNCTION f_halloween_2019_spawn_witch]
+LOCAL.POSITION <f_get_world_random_location>
+SERV.NEWNPC c_halloween_2019_witch
+NEW.P <LOCAL.POSITION>
+NEW.HOME <NEW.P>
+NEW.HOMEDIST 10
+
+SERV.LOG A new <NEW.NAME> is at <NEW.P>.
+
+[FUNCTION f_halloween_2019_spawn_pumpkin]
+LOCAL.POSITION <f_get_world_random_location>
+SERV.NEWITEM i_halloween_2019_pumpkin
+NEW.P <LOCAL.POSITION>
+
+SERV.LOG A new <NEW.NAME> is at <NEW.P>.
+
+[CHARDEF c_halloween_2019_witch]
+id=c_Wailing_Banshee
+Name=Halloween 2019 Witch
+DAM=30,50
+ARMOR=25
+CAN=MT_WALK|MT_RUN|MT_FLY
+AVERSIONS=r_civilization
+
+ON=@Create
+	COLOR=<DEF.HALLOWEEN_2019_COLOR_<R1,<DEF.HALLOWEEN_2019_COLOR_COUNT>>>
+	TAG.LOOTPROPRIO 1
+	NPC=brain_monster
+	STR=1200
+	DEX={800 900}
+	INT=300
+	PARRYING={95.0 105.0}
+	MAGERY=6.0
+	MAGICRESISTANCE={60.0 75.0}
+	TACTICS={90.0 100.0}
+	WRESTLING={99.0 100.0}
+	FAME={1000 6000}
+	KARMA=-10000
+	//SPELLCIRCLE=3 5
+	HITS 10000
+	MAXHITS 10000
+	ITEMNEWBIE=i_light_source
+	ITEMNEWBIE=i_spellbook
+	ADDSPELL=s_magic_arrow
+	ADDSPELL=s_fireball
+	ADDSPELL=s_fire_field
+	ADDSPELL=s_explosion
+	ADDSPELL=s_flamestrike
+	ADDSPELL=s_meteor_swarm
+	ADDSPELL=s_fire_bolt
+
+ON=@GetHit
+	SRC.TAG.HALLOWEEN_2019_MONSTERS_DAMAGE += <ARGN1>
+
+ON=@Death
+	IF !(<R20>)
+		SERV.NEWITEM <ICON>
+		NEW.TAG.STATUETTE 1
+		NEW.COLOR <COLOR>
+		NEW.NAME <NAME> Statuette
+		NEW.CONT <UID>
+	ENDIF
+
+	LOCAL.MINX <EVAL ((<P.X> / 1000) - 1) * 1000>
+	LOCAL.MINY <EVAL ((<P.Y> / 1000) - 1) * 1000>
+	LOCAL.MAXX <EVAL ((<P.X> / 1000) + 1) * 1000>
+	LOCAL.MAXY <EVAL ((<P.Y> / 1000) + 1) * 1000>
+
+	IF (<LOCAL.MINX> < 0)
+		LOCAL.MINX 0
+	ENDIF
+
+	IF (<LOCAL.MINY> < 0)
+		LOCAL.MINY 0
+	ENDIF
+
+	IF (<LOCAL.MAXX> > 6144)
+		LOCAL.MAXX 6144
+	ENDIF
+
+	IF (<LOCAL.MAXY> > 6144)
+		LOCAL.MAXY 6144
+	ENDIF
+
+	IF (<TOPOBJ.P.TYPE> == t_forest)
+		LOCAL.TERRAIN = "Forest"
+	ELIF (<TOPOBJ.P.TYPE> == t_water)
+		LOCAL.TERRAIN = "Water"
+	ELIF (<TOPOBJ.P.TYPE> == t_normal)
+		LOCAL.TERRAIN = "Terrain or Building"
+	ELIF (<TOPOBJ.P.TYPE> == t_swamp)
+		LOCAL.TERRAIN = "Swamp"
+	ELIF (<TOPOBJ.P.TYPE> == t_rock)
+		LOCAL.TERRAIN = "Rock, Sand, Mine or Dungeon"
+	ELIF (<TOPOBJ.P.TYPE> == t_sand)
+		LOCAL.TERRAIN = "Sand or Desert"
+	ELIF (<TOPOBJ.P.TYPE> == t_dirt)
+		LOCAL.TERRAIN = "Plantation or Arable"
+	ELIF (<TOPOBJ.P.TYPE> == t_grass)
+		LOCAL.TERRAIN = "Grass or Flower"
+	ELIF (<TOPOBJ.P.TYPE> == t_jungle)
+		LOCAL.TERRAIN = "Jungle"
+	ELIF (<TOPOBJ.P.TYPE> == t_snow)
+		LOCAL.TERRAIN = "Snow"
+	ELSE
+		LOCAL.TERRAIN = "Unknown"
+	ENDIF
+
+	SERV.B @55 A <NAME> has just been killed between: (<DLOCAL.MINX>, <DLOCAL.MINY>) and (<DLOCAL.MAXX>, <DLOCAL.MAXY>). The terrain type was: <LOCAL.TERRAIN> !
+
+ON=@NPCRestock
+	EVENTS +e_mage_spell_attack
+	EVENTS +e_poison_immune
+
+	ITEM=i_gold,{60000 62000}
+	ITEM=i_gold,{60000 62000}
+	ITEM={i_panotrue_w 1 i_panotrue_b 1 i_panotrue_g 1}
+	ITEM={i_panotrue_w 1 i_panotrue_b 1 i_panotrue_g 1},R3
+	ITEM=i_magic_gem,R10
+	ITEM=random_minor_artic_ogre
+	ITEM=random_minor_artic_ogre
+	ITEM=random_rare_arctic_ogre,R3
+
+[PLEVEL 1]
+score_halloween_2019
+
+[FUNCTION score_halloween_2019]
+SRC.SYSMESSAGE @,,1 Witches damage in Halloween 2019 event: <SRC.DTAG0.HALLOWEEN_2019_MONSTERS_DAMAGE>
+SRC.SYSMESSAGE @,,1 Pumpkins found in Halloween 2019 event: <SRC.DTAG0.HALLOWEEN_2019_PUMPKINS_FOUND>
+
+[EOF]

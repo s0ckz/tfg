@@ -1,0 +1,134 @@
+[comment names]
+1 = um miner de minoc vendedor de ores  (Sakrod, Dûrgrimst Knurlcarathn Knurla)
+2 = um receptador de ores que fica em britain e distribue os ores ( Ofamli, Dûrgrimst Ingeitum Knurla)
+3 = um escavador estudioso dos solos (Torekgrot, Dûrgrimst Ebardac Grimstborith)
+
+[CHARDEF c_dwarf_ore_scholar]
+NAME=Torekgrot
+ID=C_MAN
+TSPEECH=spk_human_prime
+TSPEECH=jobMiner
+TSPEECH=jobscholar
+TEVENTS=e_npc_citizen
+
+ON=@Create
+	tag.name.hue=0481
+	NPC=brain_human
+	COLOR=colors_skin
+    Title=Dûrgrimst Ebardac Grimstborith
+	STR={36 50}
+	DEX={36 50}
+	INT={51 65}
+	WRESTLING={15.0 38.0}
+	TACTICS={15.0 38.0}
+	Mining={99.0 99.0}
+	ITEMNEWBIE=i_hair_long
+	COLOR=colors_hair
+    ITEMNEWBIE=i_beard_long
+    color=match_hair
+
+ON=@NPCRestock
+	ITEM=RANDOM_LIGHT
+    item=i_axe
+	ITEM=i_robe
+	COLOR=colors_all
+	ITEM=random_shoes
+	COLOR=colors_neutral
+	ITEM=random_coin_purse
+	SELL=VENDOR_S_ORETrader
+	BUY=VENDOR_B_ORETrader
+
+[CHARDEF c_dwarf_ore_trader]
+NAME=Ofamli
+ID=C_MAN
+TSPEECH=spk_human_prime
+TSPEECH=jobMiner
+TSPEECH=spk_shopkeep
+TEVENTS=e_npc_citizen
+
+ON=@Create
+	tag.name.hue=0481
+	NPC=brain_vendor
+	COLOR=colors_skin
+    Title=Dûrgrimst Ingeitum Knurla
+	STR={36 50}
+	DEX={36 50}
+	INT={51 65}
+	WRESTLING={15.0 38.0}
+	TACTICS={15.0 38.0}
+	Mining={99.0 99.0}
+	ITEMNEWBIE=i_hair_long
+	COLOR=colors_hair
+    ITEMNEWBIE=i_beard_long
+    color=match_hair
+
+ON=@NPCRestock
+	ITEM=RANDOM_LIGHT
+    item=i_axe
+	ITEM=i_shirt_plain
+	COLOR=colors_all
+	ITEM=random_pants
+	COLOR=colors_all
+	ITEM=random_shoes
+	COLOR=colors_neutral
+	ITEM=random_coin_purse
+	SELL=VENDOR_S_ORETrader
+	BUY=VENDOR_B_ORETrader
+
+[CHARDEF c_dwarf_ore_seller]
+NAME=Sakrod
+ID=C_MAN
+TSPEECH=spk_human_prime
+TSPEECH=jobMiner
+TSPEECH=spk_shopkeep
+TEVENTS=e_npc_citizen
+
+ON=@Create
+	tag.name.hue=0481
+	NPC=brain_vendor
+	COLOR=colors_skin
+    Title=Dûrgrimst Knurlcarathn Knurla
+	STR={36 50}
+	DEX={36 50}
+	INT={51 65}
+	WRESTLING={15.0 38.0}
+	TACTICS={15.0 38.0}
+	Mining={99.0 99.0}
+	ITEMNEWBIE=i_hair_long
+	COLOR=colors_hair
+    ITEMNEWBIE=i_beard_long
+    color=match_hair
+
+ON=@NPCRestock
+	ITEM=RANDOM_LIGHT
+    item=i_pickaxe
+    color=colors_all
+	ITEM=i_shirt_plain
+	COLOR=colors_all
+	ITEM=random_pants
+	COLOR=colors_all
+	ITEM=i_robe
+	COLOR=colors_red
+	ITEM=random_shoes
+	COLOR=colors_neutral
+	ITEM=random_coin_purse
+	SELL=VENDOR_S_ORE
+	//BUY=VENDOR_B_ORE
+
+[TEMPLATE VENDOR_S_ORE]
+CATEGORY=Vendor Templates
+SUBSECTION=Sell Templates
+DESCRIPTION=Ore
+SELL=i_sandals,{2 12}
+
+[TEMPLATE VENDOR_S_ORETrader]
+CATEGORY=Vendor Templates
+SUBSECTION=Sell Templates
+DESCRIPTION=Ore
+SELL=i_sandals,{2 12}
+
+[TEMPLATE VENDOR_B_ORETrader]
+CATEGORY=Vendor Templates
+SUBSECTION=Sell Templates
+DESCRIPTION=Ore
+BUY=i_sandals,{2 12}

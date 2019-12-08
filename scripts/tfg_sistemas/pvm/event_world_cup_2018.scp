@@ -1,0 +1,697 @@
+[COMMENT script_world_cup_2018]
+CREATE TABLE `world_cup_2018_matches` (
+  `id` int(11) NOT NULL,
+  `date_time` datetime NOT NULL,
+  `name` varchar(250) NOT NULL,
+  `team1` varchar(250) NOT NULL,
+  `team2` varchar(250) NOT NULL,
+  `score1` int(11),
+  `score2` int(11),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE `world_cup_2018_bets` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `global_account_id` int(11) NOT NULL,
+  `match_id` int(11) NOT NULL,
+  `date_time` datetime NOT NULL DEFAULT current_timestamp(),
+  `score1` int(11),
+  `score2` int(11),
+  `value` int(11),
+  PRIMARY KEY (`id`),
+--  CONSTRAINT FOREIGN KEY (`global_account_id`) REFERENCES `contapainel` (`IdContaPainel`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT FOREIGN KEY (`match_id`) REFERENCES `world_cup_2018_matches` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+resultados
+
+delete from world_cup_2018_bets where not exists (select * from contapainel where idcontapainel = global_account_id);
+
+create view world_cup_2018_values as select match_id, sum(value) value from world_cup_2018_bets group by match_id;
+
+create view world_cup_2018_scores as select global_account_id, b.match_id, case when b.score1 = m.score1 and b.score2 = b.score2 then 30 * b.value when b.score1 = m.score1 or b.score2 = m.score2 then 15 * b.value else 0 end score from world_cup_2018_bets b join world_cup_2018_matches m on b.match_id = m.id;
+
+create view world_cup_2018_scores_by_match as select match_id, sum(score) score from world_cup_2018_scores group by match_id;
+
+create view world_cup_2018_final_scores as select s.global_account_id, sum(case when m.score > 0 then s.score / m.score * v.value else 0 end) score from world_cup_2018_scores s join world_cup_2018_values v on s.match_id = v.match_id join world_cup_2018_scores_by_match m on s.match_id = m.match_id group by s.global_account_id;
+
+select * from world_cup_2018_final_scores order by score desc limit 10;
+
+[DEFNAME WORLD_CUP_2018_SETTINGS]
+WORLD_CUP_2018_COLOR_1 0799
+WORLD_CUP_2018_COLOR_2 07ab
+WORLD_CUP_2018_COLOR_COUNT 2
+WORLD_CUP_2018_ROWS_PAGE 6
+WORLD_CUP_2018_MINIMUM_BET 20000
+
+[ITEMDEF i_world_cup_2018_bet_ticket]
+ID=i_cards
+NAME=World Cup 2018 Bet Ticket
+
+ON=@Create
+	MOREX=5
+	COLOR=<DEF.WORLD_CUP_2018_COLOR_<R1,<DEF.WORLD_CUP_2018_COLOR_COUNT>>>
+
+ON=@Click
+	MESSAGE @,,1 <QVAL (<MOREX> < 2) ? [<DMOREX> bet left] : [<DMOREX> bets left] >
+
+ON=@DClick
+	IF (<TOPOBJ> != <SRC.UID>)
+		SRC.SYSMESSAGE @,,1 This item must be inside your bag.
+		RETURN 1
+	ENDIF
+
+	IF !(<DB.CONNECTED>)
+		DB.CONNECT
+	ENDIF
+
+	IF (!<DB.CONNECTED>)
+		SRC.SYSMESSAGE @,,1 Unexpected error, please contact the GM.
+		RETURN 1
+	ENDIF
+
+	IF !(<ISDIALOGOPEN d_world_cup_2018_bets>)
+		SRC.CTAG.WORLD_CUP_2017_BET_TICKET_UID <UID>
+		SDIALOG d_world_cup_2018_bets
+	ENDIF
+
+	RETURN 1
+
+[DIALOG d_world_cup_2018_bets]
+250,250
+page 0
+resizepic 0 1 9300 383 508
+button 296 461 241 242 1 0 0
+dhtmlgump 18 17 348 45 0 0 <def.center><def.u>TFG Shard - World Cup 2018 Bets
+button 223 461 247 248 1 0 1
+text 32 388 0 0
+text 32 418 0 1
+resizepic 154 385 3000 42 27
+resizepic 221 385 3000 42 27
+resizepic 154 416 3000 109 27
+text 204 387 0 2
+textentry 158 388 33 20 0 0 1101
+textentry 225 388 33 20 0 1 1102
+textentry 157 419 102 20 0 2 1103
+DB.QUERY "SELECT m.id, m.date_time, m.name, m.team1, m.team2, COALESCE(m.score1, -1) score1, m.score2, b.score1 betted_score1, b.score2 betted_score2, COALESCE(b.value, 0) value FROM world_cup_2018_matches m LEFT JOIN world_cup_2018_bets b ON b.match_id = m.id AND b.global_account_id = <dSRC.ACCOUNT.TAG.GLOBAL> ORDER BY m.id"
+LOCAL.PAGES <EVAL ((<DB.ROW.NUMROWS> - 1) / <DEF.WORLD_CUP_2018_ROWS_PAGE>) + 1>
+FOR PAGE 1 <LOCAL.PAGES>
+	page <DLOCAL.PAGE>
+	Group 0
+	FOR X 1 <DEF.WORLD_CUP_2018_ROWS_PAGE>
+		LOCAL.ITEM <EVAL ((<LOCAL.PAGE> - 1) * <DEF.WORLD_CUP_2018_ROWS_PAGE>) + <LOCAL.X> - 1>
+		IF (<LOCAL.ITEM> < <DB.ROW.NUMROWS>)
+			dhtmlgump 68 <EVAL 46 + (54 * (<LOCAL.X> - 1))> 300 33 0 0 <DB.ROW.<dLOCAL.ITEM>.name> - <DB.ROW.<dLOCAL.ITEM>.team1> x <DB.ROW.<dLOCAL.ITEM>.team2>
+
+			IF (<DB.ROW.<dLOCAL.ITEM>.score1> >= 0)
+				dhtmlgump 68 <EVAL 62 + (54 * (<LOCAL.X> - 1))> 300 33 0 0 Result - <DB.ROW.<dLOCAL.ITEM>.score1> x <DB.ROW.<dLOCAL.ITEM>.score2>
+			ENDIF
+
+			IF (<DB.ROW.<dLOCAL.ITEM>.value> > 0)
+				dhtmlgump 68 <EVAL 78 + (54 * (<LOCAL.X> - 1))> 300 33 0 0 Your Bet - <DB.ROW.<dLOCAL.ITEM>.betted_score1> x <DB.ROW.<dLOCAL.ITEM>.betted_score2> - <dDB.ROW.<dLOCAL.ITEM>.value> GPs
+			ELSEIF (STRCMP("<DB.ROW.<dLOCAL.ITEM>.date_time>", "<SERV.RTIME.FORMAT %Y-%m-%d %H:%M:%S>") > 0)
+				radio 32 <EVAL 43 + (54 * (<LOCAL.X> - 1))> 2151 2153 0 <DB.ROW.<dLOCAL.ITEM>.id>
+			ENDIF
+		ENDIF
+
+		IF (<LOCAL.PAGE> > 1)
+			button 32 466 2466 2467 0 <EVAL <LOCAL.PAGE> - 1> 0
+		ENDIF
+
+		IF (<LOCAL.PAGE> < <LOCAL.PAGES>)
+			button 126 466 2469 2470 0 <EVAL <LOCAL.PAGE> + 1> 0
+		ENDIF
+	ENDFOR
+ENDFOR
+
+[DIALOG d_world_cup_2018_bets text]
+Result:
+Value (in GPs):
+x
+
+[DIALOG d_world_cup_2018_bets button]
+ON=1
+REF1 <SRC.CTAG.WORLD_CUP_2017_BET_TICKET_UID>
+
+IF (<REF1.MOREX> <= 0)
+	SRC.SYSMESSAGE @,,1 You must get a new ticket with bets available.
+	RETURN 1
+ENDIF
+
+
+IF (<DARGCHKID> == -1)
+	SRC.SYSMESSAGE @,,1 You must choose a match to bet.
+	RETURN 1
+ENDIF
+
+IF !(STRMATCH(*[0-9]*, <ARGTXT[0]>)) || !(STRMATCH(*[0-9]*, <ARGTXT[1]>)) || !(STRMATCH(*[0-9]*, <ARGTXT[2]>))
+	SRC.SYSMESSAGE @,,1 You must type only numbers.
+	RETURN 1
+ENDIF
+
+LOCAL.SCORE1 <ARGTXT[0]>
+LOCAL.SCORE2 <ARGTXT[1]>
+LOCAL.VALUE <ARGTXT[2]>
+
+IF (<LOCAL.SCORE1> < 0) || (<LOCAL.SCORE2> < 0)
+	SRC.SYSMESSAGE @,,1 Negative numbers are not allowed.
+	RETURN 1
+ENDIF
+
+IF (<LOCAL.VALUE> < <DEF.WORLD_CUP_2018_MINIMUM_BET>)
+	SRC.SYSMESSAGE @,,1 The minimum bet is of <dDEF.WORLD_CUP_2018_MINIMUM_BET> GPs.
+	RETURN 1
+ENDIF
+
+IF (<LOCAL.VALUE> > <SRC.GOLD>)
+	SRC.SYSMESSAGE @,,1 Your gold balance is not sufficient for this bet.
+	RETURN 1
+ENDIF
+
+DB.EXECUTE "INSERT INTO world_cup_2018_bets (global_account_id, match_id, score1, score2, value) VALUES (<dSRC.ACCOUNT.TAG.GLOBAL>, <DARGCHKID>, <dLOCAL.SCORE1>, <dLOCAL.SCORE2>, <dLOCAL.VALUE>)"
+
+REF1.MOREX -= 1
+SRC.GOLD -= <LOCAL.VALUE>
+
+SRC.SYSMESSAGE Your bet was registered!
+
+[ITEMDEF i_world_cup_2018_jin_baori]
+ID=i_jinbaori
+TYPE=t_clothing
+LAYER=layer_ears
+NAME=World Cup 2018 1st Place Award Jin-Baori
+TEVENTS=t_global_bound_item
+
+ON=@Create
+	COLOR=<DEF.WORLD_CUP_2018_COLOR_<R1,<DEF.WORLD_CUP_2018_COLOR_COUNT>>>
+	ATTR attr_newbie
+
+[ITEMDEF i_world_cup_2018_ethereal_mount_talisman]
+ID=i_talisman4
+NAME=World Cup 2018 Ethereal Mount Talisman
+TEVENTS=t_global_bound_item
+
+ON=@Create
+	ATTR=attr_newbie
+	COLOR=<DEF.WORLD_CUP_2018_COLOR_<R1,<DEF.WORLD_CUP_2018_COLOR_COUNT>>>
+
+[ITEMDEF i_world_cup_2018_bottle_hair_dye]
+ID=i_bottle_hair_dye
+NAME=World Cup 2018 Hair Dye
+
+ON=@Create
+	ATTR=attr_newbie
+	COLOR=<DEF.WORLD_CUP_2018_COLOR_<R1,<DEF.WORLD_CUP_2018_COLOR_COUNT>>>
+
+ON=@Click
+	MESSAGE @<f_get_world_cup_2018_text_color <COLOR>>,,1 <NAME>
+	RETURN 1
+
+ON=@DClick
+	IF (<TOPOBJ.UID> != <SRC.UID>)
+		SRC.SYSMESSAGE @,,1 This item must be inside your backpack or bank to be used.
+		RETURN 1
+	ENDIF
+
+	IF (<SRC.FINDLAYER.layer_hair.UID>)
+		SRC.FINDLAYER.layer_hair.COLOR <COLOR>
+	ELSE
+		SRC.SYSMESSAGE @,,1 <DEFMSG.itemuse_dye_nohair>
+		RETURN 1
+	ENDIF
+
+	IF (<SRC.FINDLAYER.layer_beard.UID>)
+		SRC.FINDLAYER.layer_beard.COLOR <COLOR>
+	ENDIF
+
+	REMOVE
+
+	RETURN 1
+
+[ITEMDEF i_world_cup_2018_title_deed]
+ID=i_deed
+NAME=World Cup 2018 Title Deed
+
+ON=@Create
+	COLOR = <DEF.WORLD_CUP_2018_COLOR_<R1,<DEF.WORLD_CUP_2018_COLOR_COUNT>>>
+	DORAND 60
+		TAG.WORLD_CUP_2018_TITLE_NAME Igor Akinfeev
+		TAG.WORLD_CUP_2018_TITLE_NAME Al Shehri
+		TAG.WORLD_CUP_2018_TITLE_NAME Mohamed Salah
+		TAG.WORLD_CUP_2018_TITLE_NAME Luis Suárez
+		TAG.WORLD_CUP_2018_TITLE_NAME Cristiano Ronaldo
+		TAG.WORLD_CUP_2018_TITLE_NAME Andrés Iniesta
+		TAG.WORLD_CUP_2018_TITLE_NAME Mehdi Benatia
+		TAG.WORLD_CUP_2018_TITLE_NAME Sardar Azmoun
+		TAG.WORLD_CUP_2018_TITLE_NAME Antoine Griezmann
+		TAG.WORLD_CUP_2018_TITLE_NAME Tim Cahill
+		TAG.WORLD_CUP_2018_TITLE_NAME Paolo Guerrero
+		TAG.WORLD_CUP_2018_TITLE_NAME Christian Eriksen
+		TAG.WORLD_CUP_2018_TITLE_NAME Lionel Messi
+		TAG.WORLD_CUP_2018_TITLE_NAME Gylfi Sigurdsson
+		TAG.WORLD_CUP_2018_TITLE_NAME Luka Modrić
+		TAG.WORLD_CUP_2018_TITLE_NAME Obi Mikel
+		TAG.WORLD_CUP_2018_TITLE_NAME Neymar
+		TAG.WORLD_CUP_2018_TITLE_NAME Xherdan Shaqiri
+		TAG.WORLD_CUP_2018_TITLE_NAME Keylor Navas
+		TAG.WORLD_CUP_2018_TITLE_NAME Nemanja Matić
+		TAG.WORLD_CUP_2018_TITLE_NAME Toni Kroos
+		TAG.WORLD_CUP_2018_TITLE_NAME Javier Hernández
+		TAG.WORLD_CUP_2018_TITLE_NAME Andreas Granqvist
+		TAG.WORLD_CUP_2018_TITLE_NAME Son Heung-min
+		TAG.WORLD_CUP_2018_TITLE_NAME Kevin De Bruyne
+		TAG.WORLD_CUP_2018_TITLE_NAME Felipe Baloy
+		TAG.WORLD_CUP_2018_TITLE_NAME Wahbi Khazri
+		TAG.WORLD_CUP_2018_TITLE_NAME Harry Kane
+		TAG.WORLD_CUP_2018_TITLE_NAME Robert Lewandowski
+		TAG.WORLD_CUP_2018_TITLE_NAME Sadio Manè
+		TAG.WORLD_CUP_2018_TITLE_NAME James Rodriguez
+		TAG.WORLD_CUP_2018_TITLE_NAME Takuma Asano
+		TAG.WORLD_CUP_2018_TITLE_NAME Garrincha
+		TAG.WORLD_CUP_2018_TITLE_NAME Pelé
+		TAG.WORLD_CUP_2018_TITLE_NAME Zagallo
+		TAG.WORLD_CUP_2018_TITLE_NAME Djalma Santos
+		TAG.WORLD_CUP_2018_TITLE_NAME Didi
+		TAG.WORLD_CUP_2018_TITLE_NAME Vavá
+		TAG.WORLD_CUP_2018_TITLE_NAME Zico
+		TAG.WORLD_CUP_2018_TITLE_NAME Ronaldo
+		TAG.WORLD_CUP_2018_TITLE_NAME Ronaldinho
+		TAG.WORLD_CUP_2018_TITLE_NAME Romário
+		TAG.WORLD_CUP_2018_TITLE_NAME Sócrates
+		TAG.WORLD_CUP_2018_TITLE_NAME Gérson
+		TAG.WORLD_CUP_2018_TITLE_NAME Rivelino
+		TAG.WORLD_CUP_2018_TITLE_NAME Heleno de Freitas
+		TAG.WORLD_CUP_2018_TITLE_NAME Leonidas da Silva
+		TAG.WORLD_CUP_2018_TITLE_NAME Vampeta
+		TAG.WORLD_CUP_2018_TITLE_NAME Edmundo
+		TAG.WORLD_CUP_2018_TITLE_NAME Rivaldo
+		TAG.WORLD_CUP_2018_TITLE_NAME Taffarel
+		TAG.WORLD_CUP_2018_TITLE_NAME Renato Gaúcho
+		TAG.WORLD_CUP_2018_TITLE_NAME Maradona
+		TAG.WORLD_CUP_2018_TITLE_NAME Johan Cruiff
+		TAG.WORLD_CUP_2018_TITLE_NAME Allejo
+		TAG.WORLD_CUP_2018_TITLE_NAME Cafu
+		TAG.WORLD_CUP_2018_TITLE_NAME Túlio Maravilha
+		TAG.WORLD_CUP_2018_TITLE_NAME Biro Biro
+		TAG.WORLD_CUP_2018_TITLE_NAME Roberto Carlos
+		TAG.WORLD_CUP_2018_TITLE_NAME Philippe Coutinho
+	ENDDO
+
+ON=@Click
+	MESSAGE @<f_get_world_cup_2018_text_color <COLOR>>,,1 [<TAG.WORLD_CUP_2018_TITLE_NAME>]
+
+ON=@DClick
+	IF (<TOPOBJ.UID> != <SRC.UID>)
+		SRC.SYSMESSAGE This item must be inside your backpack or bank to be used.
+		RETURN 1
+	ENDIF
+
+	remove_title_halloween_2017
+	remove_title_christmas_nightmare_2017
+
+	SRC.EVENTS +e_world_cup_2018_title
+	SRC.TAG.WORLD_CUP_2018_TITLE_NAME <TAG.WORLD_CUP_2018_TITLE_NAME>
+	SRC.TAG.WORLD_CUP_2018_TITLE_COLOR <COLOR>
+	REMOVE
+
+	RETURN 1
+
+[ITEMDEF i_world_cup_2018_dye_tub]
+ID=0fab
+NAME=World Cup 2018 Dye Tub
+TYPE=T_NORMAL
+VALUE=20
+
+ON=@Create
+	MOREX = 1
+	COLOR = <DEF.WORLD_CUP_2018_COLOR_<R1,<DEF.WORLD_CUP_2018_COLOR_COUNT>>>
+
+ON=@Click
+	MESSAGE @,,1 <QVAL (<MOREX> < 2) ? [<DMOREX> charge] : [<DMOREX> charges] >
+
+ON=@DClick
+IF (<ATTR> == attr_move_never)
+	SRC.SYSMESSAGE @,,1 This item is locked.
+	RETURN 1
+ELSEIF (<MOREX> < 1)
+	REMOVE
+	RETURN 1
+ELSE
+	TARGET @,,1 Select what you want to dye.
+ENDIF
+RETURN 1
+
+ON=@Targon_Item
+IF (<ARGO.UID> == <UID>)
+	SRC.SYSMESSAGE @,,1 This dye tub is already colored.
+	RETURN 1
+ENDIF
+
+IF (<ARGO.BASEID> == <BASEID>) && (<ARGO.COLOR> == <COLOR>)
+  ARGO.MOREX += <MOREX>
+  SRC.SYSMESSAGE @,,1 You merged both dye tubs.
+  REMOVE
+  RETURN 1
+ENDIF
+
+if (<ARGO.BASEID> == i_dye_tub) && !(<ARGO.COLOR>)
+	if (<ARGO.CONT> == <SRC.FINDLAYER(21).UID>)
+		ARGO.REMOVE
+		SERV.NEWITEM i_world_cup_2018_dye_tub
+		NEW.COLOR <COLOR>
+		NEW.MOREX = 1
+		NEW.LINK <SRC>
+		SRC.NEW.BOUNCE
+
+		SRC.SYSMESSAGE @,,1 You added one charge to this blank dye tube.
+
+		MOREX -= 1
+
+		IF (<MOREX> <= 0) || (<MOREX> > 100)
+			REMOVE
+		ENDIF
+
+		RETURN 1
+	ELSE
+		SRC.SYSMESSAGE @,,1 The dye tub must be inside your bag.
+	ENDIF
+ENDIF
+
+LOCAL.CHARGE_COST 1
+
+IF (<MOREX> <= 0) || (<MOREX> > 100)
+	REMOVE
+	RETURN 1
+ELSEIF (<ARGO.TYPE> != t_clothing)
+	SRC.SYSMESSAGE @,,1 You can't dye this item.
+	RETURN 1
+ELSEIF (<ARGO.ATTR> & attr_newbie) && !(STRMATCH(i_paragon_*, <ARGO.BASEID>))
+	LOCAL.CHARGE_COST 4
+ENDIF
+
+IF (<LOCAL.CHARGE_COST> > <MOREX>)
+	SRC.SYSMESSAGE @,,1 You must have <DLOCAL.CHARGE_COST> charges to dye this item.
+	RETURN 1
+ENDIF
+
+IF (<ARGO.TOPOBJ> == <SRC.UID>)
+	ARGO.COLOR <COLOR>
+	MOREX -= <LOCAL.CHARGE_COST>
+	IF (<MOREX> <= 0) || (<MOREX> > 100)
+		REMOVE
+	ENDIF
+
+	RETURN 1
+ELSE
+	SRC.SYSMESSAGE @,,1 The item to be dyed must be inside your backpack or bank.
+	RETURN 1
+ENDIF
+
+ON=@TargOn_Char
+	RETURN 1
+
+[FUNCTION f_world_cup_2018_mount_prizes]
+DB.QUERY "SET SQL_MODE = ''"
+DB.QUERY "SELECT account, SUM(score) score from event_ranking WHERE event = 'World Cup 2018' GROUP BY global_account_id ORDER BY score DESC LIMIT 10"
+LOCAL.POSITION 1
+
+FOR 0 <EVAL <DB.ROW.NUMROWS> - 1>
+	LOCAL.ACCOUNT_<DLOCAL.POSITION> "<DB.ROW.<DLOCAL._FOR>.ACCOUNT>"
+	LOCAL.POSITION += 1
+ENDFOR
+
+FOR 1 10
+	LOCAL.POSITION <DLOCAL._FOR>
+	LOCAL.ACCOUNT "<LOCAL.ACCOUNT_<DLOCAL.POSITION>>"
+	REF1 <SERV.ACCOUNT.<LOCAL.ACCOUNT>.CHAR.0>
+
+	SERV.LOG Generating prizes of: <DLOCAL.POSITION>. <REF1.NAME>
+
+//	FORCONT <REF1.FINDLAYER.layer_bankbox.UID>
+//		REMOVE
+//	ENDFOR
+
+	SERV.NEWITEM i_chest_metal
+	NEW.COLOR <DEF.WORLD_CUP_2018_COLOR_<R1,<DEF.WORLD_CUP_2018_COLOR_COUNT>>>
+	NEW.NAME World Cup 2018 Prize - Place: <DLOCAL.POSITION>
+
+	REF2 <NEW.UID>
+	REF2.CONT <REF1.FINDLAYER.layer_bankbox.UID>
+
+	// maps
+	SERV.NEWITEM i_bag
+	NEW.NAME World Cup 2018 Prize
+	NEW.COLOR <DEF.WORLD_CUP_2018_COLOR_<R1,<DEF.WORLD_CUP_2018_COLOR_COUNT>>>
+
+	REF3 <NEW.UID>
+	REF3.CONT <REF2.UID>
+
+	LOCAL.COUNT <EVAL 20 - 2 * (<LOCAL.POSITION> - 1)>
+	FOR 1 <LOCAL.COUNT>
+		SERV.NEWITEM i_treasure_map_lvl_5
+		NEW.CONT <REF3.UID>
+	ENDFOR
+
+	// vips
+	LOCAL.AMOUNT <EVAL 300 - 30 * (<LOCAL.POSITION> - 1)>
+	add_vip_coins <LOCAL.ACCOUNT>,<DLOCAL.AMOUNT>
+
+	// dyes
+	LOCAL.AMOUNT <EVAL 10 - (<LOCAL.POSITION> - 1)>
+	FOR 1 <DEF.WORLD_CUP_2018_COLOR_COUNT>
+		SERV.NEWITEM i_world_cup_2018_dye_tub
+		NEW.COLOR <DEF.WORLD_CUP_2018_COLOR_<DLOCAL._FOR>>
+		NEW.MOREX <LOCAL.AMOUNT>
+		NEW.CONT <REF2.UID>
+	ENDFOR
+
+	// hair dyes
+	IF (<LOCAL.POSITION> <= 5)
+		SERV.NEWITEM i_bag
+		NEW.NAME World Cup 2018 Prize
+		NEW.COLOR <DEF.WORLD_CUP_2018_COLOR_<R1,<DEF.WORLD_CUP_2018_COLOR_COUNT>>>
+
+		REF3 <NEW.UID>
+		REF3.CONT <REF2.UID>
+
+		LOCAL.COUNT <EVAL 5 - (<LOCAL.POSITION> - 1)>
+		FOR X 1 <DEF.WORLD_CUP_2018_COLOR_COUNT>
+			FOR 1 <LOCAL.COUNT>
+				SERV.NEWITEM i_world_cup_2018_bottle_hair_dye
+				NEW.COLOR <DEF.WORLD_CUP_2018_COLOR_<DLOCAL.X>>
+				NEW.CONT <REF3.UID>
+			ENDIF
+		ENDFOR
+	ENDIF
+
+	IF (<LOCAL.POSITION> == 1)
+		FOR 1 <DEF.WORLD_CUP_2018_COLOR_COUNT>
+			SERV.NEWITEM i_world_cup_2018_ethereal_mount_talisman
+			NEW.COLOR <DEF.WORLD_CUP_2018_COLOR_<DLOCAL._FOR>>
+			NEW.CONT <REF2.UID>
+		ENDFOR
+
+		FOR 1 <DEF.WORLD_CUP_2018_COLOR_COUNT>
+			SERV.NEWITEM i_world_cup_2018_jin_baori
+			NEW.COLOR <DEF.WORLD_CUP_2018_COLOR_<DLOCAL._FOR>>
+			NEW.CONT <REF2.UID>
+		ENDFOR
+	ELSEIF (<LOCAL.POSITION> == 2)
+		SERV.NEWITEM i_world_cup_2018_ethereal_mount_talisman
+		NEW.CONT <REF2.UID>
+
+		SERV.NEWITEM i_world_cup_2018_jin_baori
+		NEW.CONT <REF2.UID>
+	ELSEIF (<LOCAL.POSITION> == 3)
+		SERV.NEWITEM i_world_cup_2018_ethereal_mount_talisman
+		NEW.CONT <REF2.UID>
+	ENDIF
+
+	LOCAL.POSITION += 1
+ENDFOR
+
+[FUNCTION f_world_cup_2018_mount_bets_prizes]
+DB.QUERY "SELECT global_account_id FROM world_cup_2018_final_scores ORDER BY SCORE DESC LIMIT 10"
+LOCAL.POSITION 1
+
+FOR 0 <EVAL <DB.ROW.NUMROWS> - 1>
+	LOCAL.GLOBAL_ACCOUNT_ID_<DLOCAL.POSITION> "<DB.ROW.<DLOCAL._FOR>.global_account_id>"
+	LOCAL.POSITION += 1
+ENDFOR
+
+FOR 1 10
+	LOCAL.POSITION <DLOCAL._FOR>
+	LOCAL.GLOBAL_ACCOUNT_ID "<LOCAL.GLOBAL_ACCOUNT_ID_<DLOCAL.POSITION>>"
+
+	DB.QUERY "SELECT LoginConta FROM containgame WHERE IdContaPainel = '<DLOCAL.GLOBAL_ACCOUNT_ID>' ORDER BY IdContaInGame ASC LIMIT 1"
+	LOCAL.ACCOUNT <DB.ROW.0.LoginConta>
+
+	// manual fixes
+	IF !(STRCMPI("tfgliu", "<LOCAL.ACCOUNT>"))
+		LOCAL.ACCOUNT kiwi420
+	ELSEIF !(STRCMPI("Diana", "<LOCAL.ACCOUNT>"))
+		LOCAL.ACCOUNT Dianna
+	ENDIF
+
+	REF1 <SERV.ACCOUNT.<LOCAL.ACCOUNT>.CHAR.0>
+
+	SERV.LOG Generating prizes of: <DLOCAL.POSITION>. <REF1.NAME>
+
+//	FORCONT <REF1.FINDLAYER.layer_bankbox.UID>
+//		REMOVE
+//	ENDFOR
+
+	SERV.NEWITEM i_chest_metal
+	NEW.COLOR <DEF.WORLD_CUP_2018_COLOR_<R1,<DEF.WORLD_CUP_2018_COLOR_COUNT>>>
+	NEW.NAME World Cup 2018 Bets Prize - Place: <DLOCAL.POSITION>
+
+	REF2 <NEW.UID>
+	REF2.CONT <REF1.FINDLAYER.layer_bankbox.UID>
+
+	// maps
+	SERV.NEWITEM i_bag
+	NEW.NAME World Cup 2018 Bets Prize
+	NEW.COLOR <DEF.WORLD_CUP_2018_COLOR_<R1,<DEF.WORLD_CUP_2018_COLOR_COUNT>>>
+
+	REF3 <NEW.UID>
+	REF3.CONT <REF2.UID>
+
+	LOCAL.COUNT <EVAL 12 - (<LOCAL.POSITION> - 1)>
+	FOR 1 <LOCAL.COUNT>
+		SERV.NEWITEM i_treasure_map_lvl_5
+		NEW.CONT <REF3.UID>
+	ENDFOR
+
+	// dyes
+	LOCAL.AMOUNT <EVAL 10 - (<LOCAL.POSITION> - 1)>
+	SERV.NEWITEM i_world_cup_2018_dye_tub
+	NEW.MOREX <LOCAL.AMOUNT>
+	NEW.CONT <REF2.UID>
+
+	IF (<LOCAL.POSITION> == 1)
+		SERV.NEWITEM i_deed_castle_fence
+		NEW.CONT <REF2.UID>
+
+		SERV.NEWITEM i_world_cup_2018_ethereal_mount_talisman
+		NEW.CONT <REF2.UID>
+
+		SERV.NEWITEM i_world_cup_2018_jin_baori
+		NEW.CONT <REF2.UID>
+	ELSEIF (<LOCAL.POSITION> == 2)
+		SERV.NEWITEM i_deed_castle
+		NEW.CONT <REF2.UID>
+
+		SERV.NEWITEM i_world_cup_2018_ethereal_mount_talisman
+		NEW.CONT <REF2.UID>
+
+		SERV.NEWITEM i_world_cup_2018_jin_baori
+		NEW.CONT <REF2.UID>
+	ELSEIF (<LOCAL.POSITION> == 3)
+		SERV.NEWITEM i_world_cup_2018_ethereal_mount_talisman
+		NEW.CONT <REF2.UID>
+	ENDIF
+
+	LOCAL.POSITION += 1
+ENDFOR
+
+[FUNCTION f_become_world_cup_2018_monster]
+IF (<ARGV> != 1)
+	RETURN
+ENDIF
+
+REF1 <ARGS>
+REF1.COLOR <DEF.WORLD_CUP_2018_COLOR_<R1,<DEF.WORLD_CUP_2018_COLOR_COUNT>>>
+REF1.EVENTS +e_world_cup_2018
+REF1.STR <EVAL (<REF1.STR> * 12) / 10>
+REF1.MAXHITS <EVAL (<REF1.MAXHITS> * 12) / 10>
+REF1.HITS <REF1.MAXHITS>
+REF1.TAG.DISABLE_DEFAULT_LOOT 1
+
+[FUNCTION f_world_cup_2018_decision]
+LOCAL.CHANCE 4
+
+IF (<STR> > 500)
+	LOCAL.CHANCE *= 3
+ENDIF
+
+IF !(<R<LOCAL.CHANCE>>) && !(<TAG0.LOOTPROPRIO>)
+	SERV.NEWNPC <BASEID>
+	NEW.P <P>
+	NEW.HOME <NEW.P>
+	NEW.HOMEDIST 6
+
+	f_become_world_cup_2018_monster <NEW.UID>
+
+	SERV.LOG A new <NEW.NAME> World Cup 2018 monster has been spawned at <NEW.P> (<NEW.REGION.NAME>) !
+ENDIF
+
+[FUNCTION f_get_world_cup_2018_text_color]
+IF (<ARGS> == <DEF.WORLD_CUP_2018_COLOR_1>)
+	RETURN 021
+ELSE
+	RETURN 03
+ENDIF
+
+[PLEVEL 1]
+score_world_cup_2018
+remove_title_world_cup_2018
+
+[FUNCTION remove_title_world_cup_2018]
+SRC.EVENTS -e_world_cup_2018_title
+SRC.TAG.WORLD_CUP_2018_TITLE_NAME
+SRC.TAG.WORLD_CUP_2018_TITLE_COLOR
+
+[EVENTS e_world_cup_2018_title]
+ON=@Click
+	MESSAGE @<f_get_world_cup_2018_text_color <TAG.WORLD_CUP_2018_TITLE_COLOR>>,,1 [<TAG.WORLD_CUP_2018_TITLE_NAME>]
+
+[FUNCTION score_world_cup_2018]
+SRC.SYSMESSAGE @,,1 Monsters killed in World Cup 2018 event: <SRC.DTAG0.WORLD_CUP_2018_MONSTERS_KILLED>
+
+[EVENTS e_world_cup_2018]
+ON=@Click
+	MESSAGE @<f_get_world_cup_2018_text_color <COLOR>>,,1 [World Cup 2018]
+
+ON=@DeathCorpse
+	ARGO.TAG.DISABLE_CUT 1
+
+ON=@Death
+//	IF (<ATTACKER>)
+//		FOR 0 <EVAL <ATTACKER> - 1>
+//			REF1 <ATTACKER.<DLOCAL._FOR>>
+//			IF (<REF1.ISPLAYER>)
+//				REF1.TAG0.WORLD_CUP_2018_MONSTERS_KILLED += 1
+//			ENDIF
+//		ENDFOR
+//	ENDIF
+
+	FORCONT <UID>
+		IF (<BASEID> != i_panotrue_b) && (<BASEID> != i_panotrue_g) && (<BASEID> != i_panotrue_w)
+			REMOVE
+		ENDIF
+	ENDFOR
+
+	LOCAL.CHANCE 144
+
+	IF (<STR> > 500)
+		LOCAL.CHANCE /= 4
+	ENDIF
+
+	IF !(<R<LOCAL.CHANCE>>)
+		SERV.NEWITEM {i_world_cup_2018_dye_tub 1 i_world_cup_2018_bet_ticket 4 i_world_cup_2018_title_deed 7}
+		NEW.CONT <UID>
+		SERV.LOG New World Cup Event 2018 Item dropped: <NEW.NAME>
+	ENDIF
+
+	IF (!<R36>)
+		NEWITEM <EVAL {i_panotrue_g 4 i_panotrue_b 4 i_panotrue_w 4 i_deed_shop_marble_small 1 i_deed_shop_stone_small 1 i_deed_villa_2story 1 i_deed_house_patio_sand 1 i_deed_cabin_log_2story 1 i_deed_house_3room_fence 1 i_Wizardry_ring 2 i_20life_necklace 2 i_20Stamina_necklace 2 i_20Mana_necklace 2 i_paragon_ethereal_mount_talisman 5 i_Titan_ring 4 i_15Stamina_necklace 4 i_Knowledge_ring 4 i_Speedy_ring 4 i_ethereal_mount_deed 7 i_treasure_map_lvl_5 20 I_X_RUNEBOOK 20 i_keg_glb1 20 i_keg_gmb1 20 i_keg_grf1 20 i_chaos_shield 40 i_order_shield 40 i_rust_dagger 40 i_magic_mask_tribal 50 i_magic_mask_orc 50 i_magic_helm_orc 50 i_magic_mask_deer 50 i_magic_mask_bear 50 i_magic_mask_bear_polar 50 i_magic_mask_bear_black 50 i_power_scroll 60}>
+		NEW.ATTR &= ~attr_newbie
+		SERV.LOG New World Cup Event 2018 Item dropped: <NEW.NAME>
+		NEW.CONT <UID>
+	ENDIF
+
+	SERV.NEWITEM i_gold
+	NEW.AMOUNT <EVAL <BALANCEARGOLD <GRANAMOBS>> * 2>
+	NEW.CONT <UID>
+
+[EOF]

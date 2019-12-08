@@ -1,0 +1,49 @@
+[DEFNAME TREASURE_SETTINGS]
+// carto necessario para decifrar
+treasure_carto_lvl_1 = 50.0
+treasure_carto_lvl_2 = 60.0
+treasure_carto_lvl_3 = 70.0
+treasure_carto_lvl_4 = 73.0
+treasure_carto_lvl_5 = 80.0
+treasure_carto_lvl_6 = 100.0
+
+// mining necessario para escavar
+treasure_mining_lvl_1 = 50.0
+treasure_mining_lvl_2 = 60.0
+treasure_mining_lvl_3 = 70.0
+treasure_mining_lvl_4 = 73.0
+treasure_mining_lvl_5 = 83.0
+treasure_mining_lvl_6 = 100.0
+
+// monstros gerados
+treasure_monsters_lvl_1 = { c_ettin 1 c_skeleton 1 c_troll_w_axe 1 c_orc_lord 1 }
+treasure_monsters_lvl_2 = { c_m_orc_mage 1 c_orc_lord 1 c_gargoyle 1 c_gazer 1 c_m_hellhound 1 c_elem_earth 1 }
+treasure_monsters_lvl_3 = { c_liche 1 c_m_liche_lord 1 c_DAEMON 1 c_DAEMON_W_SWORD 1 c_m_gazer_elder 1 c_m_ogre_lord 1 c_m_orc_mage 1 }
+treasure_monsters_lvl_4 = { c_liche 1 c_m_liche_lord 1 c_m_drake_Silver 1 c_m_ogre_lord_Dark 1 c_m_gazer_elder 1 c_m_ogre_lord 1 c_m_balron 1 }
+treasure_monsters_lvl_5 = { C_M_BALRON 1 c_m_dragon_wyrm_Blood 1 c_m_balron_Blood 1 c_m_dragon_wyrm_silver 1 c_m_dragon_Blood 1 c_m_drake_Blood 1 c_m_elem_blood 1 c_m_ogre_lord 1}
+treasure_monsters_lvl_6 = { C_M_BALRON 1 c_m_dragon_wyrm_Blood 1 c_m_balron_Blood 1 c_m_dragon_wyrm_silver 1 c_m_dragon_Blood 1 c_m_drake_Blood 1 c_m_elem_blood 1 c_m_ogre_lord 1}
+
+treasure_quads = 21
+treasure_quad_1  = 1887,687,  1988,782
+treasure_quad_2  = 2282,641,  2478,759
+treasure_quad_3  = 1959,1035, 2101,1036
+treasure_quad_4  = 1359,2586, 1662,2610
+treasure_quad_5  = 3102,613,  3317,615
+treasure_quad_6  = 1575,3064, 2226,3398
+treasure_quad_7  = 1332,2963, 1477,3081
+treasure_quad_8  = 4471,3452, 4757,3494
+treasure_quad_9  = 4338,3673, 4414,3775
+treasure_quad_10 = 4094,3000, 4917,4025
+treasure_quad_11 = 4094,3000, 4917,4025  // fire island
+treasure_quad_12 = 2016,2056, 2214,2224  // Horseshoe Island
+treasure_quad_13 = 2302,3350, 2426,3554  // Bald Island
+treasure_quad_14 = 2086,3884, 2213,4018  // Amoeba Island
+treasure_quad_15 = 1026,3388, 1218,3702  // North Jhelom Island
+treasure_quad_16 = 2164,1964, 2216,2014  // Blanche Island
+treasure_quad_17 = 1964,1922, 2154,2038  // Ocarina Isle
+treasure_quad_18 = 397,2114,  522,2011   // Aff nao sei
+treasure_quad_19 = 1816,2054, 1986,2158  // Marble Island
+treasure_quad_20 = 1658,1926, 1780,2052  // Eiffel Island
+treasure_quad_21 = 1044,3090, 1132,3232  // Dragon Isle
+
+[EOF]

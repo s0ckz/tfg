@@ -1,0 +1,798 @@
+///////////////////////////////////// revisar e testar:
+// tirar GS (ok, testar o tirar e por)
+// deslogou mais de 45 segundos, ta fora. (ok)
+// comando mais vagas (ok)
+// portas automaticas (ok)
+// start ffa tira o gate (ok)
+// escolher o rtanto de minutos pra come�ar  (ok)
+// opcao SH (ok)
+// start ffa fechar porta (somente quando porta tiver ponto fixo) (ok)
+// criar baus sozin (ok - testar)
+// bau de recursos com explo e id proprio pra deleta (ok)
+// verificar se o deslogado nao era o penultimo pra dar ganhador  (ok - testar)
+// nao poder usar ffa_mai_vagas se o ffa ja nao tiver sido criado  (ok - testar)
+
+
+
+////
+// metodos anti panela
+// tirar da GS ou enviar mesma notoriedade (testar)
+// todos da mesma cor (ok)
+// invis ate o inicio do evento (ok)
+// proibir detect hidding (ok)
+// nao pode desequipar item (ok)
+// nao poder falar (testar)
+// sem mensagem de qts falta (ok)
+
+// preciso melhorar as portas automaticas pra uma posicao precisa pra se abrir 2x nao ir longe
+
+
+// Cons functions
+
+// falta .mais vagas
+
+[DEFNAME ffa_settings]
+FFA_WINNER_EVENT_POINTS 100
+FFA_START_WAIT_MINUTES 7
+FFA_MIN_PLAYERS 4
+
+[FUNCTION criar_ffa]
+if <tag0.can_i_use_event_cmd>
+	novoffa <args>
+else
+	sysmessage @,,1 Voce nao pode usar este comando.
+endif
+return 1
+
+[FUNCTION iniciar_ffa]
+if <tag0.can_i_use_event_cmd>
+	startffa
+else
+	sysmessage @,,1 Voce nao pode usar este comando.
+endif
+return 1
+
+[FUNCTION fecha_gate_ffa]
+if <tag0.can_i_use_event_cmd>
+	forinstances i_gate_ffa
+		remove
+	endfor
+	set_event_gate_walls 0
+	forinstances i_anuncia_ffa
+		remove
+	endfor
+	sysmessage @,,1 Gates fechados.
+else
+	sysmessage @,,1 Voce nao pode usar este comando.
+endif
+return 1
+
+[FUNCTION stop_ffa]
+if <tag0.can_i_use_event_cmd>
+	stop_ffa_op
+else
+	sysmessage @,,1 Voce nao pode usar este comando.
+endif
+return 1
+
+//
+
+[FUNCTION stop_ffa_op]
+forinstances i_gate_ffa
+	remove
+endfor
+set_event_gate_walls 0
+forinstances i_anuncia_ffa
+	remove
+endfor
+for x 0 <eval <serv.list.players_ffa.count> - 1>
+	ref1 = <serv.list.players_ffa.<dlocal.x>>
+	ref1.go Commerce Room
+endfor
+SERV.B @31 O FFA foi interrompido.
+serv.list.players_ffa.clear
+var.novo_ffa =
+var.ffa_cidade =
+var.ffa_iniciado =
+return 1
+
+[FUNCTION ffa_mais_vagas]
+if !<var0.novo_ffa>
+	src.sysmessage @,,1 Voce precisa primeiro criar o FFA
+	return 1
+endif
+forinstances i_gate_ffa
+	remove
+endfor
+set_event_gate_walls 0
+forinstances i_anuncia_ffa
+	remove
+endfor
+		  serv.newitem i_gate_ffa
+		  new.tag.maximo <args>
+         	  new.p 2341,541,1
+          	  new.updatex
+		  ref1 = <new.uid>
+		  serv.newitem i_anuncia_ffa
+		  new.tag.start = 1
+		  new.tag.gate = <ref1.uid>
+		  new.timer = 15
+		  set_event_gate_walls 1
+serv.b @31 Foram abertas mais <eval <args>> vagas para o FFA <qval (<var.ffa_cidade> == 1)?Cemiterio:Serpent's Hold>. Gate na Commerce Room.
+abre_portas_evento
+return 1
+
+[EVENTS e_all_orange]
+ON=@NotoSend
+argn1=5
+argn2=31
+
+[SPEECH spk_ffa]
+ON=*
+src.sysmessage @,,1 Voce nao pode falar neste evento. Voce so pode atacar, atacar, atacar!
+return 1
+
+[ITEMDEF i_gate_ffa]
+ID=0f6c
+WEIGHT=1
+TYPE=t_normal
+NAME=FFA Cemiterio
+
+ON=@Create
+  attr 08000
+  color 079d
+  tag.contagem 0
+  tag.maximo 16
+  return 0
+
+ON=@Click
+  message @0790 <name>
+  return 1
+
+ON=@Step
+if <src.tag0.event_block>
+	src.sysmessage @,,1 Voce esta banido de eventos!
+	return 1
+endif
+if (<tag.contagem> >= <tag.maximo>) && (<tag.maximo> > 0)
+    src.message @0790,,1 Evento Lotado!
+    return 1
+endif
+if <src.guild>
+	ref2 = <src.guild>
+	if (<ref2.memberfromuid.<src.uid>.priv>==1) || (<ref2.memberfromuid.<src.uid>.priv>==0)
+		src.tag.event.guild_priv = <ref2.memberfromuid.<src.uid>.priv>
+		src.tag.event.guild = <ref2>
+		ref2.resign <src.uid>
+	endif
+endif
+serv.list.players_ffa.add <src.uid>
+  src.shrinklayer25_save
+  tag.contagem += 1
+SRC.CANCELLHELPROOM
+SRC.OFFABREV
+src.tag.askills=<src.kills>
+src.tag.askarma=<src.karma>
+src.tag.asfame=<src.fame>
+src.tag.asdeaths=<src.deaths>
+  src.findlayer.31.bounce //layer dragging
+  src.tag.lastbackpack <src.findlayer.21.uid>
+  src.stripsave
+  ref199=<more2>
+  //tag.cortemp=<eval <tag.contagem> * 10>
+  tag.cortemp = 31
+  SRC.tag.name.hue=<tag.cortemp>
+  src.tag.onevent 1
+  src.tag.name.alt Killer
+  src.findlayer.21.attr 0
+  ref1=<src.findlayer.21.uid>
+  src.findlayer.21.cont <src.findlayer.29.uid>
+  REF1.updatex
+  src.newitem i_backpack
+  src.act.color <tag.cortemp>
+  src.act.equip
+
+	// itens
+  src.newitem i_bow_bloodrock
+  src.act.name TFG Shard Evento
+  src.act.color <tag.cortemp>
+  src.act.equip
+
+  src.newitem i_except_War_fork
+  src.act.name TFG Shard Evento (Poisoned)
+  src.act.tag.poisonlevel 4
+  src.act.tag.poisontimer 3
+  src.act.color <tag.cortemp>
+  src.act.equip
+
+    src.newitem i_except_kryss
+  src.act.name TFG Shard Evento (Poisoned)
+  src.act.tag.poisonlevel 4
+  src.act.tag.poisontimer 3
+  src.act.color <tag.cortemp>
+  src.act.equip
+
+  //src.newitem i_bloodrock_closed_helm
+  //src.act.attr 010
+  //src.act.name TFG Shard Evento
+  //src.act.color <tag.cortemp>
+  //src.act.equip
+
+  src.newitem i_bloodrock_female_platemail
+  src.act.attr 010
+  src.act.name TFG Shard Evento
+  src.act.color <tag.cortemp>
+  src.act.equip
+
+  //src.newitem i_bloodrock_platemail_arms
+  //src.act.attr 010
+  //src.act.name TFG Shard Evento
+  //src.act.color <tag.cortemp>
+  //src.act.equip
+
+  //src.newitem i_bloodrock_platemail_gauntlets
+  //src.act.attr 010
+  //src.act.name TFG Shard Evento
+  //src.act.color <tag.cortemp>
+  //src.act.equip
+
+  //src.newitem i_bloodrock_platemail_gorget
+  //src.act.attr 010
+  //src.act.name TFG Shard Evento
+  //src.act.color <tag.cortemp>
+  //src.act.equip
+
+  src.newitem i_bloodrock_platemail_leggings
+  src.act.attr 010
+  src.act.name TFG Shard Evento
+  src.act.color <tag.cortemp>
+  src.act.equip
+
+  src.newitem i_llama_evento // animal
+  src.act.name TFG Shard Evento
+  src.act.color <tag.cortemp>
+  src.act.attr 010
+  src.act.useitem
+
+  src.newitem i_spellbook_full
+  src.act.color 07B5
+  src.act.bounce
+
+  if (<src.memoryfindtype.memory_guild.link.align>==2)
+	  src.newitem i_chaos_shield
+	  //src.act.attr 010
+	  src.act.name TFG Shard Evento
+	  src.act.color <tag.cortemp>
+	  src.act.equip
+  elif (<src.memoryfindtype.memory_guild.link.align>==1)
+	  src.newitem i_order_shield
+	  //src.act.attr 010
+	  src.act.name TFG Shard Evento
+	  src.act.color <tag.cortemp>
+	  src.act.equip
+  else
+      src.newitem i_bloodrock_heater_shield
+	  //src.act.attr 010
+	  src.act.name TFG Shard Evento
+	  src.act.color <tag.cortemp>
+	  src.act.equip
+  endif
+
+  	  src.newitem i_bless_robe
+	  src.act.attr 010
+	  src.act.name TFG Shard Evento
+	  src.act.color <tag.cortemp>
+	  src.act.equip
+
+	  src.newitem i_leather_leggings_wyrm
+	  src.act.attr 010
+	  src.act.name TFG Shard Evento
+	  src.act.color <tag.cortemp>
+	  src.act.equip
+
+	  src.newitem i_leather_tunic_wyrm
+	  src.act.attr 010
+	  src.act.name TFG Shard Evento
+	  src.act.color <tag.cortemp>
+	  src.act.equip
+
+	  src.newitem i_leather_sleeves_wyrm
+	  src.act.attr 010
+	  src.act.name TFG Shard Evento
+	  src.act.color <tag.cortemp>
+	  src.act.equip
+
+	  src.newitem i_leather_gorget_wyrm
+	  src.act.attr 010
+	  src.act.name TFG Shard Evento
+	  src.act.color <tag.cortemp>
+	  src.act.equip
+
+	  src.newitem i_leather_gloves_wyrm
+	  src.act.attr 010
+	  src.act.name TFG Shard Evento
+	  src.act.color <tag.cortemp>
+	  src.act.equip
+
+	  src.newitem i_color_orc_helm_12
+	  src.act.attr 010
+	  src.act.name TFG Shard Evento
+	  src.act.color <tag.cortemp>
+	  src.act.equip
+
+  src.campmine_renew_resources
+
+
+  // body
+  SRC.BODY c_woman
+
+if (<var.ffa_cidade> == 1)
+	src.f_go 1371,1485,10,1
+elif (<var.ffa_cidade> == 2)
+	src.f_go 3010,3371,15,1
+endif
+src.invul 1
+src.invis 1
+
+  SRC.RESENDALL
+  src.dspeech +spk_ffa
+  src.events +e_evento_ffa_espera
+  src.events +e_evento_ffa
+
+IF (<tag.contagem> == <tag.maximo>)
+  FORINSTANCES i_anuncia_ffa
+	REMOVE
+  ENDFOR
+  SERV.B @55 Evento Completo!
+	fecha_portas_evento
+	startffa
+	remove
+ENDIF
+return 1
+
+[ITEMDEF i_anuncia_ffa]
+ID=i_crystal_ball
+NAME=FFA [DO NOT REMOVE]
+WEIGHT=200
+TYPE=t_eq_script
+
+ON=@Create
+    ATTR=attr_decay|attr_invis
+    TIMER=60
+	TAG.MINUTOS=10
+
+ON=@TIMER
+IF (<TAG0.START>)
+	REF1=<TAG.GATE>
+
+	IF (<TAG.FFA_START_WAIT_SECONDS> == <EVAL <DEF.FFA_START_WAIT_MINUTES> * 60>)
+		IF (<REF1.TAG.CONTAGEM> >= <DEF.FFA_MIN_PLAYERS>)
+			SERV.B @55 FFA sera iniciado !
+			startffa
+		ELSE
+			SERV.B @55 FFA sera cancelado por nao ter ao menos <EVAL <DEF.FFA_MIN_PLAYERS>> participantes.
+			stop_ffa_op
+		ENDIF
+	ELSE
+		SERV.B @55 Restam <eval <ref1.tag.maximo> - <ref1.tag.contagem>> vagas para o FFA <qval (<var.ffa_cidade> == 1)?Cemiterio:Serpent's Hold>! Gate na Commerce Room - fechara em <EVAL (<DEF.FFA_START_WAIT_MINUTES> * 60) - <TAG0.FFA_START_WAIT_SECONDS>> segundos!
+		TIMER 15
+		TAG0.FFA_START_WAIT_SECONDS += <TIMER>
+	ENDIF
+ELSE
+	TAG.MINUTOS -= 1
+	if <tag0.minutos> > 0
+		SERV.B @55 Um novo FFA <qval (<var.ffa_cidade> == 1)?Cemiterio:Serpent's Hold> vai comecar em <dtag.minutos> minutos. O loot e da staff, chamem seus amigos!
+		TIMER 60
+	else
+		TAG.START = 1
+		SERV.B @55 Foram liberadas <dtag.max> vagas para o FFA <qval (<var.ffa_cidade> == 1)?Cemiterio:Serpent's Hold>. Gate na Commerce Room!
+		abre_portas_evento
+		TIMER = 15
+		TAG0.FFA_START_WAIT_SECONDS += <TIMER>
+		  serv.newitem i_gate_ffa
+		  new.tag.maximo <tag.max>
+          new.p 2341,541,1
+		  new.link <uid>
+          new.updatex
+		  ref1 = <new.uid>
+		  tag.gate = <ref1.uid>
+		  set_event_gate_walls 1
+	endif
+endif
+RETURN 1
+
+[EVENTS e_evento_ffa_espera]
+ON=@Click
+msg @,,1 [FFA Espera]
+
+On=@GetHit
+return 1
+
+On=@HIT
+return 1
+
+On=@HitTry
+return 1
+
+On=@SpellCast
+return 1
+
+ON=@UserGuildButton
+return 1
+
+[EVENTS e_evento_ffa]
+ON=@CLICK
+if <src.isgm>
+	message (<name>)
+endif
+RETURN 1
+
+ON=@Mount
+src.sysmessage "@31,,1 Voce so pode montar nas criaturas do evento."
+return 1
+
+ON=@UserGuildButton
+return 1
+
+ON=@SkillStart
+if (<argn1>==14)
+	src.sysmessage @,,1 Voce nao pode detectar com skill no FFA.
+	return 1
+elif (<argn1>==38)
+	src.sysmessage @,,1 Voce nao pode usar tracking no FFA.
+	return 1
+endif
+
+ON=@Death
+// preciso criar uma protecao pra ver se ja nao morreu
+	ctag.ffa_death = 1
+	if (<eval <serv.list.players_ffa.findelem <uid>>> >= 0)
+		serv.list.players_ffa.<serv.list.players_ffa.findelem <uid>>.remove
+	endif
+	CTF_DEATH_FIX
+	HITS = <STR>
+	MANA = <INT>
+	STAM = <DEX>
+	action -1
+	message @0790 Voce morreu!
+	local.players_ffa = <eval <serv.list.players_ffa.count>>
+	if <local.players_ffa> <= 1
+		ref1 = <serv.list.players_ffa.0>
+		s <name> saiu do FFA.
+			if (<isempty <ref1.ctag.ffa_death>>) && (<ref1.isplayer>)
+				SERV.B @31 <ref1.name> ganhou o FFA!
+				ref1.go help room
+				f_ffa_reward <ref1.uid>
+				var.novo_ffa =
+				var.evento =
+			endif
+	else
+		s <name> saiu do FFA. Ainda restam <eval <serv.list.players_ffa.count>> vivos no FFA!
+		SERV.B @55 Ainda restam <eval <serv.list.players_ffa.count>> vivos no FFA!
+	endif
+	timerf 1,go 5275,1166
+	return 1
+
+ON=@Logout
+  message @32,,1 [Logout!]
+if <var0.ffa_iniciado>
+	s <name> deslogou no FFA. Sera removido em 45 segundos.
+	serv.newitem i_ffa_anti_logout
+	new.tag.player = <uid>
+	new.p = <p>
+endif
+
+ON=@Login
+message @478,,1 [Login!]
+ref1 = <uid>
+if <var0.ffa_iniciado>
+	forinstances i_ffa_anti_logout
+		if (<tag.player> == <ref1.uid>)
+			local.timer = <timer>
+			remove
+		endif
+	endfor
+local.tempodecorrido = <eval 45 - <local.timer>>
+s <name> relogou apos <dlocal.tempodecorrido> segundos deslogado no FFA.
+endif
+
+
+ON=@EnvironChange
+if (<map> != 1)
+    stripremove
+  if <src.tag0.event.guild>
+	ref1 = <src.tag0.event.guild>
+	if <src.tag0.event.guild_priv>
+		ref1.JoinAsMember <src.uid>
+	else
+		ref1.ApplyToJoin <src.uid>
+	endif
+	src.tag.event.guild_priv =
+	src.tag.event.guild =
+  endif
+  src.kills=<tag.askills>
+  src.karma=<tag.askarma>
+  src.fame=<tag.asfame>
+  src.deaths=<tag.asdeaths>
+  src.memoryfindtype.memory_harmedby.remove
+  src.memoryfindtype.memory_iaggressor.remove
+  src.memoryfindtype.memory_fight.remove
+  src.memoryfindtype.memory_sawcrime.remove
+  src.memoryfindtype.memory_aggreived.remove
+  src.memoryfindtype.memory_war_targ.remove
+  src.memoryfindtype.memory_harmedby.remove
+  src.memoryfindtype.memory_iaggressor.remove
+  src.memoryfindtype.memory_fight.remove
+  src.memoryfindtype.memory_sawcrime.remove
+  src.memoryfindtype.memory_aggreived.remove
+  src.memoryfindtype.memory_war_targ.remove
+  tag.askills=
+  tag.askarma=
+  tag.asfame=
+  tag.asdeaths=
+  tag.name.alt=
+  src.criminal 0
+  invis 0
+  invul 0
+    findlayer.21.remove
+    findlayer.25.remove
+    findlayer.31.remove
+    newitem i_gold
+    act.link 0<tag.lastbackpack>
+    act.link.cont <uid>
+    act.remove
+	events -e_evento_ffa_espera
+    events -e_evento_ffa
+    dspeech -spk_ffa
+    tag.team
+    if (<findlayer.21> = 0)
+      SERV.ALLCLIENTS MSTAFF2 @0790 [SYSTEM]: Err... <name> saiu do evento e nao foi possivel recuperar sua backpack!
+      SERV.ALLCLIENTS MSTAFF2 @0790 [SYSTEM]: Root: <uid> - Act: <act.uid> - Src: <src.uid> - Action: <action> - Backpack: <tag.lastbackpack>
+    endif
+BODY=<OBODY>
+RESENDALL
+REEQUIPALL
+   tag.lastbackpack=
+   tag.onevent=
+   TAG.NOPREMIO=   // pra que eu sirvo?
+   TAG.NAME.HUE=
+   ctag.ffa_death =
+   por_gs
+   endif
+  return 0
+
+[FUNCTION novoffa]
+IF (<ARGV> != 3)
+	SRC.SYSMESSAGE @,,1 Sintaxe: .novoffa [vagas],[minutos-espera],[local]
+	RETURN 1
+ENDIF
+
+IF !(<VAR0.FFA_PRIZE>)
+	SRC.SYSMESSAGE @,,1 The FFA prize is not set. Set it using .set_ffa_prize.
+	RETURN 1
+ENDIF
+
+IF !(<VAR0.FFA_TROPHY>)
+	SRC.SYSMESSAGE @,,1 The FFA trophy is not set. Set it using .set_ffa_trophy.
+	RETURN 1
+ENDIF
+
+local.minutos = <argv[1]>
+local.cidade = <argv[2]>
+if <local.minutos> < 1
+	src.sysmessage @,,1 Voce precisa dar no minimo 1 minuto de aviso.
+	return 1
+endif
+IF (<ARGV[0]> < <DEF.FFA_MIN_PLAYERS>)
+	src.sysmessage @,,1 O evento deve ter pelo menos <EVAL <DEF.FFA_MIN_PLAYERS>> participantes.
+	return 1
+ENDIF
+
+IF (<local.cidade> != 1) && (<local.cidade> != 2)
+	src.sysmessage @,,1 O local deve ser 1 (Cemiterio) ou 2 (Serpent's Hold).
+	return 1
+ENDIF
+
+serv.list.players_ffa.clear
+  var.evento = 1
+  //var.players_ffa = <args>
+  var.novo_ffa = 1
+  var.ffa_cidade = <local.cidade>
+  var.ffa_iniciado = 0
+  serv.newitem i_anuncia_ffa
+  new.p 2341,541,1
+  new.tag.max <argv[0]>
+  new.tag.minutos <dlocal.minutos>
+  new.update
+	prepara_cidade_ffa
+  		SERV.B @55 Um novo FFA <qval (<var.ffa_cidade> == 1)?Cemiterio:Serpent's Hold> vai comecar em <dlocal.minutos> minutos. Chamem seus amigos!
+
+[FUNCTION prepara_cidade_ffa]
+FORINSTANCES i_chest_metal_eventos
+	s <name>
+	REMOVE
+ENDFOR
+FORINSTANCES i_box_wood_eventos
+	s <name>
+	REMOVE
+ENDFOR
+if (<var0.ffa_cidade>==1)
+	SERV.NEWITEM tm_baurecursos
+	NEW.P = 1375,1483,11,1
+	SERV.NEWITEM tm_baurecursos
+	NEW.P = 1363,1488,11,1
+	SERV.NEWITEM tm_baurecursos
+	NEW.P = 1369,1469,11,1
+	SERV.NEWITEM tm_baurecursos
+	NEW.P = 1369,1444,11,1
+	SERV.NEWITEM tm_baurecursos
+	NEW.P = 1337,1446,13,1
+	NEW.FLIP
+	SERV.NEWITEM tm_baurecursos
+	NEW.P = 1337,1464,14,1
+	NEW.FLIP
+	SERV.NEWITEM tm_baurecursos
+	NEW.P = 1352,1452,20,1
+	NEW.FLIP
+elif (<var0.ffa_cidade>==2)
+	SERV.NEWITEM tm_baurecursos
+	NEW.P = 3002,3368,16,1
+	SERV.NEWITEM tm_baurecursos
+	NEW.P = 3012,3360,36,1
+	SERV.NEWITEM tm_baurecursos
+	NEW.P = 3018,3368,16,1
+	SERV.NEWITEM tm_baurecursos
+	NEW.P = 3000,3388,16,1
+	SERV.NEWITEM tm_baurecursos
+	NEW.P = 3064,3336,15,1
+	SERV.NEWITEM tm_baurecursos
+	NEW.P = 3009,3352,15,1
+	SERV.NEWITEM tm_baurecursos
+	NEW.P = 3012,3344,16,1
+endif
+return 1
+
+[FUNCTION vagasffa]
+//var.players_ffa = <args>
+src.sysmessage @,,1 Setado em <dargs> jogadores.
+return 1
+
+[FUNCTION startffa]
+SERV.NEWNPC c_dog
+NEW.FLAGS = statf_invul|statf_insubstantial
+
+IF (<VAR.FFA_CIDADE> == 1)
+	NEW.P 1371,1485,10,1
+ELIF (<VAR.FFA_CIDADE> == 2)
+	NEW.P 3010,3371,15,1
+ENDIF
+
+NEW.TIMERF 1,f_startffa
+
+NEW.TIMERF 15,REMOVE
+
+[FUNCTION f_startffa]
+forinstances i_gate_ffa
+	remove
+endfor
+set_event_gate_walls 0
+forinstances i_anuncia_ffa
+	remove
+endfor
+FORPLAYERS 400
+	IF !(<ISGM>)
+		trysrc <uid> msg_start_10
+		timerf 10,VERIFICA_LOGOUT_FFA
+		timerf 10,startffa2
+	ENDIF
+ENDFOR
+timerf 10,var.ffa_iniciado = 1
+fecha_portas_evento
+
+[FUNCTION msg_start_10]
+MSG @31,,1 Comeca em 10 segundos!
+
+[FUNCTION startffa2]
+INVUL 0
+INVIS 0
+EVENTS -e_evento_ffa_espera
+MSG @31,,1 Ready! Fight!
+
+
+
+[ITEMDEF i_ffa_anti_logout]
+ID=i_crystal_ball
+NAME=FFA Anti Logout [DO NOT REMOVE]
+WEIGHT=200
+TYPE=t_eq_script
+
+ON=@Create
+    ATTR=attr_decay|attr_invis
+    TIMER=45
+
+ON=@TIMER
+REF1 = <tag.player>
+if (<eval <serv.list.players_ffa.findelem <ref1.uid>>> >= 0)
+	serv.list.players_ffa.<serv.list.players_ffa.findelem <ref1.uid>>.remove
+	//SERV.B @55 Ainda restam <eval <serv.list.players_ffa.count>> vivos no FFA!
+	REF1.GO Commerce Room
+	S <ref1.name> removido do FFA por LogOut de mais de 45s. Ainda restam <eval <serv.list.players_ffa.count>> vivos no FFA!
+	if (<eval <serv.list.players_ffa.count>> <= 1)
+		ref2 = <serv.list.players_ffa.0>
+			if (<isempty <ref2.ctag.ffa_death>>) && (<ref2.tag0.onevent>) && (<ref2.isplayer>)
+				SERV.B @31 <ref2.name> ganhou o FFA!
+				ref2.go help room
+				serv.newitem i_cards
+				new.name Vale Premio FFA
+				new.color 0480
+				new.attr 010
+				trysrc <ref2> new.bounce
+				var.novo_ffa =
+				var.evento =
+			endif
+	endif
+endif
+REMOVE
+return 1
+
+[FUNCTION verifica_logout_ffa]
+if !(<isonline>)
+	s <name> esta deslogado no FFA. Sera removido em 45 segundos.
+	serv.newitem i_ffa_anti_logout
+	new.tag.player = <uid>
+	new.p = <p>
+endif
+return 1
+
+[FUNCTION set_ffa_prize]
+TARGETF f_set_ffa_prize
+
+[FUNCTION f_set_ffa_prize]
+IF !(<ARGO.ISITEM>)
+	SRC.SYSMESSAGE @,,1 The FFA prize must be an item.
+	RETURN 1
+ENDIF
+
+IF (<ARGO.TYPE> != t_container)
+	SRC.SYSMESSAGE @,,1 The FFA prize must be a container.
+	RETURN 1
+ENDIF
+
+VAR.FFA_PRIZE <ARGO.UID>
+
+[FUNCTION set_ffa_trophy]
+TARGETF f_set_ffa_trophy
+
+[FUNCTION f_set_ffa_trophy]
+IF !(<ARGO.ISITEM>)
+	SRC.SYSMESSAGE @,,1 The FFA trophy must be an item.
+	RETURN 1
+ENDIF
+
+VAR.FFA_TROPHY <ARGO.UID>
+
+[FUNCTION f_ffa_reward]
+IF (<ARGV> != 1)
+	RETURN
+ENDIF
+
+REF1 <ARGV[0]>
+
+IF !(<REF1.ISPLAYER>)
+	RETURN
+ENDIF
+
+SERV.NEWDUPE <VAR.FFA_PRIZE>
+NEW.NAME "@,,1 <REF1.NAME> - Campeão do FFA - <SERV.RTIME.FORMAT %d/%m/%Y>"
+NEW.CONT <REF1.FINDLAYER.layer_pack>
+
+LOCAL.CONTAINER_PRIZE_UID <NEW.UID>
+
+SERV.NEWDUPE <VAR.FFA_TROPHY>
+NEW.NAME "@,,1 <REF1.NAME> - Troféu Campeão do FFA - <SERV.RTIME.FORMAT %d/%m/%Y>"
+NEW.CONT <LOCAL.CONTAINER_PRIZE_UID>
+NEW.CONTP 116,105
+
+REF1.TAG0.EVENTPOINTS += <DEF.FFA_WINNER_EVENT_POINTS>
+
+[EOF]

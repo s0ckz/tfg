@@ -1,0 +1,74 @@
+//////////////////////////////
+
+// Deleta contas sem cadastro nao usadas em 30 dias
+
+//////////////////////////////
+
+
+[FUNCTION f_unused_30dias_semcadastro_delete]
+SERV.ACCOUNT UNUSED 30 TAG.UNUSED30 1
+f_unused_quarentena_scadastro_op
+
+[FUNCTION f_unused_quarentena_scadastro_op]
+local.acc 0
+local.ct 0
+			for x 0 <eval <serv.accounts> -1>
+				serv.log acc <dlocal.x> / <eval <serv.accounts> -1>
+						if (<serv.account.<dlocal.x>.tag0.unused30>)
+							local.acc ++
+							for y 0 <eval <serv.account.<dlocal.x>.chars> -1>
+								ref1 = <serv.account.<dlocal.x>.char.<dlocal.y>>
+								if (<ref1.stone>) && !(<ref1.findid.i_cadastro>)
+										local.ct ++
+									serv.writefile Removidas_Casastro.txt O char <ref1.name> (conta <ref1.account.name>, lastconnectdate <ref1.account.lastconnectdate>) foi removido por nao ter se cadastrado.
+									SERV.ACCOUNT <ref1.account.name> DELETE
+							endif
+							//
+						    if (<local.x> >= <eval <serv.accounts> -1>)
+								serv.log STOP! <dlocal.ct> chars de <dlocal.acc> contas em quarentena removidos por nao ter cadastro!
+								serv.writefile Removidas_Casastro.txt <dlocal.ct> chars de <dlocal.acc> contas em quarentena removidos por nao ter cadastro!
+								return 1
+							endif
+							endfor
+						endif
+						//
+			endfor
+return 1
+
+///////////////////////////////////////////
+
+/// Quarentena p todas acc sem cadastro
+
+///////////////////////////////////////////
+
+[FUNCTION f_quarentena_scadastro]
+local.ct 0
+			for x 0 <eval <serv.accounts> -1>
+				serv.log acc <dlocal.x> / <eval <serv.accounts> -1>
+							for y 0 <eval <serv.account.<dlocal.x>.chars> -1>
+								ref1 = <serv.account.<dlocal.x>.char.<dlocal.y>>
+								if (<ref1.stone>) && !(<ref1.findid.i_cadastro>)
+									local.ct ++
+									serv.writefile Quarentena_Cadastro.txt O char <ref1.name> (conta <ref1.account.name>, lastconnectdate <ref1.account.lastconnectdate>) foi colocado em quarentena por nao ter se cadastrado.
+									ref1.go <r5385,5401>,<r1244,1255>
+								endif
+							endfor
+						endif
+						//
+			endfor
+serv.log <dlocal.ct> chars em quarentena por nao terem se cadastrado!
+serv.writefile Quarentena_Cadastro.txt <dlocal.ct> chars em quarentena por nao terem se cadastrado!
+return 1
+
+////////////////////////////////////////
+
+[FUNCTION f_unused_corrige]
+SERV.ACCOUNT UNUSED 30 TAG.UNUSED30 0
+
+/////////////////////////////////////////
+
+[FUNCTION f_teste_cad]
+if (<stone>) && !(<findid.i_cadastro>)
+ src.sysmessage verdade
+endif
+ return 1

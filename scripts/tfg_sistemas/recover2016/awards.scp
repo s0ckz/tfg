@@ -1,0 +1,1456 @@
+[TYPEDEF t_reward_2016]
+
+ON=@Click
+	IF (<LINK> == 04fffffff)
+		MESSAGE @<COLOR> Unlinked <NAME>
+	ELSE
+		MESSAGE @<COLOR> <LINK.NAME>'s <NAME>
+	ENDIF
+	RETURN 1
+
+ON=@Equip
+	IF (<LINK> == 04fffffff)
+		LINK = <SRC.UID>
+	ENDIF
+	IF (<LINK> == <SRC.UID>)
+		SRC.SOUND = snd_SPELL_BLESS
+	ELSE
+		SRC.SYSMESSAGE This item does not belong to you
+		CONT = <LINK.FINDLAYER(21).UID>
+		RETURN 1
+	ENDIF
+
+ON=@Destroy
+	HITS=5000
+	RETURN 1
+
+[ITEMDEF i_paragon_cape]
+ID=i_cape
+TYPE=t_clothing
+NAME=Paragon Cape
+TEVENTS=t_reward_2016
+
+ON=@Create
+  COLOR 0a23
+  ATTR attr_newbie
+
+ON=@Equip
+  ATTR attr_newbie
+
+[ITEMDEF i_paragon_half_apron]
+ID=i_apron_half
+TYPE=t_clothing
+NAME=Paragon Half Apron
+TEVENTS=t_reward_2016
+
+ON=@Create
+  COLOR 0a23
+  ATTR attr_newbie
+
+ON=@Equip
+  ATTR attr_newbie
+
+[ITEMDEF i_statuette_prisma_paragon]
+ID=i_statuette_daemon
+NAME=Paragon Prisma Lord Statuette
+TYPE=T_FIGURINE
+TAG.STATUETTE=1
+TAG.SOUNDMIN=357
+TAG.SOUNDMAX=361
+
+ON=@CREATE
+	COLOR=0a23
+
+ON=@Click
+	MESSAGE @<COLOR> <NAME>
+	RETURN 1
+
+[CHARDEF c_ethereal_llama]
+ID=c_llama
+CAN=MT_RUN
+ICON=i_pet_llama
+TAG.UNSHRINKABLE=1
+
+ON=@Create
+NPC=brain_animal
+TAMING=50.0
+
+ON=@Death
+	REMOVE
+	RETURN 1
+
+ON=@Click
+	REMOVE
+	RETURN 1
+
+[ITEMDEF i_ethereal_llama]
+ID=i_pet_llama
+NAME=Ethereal Llama
+TYPE=t_normal
+TEVENTS=t_global_bound_item
+
+ON=@Create
+	ATTR=attr_newbie
+
+ON=@Click
+	IF (<TAG0.SPECIAL_COLOR>)
+	    IF (<TOPOBJ.UID> == <SRC.UID>)
+			SRC.CTAG.ETHEREAL_MOUNT <UID>
+			SRC.MENU MENU_ETHEREAL_MOUNT_UPDATE
+
+			RETURN 1
+		ENDIF
+	ENDIF
+
+ON=@DClick
+	IF !(<SRC.FINDLAYER.layer_horse.UID>)
+		IF (<EVAL <SERV.TIME> - <SRC.CTAG0.LAST_DEATH>> < 300)
+			SRC.SYSMESSAGE You can't use your ethereal mount yet.
+			SRC.MESSAGE Remaining time: <EVAL 30 - (<SERV.TIME> - <SRC.CTAG0.LAST_DEATH>) / 10> s
+			RETURN 1
+		ENDIF
+
+		IF (<EVAL <SERV.TIME> - <SRC.CTAG0.LAST_DISMOUNT>> < 100)
+			SRC.SYSMESSAGE You can't use your ethereal mount yet.
+			SRC.MESSAGE Remaining time: <EVAL 10 - (<SERV.TIME> - <SRC.CTAG0.LAST_DISMOUNT>) / 10> s
+			RETURN 1
+		ENDIF
+
+		SERV.NEWITEM i_mt_ethereal_llama
+		NEW.MORE1=c_ethereal_llama
+		NEW.MORE2=<NEW.UID>
+		NEW.NAME <NAME>
+
+		IF (<SRC.FINDLAYER.layer_talisman.BASEID> == i_paragon_ethereal_mount_talisman)
+			NEW.COLOR 0a23
+		ELSEIF (<SRC.FINDLAYER.layer_talisman.BASEID> == i_halloween_2017_ethereal_mount_talisman)
+			NEW.COLOR <SRC.FINDLAYER.layer_talisman.COLOR>
+		ELSEIF (<SRC.FINDLAYER.layer_talisman.BASEID> == i_evil_easter_2018_ethereal_mount_talisman)
+			NEW.COLOR <SRC.FINDLAYER.layer_talisman.COLOR>
+		ELSEIF (<SRC.FINDLAYER.layer_talisman.BASEID> == i_world_cup_2018_ethereal_mount_talisman)
+			NEW.COLOR <SRC.FINDLAYER.layer_talisman.COLOR>
+		ELSEIF (<SRC.FINDLAYER.layer_talisman.BASEID> == i_halloween_2018_ethereal_mount_talisman)
+			NEW.COLOR <SRC.FINDLAYER.layer_talisman.COLOR>
+		ELSEIF (<SRC.FINDLAYER.layer_talisman.BASEID> == i_christmas_2018_ethereal_mount_talisman)
+			NEW.COLOR <SRC.FINDLAYER.layer_talisman.COLOR>
+		ELSEIF (<SRC.FINDLAYER.layer_talisman.BASEID> == i_carnival_2019_ethereal_mount_talisman)
+			NEW.COLOR <SRC.FINDLAYER.layer_talisman.COLOR>
+		ELSEIF (<TAG0.SPECIAL_COLOR>)
+			NEW.COLOR <TAG.SPECIAL_COLOR>
+		ELSE
+			NEW.COLOR color_spectral
+		ENDIF
+
+		NEW.TAG.SPECIAL_COLOR <TAG0.SPECIAL_COLOR>
+		NEW.EQUIP
+		NEW.UPDATE
+		REMOVE
+	ELSE
+		SRC.MESSAGE @07a1 You are already mounting an animal!
+	ENDIF
+
+	RETURN 1
+
+[itemdef i_mt_ethereal_llama]
+ID=i_mt_llama
+LAYER=layer_horse
+
+ON=@Equip
+	LINK=<SRC.UID>
+
+ON=@Unequip
+	IF <SRC.FINDLAYER(21).UID>
+		SRC.CTAG.LAST_DISMOUNT <SERV.TIME>
+		SERV.NEWITEM i_ethereal_llama
+		NEW.NAME <NAME>
+		NEW.TAG.SPECIAL_COLOR <TAG0.SPECIAL_COLOR>
+		IF (<TAG0.SPECIAL_COLOR>)
+			NEW.COLOR <TAG0.SPECIAL_COLOR>
+		ENDIF
+		NEW.CONT=<SRC.FINDLAYER.layer_pack>
+		NEW.LINK=<SRC.UID>
+	ENDIF
+
+	RETURN 1
+
+[CHARDEF c_ethereal_bear]
+ID=c_bear_polar
+CAN=MT_RUN
+ICON=i_pet_bear_polar
+TAG.UNSHRINKABLE=1
+
+ON=@Create
+NPC=brain_animal
+TAMING=50.0
+
+ON=@Death
+	REMOVE
+	RETURN 1
+
+ON=@Click
+	REMOVE
+	RETURN 1
+
+[ITEMDEF i_ethereal_bear]
+ID=i_pet_bear_polar
+NAME=Ethereal Bear
+TYPE=t_normal
+TEVENTS=t_global_bound_item
+
+ON=@Create
+	ATTR=attr_newbie
+
+ON=@DClick
+	IF !(<SRC.FINDLAYER.layer_horse.UID>)
+		IF (<EVAL <SERV.TIME> - <SRC.CTAG0.LAST_DEATH>> < 300)
+			SRC.SYSMESSAGE You can't use your ethereal mount yet.
+			SRC.MESSAGE Remaining time: <EVAL 30 - (<SERV.TIME> - <SRC.CTAG0.LAST_DEATH>) / 10> s
+			RETURN 1
+		ENDIF
+
+		IF (<EVAL <SERV.TIME> - <SRC.CTAG0.LAST_DISMOUNT>> < 100)
+			SRC.SYSMESSAGE You can't use your ethereal mount yet.
+			SRC.MESSAGE Remaining time: <EVAL 10 - (<SERV.TIME> - <SRC.CTAG0.LAST_DISMOUNT>) / 10> s
+			RETURN 1
+		ENDIF
+
+		SERV.NEWITEM i_mt_ethereal_bear
+		NEW.MORE1=c_ethereal_bear
+		NEW.MORE2=<NEW.UID>
+		NEW.NAME <NAME>
+
+		IF (<SRC.FINDLAYER.layer_talisman.BASEID> == i_paragon_ethereal_mount_talisman)
+			NEW.COLOR 0a23
+		ELSEIF (<SRC.FINDLAYER.layer_talisman.BASEID> == i_halloween_2017_ethereal_mount_talisman)
+			NEW.COLOR <SRC.FINDLAYER.layer_talisman.COLOR>
+		ELSEIF (<SRC.FINDLAYER.layer_talisman.BASEID> == i_evil_easter_2018_ethereal_mount_talisman)
+			NEW.COLOR <SRC.FINDLAYER.layer_talisman.COLOR>
+		ELSEIF (<SRC.FINDLAYER.layer_talisman.BASEID> == i_world_cup_2018_ethereal_mount_talisman)
+			NEW.COLOR <SRC.FINDLAYER.layer_talisman.COLOR>
+		ELSEIF (<SRC.FINDLAYER.layer_talisman.BASEID> == i_halloween_2018_ethereal_mount_talisman)
+			NEW.COLOR <SRC.FINDLAYER.layer_talisman.COLOR>
+		ELSEIF (<SRC.FINDLAYER.layer_talisman.BASEID> == i_christmas_2018_ethereal_mount_talisman)
+			NEW.COLOR <SRC.FINDLAYER.layer_talisman.COLOR>
+		ELSEIF (<SRC.FINDLAYER.layer_talisman.BASEID> == i_carnival_2019_ethereal_mount_talisman)
+			NEW.COLOR <SRC.FINDLAYER.layer_talisman.COLOR>
+		ELSEIF (<TAG0.SPECIAL_COLOR>)
+			NEW.COLOR <TAG.SPECIAL_COLOR>
+		ELSE
+			NEW.COLOR color_spectral
+		ENDIF
+
+		NEW.TAG.SPECIAL_COLOR <TAG0.SPECIAL_COLOR>
+		NEW.EQUIP
+		NEW.UPDATE
+		REMOVE
+	ELSE
+		SRC.MESSAGE @07a1 You are already mounting an animal!
+	ENDIF
+
+	RETURN 1
+
+[itemdef i_mt_ethereal_bear]
+ID=i_mt_bear_polar
+LAYER=layer_horse
+
+ON=@Equip
+	LINK=<SRC.UID>
+
+ON=@Unequip
+	IF <SRC.FINDLAYER(21).UID>
+		SRC.CTAG.LAST_DISMOUNT <SERV.TIME>
+		SERV.NEWITEM i_ethereal_bear
+		NEW.NAME <NAME>
+		NEW.TAG.SPECIAL_COLOR <TAG0.SPECIAL_COLOR>
+		IF (<TAG0.SPECIAL_COLOR>)
+			NEW.COLOR <TAG0.SPECIAL_COLOR>
+		ENDIF
+		NEW.CONT=<SRC.FINDLAYER.layer_pack>
+		NEW.LINK=<SRC.UID>
+	ENDIF
+
+	RETURN 1
+
+[CHARDEF c_ethereal_ostard_zostrich]
+ID=c_ostard_zostrich
+CAN=MT_RUN
+ICON=i_pet_ostard_zostrich
+TAG.UNSHRINKABLE=1
+
+ON=@Create
+NPC=brain_animal
+TAMING=50.0
+
+ON=@Death
+	REMOVE
+	RETURN 1
+
+ON=@Click
+	REMOVE
+	RETURN 1
+
+[ITEMDEF i_ethereal_ostard_zostrich]
+ID=i_pet_ostard_zostrich
+NAME=Ethereal Zostrich
+TYPE=t_normal
+TEVENTS=t_global_bound_item
+
+ON=@Create
+	ATTR=attr_newbie
+
+ON=@Click
+	IF (<TAG0.SPECIAL_COLOR>)
+	    IF (<TOPOBJ.UID> == <SRC.UID>)
+			SRC.CTAG.ETHEREAL_MOUNT <UID>
+			SRC.MENU MENU_ETHEREAL_MOUNT_UPDATE
+
+			RETURN 1
+		ENDIF
+	ENDIF
+
+ON=@DClick
+	IF !(<SRC.FINDLAYER.layer_horse.UID>)
+		IF (<EVAL <SERV.TIME> - <SRC.CTAG0.LAST_DEATH>> < 300)
+			SRC.SYSMESSAGE You can't use your ethereal mount yet.
+			SRC.MESSAGE Remaining time: <EVAL 30 - (<SERV.TIME> - <SRC.CTAG0.LAST_DEATH>) / 10> s
+			RETURN 1
+		ENDIF
+
+		IF (<EVAL <SERV.TIME> - <SRC.CTAG0.LAST_DISMOUNT>> < 100)
+			SRC.SYSMESSAGE You can't use your ethereal mount yet.
+			SRC.MESSAGE Remaining time: <EVAL 10 - (<SERV.TIME> - <SRC.CTAG0.LAST_DISMOUNT>) / 10> s
+			RETURN 1
+		ENDIF
+
+		SERV.NEWITEM i_mt_ethereal_ostard_zostrich
+		NEW.MORE1=c_ethereal_ostard_zostrich
+		NEW.MORE2=<NEW.UID>
+		NEW.NAME <NAME>
+
+		IF (<SRC.FINDLAYER.layer_talisman.BASEID> == i_paragon_ethereal_mount_talisman)
+			NEW.COLOR 0a23
+		ELSEIF (<SRC.FINDLAYER.layer_talisman.BASEID> == i_halloween_2017_ethereal_mount_talisman)
+			NEW.COLOR <SRC.FINDLAYER.layer_talisman.COLOR>
+		ELSEIF (<SRC.FINDLAYER.layer_talisman.BASEID> == i_evil_easter_2018_ethereal_mount_talisman)
+			NEW.COLOR <SRC.FINDLAYER.layer_talisman.COLOR>
+		ELSEIF (<SRC.FINDLAYER.layer_talisman.BASEID> == i_world_cup_2018_ethereal_mount_talisman)
+			NEW.COLOR <SRC.FINDLAYER.layer_talisman.COLOR>
+		ELSEIF (<SRC.FINDLAYER.layer_talisman.BASEID> == i_halloween_2018_ethereal_mount_talisman)
+			NEW.COLOR <SRC.FINDLAYER.layer_talisman.COLOR>
+		ELSEIF (<SRC.FINDLAYER.layer_talisman.BASEID> == i_christmas_2018_ethereal_mount_talisman)
+			NEW.COLOR <SRC.FINDLAYER.layer_talisman.COLOR>
+		ELSEIF (<SRC.FINDLAYER.layer_talisman.BASEID> == i_carnival_2019_ethereal_mount_talisman)
+			NEW.COLOR <SRC.FINDLAYER.layer_talisman.COLOR>
+		ELSEIF (<TAG0.SPECIAL_COLOR>)
+			NEW.COLOR <TAG.SPECIAL_COLOR>
+		ELSE
+			NEW.COLOR color_spectral
+		ENDIF
+
+		NEW.TAG.SPECIAL_COLOR <TAG0.SPECIAL_COLOR>
+		NEW.EQUIP
+		NEW.UPDATE
+		REMOVE
+	ELSE
+		SRC.MESSAGE @07a1 You are already mounting an animal!
+	ENDIF
+
+	RETURN 1
+
+[itemdef i_mt_ethereal_ostard_zostrich]
+ID=i_mt_ostard_zostrich
+LAYER=layer_horse
+
+ON=@Equip
+	LINK=<SRC.UID>
+
+ON=@Unequip
+	IF <SRC.FINDLAYER(21).UID>
+		SRC.CTAG.LAST_DISMOUNT <SERV.TIME>
+		SERV.NEWITEM i_ethereal_ostard_zostrich
+		NEW.NAME <NAME>
+		NEW.TAG.SPECIAL_COLOR <TAG0.SPECIAL_COLOR>
+		IF (<TAG0.SPECIAL_COLOR>)
+			NEW.COLOR <TAG0.SPECIAL_COLOR>
+		ENDIF
+		NEW.CONT=<SRC.FINDLAYER.layer_pack>
+		NEW.LINK=<SRC.UID>
+	ENDIF
+
+	RETURN 1
+
+[CHARDEF c_ethereal_ostard_forest]
+ID=c_ostard_forest
+CAN=MT_RUN
+ICON=i_pet_ostard_forest
+TAG.UNSHRINKABLE=1
+
+ON=@Create
+NPC=brain_animal
+TAMING=50.0
+
+ON=@Death
+	REMOVE
+	RETURN 1
+
+ON=@Click
+	REMOVE
+	RETURN 1
+
+[ITEMDEF i_ethereal_ostard_forest]
+ID=i_pet_ostard_forest
+NAME=Ethereal Orn
+TYPE=t_normal
+TEVENTS=t_global_bound_item
+
+ON=@Create
+	ATTR=attr_newbie
+
+ON=@Click
+	IF (<TAG0.SPECIAL_COLOR>)
+	    IF (<TOPOBJ.UID> == <SRC.UID>)
+			SRC.CTAG.ETHEREAL_MOUNT <UID>
+			SRC.MENU MENU_ETHEREAL_MOUNT_UPDATE
+
+			RETURN 1
+		ENDIF
+	ENDIF
+
+ON=@DClick
+	IF !(<SRC.FINDLAYER.layer_horse.UID>)
+		IF (<EVAL <SERV.TIME> - <SRC.CTAG0.LAST_DEATH>> < 300)
+			SRC.SYSMESSAGE You can't use your ethereal mount yet.
+			SRC.MESSAGE Remaining time: <EVAL 30 - (<SERV.TIME> - <SRC.CTAG0.LAST_DEATH>) / 10> s
+			RETURN 1
+		ENDIF
+
+		IF (<EVAL <SERV.TIME> - <SRC.CTAG0.LAST_DISMOUNT>> < 100)
+			SRC.SYSMESSAGE You can't use your ethereal mount yet.
+			SRC.MESSAGE Remaining time: <EVAL 10 - (<SERV.TIME> - <SRC.CTAG0.LAST_DISMOUNT>) / 10> s
+			RETURN 1
+		ENDIF
+
+		SERV.NEWITEM i_mt_ethereal_ostard_forest
+		NEW.MORE1=c_ethereal_ostard_forest
+		NEW.MORE2=<NEW.UID>
+		NEW.NAME <NAME>
+
+		IF (<SRC.FINDLAYER.layer_talisman.BASEID> == i_paragon_ethereal_mount_talisman)
+			NEW.COLOR 0a23
+		ELSEIF (<SRC.FINDLAYER.layer_talisman.BASEID> == i_halloween_2017_ethereal_mount_talisman)
+			NEW.COLOR <SRC.FINDLAYER.layer_talisman.COLOR>
+		ELSEIF (<SRC.FINDLAYER.layer_talisman.BASEID> == i_evil_easter_2018_ethereal_mount_talisman)
+			NEW.COLOR <SRC.FINDLAYER.layer_talisman.COLOR>
+		ELSEIF (<SRC.FINDLAYER.layer_talisman.BASEID> == i_world_cup_2018_ethereal_mount_talisman)
+			NEW.COLOR <SRC.FINDLAYER.layer_talisman.COLOR>
+		ELSEIF (<SRC.FINDLAYER.layer_talisman.BASEID> == i_halloween_2018_ethereal_mount_talisman)
+			NEW.COLOR <SRC.FINDLAYER.layer_talisman.COLOR>
+		ELSEIF (<SRC.FINDLAYER.layer_talisman.BASEID> == i_christmas_2018_ethereal_mount_talisman)
+			NEW.COLOR <SRC.FINDLAYER.layer_talisman.COLOR>
+		ELSEIF (<SRC.FINDLAYER.layer_talisman.BASEID> == i_carnival_2019_ethereal_mount_talisman)
+			NEW.COLOR <SRC.FINDLAYER.layer_talisman.COLOR>
+		ELSEIF (<TAG0.SPECIAL_COLOR>)
+			NEW.COLOR <TAG.SPECIAL_COLOR>
+		ELSE
+			NEW.COLOR color_spectral
+		ENDIF
+
+		NEW.TAG.SPECIAL_COLOR <TAG0.SPECIAL_COLOR>
+		NEW.EQUIP
+		NEW.UPDATE
+		REMOVE
+	ELSE
+		SRC.MESSAGE @07a1 You are already mounting an animal!
+	ENDIF
+
+	RETURN 1
+
+[itemdef i_mt_ethereal_ostard_forest]
+ID=i_mt_ostard_forest
+LAYER=layer_horse
+
+ON=@Equip
+	LINK=<SRC.UID>
+
+ON=@Unequip
+	IF <SRC.FINDLAYER(21).UID>
+		SRC.CTAG.LAST_DISMOUNT <SERV.TIME>
+		SERV.NEWITEM i_ethereal_ostard_forest
+		NEW.NAME <NAME>
+		NEW.TAG.SPECIAL_COLOR <TAG0.SPECIAL_COLOR>
+		IF (<TAG0.SPECIAL_COLOR>)
+			NEW.COLOR <TAG0.SPECIAL_COLOR>
+		ENDIF
+		NEW.CONT=<SRC.FINDLAYER.layer_pack>
+		NEW.LINK=<SRC.UID>
+	ENDIF
+
+	RETURN 1
+
+[CHARDEF c_ethereal_ostard_desert]
+ID=c_ostard_desert
+CAN=MT_RUN
+ICON=i_pet_ostard_desert
+TAG.UNSHRINKABLE=1
+
+ON=@Create
+NPC=brain_animal
+TAMING=50.0
+
+ON=@Death
+	REMOVE
+	RETURN 1
+
+ON=@Click
+	REMOVE
+	RETURN 1
+
+[ITEMDEF i_ethereal_ostard_desert]
+ID=i_pet_ostard_desert
+NAME=Ethereal Oclock
+TYPE=t_normal
+TEVENTS=t_global_bound_item
+
+ON=@Create
+	ATTR=attr_newbie
+
+ON=@Click
+	IF (<TAG0.SPECIAL_COLOR>)
+	    IF (<TOPOBJ.UID> == <SRC.UID>)
+			SRC.CTAG.ETHEREAL_MOUNT <UID>
+			SRC.MENU MENU_ETHEREAL_MOUNT_UPDATE
+
+			RETURN 1
+		ENDIF
+	ENDIF
+
+ON=@DClick
+	IF !(<SRC.FINDLAYER.layer_horse.UID>)
+		IF (<EVAL <SERV.TIME> - <SRC.CTAG0.LAST_DEATH>> < 300)
+			SRC.SYSMESSAGE You can't use your ethereal mount yet.
+			SRC.MESSAGE Remaining time: <EVAL 30 - (<SERV.TIME> - <SRC.CTAG0.LAST_DEATH>) / 10> s
+			RETURN 1
+		ENDIF
+
+		IF (<EVAL <SERV.TIME> - <SRC.CTAG0.LAST_DISMOUNT>> < 100)
+			SRC.SYSMESSAGE You can't use your ethereal mount yet.
+			SRC.MESSAGE Remaining time: <EVAL 10 - (<SERV.TIME> - <SRC.CTAG0.LAST_DISMOUNT>) / 10> s
+			RETURN 1
+		ENDIF
+
+		SERV.NEWITEM i_mt_ethereal_ostard_desert
+		NEW.MORE1=c_ethereal_ostard_desert
+		NEW.MORE2=<NEW.UID>
+		NEW.NAME <NAME>
+
+		IF (<SRC.FINDLAYER.layer_talisman.BASEID> == i_paragon_ethereal_mount_talisman)
+			NEW.COLOR 0a23
+		ELSEIF (<SRC.FINDLAYER.layer_talisman.BASEID> == i_halloween_2017_ethereal_mount_talisman)
+			NEW.COLOR <SRC.FINDLAYER.layer_talisman.COLOR>
+		ELSEIF (<SRC.FINDLAYER.layer_talisman.BASEID> == i_evil_easter_2018_ethereal_mount_talisman)
+			NEW.COLOR <SRC.FINDLAYER.layer_talisman.COLOR>
+		ELSEIF (<SRC.FINDLAYER.layer_talisman.BASEID> == i_world_cup_2018_ethereal_mount_talisman)
+			NEW.COLOR <SRC.FINDLAYER.layer_talisman.COLOR>
+		ELSEIF (<SRC.FINDLAYER.layer_talisman.BASEID> == i_halloween_2018_ethereal_mount_talisman)
+			NEW.COLOR <SRC.FINDLAYER.layer_talisman.COLOR>
+		ELSEIF (<SRC.FINDLAYER.layer_talisman.BASEID> == i_christmas_2018_ethereal_mount_talisman)
+			NEW.COLOR <SRC.FINDLAYER.layer_talisman.COLOR>
+		ELSEIF (<SRC.FINDLAYER.layer_talisman.BASEID> == i_carnival_2019_ethereal_mount_talisman)
+			NEW.COLOR <SRC.FINDLAYER.layer_talisman.COLOR>
+		ELSEIF (<TAG0.SPECIAL_COLOR>)
+			NEW.COLOR <TAG.SPECIAL_COLOR>
+		ELSE
+			NEW.COLOR color_spectral
+		ENDIF
+
+		NEW.TAG.SPECIAL_COLOR <TAG0.SPECIAL_COLOR>
+		NEW.EQUIP
+		NEW.UPDATE
+		REMOVE
+	ELSE
+		SRC.MESSAGE @07a1 You are already mounting an animal!
+	ENDIF
+
+	RETURN 1
+
+[itemdef i_mt_ethereal_ostard_desert]
+ID=i_mt_ostard_desert
+LAYER=layer_horse
+
+ON=@Equip
+	LINK=<SRC.UID>
+
+ON=@Unequip
+	IF <SRC.FINDLAYER(21).UID>
+		SRC.CTAG.LAST_DISMOUNT <SERV.TIME>
+		SERV.NEWITEM i_ethereal_ostard_desert
+		NEW.NAME <NAME>
+		NEW.TAG.SPECIAL_COLOR <TAG0.SPECIAL_COLOR>
+		IF (<TAG0.SPECIAL_COLOR>)
+			NEW.COLOR <TAG0.SPECIAL_COLOR>
+		ENDIF
+		NEW.CONT=<SRC.FINDLAYER.layer_pack>
+		NEW.LINK=<SRC.UID>
+	ENDIF
+
+	RETURN 1
+
+[CHARDEF c_ethereal_horse_brown_dk]
+ID=c_horse_brown_dk
+CAN=MT_RUN
+ICON=i_pet_horse_brown_dk
+TAG.UNSHRINKABLE=1
+
+ON=@Create
+NPC=brain_animal
+TAMING=50.0
+
+ON=@Death
+	REMOVE
+	RETURN 1
+
+ON=@Click
+	REMOVE
+	RETURN 1
+
+[ITEMDEF i_ethereal_horse_brown_dk]
+ID=i_pet_horse_brown_dk
+NAME=Ethereal Mustang
+TYPE=t_normal
+TEVENTS=t_global_bound_item
+
+ON=@Create
+	ATTR=attr_newbie
+
+ON=@Click
+	IF (<TAG0.SPECIAL_COLOR>)
+	    IF (<TOPOBJ.UID> == <SRC.UID>)
+			SRC.CTAG.ETHEREAL_MOUNT <UID>
+			SRC.MENU MENU_ETHEREAL_MOUNT_UPDATE
+
+			RETURN 1
+		ENDIF
+	ENDIF
+
+ON=@DClick
+	IF !(<SRC.FINDLAYER.layer_horse.UID>)
+		IF (<EVAL <SERV.TIME> - <SRC.CTAG0.LAST_DEATH>> < 300)
+			SRC.SYSMESSAGE You can't use your ethereal mount yet.
+			SRC.MESSAGE Remaining time: <EVAL 30 - (<SERV.TIME> - <SRC.CTAG0.LAST_DEATH>) / 10> s
+			RETURN 1
+		ENDIF
+
+		IF (<EVAL <SERV.TIME> - <SRC.CTAG0.LAST_DISMOUNT>> < 100)
+			SRC.SYSMESSAGE You can't use your ethereal mount yet.
+			SRC.MESSAGE Remaining time: <EVAL 10 - (<SERV.TIME> - <SRC.CTAG0.LAST_DISMOUNT>) / 10> s
+			RETURN 1
+		ENDIF
+
+		SERV.NEWITEM i_mt_ethereal_horse_brown_dk
+		NEW.MORE1=c_ethereal_horse_brown_dk
+		NEW.MORE2=<NEW.UID>
+		NEW.NAME <NAME>
+
+		IF (<SRC.FINDLAYER.layer_talisman.BASEID> == i_paragon_ethereal_mount_talisman)
+			NEW.COLOR 0a23
+		ELSEIF (<SRC.FINDLAYER.layer_talisman.BASEID> == i_halloween_2017_ethereal_mount_talisman)
+			NEW.COLOR <SRC.FINDLAYER.layer_talisman.COLOR>
+		ELSEIF (<SRC.FINDLAYER.layer_talisman.BASEID> == i_evil_easter_2018_ethereal_mount_talisman)
+			NEW.COLOR <SRC.FINDLAYER.layer_talisman.COLOR>
+		ELSEIF (<SRC.FINDLAYER.layer_talisman.BASEID> == i_world_cup_2018_ethereal_mount_talisman)
+			NEW.COLOR <SRC.FINDLAYER.layer_talisman.COLOR>
+		ELSEIF (<SRC.FINDLAYER.layer_talisman.BASEID> == i_halloween_2018_ethereal_mount_talisman)
+			NEW.COLOR <SRC.FINDLAYER.layer_talisman.COLOR>
+		ELSEIF (<SRC.FINDLAYER.layer_talisman.BASEID> == i_christmas_2018_ethereal_mount_talisman)
+			NEW.COLOR <SRC.FINDLAYER.layer_talisman.COLOR>
+		ELSEIF (<SRC.FINDLAYER.layer_talisman.BASEID> == i_carnival_2019_ethereal_mount_talisman)
+			NEW.COLOR <SRC.FINDLAYER.layer_talisman.COLOR>
+		ELSEIF (<TAG0.SPECIAL_COLOR>)
+			NEW.COLOR <TAG.SPECIAL_COLOR>
+		ELSE
+			NEW.COLOR color_spectral
+		ENDIF
+
+		NEW.TAG.SPECIAL_COLOR <TAG0.SPECIAL_COLOR>
+		NEW.EQUIP
+		NEW.UPDATE
+		REMOVE
+	ELSE
+		SRC.MESSAGE @07a1 You are already mounting an animal!
+	ENDIF
+
+	RETURN 1
+
+[itemdef i_mt_ethereal_horse_brown_dk]
+ID=i_mt_horse_brown_dk
+LAYER=layer_horse
+
+ON=@Equip
+	LINK=<SRC.UID>
+
+ON=@Unequip
+	IF <SRC.FINDLAYER(21).UID>
+		SRC.CTAG.LAST_DISMOUNT <SERV.TIME>
+		SERV.NEWITEM i_ethereal_horse_brown_dk
+		NEW.NAME <NAME>
+		NEW.TAG.SPECIAL_COLOR <TAG0.SPECIAL_COLOR>
+		IF (<TAG0.SPECIAL_COLOR>)
+			NEW.COLOR <TAG0.SPECIAL_COLOR>
+		ENDIF
+		NEW.CONT=<SRC.FINDLAYER.layer_pack>
+		NEW.LINK=<SRC.UID>
+	ENDIF
+
+	RETURN 1
+
+[CHARDEF c_ethereal_horse_tan]
+ID=c_horse_tan
+CAN=MT_RUN
+ICON=i_pet_horse_tan
+TAG.UNSHRINKABLE=1
+
+ON=@Create
+NPC=brain_animal
+TAMING=50.0
+
+ON=@Death
+	REMOVE
+	RETURN 1
+
+ON=@Click
+	REMOVE
+	RETURN 1
+
+[ITEMDEF i_ethereal_horse_tan]
+ID=i_pet_horse_tan
+NAME=Ethereal Horse
+TYPE=t_normal
+TEVENTS=t_global_bound_item
+
+ON=@Create
+	ATTR=attr_newbie
+
+ON=@Click
+	IF (<TAG0.SPECIAL_COLOR>)
+	    IF (<TOPOBJ.UID> == <SRC.UID>)
+			SRC.CTAG.ETHEREAL_MOUNT <UID>
+			SRC.MENU MENU_ETHEREAL_MOUNT_UPDATE
+
+			RETURN 1
+		ENDIF
+	ENDIF
+
+ON=@DClick
+	IF !(<SRC.FINDLAYER.layer_horse.UID>)
+		IF (<EVAL <SERV.TIME> - <SRC.CTAG0.LAST_DEATH>> < 300)
+			SRC.SYSMESSAGE You can't use your ethereal mount yet.
+			SRC.MESSAGE Remaining time: <EVAL 30 - (<SERV.TIME> - <SRC.CTAG0.LAST_DEATH>) / 10> s
+			RETURN 1
+		ENDIF
+
+		IF (<EVAL <SERV.TIME> - <SRC.CTAG0.LAST_DISMOUNT>> < 100)
+			SRC.SYSMESSAGE You can't use your ethereal mount yet.
+			SRC.MESSAGE Remaining time: <EVAL 10 - (<SERV.TIME> - <SRC.CTAG0.LAST_DISMOUNT>) / 10> s
+			RETURN 1
+		ENDIF
+
+		SERV.NEWITEM i_mt_ethereal_horse_tan
+		NEW.MORE1=c_ethereal_horse_tan
+		NEW.MORE2=<NEW.UID>
+		NEW.NAME <NAME>
+
+		IF (<SRC.FINDLAYER.layer_talisman.BASEID> == i_paragon_ethereal_mount_talisman)
+			NEW.COLOR 0a23
+		ELSEIF (<SRC.FINDLAYER.layer_talisman.BASEID> == i_halloween_2017_ethereal_mount_talisman)
+			NEW.COLOR <SRC.FINDLAYER.layer_talisman.COLOR>
+		ELSEIF (<SRC.FINDLAYER.layer_talisman.BASEID> == i_evil_easter_2018_ethereal_mount_talisman)
+			NEW.COLOR <SRC.FINDLAYER.layer_talisman.COLOR>
+		ELSEIF (<SRC.FINDLAYER.layer_talisman.BASEID> == i_world_cup_2018_ethereal_mount_talisman)
+			NEW.COLOR <SRC.FINDLAYER.layer_talisman.COLOR>
+		ELSEIF (<SRC.FINDLAYER.layer_talisman.BASEID> == i_halloween_2018_ethereal_mount_talisman)
+			NEW.COLOR <SRC.FINDLAYER.layer_talisman.COLOR>
+		ELSEIF (<SRC.FINDLAYER.layer_talisman.BASEID> == i_christmas_2018_ethereal_mount_talisman)
+			NEW.COLOR <SRC.FINDLAYER.layer_talisman.COLOR>
+		ELSEIF (<SRC.FINDLAYER.layer_talisman.BASEID> == i_carnival_2019_ethereal_mount_talisman)
+			NEW.COLOR <SRC.FINDLAYER.layer_talisman.COLOR>
+		ELSEIF (<TAG0.SPECIAL_COLOR>)
+			NEW.COLOR <TAG.SPECIAL_COLOR>
+		ELSE
+			NEW.COLOR color_spectral
+		ENDIF
+
+		NEW.TAG.SPECIAL_COLOR <TAG0.SPECIAL_COLOR>
+		NEW.EQUIP
+		NEW.UPDATE
+		REMOVE
+	ELSE
+		SRC.MESSAGE @07a1 You are already mounting an animal!
+	ENDIF
+
+	RETURN 1
+
+[itemdef i_mt_ethereal_horse_tan]
+ID=i_mt_horse_tan
+LAYER=layer_horse
+
+ON=@Equip
+	LINK=<SRC.UID>
+
+ON=@Unequip
+	IF <SRC.FINDLAYER(21).UID>
+		SRC.CTAG.LAST_DISMOUNT <SERV.TIME>
+		SERV.NEWITEM i_ethereal_horse_tan
+		NEW.NAME <NAME>
+		NEW.TAG.SPECIAL_COLOR <TAG0.SPECIAL_COLOR>
+		IF (<TAG0.SPECIAL_COLOR>)
+			NEW.COLOR <TAG0.SPECIAL_COLOR>
+		ENDIF
+		NEW.CONT=<SRC.FINDLAYER.layer_pack>
+		NEW.LINK=<SRC.UID>
+	ENDIF
+
+	RETURN 1
+
+[CHARDEF c_ethereal_giant_beetle]
+ID=c_giant_beetle
+CAN=MT_RUN
+ICON=i_pet_giantbeetle
+TAG.UNSHRINKABLE=1
+
+ON=@Create
+NPC=brain_animal
+TAMING=50.0
+
+ON=@Death
+	REMOVE
+	RETURN 1
+
+ON=@Click
+	REMOVE
+	RETURN 1
+
+[ITEMDEF i_ethereal_giant_beetle]
+ID=i_pet_giantbeetle
+NAME=Ethereal Giant Beetle
+TYPE=t_normal
+TEVENTS=t_global_bound_item
+
+ON=@Create
+	ATTR=attr_newbie
+
+ON=@Click
+	IF (<TAG0.SPECIAL_COLOR>)
+	    IF (<TOPOBJ.UID> == <SRC.UID>)
+			SRC.CTAG.ETHEREAL_MOUNT <UID>
+			SRC.MENU MENU_ETHEREAL_MOUNT_UPDATE
+
+			RETURN 1
+		ENDIF
+	ENDIF
+
+ON=@DClick
+	IF !(<SRC.FINDLAYER.layer_horse.UID>)
+		IF (<EVAL <SERV.TIME> - <SRC.CTAG0.LAST_DEATH>> < 300)
+			SRC.SYSMESSAGE You can't use your ethereal mount yet.
+			SRC.MESSAGE Remaining time: <EVAL 30 - (<SERV.TIME> - <SRC.CTAG0.LAST_DEATH>) / 10> s
+			RETURN 1
+		ENDIF
+
+		IF (<EVAL <SERV.TIME> - <SRC.CTAG0.LAST_DISMOUNT>> < 100)
+			SRC.SYSMESSAGE You can't use your ethereal mount yet.
+			SRC.MESSAGE Remaining time: <EVAL 10 - (<SERV.TIME> - <SRC.CTAG0.LAST_DISMOUNT>) / 10> s
+			RETURN 1
+		ENDIF
+
+		SERV.NEWITEM i_mt_ethereal_giant_beetle
+		NEW.MORE1=c_ethereal_giant_beetle
+		NEW.MORE2=<NEW.UID>
+		NEW.NAME <NAME>
+
+		IF (<SRC.FINDLAYER.layer_talisman.BASEID> == i_paragon_ethereal_mount_talisman)
+			NEW.COLOR 0a23
+		ELSEIF (<SRC.FINDLAYER.layer_talisman.BASEID> == i_halloween_2017_ethereal_mount_talisman)
+			NEW.COLOR <SRC.FINDLAYER.layer_talisman.COLOR>
+		ELSEIF (<SRC.FINDLAYER.layer_talisman.BASEID> == i_evil_easter_2018_ethereal_mount_talisman)
+			NEW.COLOR <SRC.FINDLAYER.layer_talisman.COLOR>
+		ELSEIF (<SRC.FINDLAYER.layer_talisman.BASEID> == i_world_cup_2018_ethereal_mount_talisman)
+			NEW.COLOR <SRC.FINDLAYER.layer_talisman.COLOR>
+		ELSEIF (<SRC.FINDLAYER.layer_talisman.BASEID> == i_halloween_2018_ethereal_mount_talisman)
+			NEW.COLOR <SRC.FINDLAYER.layer_talisman.COLOR>
+		ELSEIF (<SRC.FINDLAYER.layer_talisman.BASEID> == i_christmas_2018_ethereal_mount_talisman)
+			NEW.COLOR <SRC.FINDLAYER.layer_talisman.COLOR>
+		ELSEIF (<SRC.FINDLAYER.layer_talisman.BASEID> == i_carnival_2019_ethereal_mount_talisman)
+			NEW.COLOR <SRC.FINDLAYER.layer_talisman.COLOR>
+		ELSEIF (<TAG0.SPECIAL_COLOR>)
+			NEW.COLOR <TAG.SPECIAL_COLOR>
+		ELSE
+			NEW.COLOR color_spectral
+		ENDIF
+
+		NEW.TAG.SPECIAL_COLOR <TAG0.SPECIAL_COLOR>
+		NEW.EQUIP
+		NEW.UPDATE
+		REMOVE
+	ELSE
+		SRC.MESSAGE @07a1 You are already mounting an animal!
+	ENDIF
+
+	RETURN 1
+
+[itemdef i_mt_ethereal_giant_beetle]
+ID=i_mt_giant_beetle
+LAYER=layer_horse
+
+ON=@Equip
+	LINK=<SRC.UID>
+
+ON=@Unequip
+	IF <SRC.FINDLAYER(21).UID>
+		SRC.CTAG.LAST_DISMOUNT <SERV.TIME>
+		SERV.NEWITEM i_ethereal_giant_beetle
+		NEW.NAME <NAME>
+		NEW.TAG.SPECIAL_COLOR <TAG0.SPECIAL_COLOR>
+		IF (<TAG0.SPECIAL_COLOR>)
+			NEW.COLOR <TAG0.SPECIAL_COLOR>
+		ENDIF
+		NEW.CONT=<SRC.FINDLAYER.layer_pack>
+		NEW.LINK=<SRC.UID>
+	ENDIF
+
+	RETURN 1
+
+[ITEMDEF i_paragon_ethereal_mount_talisman]
+ID=i_talisman4
+NAME=Paragon Ethereal Mount Talisman
+TEVENTS=t_global_bound_item
+
+ON=@Create
+	ATTR=attr_newbie
+	COLOR=0a23
+
+[MENU MENU_ETHEREAL_MOUNT_UPDATE]
+Please select the new ethereal mount you want to use. You can change any time you want.
+
+ON=0 Mustang
+	SERV.NEWITEM i_ethereal_horse_brown_dk
+	NEW.COLOR <UID.<SRC.CTAG.ETHEREAL_MOUNT>.COLOR>
+	NEW.TAG.SPECIAL_COLOR <UID.<SRC.CTAG.ETHEREAL_MOUNT>.TAG.SPECIAL_COLOR>
+	NEW.LINK <SRC.UID>
+	NEW.BOUNCE
+
+	UID.<SRC.CTAG.ETHEREAL_MOUNT>.REMOVE
+
+ON=0 Horse
+	SERV.NEWITEM i_ethereal_horse_tan
+	NEW.COLOR <UID.<SRC.CTAG.ETHEREAL_MOUNT>.COLOR>
+	NEW.TAG.SPECIAL_COLOR <UID.<SRC.CTAG.ETHEREAL_MOUNT>.TAG.SPECIAL_COLOR>
+	NEW.LINK <SRC.UID>
+	NEW.BOUNCE
+
+	UID.<SRC.CTAG.ETHEREAL_MOUNT>.REMOVE
+
+ON=0 Llama
+	SERV.NEWITEM i_ethereal_llama
+	NEW.COLOR <UID.<SRC.CTAG.ETHEREAL_MOUNT>.COLOR>
+	NEW.TAG.SPECIAL_COLOR <UID.<SRC.CTAG.ETHEREAL_MOUNT>.TAG.SPECIAL_COLOR>
+	NEW.LINK <SRC.UID>
+	NEW.BOUNCE
+
+	UID.<SRC.CTAG.ETHEREAL_MOUNT>.REMOVE
+
+ON=0 Zostrich
+	SERV.NEWITEM i_ethereal_ostard_zostrich
+	NEW.COLOR <UID.<SRC.CTAG.ETHEREAL_MOUNT>.COLOR>
+	NEW.TAG.SPECIAL_COLOR <UID.<SRC.CTAG.ETHEREAL_MOUNT>.TAG.SPECIAL_COLOR>
+	NEW.LINK <SRC.UID>
+	NEW.BOUNCE
+
+	UID.<SRC.CTAG.ETHEREAL_MOUNT>.REMOVE
+
+ON=0 Orn
+	SERV.NEWITEM i_ethereal_ostard_forest
+	NEW.COLOR <UID.<SRC.CTAG.ETHEREAL_MOUNT>.COLOR>
+	NEW.TAG.SPECIAL_COLOR <UID.<SRC.CTAG.ETHEREAL_MOUNT>.TAG.SPECIAL_COLOR>
+	NEW.LINK <SRC.UID>
+	NEW.BOUNCE
+
+	UID.<SRC.CTAG.ETHEREAL_MOUNT>.REMOVE
+
+ON=0 Oclock
+	SERV.NEWITEM i_ethereal_ostard_desert
+	NEW.COLOR <UID.<SRC.CTAG.ETHEREAL_MOUNT>.COLOR>
+	NEW.TAG.SPECIAL_COLOR <UID.<SRC.CTAG.ETHEREAL_MOUNT>.TAG.SPECIAL_COLOR>
+	NEW.LINK <SRC.UID>
+	NEW.BOUNCE
+
+	UID.<SRC.CTAG.ETHEREAL_MOUNT>.REMOVE
+
+ON=0 Giant Beetle
+	SERV.NEWITEM i_ethereal_giant_beetle
+	NEW.COLOR <UID.<SRC.CTAG.ETHEREAL_MOUNT>.COLOR>
+	NEW.TAG.SPECIAL_COLOR <UID.<SRC.CTAG.ETHEREAL_MOUNT>.TAG.SPECIAL_COLOR>
+	NEW.LINK <SRC.UID>
+	NEW.BOUNCE
+
+	UID.<SRC.CTAG.ETHEREAL_MOUNT>.REMOVE
+
+[MENU MENU_ETHEREAL_MOUNT]
+Please select the ethereal mount you want to use. Choose wisely because you can't change it !
+
+ON=0 Mustang
+	SERV.NEWITEM i_ethereal_horse_brown_dk
+	NEW.LINK <SRC.UID>
+	NEW.BOUNCE
+
+	UID.<SRC.CTAG.ETHEREAL_MOUNT_DEED>.REMOVE
+
+ON=0 Horse
+	SERV.NEWITEM i_ethereal_horse_tan
+	NEW.LINK <SRC.UID>
+	NEW.BOUNCE
+
+	UID.<SRC.CTAG.ETHEREAL_MOUNT_DEED>.REMOVE
+
+ON=0 Llama
+	SERV.NEWITEM i_ethereal_llama
+	NEW.LINK <SRC.UID>
+	NEW.BOUNCE
+
+	UID.<SRC.CTAG.ETHEREAL_MOUNT_DEED>.REMOVE
+
+ON=0 Zostrich
+	SERV.NEWITEM i_ethereal_ostard_zostrich
+	NEW.LINK <SRC.UID>
+	NEW.BOUNCE
+
+	UID.<SRC.CTAG.ETHEREAL_MOUNT_DEED>.REMOVE
+
+ON=0 Orn
+	SERV.NEWITEM i_ethereal_ostard_forest
+	NEW.LINK <SRC.UID>
+	NEW.BOUNCE
+
+	UID.<SRC.CTAG.ETHEREAL_MOUNT_DEED>.REMOVE
+
+ON=0 Oclock
+	SERV.NEWITEM i_ethereal_ostard_desert
+	NEW.LINK <SRC.UID>
+	NEW.BOUNCE
+
+	UID.<SRC.CTAG.ETHEREAL_MOUNT_DEED>.REMOVE
+
+[ITEMDEF i_ethereal_mount_deed]
+ID=i_deed
+NAME=Ethereal Mount Deed
+VALUE=40
+
+ON=@Create
+	COLOR=460
+	ATTR=attr_newbie
+
+ON=@DClick
+    IF (<TOPOBJ.UID> != <SRC.UID>)
+		SRC.SYSMESSAGE @021 The deed must be in your backpack.
+		RETURN 1
+	ENDIF
+
+	SRC.CTAG.ETHEREAL_MOUNT_DEED <UID>
+	SRC.MENU MENU_ETHEREAL_MOUNT
+
+	RETURN 1
+
+[MENU MENU_ETHEREAL_SPECIAL_MOUNT]
+Please select the ethereal special mount you want to use. Choose wisely because you can't change it !
+
+ON=0 Giant Beetle
+	SERV.NEWITEM i_ethereal_giant_beetle
+	NEW.LINK <SRC.UID>
+	NEW.BOUNCE
+
+	UID.<SRC.CTAG.ETHEREAL_SPECIAL_MOUNT_DEED>.REMOVE
+
+[ITEMDEF i_ethereal_special_mount_deed]
+ID=i_deed
+NAME=Ethereal Special Mount Deed
+VALUE=100
+
+ON=@Create
+	COLOR=490
+	ATTR=attr_newbie
+
+ON=@DClick
+    IF (<TOPOBJ.UID> != <SRC.UID>)
+		SRC.SYSMESSAGE @021 The deed must be in your backpack.
+		RETURN 1
+	ENDIF
+
+	SRC.CTAG.ETHEREAL_SPECIAL_MOUNT_DEED <UID>
+	SRC.MENU MENU_ETHEREAL_SPECIAL_MOUNT
+
+	RETURN 1
+
+[FUNCTION f_reward_players]
+FOR X 0 <EVAL <SERV.ACCOUNTS> - 1>
+    IF (<SERV.ACCOUNT.<dLOCAL.X>.CHARS> > 0)
+    	IF (<SERV.ACCOUNT.<dLOCAL.X>.PLEVEL> == 1)
+	        FOR Y 0 <EVAL <SERV.ACCOUNT.<dLOCAL.X>.CHARS> -1>
+	            REF1 = <SERV.ACCOUNT.<dLOCAL.X>.CHAR.<dLOCAL.Y>>
+	            IF (STRMATCH(2017*,<REF1.ACCOUNT.FIRSTCONNECTDATE>))
+					LOCAL.PvPRank=<FEVAL <REF1.f_RankCalcPvP>>
+					LOCAL.PvMRank=<FEVAL <REF1.f_RankCalcPvM>>
+					IF (<dLOCAL.PvPRank> > 10) || (<dLOCAL.PvMRank> > 10)
+						f_reward_player_char_uid <REF1.UID>,2017
+		            ENDIF
+		        ELSEIF (STRMATCH(2016*,<REF1.ACCOUNT.FIRSTCONNECTDATE>))
+					LOCAL.PvPRank=<FEVAL <REF1.f_RankCalcPvP>>
+					LOCAL.PvMRank=<FEVAL <REF1.f_RankCalcPvM>>
+					IF (<dLOCAL.PvPRank> > 10) || (<dLOCAL.PvMRank> > 10)
+						f_reward_player_char_uid <REF1.UID>,2016
+		            ENDIF
+	            ENDIF
+	        ENDFOR
+	    ENDIF
+    ENDIF
+ENDFOR
+
+[FUNCTION reward_player]
+IF (<ARGV> != 1)
+	SRC.SYSMESSAGE You must inform the player's start year.
+	RETURN 1
+ENDIF
+
+TARGETF f_reward_player <ARGV[0]>
+
+[FUNCTION f_reward_player]
+IF !(<ARGO.ISPLAYER>)
+	SRC.SYSMESSAGE @,,1 This function must be used on players only.
+ELSE
+	f_reward_player_char_uid <ARGO.UID>,<ARGV[0]>
+ENDIF
+
+[FUNCTION f_reward_player_char_uid]
+IF (<ARGV> != 2)
+	RETURN 1
+ENDIF
+
+REF1 <ARGV[0]>
+LOCAL.YEAR <ARGV[1]>
+
+IF !(<REF1.ISPLAYER>)
+	RETURN 1
+ENDIF
+
+IF !(<REF1.ACCOUNT.TAG0.GLOBAL>)
+	RETURN 1
+ENDIF
+
+IF (<dLOCAL.YEAR> != 2016) && (<dLOCAL.YEAR> != 2017)
+	RETURN 1
+ENDIF
+
+IF (<VAR0.ACCOUNT_<REF1.ACCOUNT.TAG.GLOBAL>.RECOVER_2016_REWARD>)
+	RETURN 1
+ENDIF
+
+IF (<REF1.FLAGS> & statf_stone) || (<REF1.ACCOUNT.JAIL>) || (<REF1.ACCOUNT.BLOCK>)
+	RETURN 1
+ENDIF
+
+SERV.LOG Starting to reward account <dLOCAL.YEAR> <REF1.ACCOUNT> - nick <REF1.NAME>.
+
+SERV.NEWITEM i_chest_metal
+NEW.CONT <REF1.FINDLAYER.layer_bankbox.UID>
+NEW.NAME Premio por jogar na TFG desde <dLOCAL.YEAR>
+LOCAL.ITEMS_CONTAINER <NEW.UID>
+
+SERV.NEWITEM i_paragon_cape
+NEW.CONT <LOCAL.ITEMS_CONTAINER>
+
+SERV.NEWITEM i_paragon_half_apron
+NEW.CONT <LOCAL.ITEMS_CONTAINER>
+
+SERV.NEWITEM i_statuette_prisma_paragon
+NEW.CONT <LOCAL.ITEMS_CONTAINER>
+
+IF (<dLOCAL.YEAR> == 2017)
+	SERV.NEWITEM i_bag
+	NEW.NAME Premio extra por jogar em 2017
+	NEW.CONT <LOCAL.ITEMS_CONTAINER>
+	LOCAL.EXTRA_ITEMS_CONTAINER <NEW.UID>
+
+	SERV.NEWITEM i_hides_wyrm
+	NEW.AMOUNT 400
+	NEW.CONT <LOCAL.EXTRA_ITEMS_CONTAINER>
+
+	SERV.NEWITEM i_keg_glb
+	NEW.CONT <LOCAL.EXTRA_ITEMS_CONTAINER>
+
+	SERV.NEWITEM i_keg_gmb
+	NEW.CONT <LOCAL.EXTRA_ITEMS_CONTAINER>
+
+	SERV.NEWITEM i_keg_grf
+	NEW.CONT <LOCAL.EXTRA_ITEMS_CONTAINER>
+ENDIF
+
+VAR.ACCOUNT_<REF1.ACCOUNT.TAG.GLOBAL>.RECOVER_2016_REWARD <LOCAL.YEAR>
+
+SERV.LOG Finished rewarding of account <dLOCAL.YEAR> <REF1.ACCOUNT> - nick <REF1.NAME>.
+
+[FUNCTION f_reward_uo_20_years_players]
+FOR X 0 <EVAL <SERV.ACCOUNTS> - 1>
+    IF (<SERV.ACCOUNT.<dLOCAL.X>.CHARS> > 0)
+    	IF (<SERV.ACCOUNT.<dLOCAL.X>.PLEVEL> == 1)
+	        FOR Y 0 <EVAL <SERV.ACCOUNT.<dLOCAL.X>.CHARS> -1>
+	            REF1 = <SERV.ACCOUNT.<dLOCAL.X>.CHAR.<dLOCAL.Y>>
+	            IF (STRMATCH(2017*,<REF1.ACCOUNT.LASTCONNECTDATE>))
+					f_reward_uo_20_years_player_char_uid <REF1.UID>
+	            ENDIF
+	        ENDFOR
+	    ENDIF
+    ENDIF
+ENDFOR
+
+[ITEMDEF i_uo_20_years_reward_stone]
+id=i_gravestone_18
+name=20 Years Of Ultima Online - Reward Stone
+TYPE=t_normal
+
+ON=@CREATE
+ATTR 010
+COLOR=0a23
+
+ON=@DCLICK
+IF (<VAR0.ACCOUNT_<SRC.ACCOUNT.TAG.GLOBAL>.UO_20_YEARS_REWARD>)
+	SRC.SYSMESSAGE @,,1 You already collected your reward !
+	RETURN 1
+ENDIF
+
+SRC.MENU MENU_CONFIRM_20_YEARS_REWARD
+
+RETURN 1
+
+[MENU MENU_CONFIRM_20_YEARS_REWARD]
+You want to collect the reward for this char? It's one time only per global account ! Warning: use your char with the maximum pvm or pvp ranking - you will be able to receive extra prizes with that.
+
+ON=0 Yes
+f_reward_uo_20_years_player_char_uid <SRC.UID>
+
+ON=0 No
+SRC.SYSMESSAGE @,,1 Come back with another char then!
+
+[FUNCTION reward_uo_20_years_player]
+TARGETF f_reward_uo_20_years_player
+
+[FUNCTION f_reward_uo_20_years_player]
+IF !(<ARGO.ISPLAYER>)
+	SRC.SYSMESSAGE @,,1 This function must be used on players only.
+ELSE
+	f_reward_uo_20_years_player_char_uid <ARGO.UID>
+ENDIF
+
+[FUNCTION f_reward_uo_20_years_player_char_uid]
+IF (<ARGV> != 1)
+	RETURN 1
+ENDIF
+
+REF1 <ARGV[0]>
+
+IF !(<REF1.ISPLAYER>)
+	RETURN 1
+ENDIF
+
+IF !(<REF1.ACCOUNT.TAG0.GLOBAL>)
+	RETURN 1
+ENDIF
+
+IF (<VAR0.ACCOUNT_<REF1.ACCOUNT.TAG.GLOBAL>.UO_20_YEARS_REWARD>)
+	RETURN 1
+ENDIF
+
+IF (<REF1.FLAGS> & statf_stone) || (<REF1.ACCOUNT.JAIL>) || (<REF1.ACCOUNT.BLOCK>)
+	RETURN 1
+ENDIF
+
+SERV.LOG Starting to reward - UO 20 years - account <REF1.ACCOUNT> - nick <REF1.NAME>.
+
+REF1.MAGERY 1000
+REF1.HEALING 1000
+REF1.PARRYING 1000
+REF1.ANATOMY 1000
+REF1.ARCHERY 1000
+REF1.FENCING 1000
+REF1.MACEFIGHTING 1000
+REF1.SWORDSMANSHIP 1000
+
+SERV.NEWITEM i_chest_metal
+NEW.CONT <REF1.FINDLAYER.layer_bankbox.UID>
+NEW.NAME Brindes - 20 anos de UO
+LOCAL.ITEMS_CONTAINER <NEW.UID>
+
+SERV.NEWITEM i_spellbook
+NEW.MORE1 0ffffffff
+NEW.MORE2 0ffffffff
+NEW.CONT <LOCAL.ITEMS_CONTAINER>
+
+LOCAL.PvPRank=<FEVAL <REF1.f_RankCalcPvP>>
+LOCAL.PvMRank=<FEVAL <REF1.f_RankCalcPvM>>
+
+// only good players
+IF (<dLOCAL.PvPRank> >= 10) || (<dLOCAL.PvMRank> >= 10)
+	SERV.LOG Extra reward - UO 20 years - of account <REF1.ACCOUNT> - nick <REF1.NAME>.
+
+	SERV.NEWITEM i_ethereal_mount_deed
+	NEW.LINK <REF1.UID>
+	NEW.CONT <LOCAL.ITEMS_CONTAINER>
+
+	tfg_vip_addcoins <REF1.ACCOUNT.TAG0.GLOBAL>,<EVAL <DEF.BONUS_EVENT_VIP_COINS> * 2>,<REF1.UID>,"Evento de Bonus"
+
+	REF1.TAG0.EVENTPOINTS += <DEF.BONUS_EVENT_EVENTPOINTS>
+
+	REF1.SYSMESSAGE @,,1 Congratulations ! You received a full spellbook, GM on Magery/Healing/Parrying/Anatomy/Archery/Fencing/Macefighting/Swordsmanship, an ethereal mount deed, <EVAL <DEF.BONUS_EVENT_VIP_COINS> * 2> TFG VIP Coins and <DDEF.BONUS_EVENT_EVENTPOINTS> event points !
+ELSE
+	REF1.SYSMESSAGE @,,1 Congratulations ! You received a full spellbook and GM on Magery/Healing/Parrying/Anatomy/Archery/Fencing/Macefighting/Swordsmanship !
+
+	IF (STRMATCH(2016*,<REF1.ACCOUNT.FIRSTCONNECTDATE>))
+		SERV.LOG Player from 2016 - UO 20 years - award of vip coins - account <REF1.ACCOUNT> - nick <REF1.NAME>.
+		tfg_vip_addcoins <REF1.ACCOUNT.TAG0.GLOBAL>,<DEF.BONUS_EVENT_VIP_COINS>,<REF1.UID>,"Evento de Bonus"
+		REF1.SYSMESSAGE @,,1 Congratulations ! You also received <DDEF.BONUS_EVENT_VIP_COINS> TFG VIP Coins!
+	ENDIF
+ENDIF
+
+VAR.ACCOUNT_<REF1.ACCOUNT.TAG.GLOBAL>.UO_20_YEARS_REWARD 1
+
+SERV.LOG Finished rewarding - UO 20 years - of account <REF1.ACCOUNT> - nick <REF1.NAME>.
+
+[ITEMDEF i_christmas_2017_gift]
+id=i_gift_box
+name=Christmas 2017 - Gift
+TYPE=t_normal
+
+ON=@CREATE
+ATTR 010
+COLOR=079c
+
+ON=@DCLICK
+IF (<VAR0.ACCOUNT_<SRC.ACCOUNT.TAG.GLOBAL>.CHRISTMAS_2017_REWARD>)
+	SRC.SYSMESSAGE @,,1 You already collected your reward !
+	RETURN 1
+ENDIF
+
+LOCAL.PvPRank=<FEVAL <SRC.f_RankCalcPvP>>
+LOCAL.PvMRank=<FEVAL <SRC.f_RankCalcPvM>>
+
+LOCAL.DAY_FIRST_CONNECT <STRSUB 8 2 <SRC.ACCOUNT.FIRSTCONNECTDATE>>
+LOCAL.MONTH_FIRST_CONNECT <STRSUB 5 2 <SRC.ACCOUNT.FIRSTCONNECTDATE>>
+LOCAL.YEAR_FIRST_CONNECT <STRSUB 0 4 <SRC.ACCOUNT.FIRSTCONNECTDATE>>
+
+IF (<DLOCAL.YEAR_FIRST_CONNECT> > 2017) || ((<DLOCAL.MONTH_FIRST_CONNECT> == 12) && (<DLOCAL.DAY_FIRST_CONNECT> >= 25))
+	SRC.SYSMESSAGE @,,1 Your account should've been created before Christmas !
+ENDIF
+
+IF (<dLOCAL.PvPRank> < 10) && (<dLOCAL.PvMRank> < 10)
+	SRC.SYSMESSAGE @,,1 You must have PvP or PvM level of 10 or more !
+ENDIF
+
+SRC.MENU MENU_CONFIRM_CHRISTMAS_2017_REWARD
+
+RETURN 1
+
+[MENU MENU_CONFIRM_CHRISTMAS_2017_REWARD]
+You want to collect the reward for this char? It's one time only per global account !
+
+ON=0 Yes
+f_reward_christmas_2017_player_char_uid <SRC.UID>
+
+ON=0 No
+SRC.SYSMESSAGE @,,1 Come back with another char then!
+
+[FUNCTION reward_christmas_2017_player]
+TARGETF f_reward_christmas_2017_player
+
+[FUNCTION f_reward_christmas_2017_player]
+IF !(<ARGO.ISPLAYER>)
+	SRC.SYSMESSAGE @,,1 This function must be used on players only.
+ELSE
+	f_reward_christmas_2017_player_char_uid <ARGO.UID>
+ENDIF
+
+[FUNCTION f_reward_christmas_2017_player_char_uid]
+IF (<ARGV> != 1)
+	RETURN 1
+ENDIF
+
+REF1 <ARGV[0]>
+
+IF !(<REF1.ISPLAYER>)
+	RETURN 1
+ENDIF
+
+IF !(<REF1.ACCOUNT.TAG0.GLOBAL>)
+	RETURN 1
+ENDIF
+
+IF (<VAR0.ACCOUNT_<REF1.ACCOUNT.TAG.GLOBAL>.CHRISTMAS_2017_REWARD>)
+	RETURN 1
+ENDIF
+
+IF (<REF1.FLAGS> & statf_stone) || (<REF1.ACCOUNT.JAIL>) || (<REF1.ACCOUNT.BLOCK>)
+	RETURN 1
+ENDIF
+
+SERV.LOG Starting to reward - Christmas 2017 - account <REF1.ACCOUNT> - nick <REF1.NAME>.
+
+REF1.MAGERY 1000
+REF1.HEALING 1000
+REF1.PARRYING 1000
+REF1.ANATOMY 1000
+REF1.ARCHERY 1000
+REF1.FENCING 1000
+REF1.MACEFIGHTING 1000
+REF1.SWORDSMANSHIP 1000
+
+SERV.NEWITEM i_chest_metal
+NEW.COLOR 07b2
+NEW.CONT <REF1.FINDLAYER.layer_bankbox.UID>
+NEW.NAME Brindes - Natal 2017
+LOCAL.ITEMS_CONTAINER <NEW.UID>
+
+SERV.NEWDUPE 040117367
+NEW.COLOR color_o_bloodrock
+NEW.NAME Loot Blood Rock - Natal 2017
+NEW.CONT <LOCAL.ITEMS_CONTAINER>
+
+SERV.NEWDUPE 040117367
+NEW.COLOR color_o_bloodrock
+NEW.NAME Loot Blood Rock - Natal 2017
+NEW.CONT <LOCAL.ITEMS_CONTAINER>
+
+SERV.NEWITEM <EVAL {i_panotrue_w 1 i_panotrue_b 1 i_panotrue_g 1}>
+NEW.CONT <LOCAL.ITEMS_CONTAINER>
+
+SERV.NEWITEM <EVAL i_wreath>
+NEW.COLOR 079c
+NEW.CONT <LOCAL.ITEMS_CONTAINER>
+
+SERV.NEWITEM <EVAL i_wreath>
+NEW.COLOR 079c
+NEW.CONT <LOCAL.ITEMS_CONTAINER>
+
+REF1.SYSMESSAGE @,,1 Congratulations ! You received two wreaths, two Blood Rock loots, one true cloth and GM on Magery/Healing/Parrying/Anatomy/Archery/Fencing/Macefighting/Swordsmanship !
+
+VAR.ACCOUNT_<REF1.ACCOUNT.TAG.GLOBAL>.CHRISTMAS_2017_REWARD 1
+
+SERV.LOG Finished rewarding - Christmas 2017 - of account <REF1.ACCOUNT> - nick <REF1.NAME>.
+
+[FUNCTION fix_awards]
+FORINSTANCES i_paragon_half_apron
+	NAME=Paragon Half Apron
+	TYPE=t_clothing
+ENDFOR
+
+FORINSTANCES i_paragon_cape
+	NAME=Paragon Cape
+	TYPE=t_clothing
+ENDFOR
+
+[EOF]

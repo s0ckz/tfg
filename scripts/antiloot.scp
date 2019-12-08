@@ -1,0 +1,47 @@
+[EVENTS e_antiloot]
+
+[ITEMDEF i_lottimer_memory]
+ID=i_memory
+TYPE=t_eq_script
+NAME=i_lottimer_memory
+
+on=@create 
+timer=1
+
+on=@timer 
+remove 
+return 0 
+
+///////////////////////////////////////////////////AUTO LOOT CORPO/////////////////////////////////////////////////////////////
+
+IF (<SRC.ACT.CONT.TYPE>==t_corpse)
+  IF (<SRC.REGION.FLAGS> == 018880) && (<SRC.ACT.CONT.LINK>!=<SRC.UID>) && ((<SRC.ACT.CONT.AMOUNT> = 400) || (<SRC.ACT.CONT.AMOUNT> = 401))
+    SRC.SYSMESSAGE @0481@ Voce naum pode lotear nesse lugar.
+    return 1
+  ENDIF
+  src.newitem i_lottimer_memory
+  src.act.equip
+  IF (<src.rescount i_lottimer_memory> > 1)
+        SRC.SYSMESSAGE @07a1 Voce nao pode mover este item tao rapido.
+        src.newitem i_lottimer_memory
+        src.act.timer 2
+        src.act.equip
+    return 1
+  ENDIF
+  RETURN 0
+ENDIF
+
+
+
+///////////////////////////////////////fix autolot chao//////////////////////////////////////////////
+
+  src.newitem i_lottimer_memory
+  src.act.equip
+  IF (<src.rescount i_lottimer_memory> > 1)
+        SRC.SYSMESSAGE Voce nao pode mover este item tao rapido.
+        src.newitem i_lottimer_memory
+        src.act.timer 1
+        src.act.equip
+    return 1
+  ENDIF
+

@@ -1,0 +1,564 @@
+﻿
+												//////////////////////////////////////////////
+												///											//
+												///											//
+												///											//
+												///											//
+												///			      PARTE DOIS 				//
+												///											//
+												///											//
+												//////////////////////////////////////////////
+
+
+// Britsh Ally -- 0000001
+// Blackthrone Ally ---- 0000002
+
+//////////////////////////////////////
+//
+// 0- Crieurs de Commerce Room p/ British e Blackthrone
+//
+//
+////////////////////////////////////////
+
+
+////////////////////////////////////////
+//
+//
+//
+// 1- Etapa 1: Britsh e Blackthrone
+//
+//
+//
+////////////////////////////////////////
+
+[SPEECH spk_british_quest_joias]
+ON=*jiuai*
+ON=*Tut*
+ON=*liattud*
+ON=*mik*
+ON=*jiuai*
+ON=*Kriiink!*
+ON=*Ilawi*
+ON=*Shius*
+ON=*Hinuruwa*
+ON=*Bicha*
+ON=*Hya*
+ON=*Pirate*
+ON=*Dunlk*
+ON=*Luk*
+ON=*Scroll*
+ON=*duka*
+ON=*Partiruk*
+ON=*awai*
+ON=*lulusand*
+ON=*fund*
+ON=*Ig hanic, hanic bik suni miwawa*
+if (<src.tag0.lord_ally> & 0000001)
+	message "@,,1 Estranhas palavras. Lembram-me ao mesmo tempo linguagem Drow e os dialetos das ilhas do nordeste!"
+	message "@,,1 Se quiser saber o que significam, va à ilha de Mordamir ! Na sua pequena mata ainda vivem alguns magos que falam todos, velhos e novos, idiomas de Britannia !"
+else
+	message "@,,1 Somente ajudarei meus aliados!"
+endif
+return 1
+
+ON=*
+if (<src.kills> > 0)
+	message "@,,1 Saia de meu reino, assassino ! Guardas, peguem-no!"
+	src.timerf 1,f_expulsarbritain
+elif (<src.karma> < 0)
+	message "@,,1 Sinto que tens karma muito baixo. Não tenho certeza se podes ser leal a mim!"
+elif (<src.tag0.lord_ally> & 0000001)
+	message "@,,1 Bravo guerreiro, então deseja ajudar nosso reino? Toda ajuda é agora bem-vinda!"
+	message "@,,1 Roubaram as joias da coroa, nossas jóias mais preciosas e poderosas, alguns dos meus aliados dizem que a filha de Tresshorn esta por trás disso."
+	message "@,,1 Ajude-nos e será bem recompensado! Um andarilho viu a fuga. Ele vive no belo caminho que liga Britain a Yew. Empunhe a espada do reino para que ele saiba que estás comigo e te contar toda a verdade. Conto com sua lealdade para me contar tudo o que ver!"
+else
+	message "@,,1 Você parece um homem bom, deseja se aliar a mim e a meu reino?"
+	src.dialogclose d_blackthrone_confirm
+	src.dialogclose d_british_confirm
+	src.dialog d_british_confirm
+endif
+return 1
+
+
+[SPEECH spk_blackthrone_quest_joias]
+ON=*jiuai*
+ON=*Tut*
+ON=*liattud*
+ON=*mik*
+ON=*jiuai*
+ON=*Kriiink!*
+ON=*Ilawi*
+ON=*Shius*
+ON=*Hinuruwa*
+ON=*Bicha*
+ON=*Hya*
+ON=*Pirate*
+ON=*Dunlk*
+ON=*Luk*
+ON=*Scroll*
+ON=*duka*
+ON=*Partiruk*
+ON=*awai*
+ON=*lulusand*
+ON=*fund*
+ON=*Ig hanic, hanic bik suni miwawa*
+if (<src.tag0.lord_ally> & 0000002)
+	message "@,,1 O que esta dizendo, ser desprezível? Isto parece uma mistura da linguagem Drow e do dialeto das ilhas do leste!"
+	message "@,,1 Se quer falar assim, vá à ilha de Mordamir ! Naquela pequena mata ainda vivem alguns idiotas que como ele falam esses idiomas mortos !"
+else
+	message "@,,1 Somente ajudarei meus aliados!"
+endif
+return 1
+
+ON=*
+if (<src.tag0.lord_ally> & 0000002)
+	message "@,,1 Entao, você deseja ajudar seu mestre?"
+	message "@,,1 Soube que roubaram as joias da coroa de Britain, alguns de meus espiões dizem que a filha de Tresshorn esta por trás disso."
+	message "@,,1 Esta coroa sempre teve e tem que ser minha. Vá agora procurá-la, inutil servo. Um andarilho viu a fuga. Ele esta no caminho que liga Britain a Yew. Empunhe minha espada, ele te temerá e contará toda a verdade. Seja leal e me informe de tudo o que observar."
+	message "@,,1 Nao esqueças: agora eu sou seu lider."
+else
+	message "@,,1 Deseja se aliar ao grande soberano e a seu reino? Está disposto a negar Lord British?"
+	src.dialogclose d_blackthrone_confirm
+	src.dialogclose d_british_confirm
+	src.dialog d_blackthrone_confirm
+endif
+return 1
+
+//
+[DIALOG d_british_confirm]
+250,250
+page 0
+resizepic 6 8 3500 276 192
+
+page 1
+dhtmlgump 33 24 212 24 0 0 <def.center><def.u>Aliar-se a British
+dhtmlgump 33 54 212 24 0 0 <def.center> Você tem certeza?
+dhtmlgump 20 84 250 70 1 0 <def.center><def.bfont_red>Isso convocará a raiva de Blackthrone e dos assassinos contra ti. Voce nao podera mudar isso por um certo tempo.
+dhtmlgump 28 162 199 24 0 0 <def.div_right><def.Bfont_red><def.u>EU CONFIRMO MINHA LEALDADE<def.div_end>
+button 230 160 4023 4024 1 0 1
+
+[DIALOG d_british_confirm BUTTON]
+ON=0
+SRC.SYSMESSAGE "@,,1 Você não confirmou sua lealdade à British."
+return 1
+
+ON=1
+if (<src.tag0.lord_ally> & 0000001)
+	src.sysmessage "@,,1 Você já é aliado de Lord British!"
+elif (<src.tag0.lord_ally> & 0000002)
+	src.sysmessage "@,,1 Você já é aliado de outro Lord!"
+else
+	SRC.SYSMESSAGE "@,,1 Você tornou-se aliado de Lord British. Ele te condecorou com a espada de guerreiro do reino de Britannia, guarde-a bem."
+	SRC.TAG0.lord_ally |= 0000001
+	src.events +e_british_ally
+	src.karma += 1000
+	src.sysmessage "@,,1 Voce ganhou uma certa quantidade de karma!"
+	message "@,,1 Bravo guerreiro, então deseja ajudar nosso reino? Toda ajuda é agora bem-vinda!"
+	message "@,,1 Roubaram as joias da coroa, nossas jóias mais preciosas e poderosas, alguns dos meus aliados dizem que a filha de Tresshorn esta por trás disso."
+	message "@,,1 Ajude-nos e será bem recompensado! Um andarilho viu o ladrão escapar no belo caminho que liga Britain a Yew. Empunhe a espada do reino para que ele saiba que estás comigo e te contar toda a verdade. Conto com sua lealdade para me contar tudo o que ver!"
+	serv.newitem i_sword_british_ally
+	new.link <src.uid>
+	new.cont <src.findlayer.21>
+	serv.b @91 <src.name> se aliou a British!
+endif
+return 1
+
+//
+
+[DIALOG d_blackthrone_confirm]
+250,250
+page 0
+resizepic 6 8 3500 276 192
+
+page 1
+dhtmlgump 33 24 212 24 0 0 <def.center><def.u>Aliar-se a Blackthrone
+dhtmlgump 33 54 212 24 0 0 <def.center> Você tem certeza?
+dhtmlgump 20 84 250 70 1 0 <def.center><def.bfont_red>Isso diminuirá muito seu karma, e serás visto como criminoso face aos guardas leais a Britsh! Voce nao podera mudar isso por um certo tempo.
+dhtmlgump 28 162 199 24 0 0 <def.div_right><def.Bfont_red><def.u>EU CONFIRMO MINHA LEALDADE<def.div_end>
+button 230 160 4023 4024 1 0 1
+
+[DIALOG d_blackthrone_confirm BUTTON]
+ON=0
+SRC.SYSMESSAGE "@,,1 Você não confirmou sua lealdade à Blackthrone."
+return 1
+
+ON=1
+if (<src.tag0.lord_ally> & 0000002)
+	src.sysmessage "@,,1 Você já é aliado de Lord Blackthrone!"
+elif (<src.tag0.lord_ally> & 0000001)
+	src.sysmessage "@,,1 Você já é aliado de outro Lord!"
+else
+	SRC.SYSMESSAGE "@,,1 Você tornou-se aliado de Lord Blackthrone. Ele te ofereceu uma espada, aquela que ele oferece aos seus aliados mais fracos. Uma magia foi joga-da sobre essa espada e somente você pode usá-la."
+	SRC.TAG0.lord_ally |= 0000002
+	src.events +e_blackthrone_ally
+	src.karma = -10000
+	src.sysmessage "@,,1 Você perdeu uma enorme quantidade de karma."
+	message "@,,1 Entao, você deseja ajudar seu mestre?"
+	message "@,,1 Soube que roubaram as joias da coroa de Britain, alguns de meus espiões dizem que a filha de Tresshorn esta por trás disso."
+	message "@,,1 Esta coroa sempre teve e tem que ser minha. Vá agora procurá-la, inutil servo. Um andarilho viu o ladrão escapar no caminha que liga Britain a Yew. Empunhe minha espada, ele te temerá e contará toda a verdade. Seja leal e me informe de tudo o que observar
+	message "@,,1 Nao esqueças: agora eu sou seu lider."
+	serv.newitem i_sword_blackthorne_ally
+	new.link <src.uid>
+	new.cont <src.findlayer.21>
+	serv.b @32 <src.name> se aliou a Blackthorne!
+endif
+return 1
+
+//
+
+[EVENTS e_british_ally]
+//ON=@CLICK
+//message @91,,1 [British's Ally]
+
+[EVENTS e_blackthrone_ally]
+//ON=@CLICK
+//message @32,,1 [Blackthrone's Ally]
+
+//
+
+[EVENTS e_quest_british]
+On=@ReceiveItem
+if (<argo.baseid>==i_quest_joias_perg_brit)
+	message "@,,1 Estranhas palavras. Lembram-me ao mesmo tempo linguagem Drow e os dialetos das ilhas do nordeste!"
+	message "@,,1 Se quiser saber o que significam, va à ilha de Mordamir ! Na sua pequena mata ainda vivem alguns magos que falam todos, velhos e novos, idiomas de Britannia !"
+endif
+return 1
+
+[EVENTS e_quest_blackthrone]
+On=@ReceiveItem
+if (<argo.baseid>==i_quest_joias_perg_black)
+	message "@,,1 O que esta escrito, ser desprezível? Isto parece uma mistura da linguagem Drow e do dialeto das ilhas do leste!"
+	message "@,,1 Se quer falar assim, vá à ilha de Mordamir ! Naquela pequena mata ainda vivem alguns idiotas que como ele falam esses idiomas mortos !"
+endif
+return 1
+
+//
+
+[FUNCTION f_expulsarbritain]
+serv.newnpc c_guard
+new.p 1390,1750
+ref1 = <new>
+ref1.timerf 12,remove
+go 1380,1750
+updatex
+ref1.timerf 1,say @,,1 <name> foi expulso de Britain! Nao agradas a Lord British, assassino!
+return 1
+
+//////////////////////////////////////
+//
+// 2 - Etapa 2 : O Andarilho
+//
+///////////////////////////////////////
+
+[SPEECH spk_andarilho_quest_joias]
+
+ON=*
+if (<src.findlayer(1).baseid> == i_sword_british_ally) && (<src.tag0.lord_ally> & 0000001)
+	if !(<src.findid.i_quest_joias_perg_brit>) && !(<src.findid.i_quest_joias_perg_black>)
+		message "@31,,1 *<name> esta escrevendo alguma coisa em um pergaminho*
+		src.timerf 1,f_pergbrit
+	else
+		src.sysmessage "@,,1 Voce ja recebeu um pergaminho de <name>!"
+	endif
+elif (<src.findlayer(1).baseid> == i_sword_blackthorne_ally) && (<src.tag0.lord_ally> & 0000002)
+	if !(<src.findid.i_quest_joias_perg_brit>) && !(<src.findid.i_quest_joias_perg_black>)
+		message "@31,,1 *<name> esta escrevendo alguma coisa em um pergaminho*
+		src.timerf 1,f_pergblack
+	else
+		src.sysmessage "@,,1 Voce ja recebeu um pergaminho de <name>!"
+	endif
+else
+	message "@,,1 Ig hanic, hanic bik suni miwawa."
+endif
+return 1
+
+[FUNCTION f_pergblack]
+serv.newitem i_quest_joias_perg_black
+new.link = <src.uid>
+new.cont = <src.findlayer(21).uid>
+new.updatex
+src.sysmessage @,,1 <name> colocou um pergaminho em tua mochila !
+serv.b @91 <src.name> resolveu a segunda etapa da quest!
+return 1
+
+[FUNCTION f_pergbrit]
+serv.newitem i_quest_joias_perg_brit
+new.link = <src.uid>
+new.cont = <src.findlayer(21).uid>
+new.updatex
+src.sysmessage @,,1 <name> colocou um pergaminho em tua mochila !
+serv.b @91 <src.name> resolveu a segunda etapa da quest!
+return 1
+
+////////////////////////////////////
+//
+// 3 - A carta na praia
+//
+//
+///////////////////////////////////
+
+
+
+/////////////////////////////////////
+//
+// 4 - O mago interprete
+//
+//////////////////////////////////////
+
+[SPEECH spk_white_wizard]
+ON=*Ig hanic, hanicbik suni miwawa*
+if (<src.tag0.lord_ally> & 0000001)
+	message "@,,1 Oh! Caminho, e caminhando torno-me caminho!"
+	message "@,,1 Um belo proverbio antigo, lema dos velhos andarilhos."
+else
+	message "@,,1 Posso sentir que te aliastes ao pior de todos, Blackthrone! Saia de perto de mim !"
+endif
+return 1
+
+ON=*jiuai*
+ON=*Tut*
+ON=*liattud*
+ON=*mik*
+ON=*jiuai*
+ON=*Kriiink!*
+ON=*Ilawi*
+ON=*Shius*
+ON=*Hinuruwa*
+ON=*Bicha*
+ON=*Hya*
+ON=*Pirate*
+ON=*Dunlk*
+ON=*Luk*
+ON=*Scroll*
+ON=*duka*
+ON=*Partiruk*
+ON=*awai*
+ON=*lulusand*
+ON=*fund*
+if (<src.tag0.lord_ally> & 0000001)
+	message "@,,1 Estas palavras me parecem conhecidas. Se você possuir alguma mensagem escrita, me entregue em um pergaminho e tentarei decifra-la para ti, nobre guerreiro."
+else
+	message "@,,1 Posso sentir que te aliastes ao pior de todos, Blackthrone! Saia de perto de mim !"
+endif
+return 1
+
+ON=*
+if (<src.tag0.lord_ally> & 0000001)
+	message "@,,1 Dedico minha vida a pesquisa de idiomas antigos e palavras de poder! Duduk sun Ig!"
+else
+	message "@,,1 Posso sentir que te aliastes ao pior de todos, Blackthrone! Saia de perto de mim !"
+endif
+return 1
+
+
+
+[SPEECH spk_black_wizard]
+
+ON=*Ig hanic, hanicbik suni miwawa*
+if (<src.tag0.lord_ally> & 0000002)
+	message "@,,1 Oh! Caminho, e caminhando torno-me caminho!"
+	message "@,,1 Um belo proverbio antigo, lema dos velhos andarilhos."
+else
+	message "@,,1 Posso sentir que te aliastes ao mais falso e autoritário, British! Saia daqui !"
+endif
+return 1
+
+ON=*jiuai*
+ON=*Tut*
+ON=*liattud*
+ON=*mik*
+ON=*jiuai*
+ON=*Kriiink!*
+ON=*Ilawi*
+ON=*Shius*
+ON=*Hinuruwa*
+ON=*Bicha*
+ON=*Hya*
+ON=*Pirate*
+ON=*Dunlk*
+ON=*Luk*
+ON=*Scroll*
+ON=*duka*
+ON=*Partiruk*
+ON=*awai*
+ON=*lulusand*
+ON=*fund*
+if (<src.tag0.lord_ally> & 0000002)
+	message "@,,1 Estas palavras me parecem conhecidas. Se você possuir alguma mensagem escrita, me entregue em um pergaminho e tentarei decifra-la para ti, nobre guerreiro."
+else
+	message "@,,1 Posso sentir que te aliastes ao mais falso e autoritário, British! Saia daqui !"
+endif
+return 1
+
+
+ON=*
+if (<src.tag0.lord_ally> & 0000002)
+	message "@,,1 Dedico minha vida a pesquisa de idiomas antigos e palavras de poder! Duduk sun Ig!"
+else
+	message "@,,1 Posso sentir que te aliastes ao mais falso e autoritário, British! Saia daqui !"
+endif
+return 1
+
+
+[EVENTS e_quest_mago_decifreur]
+on=@click
+message @,,1 [Mago]
+
+On=@ReceiveItem
+if (<src.tag0.lord_ally> & <tag0.enemy>)
+	message "@,,1 O amigo do meu inimigo não é meu amigo!"
+	return 1
+endif
+if (<argo.baseid>==i_quest_joias_perg_black) || (<argo.baseid>==i_quest_joias_perg_brit)
+	if (<tag0.<src.uid>> >= 7)
+		if (<argo.baseid>==i_quest_joias_perg_black)
+			message "@,,1 Aqui esta tudo o que consegui compreender desta mistura de linguagens:"
+			message "@,,1 "Um guerreiro de Lord Blackthrone! Medo ! Ele corria arrastando a joalheira até o barco, quando deixou cair um pergaminho, que afundou na areia fofa.""
+			serv.b @91 <src.name> resolveu a terceira etapa da quest!
+			return 1
+		elif (<argo.baseid>==i_quest_joias_perg_brit)
+			message "@,,1 Aqui esta tudo o que consegui compreender desta mistura de linguagens:"
+			message "@,,1 "Um guerreiro de Lord British! Todo o meu respeito ! Ele corria arrastando a joalheira até o barco, quando deixou cair um pergaminho, que afundou na areia fofa.""
+			serv.b @91 <src.name> resolveu a terceira etapa da quest!
+			return 1
+		endif
+	elif (<tag0.<src.uid>>)
+		local.rest = <eval 7 - <tag0.<src.uid>>>
+		message "@,,1 Que mensagem interessante e ao mesmo tempo complicada!"
+		message "@,,1 Se voce me ajudar, te ajudarei com a resposta ! Traga-me mais <dlocal.rest> gatos negros para completar os sete. Voce pode encontrá-los perto de bruxos e feiticeiras."
+	else
+		message "@,,1 Que mensagem interessante e ao mesmo tempo complicada!"
+		message "@,,1 Se voce me ajudar, te ajudarei com a resposta ! Sonho em ter sete gatos negros ! Traga-me os sete gatos negros. Voce pode encontrá-los perto de bruxos e feiticeiras."
+	endif
+endif
+if (<argo.baseid>==i_pet_cat) && (<argo.more1>==c_a_black_cat)
+	tag0.<src.uid> += 1
+	local.rest = <eval 7 - <tag0.<src.uid>>>
+	if (<tag0.<src.uid>> >= 7)
+		message "@,,1 Uau! Tenho meus sete gatos! Terei prazer em te ajudar. Se estiver com uma mensagem para traduzir consigo, entregue-me o pergaminho que fa-lo-ei imediatamente !"
+		argo.remove
+		//return 0
+	else
+		message "@,,1 Obrigado! Traga-me mais <dlocal.rest> gatos negros e te ajudarei com o que precisar!"
+		argo.remove
+		//return 0
+	endif
+endif
+if !<local.non>
+	//return 1
+endif
+
+//////////////////////////////////////
+//
+//
+// 5 - A cidade pirata e os piratas
+//
+//
+//
+///////////////////////////////////////
+
+[SPEECH spk_pirate_chef]
+
+ON=*
+message "@,,1 Saia já de nossa ilha ou será jogado ao mar e devorado por seus monstros!"
+if (<src.tag0.piratasmortos> >= 100) && <src.tag0.lord_ally>
+	message "@,,1 Voce provou seu valor ! Aqui esta a chave de Jack!"
+	serv.newitem i_chave_cabana_quest_joias
+	new.cont = <src.findlayer.21>
+	src.tag0.piratasmortos =
+	serv.b @91 <src.name> resolveu a quinta etapa da quest!
+	return 1
+endif
+if (<src.tag0.lord_ally> & 0000001)
+	message "@,,1 Parece que foi Britsh que te mandou! Seus dias de paz acabarão sob o império de nossa líder, àquela que tem olhos inondados com o vermelho do ódio, aquela que governa sobre o covil das serpentes."
+	message "@,,1 Um ser fraco e desprezível como você não poderá ajudá-lo. Mas se provar seu valor matando 100 de meus soldados usando a espada de seu Lord sem morrer para nosso exercito, te darei o que procura ! Estou contando, só para ver quando você irá cair !"
+elif (<src.tag0.lord_ally> & 0000002)
+	message "@,,1 Parece que foi Blackthrone que te mandou! Nossa lealdade a ele acabou! Agora só seguimos àquela que tem olhos inondados com o vermelho do ódio, aquela que governa sobre o covil das serpentes."
+	message "@,,1 Um ser fraco e desprezível como você não poderá ajudá-lo. Mas se provar seu valor matando 100 de meus soldados usando a espada de seu Lord sem morrer para nosso exercito, te darei o que procura ! Estou contando, só para ver quando você irá cair !"
+endif
+return 1
+
+////////////////////////////////////
+//
+//
+// 6 - A cabana e a ourives presa, o barco e o diário
+//
+//
+//
+////////////////////////////////////
+
+[SPEECH spk_jewler_quest]
+ON=*
+if !<tag0.aberto>
+	message "@,,1 Um guerreiro! Por favor, me ajude, me tire daqui ! O terrível homem que me sequestrou disse ao outro pirata que deixaria a chave daqui com a lider dos piratas, que esta a poucas milhas maritimas desta ilha !"
+else
+	if (<tag0.libertador> == <src.uid>)
+		message "@,,1 Nunca poderei te agradecer suficientemente, estou livre! Nos chegamos aqui num destes barcos, mas logo depois de me trancar, aquele homem rude, vestido todo de verde e com cabelo moicano, partiu em direcao ao sudeste da ilha com um outro barco!"
+	else
+		ref1 = <tag.libertador>
+		message "@,,1 Estou livre! <ref1.name> me salvou! Nos chegamos aqui num destes barcos, mas logo depois de me trancar, aquele homem rude, vestido todo de verde e com cabelo moicano, partiu em direcao ao sudeste da ilha com um outro barco!"
+	endif
+endif
+return 1
+
+////////////////////////////////////
+//
+//
+// 7 - O disfarçado em SH e as jóias do rei
+//
+//
+////////////////////////////////////////
+
+[SPEECH spk_pirate_deguised]
+ON=*flor de lis*
+ON=*flor de lirio*
+ON=*flor de lys*
+ON=*flor de lírio*
+ON=*lirio*
+ON=*lírio*
+if (<src.findlayer(6).baseid>==i_hat_feather)
+	if !<tag0.joias>
+		message "@,,1 Aqui estão as jóias."
+		serv.b @91 <src.name> esta em possessão das joias da coroa!
+		tag.joias = 1
+		tag.uid_contact = <src.uid>
+		serv.newitem tm_crown_jewels
+		new.cont = <src.findlayer.21>
+		new.updatex
+		src.sysmessage "@,,1 Você recebeu as jóias roubadas de British."
+	else
+		ref1 = <tag.uid_contact>
+		message "@,,1 Outro servo de Tresshorn, chamado <ref1.name>, já passou por aqui e me disse o código. Ele esta em possessão das jóias."
+	endif
+endif
+return 1
+
+
+///////////
+//
+/////////
+
+[EVENTS e_quest_joia_inv]
+ON=@GetHit
+dex = 0
+stam = 0
+return 1
+
+//
+//
+
+[TYPEDEF t_anuncio_questt]
+ON=@TIMER
+ref1=0eb3eb
+ref2=0eb156
+ref1.say "@91,,1 Guerreiros Honrados de Britannia! British precisa de sua ajuda para recuperar algo valioso que foi roubado da Capital!"
+ref2.say "@33,,1 Guerreiros de Britannia que reconhecem seu verdadeiro lider, mercenários, Lord Blackthorn convoca-os todos para ajudá-lo a recuperar esses valiosos e poderosos objetos ! Serao bem recompensados! "
+SERV.B @,,1 TFG BroadCast - Esta acontecendo uma QUEST! Enredo em forum.tfg.com.br ou no discord!
+SERV.B @,,1 TFG BroadCast - Para acessar o forum digite .forum.
+TIMER = 60
+
+[TYPEDEF t_plank_jack]
+ON=@DCLICK
+if !<src.findid.i_chave_cabana_quest_joias>
+	src.sysmessage @,,1 Jack trancou bem seu barco.
+endif

@@ -1,0 +1,27 @@
+[FUNCTION isolanaovinc]
+        for h <serv.accounts>
+                local.i=0
+                if !(<serv.account.<eval <local.h> +-1>.chars>)
+					local.ct ++
+					if (<serv.account.<eval <local.h> +-1>.tag0.global>)
+						local.ct2 ++
+					endif
+                elif (<serv.account.<eval <local.h> +-1>.tag0.global>)
+					local.ctglobal ++
+				else
+					local.ctsem ++
+				endif
+        endfor
+		DB.QUERY "SELECT * FROM containgame"
+						for 0 <eval <db.row.numrows> - 1>
+							local.id "<db.row.<dlocal._for>.LoginConta>"
+							if !<serv.account.<local.id>>
+								if !<f_account_verify_index <local.id>
+									s  <local.id> esta no banco e nao esta no jogo.
+								endif
+							elif !<serv.account.<local.id>.tag0.global>
+								s <local.id> esta no banco global e nao esta associada.
+							endif
+						endfor
+		smsg @,,1 <dlocal.ct> contas sem char (das quais <dlocal.ct2> vinculadas, <dlocal.ctglobal> contas vinculadas, <dlocal.ctsem> contas nao vinculadas.
+return 1

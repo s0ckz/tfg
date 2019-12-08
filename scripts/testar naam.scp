@@ -1,0 +1,10 @@
+[function testarnaam]
+f_tester <explode " ",xtimer 2340>
+
+[function f_tester]
+sysmessage @,,1 ARGN 1 : <argn1> ARGV0 <argv[0]>
+sysmessage @,,1 ARGN 2 : <argn2> ARGV1 <argv[1]>
+sysmessage @,,1 ARGN 3 : <argn3> ARGV2 <argv[2]>
+
+[FUNCTION testenaam]
+timer <args>

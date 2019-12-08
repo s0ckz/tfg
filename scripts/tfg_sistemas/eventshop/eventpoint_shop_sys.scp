@@ -1,0 +1,654 @@
+///////////////////////TFG 2017//////////////////////////
+////////////EVENT POINTS SHOP MENU AND DEFS//////////////
+/////////////////////////////////////////////////////////
+
+[defname d_eventpoints_config]
+cost_eps_pvp_1  70
+item_eps_pvp_1  tm_bag_pvp
+cost_eps_pvp_2  50
+item_eps_pvp_2  i_keg_gmb1
+cost_eps_pvp_3  50
+item_eps_pvp_3  i_keg_glb1
+cost_eps_pvp_4  65
+item_eps_pvp_4  i_keg_grf1
+cost_eps_pvp_5  15
+item_eps_pvp_5  i_scroll_flamestrike
+
+cost_eps_pvm_1  300
+item_eps_pvm_1  i_survivor_shield
+cost_eps_pvm_2  50
+item_eps_pvm_2  t_blood_weapon_template
+cost_eps_pvm_3  120
+item_eps_pvm_3  i_lucky_bracelet
+cost_eps_pvm_4  60
+item_eps_pvm_4  i_paragon_tracker
+cost_eps_pvm_5  40
+item_eps_pvm_5  t_silver_weapon_template
+
+cost_eps_misc_1 250
+item_eps_misc_1 i_repair_orb
+cost_eps_misc_2 100
+item_eps_misc_2 i_penis_increase
+cost_eps_misc_3 20
+item_eps_misc_3 i_ticket_russia
+cost_eps_misc_4 100
+item_eps_misc_4 i_panotrue_g
+
+repair_orb_max_charges 10
+
+[function epshop]
+if (<f_is_in_event <src.uid>>)
+    src.sysmessage @,,1 You may not use this in an event.
+    return 1
+endif
+src.dialogclose d_eventps_pvm
+src.dialogclose d_eventps_pvp
+src.dialogclose d_eventps_misc
+src.dialog d_eventps_pvp
+
+// deve ter x cargas
+// usar somente uma vez
+// escudo gasta dependendo do ore.
+// magica dependnedo do nivel de morex...
+[ITEMDEF i_repair_orb]
+NAME=Repair Orb
+ID=i_virtstone_2
+TYPE=t_normal
+// avoid stack
+CAN=0
+
+ON=@Create
+    COLOR=1990
+    MORE1 <DEF.repair_orb_max_charges>
+
+ON=@DropOn_Item
+    IF (<ARGO.BASEID> == <BASEID>)
+        ARGO.MORE1 += <MORE1>
+        SRC.SYSMESSAGE @,,1 You merged both repair orbs.
+        REMOVE
+        RETURN 1
+    ENDIF
+
+on=@Click
+    MESSAGE @84,,1 [<DMORE1> charges]
+    MESSAGE @84,,1 <NAME>
+    RETURN 1
+
+on=@dclick
+    IF !(<SRC.ISGM>) && (<TOPOBJ> != <SRC.UID>)
+        SRC.SYSMESSAGE @,,1 This item must be inside your backpack!
+        RETURN 1
+    ENDIF
+
+    IF (<MORE1> <= 0)
+        SRC.SYSMESSAGE @,,1 This repair orb is out of charges.
+        REMOVE
+        RETURN 1
+    ENDIF
+
+    SRC.SYSMESSAGE @,,1 Select the shield or the magic weapon that you want to repair.
+    SRC.TARGETF f_repair_orb <UID>
+
+    RETURN 1
+
+[FUNCTION f_repair_orb]
+IF (<ARGV> != 1)
+    RETURN 1
+ENDIF
+
+REF1 <ARGV[0]>
+
+IF !(<SRC.ISGM>) && (<ARGO.TOPOBJ> != <SRC.UID>)
+    SRC.SYSMESSAGE @,,1 The item to be repaired must be inside your backpack!
+    RETURN 1
+ENDIF
+
+IF (!(STRMATCH(*t_weapon*, <ARGO.TYPE>)) || (<ARGO.MOREY> <= 0)) && (<ARGO.TYPE> != t_shield)
+    SRC.SYSMESSAGE @,,1 You must select a shield or a magic weapon to repair.
+    RETURN 1
+ENDIF
+
+IF (<ARGO.HITS> == <ARGO.MAXHITS>)
+    SRC.SYSMESSAGE @,,1 This item doesn't need repair.
+    RETURN 1
+ENDIF
+
+IF (<ARGO.TAG0.REPAIRED_BY_ORB>)
+    SRC.SYSMESSAGE @,,1 This item was already repaired by a repair orb. It can't be repaired again.
+    RETURN 1
+ENDIF
+
+LOCAL.CHARGES_COST 0
+
+IF (STRMATCH(*t_weapon*, <ARGO.TYPE>))
+    LOCAL.CHARGES_COST <EVAL <ARGO.MOREY> / 200>
+ELSEIF (<ARGO.COLOR> == color_o_adamantium
+    LOCAL.CHARGES_COST 5
+ELSEIF (<ARGO.BASEID> == i_chaos_shield) || (<ARGO.BASEID> == i_order_shield)
+    LOCAL.CHARGES_COST 4
+ELSEIF (<ARGO.COLOR> == color_o_mytheril)
+    LOCAL.CHARGES_COST 3
+ELSEIF (<ARGO.COLOR> == color_o_blackrock)
+    LOCAL.CHARGES_COST 2
+ELSEIF (<ARGO.COLOR> == color_o_bloodrock)
+    LOCAL.CHARGES_COST 1
+ELSE
+    SRC.SYSMESSAGE @,,1 The shield to be repaired must be blood rock or superior !
+    RETURN 1
+ENDIF
+
+IF (<LOCAL.CHARGES_COST> > <REF1.MORE1>)
+    SRC.SYSMESSAGE @,,1 You don't have <dLOCAL.CHARGES_COST> charge(s) to repair this item.
+    RETURN 1
+ENDIF
+
+SRC.CTAG.CHARGES_COST <LOCAL.CHARGES_COST>
+SRC.CTAG.ITEM_TO_BE_REPAIRED <ARGO.UID>
+SRC.CTAG.ITEM_REPAIR_ORB <ARGV[0]>
+SRC.MENU MENU_CONFIRM_ORB_ITEM_REPAIR
+
+RETURN 1
+
+[MENU MENU_CONFIRM_ORB_ITEM_REPAIR]
+Do you want to repair <UID.<SRC.CTAG.ITEM_TO_BE_REPAIRED>.NAME> ? It will cost <dSRC.CTAG.CHARGES_COST> charge(s).
+
+ON=0 Yes
+    IF (<SRC.CTAG.CHARGES_COST> <= <UID.<SRC.CTAG.ITEM_REPAIR_ORB>.MORE1>) && !(<UID.<SRC.CTAG0.ITEM_TO_BE_REPAIRED>.TAG0.REPAIRED_BY_ORB>)
+        UID.<SRC.CTAG.ITEM_REPAIR_ORB>.MORE1 -= <SRC.CTAG.CHARGES_COST>
+        UID.<SRC.CTAG.ITEM_TO_BE_REPAIRED>.HITS <UID.<SRC.CTAG.ITEM_TO_BE_REPAIRED>.MAXHITS>
+        UID.<SRC.CTAG.ITEM_TO_BE_REPAIRED>.TAG.REPAIRED_BY_ORB 1
+
+	SRC.SYSMESSAGE @,,1 The item was successfully repaired.
+    ENDIF
+
+    SRC.CTAG.ITEM_REPAIR_ORB
+    SRC.CTAG.CHARGES_COST
+    SRC.CTAG.ITEM_TO_BE_REPAIRED
+
+ON=0 No
+    SRC.CTAG.ITEM_REPAIR_ORB
+    SRC.CTAG.CHARGES_COST
+    SRC.CTAG.ITEM_TO_BE_REPAIRED
+
+[itemdef i_paragon_tracker]
+name=Paragon Tracker
+id=i_scroll_cleanse_by_fire
+type=t_normal
+
+on=@click
+    if (<tag0.paragon>)
+        message @,,1 [Used]
+    endif
+    message @84,,1 Paragon Tracker
+    return 1
+
+on=@dclick
+src.ctag.paragontracker 1
+if !(<tag0.paragon>)
+    src.dialog d_tracking_paragon
+    local.paragon "<src.f_find_paragon>"
+    local.time <serv.rtime>
+    if (<local.paragon>)
+        tag.paragon "<local.paragon>"
+        tag.time "<local.time>"
+        src.ctag.paragonat "<local.paragon>"
+        src.ctag.paragonattime "<local.time>"
+        src.timerf 3, dialog d_tracked_paragon
+        src.timerf 3, dialogclose d_tracking_paragon
+    else
+        src.timerf 1,dialog d_paragon_error
+        src.timerf 1,dialogclose d_tracking_paragon
+    endif
+else
+    src.ctag.paragonat <tag0.paragon>
+    src.dialog d_tracked_paragon
+    src.sysmessage @,,1 This tracker has already been used in <tag0.time>.
+endif
+
+return 1
+
+[DIALOG d_tracking_paragon]
+0,0
+NOCLOSE
+NODISPOSE
+page 0
+resizepic 152 139 9380 280 225
+gumppic 265 224 5608
+tilepichue 277 231 8408 2595
+text 261 291 2555 0
+text 245 186 2595 1
+tilepic 301 210 5365
+text 259 308 2555 2
+tilepic 226 296 6166
+
+[DIALOG d_tracking_paragon text]
+Tracking ...
+Paragon Tracker
+Please wait
+
+[DIALOG d_tracking_paragon button]
+
+[DIALOG d_tracked_paragon]
+0,0
+page 0
+resizepic 152 139 9380 280 225
+gumppic 265 224 5608
+tilepichue 277 231 8408 2595
+text 245 186 2595 0
+tilepic 301 210 5365
+tilepic 207 295 7729
+text 252 291 2555 1
+text 251 310 2740 2
+
+[DIALOG d_tracked_paragon text]
+Paragon Tracker
+Location Found
+"<src.ctag.paragonat>"
+
+[DIALOG d_tracked_paragon button]
+
+[DIALOG d_paragon_error]
+0,0
+page 0
+resizepic 152 139 9380 280 225
+gumppic 265 224 5608
+tilepichue 277 231 8408 2595
+text 245 186 2595 0
+tilepic 301 210 5365
+tilepic 194 305 6884
+text 228 289 2555 1
+text 244 305 32 2
+
+[DIALOG d_paragon_error text]
+Paragon Tracker
+Tracking Unsuccessful
+No paragon found
+
+[DIALOG d_paragon_error button]
+
+[DIALOG d_eventps_pvp]
+0,0
+page 0
+resizepic 146 60 9270 476 400
+resizepic 161 75 3500 370 370
+text 291 88 1718 0
+tilepic 487 348 6942
+text 311 107 37 1
+resizepic 404 126 3000 111 32
+text 417 132 1718 2
+text 459 133 1718 3
+gumppic 444 91 4037
+button 191 180 2152 2151 1 0 1
+tilepichue 216 184 3702 33
+tilepichue 229 227 6464 1331
+tilepic 214 365 3829
+button 191 225 2152 2151 1 0 2
+button 191 360 2152 2151 1 0 5
+text 254 185 55 4
+text 258 230 55 5
+tilepichue 229 272 6464 27
+button 191 270 2152 2151 1 0 3
+text 258 275 55 6
+tilepichue 229 317 6464 384
+button 191 315 2152 2151 1 0 4
+text 258 320 55 7
+text 256 365 55 8
+gumppictiled 200 167 287 2 200
+resizepic 537 75 9200 66 80
+text 563 84 2035 9
+gumppic 542 84 209
+//button 544 87 208 208 1 0 0
+text 563 107 1153 10
+button 542 107 208 209 1 0 6
+text 563 128 1153 11
+button 542 129 208 209 1 0 7
+text 559 406 1935 12
+text 556 419 1935 13
+text 428 201 55 14
+button 564 385 22153 22153 1 0 8
+
+[DIALOG d_eventps_pvp text]
+Event Points Shop
+PvP Section
+Saldo:
+<src.dtag0.eventpoints>
+PvP Bag (Scrolls, Bands, Pots, Explo....)
+Keg 100 Mana Boost (<ddef.cost_eps_pvp_2> Points)
+Keg 100 Life Boost (<ddef.cost_eps_pvp_3> Points)
+Keg 100 Refiling Boost (<ddef.cost_eps_pvp_4> Points)
+100 FlameStrike Scrolls (<ddef.cost_eps_pvp_5> Points)
+PvP
+PvM
+Misc
+TFG
+Shard
+(<ddef.cost_eps_pvp_1> Points)
+
+[DIALOG d_eventps_pvp button]
+ON=1 1// Pvp bag tm_bag_pvp
+local.cost <ddef.cost_eps_pvp_<argn>>
+if (<src.dtag0.eventpoints> >= <local.cost>)
+    //tenho pontos
+    src.tag0.eventpoints -= <dlocal.cost>
+    serv.newitem <def.item_eps_pvp_<argn>>
+    new.name PvP Bag
+    new.cont <src>
+    src.sysmessage @,,1 You have purchased the PvP Bag successfully.
+else
+    //nao tenho pontos suficientes
+    src.sysmessage @,,1 You lack the points to purchase that. You need <eval <local.cost>-<src.dtag0.eventpoints>> more points.
+endif
+
+ON=2 2 // Keg Mana
+local.cost <ddef.cost_eps_pvp_<argn>>
+if (<src.dtag0.eventpoints> >= <local.cost>)
+    //tenho pontos
+    src.tag0.eventpoints -= <dlocal.cost>
+    serv.newitem <def.item_eps_pvp_<argn>>
+    new.cont <src>
+    src.sysmessage @,,1 You have purchased the <serv.itemdef.<def.item_eps_pvp_<argn>>.name> successfully.
+else
+    //nao tenho pontos suficientes
+    src.sysmessage @,,1 You lack the points to purchase that. You need <eval <local.cost>-<src.dtag0.eventpoints>> more points.
+endif
+
+ON=5 5 // FS
+local.cost <ddef.cost_eps_pvp_<argn>>
+if (<src.dtag0.eventpoints> >= <local.cost>)
+    //tenho pontos
+    src.tag0.eventpoints -= <dlocal.cost>
+    serv.newitem <def.item_eps_pvp_<argn>>
+    new.amount 100
+    new.cont <src>
+    src.sysmessage @,,1 You have purchased the <serv.itemdef.<def.item_eps_pvp_<argn>>.name> successfully.
+else
+    //nao tenho pontos suficientes
+    src.sysmessage @,,1 You lack the points to purchase that. You need <eval <local.cost>-<src.dtag0.eventpoints>> more points.
+endif
+
+ON=3 3 // Life
+local.cost <ddef.cost_eps_pvp_<argn>>
+if (<src.dtag0.eventpoints> >= <local.cost>)
+    //tenho pontos
+    src.tag0.eventpoints -= <dlocal.cost>
+    serv.newitem <def.item_eps_pvp_<argn>>
+    new.cont <src>
+    src.sysmessage @,,1 You have purchased the <serv.itemdef.<def.item_eps_pvp_<argn>>.name> successfully.
+else
+    //nao tenho pontos suficientes
+    src.sysmessage @,,1 You lack the points to purchase that. You need <eval <local.cost>-<src.dtag0.eventpoints>> more points.
+endif
+
+ON=4 4 // Refil
+local.cost <ddef.cost_eps_pvp_<argn>>
+if (<src.dtag0.eventpoints> >= <local.cost>)
+    //tenho pontos
+    src.tag0.eventpoints -= <dlocal.cost>
+    serv.newitem <def.item_eps_pvp_<argn>>
+    new.cont <src>
+    src.sysmessage @,,1 You have purchased the <serv.itemdef.<def.item_eps_pvp_<argn>>.name> successfully.
+else
+    //nao tenho pontos suficientes
+    src.sysmessage @,,1 You lack the points to purchase that. You need <eval <local.cost>-<src.dtag0.eventpoints>> more points.
+endif
+
+ON=6 // pvm button
+src.dialogclose d_eventps_misc
+src.dialog d_eventps_pvm
+
+ON=7 // misc button
+src.dialogclose d_eventps_pvm
+src.dialog d_eventps_misc
+
+ON=8 //ajuda
+    src.smsg @,,1 Launching Wiki...
+    src.timerf 2, weblink http:\\www.tfg.com.br/wiki/index.php?title=EPShop
+
+
+[DIALOG d_eventps_pvm]
+0,0
+page 0
+resizepic 146 60 9270 476 400
+resizepic 161 75 3500 370 370
+text 291 88 1718 0
+tilepic 459 385 8492
+text 311 107 52 1
+resizepic 404 126 3000 111 32
+text 417 132 1718 2
+text 459 133 1718 3
+gumppic 444 91 4037
+button 191 180 2152 2151 1 0 1
+tilepichue 215 184 7035 2809
+tilepichue 222 229 3933 22
+tilepichue 216 365 5126 566
+button 191 225 2152 2151 1 0 2
+button 190 360 2152 2151 1 0 5
+text 258 185 55 4
+text 258 230 55 5
+tilepichue 218 280 7942 1915
+button 191 270 2152 2151 1 0 3
+text 258 275 55 6
+tilepic 214 321 8828
+button 191 315 2152 2151 1 0 4
+text 258 320 55 7
+text 256 365 55 8
+gumppictiled 200 167 287 2 200
+resizepic 537 75 9200 66 80
+text 563 84 1153 9
+button 542 84 208 209 1 0 6
+text 563 107 2035 10
+//button 544 110 2117 2118 1 0 0
+gumppic 542 107 209
+text 563 128 1153 11
+button 542 129 208 209 1 0 7
+text 559 406 1935 12
+text 556 419 1935 13
+button 564 385 22153 22153 1 0 8
+
+[DIALOG d_eventps_pvm text]
+Event Points Shop
+PvM Section
+Saldo:
+<src.dtag0.eventpoints>
+Survivor Shield (<ddef.cost_eps_pvm_1> Points)
+Random Blood Weapon (<ddef.cost_eps_pvm_2> Points)
+Lucky Bracelet (<ddef.cost_eps_pvm_3> Points)
+Paragon Tracker (<ddef.cost_eps_pvm_4> Points)
+Random Silver Weapon (<ddef.cost_eps_pvm_5> Points)
+PvP
+PvM
+Misc
+TFG
+Shard
+
+[DIALOG d_eventps_pvm button]
+ON=1 1// Surv Shield
+ local.cost <ddef.cost_eps_pvm_<argn>>
+if (<src.dtag0.eventpoints> >= <local.cost>)
+    //tenho pontos
+    src.tag0.eventpoints -= <dlocal.cost>
+    serv.newitem <def.item_eps_pvm_<argn>>
+    new.cont <src>
+    src.sysmessage @,,1 You have purchased the <serv.itemdef.<def.item_eps_pvm_<argn>>.name> successfully.
+else
+    //nao tenho pontos suficientes
+    src.sysmessage @,,1 You lack the points to purchase that. You need <eval <local.cost>-<src.dtag0.eventpoints>> more points.
+endif
+
+ON=2 2// random blood Weapon
+local.cost <ddef.cost_eps_pvm_<argn>>
+if (<src.dtag0.eventpoints> >= <local.cost>)
+    //tenho pontos
+    src.tag0.eventpoints -= <dlocal.cost>
+    serv.newitem <def.item_eps_pvm_<argn>>
+    new.cont <src>
+    src.sysmessage @,,1 You have purchased the <serv.itemdef.<def.item_eps_pvm_<argn>>.name> successfully.
+else
+    //nao tenho pontos suficientes
+    src.sysmessage @,,1 You lack the points to purchase that. You need <eval <local.cost>-<src.dtag0.eventpoints>> more points.
+endif
+
+ON=5 5// Random Silver Weapon
+local.cost <ddef.cost_eps_pvm_<argn>>
+if (<src.dtag0.eventpoints> >= <local.cost>)
+    //tenho pontos
+    src.tag0.eventpoints -= <dlocal.cost>
+    serv.newitem <def.item_eps_pvm_<argn>>
+    new.cont <src>
+    src.sysmessage @,,1 You have purchased the <serv.itemdef.<def.item_eps_pvm_<argn>>.name> successfully.
+else
+    //nao tenho pontos suficientes
+    src.sysmessage @,,1 You lack the points to purchase that. You need <eval <local.cost>-<src.dtag0.eventpoints>> more points.
+endif
+
+ON=3 3// Lucky Bracelet
+local.cost <ddef.cost_eps_pvm_<argn>>
+if (<src.dtag0.eventpoints> >= <local.cost>)
+    //tenho pontos
+    src.tag0.eventpoints -= <dlocal.cost>
+    serv.newitem <def.item_eps_pvm_<argn>>
+    new.cont <src>
+    src.sysmessage @,,1 You have purchased the <serv.itemdef.<def.item_eps_pvm_<argn>>.name> successfully.
+else
+    //nao tenho pontos suficientes
+    src.sysmessage @,,1 You lack the points to purchase that. You need <eval <local.cost>-<src.dtag0.eventpoints>> more points.
+endif
+
+ON=4 4// Paragon Tracker
+local.cost <ddef.cost_eps_pvm_<argn>>
+if (<src.dtag0.eventpoints> >= <local.cost>)
+    //tenho pontos
+    src.tag0.eventpoints -= <dlocal.cost>
+    serv.newitem <def.item_eps_pvm_<argn>>
+    new.cont <src>
+    src.sysmessage @,,1 You have purchased the <serv.itemdef.<def.item_eps_pvm_<argn>>.name> successfully.
+else
+    //nao tenho pontos suficientes
+    src.sysmessage @,,1 You lack the points to purchase that. You need <eval <local.cost>-<src.dtag0.eventpoints>> more points.
+endif
+
+ON=6 // pvp
+src.dialogclose d_eventps_misc
+src.dialog d_eventps_pvp
+
+ON=7 // misc
+src.dialogclose d_eventps_pvp
+src.dialog d_eventps_misc
+
+ON=8 //ajuda
+    src.smsg @,,1 Launching Wiki...
+    src.timerf 2, weblink http:\\www.tfg.com.br/wiki/index.php?title=EPShop
+
+[DIALOG d_eventps_misc]
+0,0
+page 0
+resizepic 146 60 9270 476 400
+resizepic 161 75 3500 370 370
+text 291 88 1718 0
+tilepic 463 374 7777
+text 311 107 93 1
+resizepic 404 126 3000 111 32
+text 417 132 1718 2
+text 459 133 1718 3
+gumppic 444 91 4037
+button 191 180 2152 2151 1 0 1
+tilepichue 214 188 6250 1990
+tilepic 219 234 6933
+button 191 225 2152 2151 1 0 2
+text 258 185 55 4
+text 258 230 55 5
+tilepic 216 278 4083
+button 191 270 2152 2151 1 0 3
+text 258 275 55 6
+gumppictiled 200 167 287 2 200
+resizepic 537 75 9200 66 80
+tilepic 220 316 5981
+button 191 315 2152 2151 1 0 4
+text 258 320 55 7
+text 563 84 1153 8
+button 542 84 208 209 1 0 6
+text 563 107 1153 9
+button 542 107 208 209 1 0 7
+text 563 128 2035 10
+//button 544 131 2117 2118 1 0 0
+gumppic 542 129 209
+text 559 406 1935 11
+text 556 419 1935 12
+tilepichue 431 264 937 2555
+tilepichue 435 268 937 3
+tilepichue 438 271 937 33
+button 564 385 22153 22153 1 0 8
+
+[DIALOG d_eventps_misc text]
+Event Points Shop
+Misc Section
+Saldo:
+<src.dtag0.eventpoints>
+Repair Orb (<ddef.cost_eps_misc_1> Event Points)
+Increase your penis (<ddef.cost_eps_misc_2> Points)
+Ticket to Russia (<ddef.cost_eps_misc_3> Points)
+Bound True Cloth (<ddef.cost_eps_misc_4> Points)
+PvP
+PvM
+Misc
+TFG
+Shard
+
+[DIALOG d_eventps_misc button]
+ON=1 // repair orb
+    LOCAL.COST <DDEF.COST_EPS_MISC_<ARGN>>
+    IF (<SRC.DTAG0.EVENTPOINTS> >= <LOCAL.COST>)
+        SRC.TAG0.EVENTPOINTS -= <DLOCAL.COST>
+        SERV.NEWITEM <DEF.ITEM_EPS_MISC_<ARGN>>
+        NEW.CONT <SRC>
+        SRC.SYSMESSAGE @,,1 You have purchased the <SERV.ITEMDEF.<DEF.ITEM_EPS_MISC_<ARGN>>.NAME> successfully.
+    ELSE
+        SRC.SYSMESSAGE @,,1 You lack the points to purchase that. You need <EVAL <LOCAL.COST> - <SRC.DTAG0.EVENTPOINTS>> more points.
+    ENDIF
+
+ON=2 // Penis
+src.say @,,1 I need 2cm more of pau!!!
+
+ON=3 // Russia
+src.say @2555 I love the owner Spenislau!!!
+src.say @3 I love the owner Spenislau!!!
+src.say @33 I love the owner Spenislau!!!
+
+src.timerf 5,say @2555 I love the owner Spenislau!!!
+src.timerf 5,say @3 I love the owner Spenislau!!!
+src.timerf 5,say @33 I love the owner Spenislau!!!
+
+src.timerf 10,say @2555 I love the owner Spenislau!!!
+src.timerf 10,say @3 I love the owner Spenislau!!!
+src.timerf 10,say @33 I love the owner Spenislau!!!
+
+ON=4
+local.cost <ddef.cost_eps_misc_<argn>>
+if (<src.dtag0.eventpoints> >= <local.cost>)
+    IF (<SRC.WEIGHT> < <SRC.MAXWEIGHT>) ||  (<SRC.ISGM>)
+        //tenho pontos
+        src.tag0.eventpoints -= <dlocal.cost>
+        serv.newitem <EVAL {i_bound_panotrue_b 1 i_bound_panotrue_w 1 i_bound_panotrue_g 1}>
+        new.cont <src>
+        src.sysmessage @,,1 You have purchased the Bound True Cloth successfully.
+    ELSE
+    src.sysmessage @,,1 You can't carry the item. Check your weight.
+    ENDIF
+else
+    //nao tenho pontos suficientes
+    src.sysmessage @,,1 You lack the points to purchase that. You need <eval <local.cost>-<src.dtag0.eventpoints>> more points.
+endif
+
+ON=6 // pvp
+src.dialogclose d_eventps_pvm
+src.dialog d_eventps_pvp
+
+ON=7 // pvm
+src.dialogclose d_eventps_misc
+src.dialog d_eventps_pvm
+
+ON=8 //ajuda
+    src.smsg @,,1 Launching Wiki...
+    src.timerf 2, weblink http:\\www.tfg.com.br/wiki/index.php?title=EPShop
+
+[EOF]

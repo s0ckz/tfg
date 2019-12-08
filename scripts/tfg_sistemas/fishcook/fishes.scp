@@ -1,0 +1,283 @@
+//////FISHING/COOKING SYSTEM////////
+
+[comment sphere_food_info]
+
+t_food	8	This type is used for edible food. It leverages the following properties:
+MORE2 = The ID of the creature that this came from
+MOREM = Is the amount (0 to 127) of "food units" that will be gained when the item is used (eaten)
+MOREZ = Is the poison level of the food
+Note: The following properties may also exist depending on your server version:
+MOREX = The ID of a spell effect that will be gained when eaten
+MOREY = The strength of the spell effect
+
+t_food_raw	9	This type is used for raw food. It leverages the following properties:
+MORE1 = ID of the item it makes when cooked (the default is i_unused and if defined, it will override TDATA1)
+MORE2 = The ID of the creature that this came from
+MOREM = Is the amount (0 to 127) of "food units" that will be gained when the item is used (eaten)
+MOREZ = Is the poison level of the food
+TDATA1 = The item ID this cooks into
+Note: The following properties may also exist depending on your server version:
+MOREX = The ID of a spell effect that will be gained when eaten
+MOREY = The strength of the spell effect
+TDATA2 = The creature ID type that the food came from
+TDATA3 = The amount of skill required to cook it (did this ever work?)
+
+[ITEMDEF i_misterious_fish]
+id=i_fish_vesper_reef_tiger
+name=Misterious Fish
+VALUE=30
+TYPE=T_FISH
+WEIGHT=1
+
+on=@create
+    color 0a23
+
+[ITEMDEF i_tuna]
+id=i_fish_big_1
+name=Tuna
+VALUE=30
+TYPE=T_FISH
+WEIGHT=1
+
+[ITEMDEF i_tuna_cut_raw] ///steak de tuna cru
+name=Tuna Raw Steak
+id=i_fish_raw_headless
+TYPE=T_FOOD_RAW
+TDATA1=i_tuna_cut_cooked
+VALUE=1
+WEIGHT=0.4
+
+ON=@create
+    tag.steaks 3
+
+[ITEMDEF i_tuna_cut_cooked] ///steak de tuna assado
+name=Tuna Cooked Steak
+id=i_fish_cut_cooked
+RESOURCES=1 I_tuna
+TYPE=T_FOOD
+VALUE=3
+WEIGHT=0.4
+
+//fish head facing NW
+//DEFNAME=i_fish_raw_head
+
+on=@create
+    morem=10
+
+[itemdef i_magical_fish]
+defname=i_magical_fish
+id=i_fish_vesper_reef_tiger
+name=Magical Fish
+Value=30
+type=T_FISH
+WEIGHT=1
+
+ON=@Create
+	SERV.LOG A magical fish has been created!
+
+[ITEMDEF i_magical_fish_cut_raw] ///steak de magical cru
+name=Magical Fish Raw Steak
+id=i_fish_raw_headless
+TYPE=T_FOOD_RAW
+TDATA1=i_magical_cut_cooked
+TDATA2=i_magical_fish
+VALUE=1
+WEIGHT=0.4
+
+ON=@create
+    tag.steaks 2
+
+[ITEMDEF i_magical_cut_cooked] ///steak de magical assado
+name=Magical Cooked Fish
+id=i_fish_cooked_small
+RESOURCES=1 i_magical_fish_cut_raw
+TYPE=T_FOOD
+VALUE=3
+WEIGHT=0.4
+
+on=@create
+    morem=12
+    local.rand <r1,9>
+    if (<dlocal.rand> < 4)
+        morex = s_strength
+        color 65
+    elif (<dlocal.rand> < 7) && (<dlocal.rand> > 3)
+        morex = s_cunning
+        color 0803
+    elif (<dlocal.rand> > 6)
+        morex = s_agility
+        color 036
+    endif
+    morey = 1000
+    
+
+[itemdef i_golden_fish]
+defname=i_golden_fish
+id=i_fish_golden_broadtail
+name=Golden Fish
+Value=30
+type=T_FISH
+WEIGHT=1
+
+[ITEMDEF i_golden_fish_cut_raw] ///steak de golden cru
+name=Golden Fish Raw Steak
+id=i_fish_raw_headless
+TYPE=T_FOOD_RAW
+TDATA1=i_golden_cut_cooked
+VALUE=1
+WEIGHT=0.4
+
+ON=@create
+    tag.steaks 1
+
+[ITEMDEF i_golden_cut_cooked] ///steak de golden assado
+name=Golden Fish Cooked
+id=i_fish_cooked_headless
+RESOURCES=1 i_golden_fish
+TYPE=T_FOOD
+VALUE=3
+WEIGHT=0.4
+
+on=@create
+    morem=10
+
+[itemdef i_large_fish]
+id=i_fish_big_2
+name=Large Heavy Fish
+value=30
+type=t_fish
+weight=4
+
+[ITEMDEF i_Large_fish_cut_raw] ///steak de Large cru
+name=Large Fish Raw Steak
+id=i_fish_raw_headless
+TYPE=T_FOOD_RAW
+TDATA1=i_Large_cut_cooked
+VALUE=1
+WEIGHT=0.4
+
+ON=@create
+    tag.steaks 6
+
+[ITEMDEF i_Large_cut_cooked] ///steak de Large assado
+name=Large Fish Cooked Steak
+id=i_fish_cut_cooked
+RESOURCES=1 i_Large_fish
+TYPE=T_FOOD
+VALUE=3
+WEIGHT=0.4
+
+on=@create
+    morem=10
+
+///criar fishing poles///
+
+[typedef t_improved_pole]
+
+
+[ITEMDEF i_2_fishing_pole]
+name=+2 Magic Fishing Pole
+id=i_fishing_pole
+type=T_FISH_POLE
+tevents=t_improved_pole
+weight=3
+resources=30 i_cedar_log, 2 i_gem_emerald
+SKILLMAKE=CARPENTRY 65.0, Tinkering 65.0, Fishing 70.0, t_tinker_tools
+
+on=@create
+    color color_o_cedar
+
+ON=@EQUIP
+    src.fishing += 20
+    src.effect 3,i_fx_bless_effect,6,15,1
+
+ON=@UNEQUIP
+    if <src.fishing> >= 20
+        src.fishing -= 20
+    else
+        src.fishing = 0
+    endif
+
+[ITEMDEF i_3_fishing_pole]
+name=+3 Magic Fishing Pole
+id=i_fishing_pole
+type=T_FISH_POLE
+tevents=t_improved_pole
+weight=3
+resources=30 i_hard_maple_log, 2 i_gem_ruby
+SKILLMAKE=CARPENTRY 70.0, Tinkering 68.0, Fishing 70.0, t_tinker_tools
+
+on=@create
+    color color_o_hard_maple
+
+ON=@EQUIP
+    src.fishing += 30
+    src.effect 3,i_fx_bless_effect,6,15,1
+
+ON=@UNEQUIP
+    if <src.fishing> >= 30
+        src.fishing -= 30
+    else
+        src.fishing = 0
+    endif
+
+[ITEMDEF i_5_fishing_pole]
+name=+5 Magic Fishing Pole
+id=i_fishing_pole
+type=T_FISH_POLE
+tevents=t_improved_pole
+weight=3
+resources=30 i_hickory_log, 2 i_gem_diamond
+SKILLMAKE=CARPENTRY 80.0, Tinkering 75.0, Fishing 75.0, t_tinker_tools
+
+on=@create
+    color color_o_hickory
+
+ON=@EQUIP
+    src.fishing += 50
+    src.effect 3,i_fx_bless_effect,6,15,1
+
+ON=@UNEQUIP
+    if <src.fishing> >= 50
+        src.fishing -= 50
+    else
+        src.fishing = 0
+    endif
+
+///criar delicious steaks e delicious food (pig etc)///
+
+//delicious fish steaks
+[ITEMDEF i_delicious_raw_fish]
+id=i_fish_cut_raw
+name=Delicious Raw Fish Steak
+TYPE=T_FOOD_RAW
+TDATA1=i_delicious_fish_steak_cooked
+VALUE=1
+WEIGHT=0.4
+
+[ITEMDEF i_delicious_fish_steak_cooked]
+name=Delicious Cooked Fish Steak
+id=i_fish_cut_cooked
+RESOURCES=1 i_delicious_raw_fish
+TYPE=T_FOOD
+VALUE=3
+WEIGHT=0.4
+//i_bacon_slice usar para receitas
+
+on=@create
+    morem=6
+
+[itemdef i_delicious_pork]
+name=Delicious Pork and Torresm
+id=i_pig_roast
+resources=1 i_pig_roast
+type=t_food
+value=20
+weight=1
+
+on=@create
+    morem=15
+
+///criar papel para o hungry sys/////
+
+///criar SOS + mobs para contra balancear macros///

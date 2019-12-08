@@ -1,0 +1,297 @@
+[function mstaff2]
+IF (<account.plevel> > 1 )
+sysmessage <args>
+endif
+
+[PLEVEL 1]
+resposta
+
+[FUNCTION resposta]
+if !(<ISEMPTY <ACCOUNT.TAG.PAGE>>)
+DIALOG d_pageresp
+account.tag.gm=
+account.tag.pagee=
+account.tag.resposta=
+account.tag.page=
+findid.i_paget.remove
+endif
+
+[ITEMDEF i_paget]
+ID=i_handr_1
+TYPE=t_eq_script
+NAME=Pagetimer
+LAYER=layer_special
+WEIGHT=00
+
+ON=@CREATE
+ATTR=attr_newbie|attr_invis
+
+ON=@EQUIP
+//CONT.SYSMESSAGE @07a1 Voce recebeu uma resposta para sua page !
+//CONT.SYSMESSAGE @07a1 Digite .resposta para recebela.
+CONT.DIALOG D_PAGE_NOTIFY
+TIMER 10
+
+ON=@TIMER
+TIMER=10
+IF (<ISEMPTY <CONT.ACCOUNT.TAG.PAGE>>)
+REMOVE
+RETURN 1
+ENDIF
+CONT.DIALOG D_PAGE_NOTIFY
+RETURN 1
+
+[FUNCTION pag]
+
+if STRMATCH(<ARGS>,wipe) && (<SERV.GMPAGES>)
+serv.allclients mstaff2 @0 <name> removeu todas as pages.
+PAGE WIPE
+return 1
+endif
+
+IF !(<SERV.GMPAGES>)
+sysmessage @0482 Nao ha pages no momento.
+else
+DIALOG d_gmpage
+endif
+return 1
+
+[FUNCTION limpages]
+page wipe
+
+[DIALOG d_gmpage]
+100,100
+page 0
+resizepic 0 0 9200 500 320
+resizepic 10 9 9350 480 300
+dtext 31 25 1153 Sistema de pages
+dtext 176 25 1153 Pages : <dSERV.GMPAGES>
+FAZDPAGE 1
+
+[DIALOG d_gmpage button]
+ON=0
+
+ON=1 1000
+ctag0.pageuid=<serv.gmpage.<eval <argn1>-1>.account>
+src.ctag0.nm=<eval <argn1>-1>
+dialogclose d_infopage
+dialog d_infopage
+
+[FUNCTION FAZDPAGE]
+LOCAL.LAT 60
+PAGE <dARGS>
+IF (<dARGS> > 1 )
+button 165 275 4014 4015 0 <EVAL <dARGS>-1>
+ENDIF
+FOR <EVAL (<dARGS>*7)-6> <EVAL (<dARGS>*7)>
+IF (<dLOCAL._FOR> > <dSERV.GMPAGES>)
+RETURN 0
+ELSE
+dcroppedtext 50 <eval <local.lat>> 430 100 0 <UID.<SERV.ACCOUNT.<SERV.GMPAGE.<eval <local._for>-1>.ACCOUNT>.LASTCHARUID>.NAME> : <SERV.GMPAGE.<eval <local._for>-1>.REASON> 
+button 15 <eval <local.lat>-2> 2151 2153 1 0 <dlocal._for>
+local.lat += 30
+ENDIF
+ENDFOR
+IF (<dSERV.GMPAGES> > <EVAL (<dARGS>*7)>)
+button 200 275 4005 4006 0 <EVAL <dARGS>+1>
+FAZDPAGE <eval <dARGS>+1>
+endif
+
+[DIALOG d_page_notify]
+50,50
+SRC.SOUND 0234
+NOCLOSE
+PAGE 0
+DTEXT 21 0 034 Page Respondida
+button 20 20 067 067 1 0 1
+DTEXT 40 55 0835 Click to Open
+
+[DIALOG d_pAGE_notify BUTTON]
+ON=1
+SRC.RESPOSTA
+
+[DIALOG d_pageresp]
+50,50
+page 1
+resizepic 100 100 9200 340 300
+dhtmlgump 110 165 320 225 1 1 <account.tag.resposta>
+resizepic 110 110 9350 320 50
+dtext 120 137 0481 Gm : <account.tag.gm> 
+dtext 118 117 0481 Resposta de sua page:
+dhtmlgump 275 115 160 50 0 0 <account.tag.pagee>
+
+[DIALOG d_pageresp button]
+
+[dialog d_gmresp]
+0,160                            
+resizepic 90 175 5054 600 175
+resizepic 100 185 9350 580 155
+resizepic 120 235 3000 550 60
+dtext 115 200 995 Mande sua resposta para a page numero <eval <ctag0.nm>+1>.
+dtext 155 300 0000 Mandar resposta
+button 120 300 4005 4007 1 0 1        
+dtext 335 300 0000 Cancelar        
+button 300 300 4005 4007 1 0 0        
+dtextentry 125 237 540 50 0 0
+
+[dialog d_gmresp BUTTON]
+ON=0
+DIALOG d_infopage
+//ctag0.pageuid=
+
+ON=1
+IF (<chegarpages>)
+REF1=<SERV.ACCOUNT.<SERV.GMPAGE.<dctag0.nm>.ACCOUNT>.LASTCHARUID>
+LOCAL.ACC=<SERV.GMPAGE.<dctag0.nm>.ACCOUNT>
+SERV.ACCOUNT.<LOCAL.ACC>.TAG.PAGE 1
+SERV.ACCOUNT.<LOCAL.ACC>.TAG.GM <NAME>
+SERV.ACCOUNT.<LOCAL.ACC>.TAG.PAGEE <SERV.GMPAGE.<dctag0.nm>.REASON>
+SERV.ACCOUNT.<LOCAL.ACC>.TAG.RESPOSTA <ARGTXT[0]>
+GMPAGE.<ctag0.nm>.DELETE
+IF (<REF1.ISONLINE>)
+serv.newitem i_paget
+ref1.equip <new.uid>
+new.timer 10
+ctag0.pageuid=
+ENDIF
+ENDIF
+RETURN 1
+
+[DIALOG d_infopage]
+100,100
+page 0
+IF (<ACCOUNT.PLEVEL>>1)
+resizepic 0 0 9200 500 320
+resizepic 11 9 9350 480 300
+
+dtext 31 25 1153 Sistema de pages
+dtext 176 25 1153 Page por : <UID.<SERV.ACCOUNT.<SERV.GMPAGE.<dsrc.ctag0.nm>.ACCOUNT>.LASTCHARUID>.NAME>
+button 65 50 2151 2153 1 0 7
+dtext 100 55 0481 Menu
+button 20 80 2151 2153 1 0 1
+button 20 115 2151 2153 1 0 2
+button 20 150 2151 2153 1 0 3
+button 20 185 2151 2153 1 0 4
+button 20 220 2151 2153 1 0 5
+button 20 255 2151 2153 1 0 6
+button 120 185 2151 2153 1 0 8
+IF (<UID.<SERV.ACCOUNT.<SERV.GMPAGE.<dsrc.ctag0.nm>.ACCOUNT>.LASTCHARUID>.ISONLINE>)
+dtext 176 55 0110 Online
+else
+dtext 176 55 025 Offline
+endif
+dtext 58 85 0480 Responder por mensagem
+dtext 58 120 0480 Deletar a page
+dtext 58 155 0480 Mandar player para jail 
+//dtext 58 190 0480 Ir ate o player [invis]
+//dtext 58 225 0480 Ir ate o player [normal]
+dtext 58 260 0480 Seguir [follow]
+dtext 58 190 0480 Ir invis
+dtext 155 190 0480 Normal
+dtext 58 225 0480 Puxar o player
+dhtmlgump 240 90 220 190 1 1 <SERV.GMPAGE.<dSRC.ctag0.nm>.reason>
+
+[DIALOG d_infopage button]
+ON=0
+ctag0.nm=
+
+ON=1
+dialog d_gmresp
+
+ON=2
+IF (<chegarpages>)
+GMPAGE.<CTAG0.NM>.DELETE
+CTAG.NM=
+ENDIF
+RETURN 1
+
+ON=3
+SRC.SYSMESSAGE Sem funcionar por enquanto.
+RETURN 0
+// JAIL
+// Depois eu junto o sys de jail aqui.
+
+ON=4
+IF (<chegarpages>)
+REF1=<SERV.ACCOUNT.<SERV.GMPAGE.<CTAG0.NM>.ACCOUNT>.LASTCHARUID>
+INVIS 1
+F_GO <REF1.P>
+ENDIF
+RETURN 1
+
+ON=5
+IF (<chegarpages>)
+REF1=<SERV.ACCOUNT.<SERV.GMPAGE.<CTAG0.NM>.ACCOUNT>.LASTCHARUID>
+REF1.F_GO <P>
+ENDIF
+RETURN 1
+
+
+ON=6
+IF (<chegarpages>)
+REF1=<SERV.ACCOUNT.<SERV.GMPAGE.<CTAG0.NM>.ACCOUNT>.LASTCHARUID>
+REF1.FOLLOW
+ENDIF
+RETURN 1
+
+
+ON=7
+SRC.PAG
+
+ON=8
+IF (<chegarpages>)
+REF1=<SERV.ACCOUNT.<SERV.GMPAGE.<CTAG0.NM>.ACCOUNT>.LASTCHARUID>
+F_GO <REF1.P>
+ENDIF
+RETURN 1
+
+[FUNCTION chegarpages]
+IF (<ISNUM <ctag0.pageuid>>)
+IF STRMATCH(<SERV.GMPAGE.<ctag0.nm>.ACCOUNT>,<dctag0.pageuid>)
+RETURN 1
+ELSE
+FOR 0 <EVAL <SERV.GMPAGES>-1>
+IF STRMATCH(<SERV.GMPAGE.<dlocal._for>.ACCOUNT>,<dctag0.pageuid>)
+ctag.nm <dLOCAL._FOR>
+RETURN 1
+ENDIF
+ENDFOR
+ENDIF
+ELSE
+IF STRMATCH(<SERV.GMPAGE.<ctag0.nm>.ACCOUNT>,<ctag0.pageuid>)
+RETURN 1
+ELSE
+FOR 0 <EVAL <SERV.GMPAGES>-1>
+IF STRMATCH(<SERV.GMPAGE.<dlocal._for>.ACCOUNT>,<ctag0.pageuid>)
+ctag.nm <dLOCAL._FOR>
+RETURN 1
+ENDIF
+ENDFOR
+ENDIF
+ENDIF
+SRC.SYSMESSAGE Houve um erro. ( Normalmente alguem deletou esta page )
+RETURN 0
+
+[function f_player_page]
+sDIALOG d_page_send
+
+
+[DIALOG d_page_send]
+0,0
+page 0
+resizepic 91 169 3500 335 150
+//alphablack 79 136 581 168
+//gumppictiled 91 169 554 121 5058
+//gumppic 91 169 2171
+//gumppic 328 169 2171
+dtext 95 142 1152 <def.dlg_text_descri>
+dtextentry 125 200 285 108 45 0  
+button 325 320 4005 4006 1 0 1
+
+[DIALOG d_page_send button]
+ON=0
+helppage
+ONBUTTON=1
+gmpage add <uid> <argtxt[0]>
+
+[EOF]

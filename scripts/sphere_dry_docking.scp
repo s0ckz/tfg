@@ -1,0 +1,246 @@
+//Orginally From EvilMageGuys Star Haven Shard
+//Dry Docking - Made By Admin EvilMageGuy
+[DIALOG d_ship_dock]
+150,200
+page 0 
+gumppic 100 10 2070 
+button 165 85 2071 2072 1 0 0 
+text 141 45 0 0 
+button 123 45 208 209 1 0 1 
+ 
+[DIALOG d_ship_dock TEXT]                       
+Drydock Ship?
+ 
+[DIALOG d_ship_dock BUTTON]  
+ONBUTTON=0
+ONBUTTON=1
+IF <LINK.MORE>==<SRC.UID>
+    serv.NEWITEM i_deed_ship
+    NEW.NAME a deed to a <LINK.NAME>
+    NEW.MORE <LINK.ID>
+    NEW.MORE2 <LINK.MORE>
+    NEW.BOUNCE
+    LINK.REMOVE
+    RETURN 1
+ELSE
+    RETURN 1
+endif
+ 
+[ITEMDEF 03e4a]
+//tiller man
+DEFNAME=i_ship_tillerman
+TYPE=t_sign_gump
+ 
+ON=@DCLICK
+IF <SRC.REGION.FLAGS>==010d2
+    SAY Arg! That hurts!
+    RETURN 1
+ELSE
+    IF <LINK.MORE>==<SRC.UID>
+        DIALOG d_ship_dock
+        RETURN 1
+    ELSE
+        RETURN 1
+    endif
+endif
+
+ 
+[ITEMDEF 03e4b]
+//tiller man
+TYPE=t_sign_gump
+//DUPEITEM=03e4a
+ 
+ON=@DCLICK
+IF <SRC.REGION.FLAGS>==010d2
+    SAY Arg! That hurts!
+    RETURN 1
+ELSE
+    IF <LINK.MORE>==<SRC.UID>
+        DIALOG d_ship_dock
+        RETURN 1
+    ELSE
+        RETURN 1
+    endif
+endif
+ 
+[ITEMDEF 03e4c]
+//tiller man
+TYPE=t_sign_gump
+//DUPEITEM=03e4a
+ 
+ON=@DCLICK
+IF <SRC.REGION.FLAGS>==010d2
+    SAY Arg! That hurts!
+    RETURN 1
+ ELSE
+        IF <LINK.MORE>==<SRC.UID>
+            DIALOG d_ship_dock
+            RETURN 1
+        ELSE
+            RETURN 1
+    endif
+endif
+ 
+[ITEMDEF 03e4d]
+//tiller man
+TYPE=t_sign_gump
+//DUPEITEM=03e4a
+ 
+ON=@DCLICK
+IF <SRC.REGION.FLAGS>==010d2
+    SAY Arg! That hurts!
+    RETURN 1
+ELSE
+    IF <LINK.MORE>==<SRC.UID>
+        DIALOG d_ship_dock
+        RETURN 1
+    ELSE
+        RETURN 1
+    endif
+endif
+
+ 
+[ITEMDEF 03e4e]
+//tiller man
+TYPE=t_sign_gump
+//DUPEITEM=03e4a
+ 
+ON=@DCLICK
+IF <SRC.REGION.FLAGS>==010d2
+    SAY Arg! That hurts!
+    RETURN 1
+ELSE
+    IF <LINK.MORE>==<SRC.UID>
+        DIALOG d_ship_dock
+        RETURN 1
+    ELSE
+        RETURN 1
+    endif
+endif
+
+ 
+[ITEMDEF 03e4f]
+//tiller man
+TYPE=t_sign_gump
+//DUPEITEM=03e4a
+ 
+ON=@DCLICK
+IF <SRC.REGION.FLAGS>==010d2
+    SAY Arg! That hurts!
+    RETURN 1
+ELSE
+    IF <LINK.MORE>==<SRC.UID>
+        DIALOG d_ship_dock
+        RETURN 1
+    ELSE
+        RETURN 1
+    endif
+endif
+ 
+[ITEMDEF 03e50]
+//tiller man
+TYPE=t_sign_gump
+//DUPEITEM=03e4a
+ 
+ON=@DCLICK
+IF <SRC.REGION.FLAGS>==010d2
+    SAY Arg! That hurts!
+    RETURN 1
+ELSE
+    IF <LINK.MORE>==<SRC.UID>
+        DIALOG d_ship_dock
+        RETURN 1
+    ELSE
+        RETURN 1
+    endif
+endif
+ 
+[ITEMDEF 03e51]
+//tiller man
+TYPE=t_sign_gump
+//DUPEITEM=03e4a
+ 
+ON=@DCLICK
+IF <SRC.REGION.FLAGS>==010d2
+    SAY Arg! That hurts!
+    RETURN 1
+ELSE
+    IF <LINK.MORE>==<SRC.UID>
+        DIALOG d_ship_dock
+        RETURN 1
+    ELSE
+        RETURN 1
+    endif
+endif
+ 
+[ITEMDEF 03e52]
+//tiller man
+TYPE=t_sign_gump
+//DUPEITEM=03e4a
+ 
+ON=@DCLICK
+IF <SRC.REGION.FLAGS>==010d2
+    SAY Arg! That hurts!
+    RETURN 1
+ELSE
+    IF <LINK.MORE>==<SRC.UID>
+        DIALOG d_ship_dock
+        RETURN 1
+    ELSE
+        RETURN 1
+    endif
+endif
+ 
+[ITEMDEF 03e53]
+//tiller man
+TYPE=t_sign_gump
+//DUPEITEM=03e4a
+ 
+ON=@DCLICK
+IF <SRC.REGION.FLAGS>==010d2
+    SAY Arg! That hurts!
+    RETURN 1
+ELSE
+    IF <LINK.MORE>==<SRC.UID>
+        DIALOG d_ship_dock
+        RETURN 1
+    ELSE
+        RETURN 1
+    endif
+endif
+ 
+[ITEMDEF 03e54]
+//tiller man
+TYPE=t_sign_gump
+//DUPEITEM=03e4a
+ 
+ON=@DCLICK
+IF <SRC.REGION.FLAGS>==010d2
+    SAY Arg! That hurts!
+    RETURN 1
+ELSE
+    IF <LINK.MORE>==<SRC.UID>
+        DIALOG d_ship_dock
+        RETURN 1
+    ELSE
+        RETURN 1
+    endif
+endif
+ 
+[ITEMDEF 03e55]
+//tiller man
+TYPE=t_sign_gump
+//DUPEITEM=03e4a
+ 
+ON=@DCLICK
+IF <SRC.REGION.FLAGS>==010d2
+    SAY Arg! That hurts!
+    RETURN 1
+ELSE
+    IF <LINK.MORE>==<SRC.UID>
+        DIALOG d_ship_dock
+        RETURN 1
+    ELSE
+        RETURN 1
+    endif
+endif

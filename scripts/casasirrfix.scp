@@ -1,0 +1,11 @@
+[function achacasasirr]
+forinstances i_sign_brass
+	if <link.type> == t_multi
+		s <name> <p>
+	endif
+endfor
+forinstances i_sign_brass_2
+	if <link.type> == t_multi
+		s <name> <p>
+	endif
+endfor

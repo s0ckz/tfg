@@ -1,0 +1,40 @@
+[COMMENT script_skill_tables]
+CREATE TABLE `skill_tables` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `skill` varchar(32) NOT NULL,
+  `display_id` int NOT NULL,
+  `color` int NOT NULL,
+  `type` varchar(32) NOT NULL,
+  `description` varchar(128) NOT NULL,
+  `required_skills` varchar(128) NOT NULL,
+  `required_resources` varchar(128),
+  `attributes` text,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+[FUNCTION f_compute_taming_skill_table]
+DB.EXECUTE DELETE FROM skill_tables WHERE skill = "Animal Taming"
+
+FORINSTANCES i_worldgem_bit
+  IF (<SERV.SPAWN.<MORE1>>)
+    LOCAL.RESPAWN_GROUP <MORE1>
+    FOR 1 <SERV.SPAWN.<LOCAL.RESPAWN_GROUP>.RESOURCES.COUNT>
+      LOCAL.CURRENT_ID <SERV.SPAWN.<LOCAL.RESPAWN_GROUP>.RESOURCES.<DLOCAL._FOR>.KEY>
+      CALL f_compute_taming_skill_table_by_defname
+    ENDFOR
+  ELSE
+    LOCAL.CURRENT_ID <MORE1>
+    CALL f_compute_taming_skill_table_by_defname
+  ENDIF
+ENDFOR
+
+[FUNCTION f_compute_taming_skill_table_by_defname]
+LOCAL.MOUNT mount_0x<STRSUB 1 STRLEN(<SERV.CHARDEF.<LOCAL.CURRENT_ID>.ID>) <SERV.CHARDEF.<LOCAL.CURRENT_ID>.ID>>
+IF (<DEF0.<LOCAL.MOUNT>>)
+  SERV.NEWNPC <LOCAL.CURRENT_ID>
+  IF !(<LOCAL.MOUNT_<EVAL <SERV.CHARDEF.<LOCAL.CURRENT_ID>.ID>>.<NEW.COLOR>>) && (<NEW.BRAIN> == brain_animal)
+    DB.EXECUTE INSERT INTO skill_tables (skill, display_id, color, type, description, required_skills) VALUES ("Animal Taming", <EVAL <SERV.CHARDEF.<LOCAL.CURRENT_ID>.ID>>, "<EVAL <NEW.COLOR>>" , "animation", "<NEW.NAME>", "Animal Taming <NEW.TAMING>%")
+    LOCAL.MOUNT_<EVAL <SERV.CHARDEF.<LOCAL.CURRENT_ID>.ID>>.<NEW.COLOR> 1
+  ENDIF
+  NEW.REMOVE
+ENDIF

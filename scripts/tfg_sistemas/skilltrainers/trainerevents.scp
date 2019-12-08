@@ -1,0 +1,105 @@
+[events e_skill_trainer]
+ON=@ReceiveItem
+//This trigger fires when an NPC is given an item from another character, before they have decided whether or not to accept it.
+// ARGO	The item the NPC is being given.
+// I	The NPC receiving the item.
+// SRC	The character giving the item away.
+// Return 1	Returns the item to SRC.
+
+    //player levels..
+    //level 1 == 70.0
+    //level 2 == 75.0 etc.
+    //level 7 == 100.0
+    //level 8 == 110.0
+
+    local.playerlevel 0
+
+    if (<src.<dtag.skill>> < 750)
+        local.playerlevel 1
+    elif ((<src.<dtag.skill>> < 800) && (<src.<dtag.skill>> > 749))
+        local.playerlevel 2
+    elif ((<src.<dtag.skill>> > 799) && (<src.<dtag.skill>> < 850))
+        local.playerlevel 3
+    elif ((<src.<dtag.skill>> > 849) && (<src.<dtag.skill>> < 900))
+        local.playerlevel 4 
+    elif ((<src.<dtag.skill>> > 899) && (<src.<dtag.skill>> < 950))
+        local.playerlevel 5
+    elif ((<src.<dtag.skill>> > 949) && (<src.<dtag.skill>> < 1000))
+        local.playerlevel 6
+    elif ((<src.<dtag.skill>> > 999) && (<src.<dtag.skill>> < 1100))
+        local.playerlevel 7
+        If !(<tag0.elder>)
+            SAY I shall not teach you anything, look for an elder sire...
+            return 1
+        endif
+    endif
+
+if (<argo.type> == t_skill_stone)
+    if (<argo.dtag.skill> != <dtag.skill>)
+        Say I do not know what to do with that <argo.name>. Im a <serv.skill.<dtag.skill>.name> Trainer.
+        return 1
+    elif (<argo.amount> > 1)
+        Say I need only one stone.
+        return 1
+    elif (<src.<dtag.skill>> < 700)
+        SAY You are still too amateur to use this stone, come back when you know more...
+        return 1
+    elif (<argo.tag0.broken>)
+        SAY That stone has decayed, I cant use it.
+        return 1
+    endif
+
+    if (<argo.dtag.level> <= <dlocal.playerlevel>)
+        Say The level of this stone is lower than what I need.
+        return 1
+    else
+        src.tag.level_<argo.dtag.level>_skill_<dtag.skill>_trainer_stone_given = 1
+        Message Thanks <src.name>, I have received your <argo.name>.
+        if (<src.tag0.level_<argo.dtag.level>_skill_<dtag.skill>_trainer_gold_paid>)
+            src.tag.level_<argo.dtag.level>_skill_<dtag.skill>_trainer_gold_paid
+            src.tag.level_<argo.dtag.level>_skill_<dtag.skill>_trainer_stone_given
+            src.f_increase_trained_skill <dtag.skill>,<eval <dlocal.playerlevel>+1>
+        endif
+    endif
+elif (<argo.type>==t_gold)
+    if (<argo.amount> != <dvar.trainer_<eval <dlocal.playerlevel>+1>_fee>)
+        SAY That amount of gold is not what I asked. My fee is exactly <dvar.trainer_<eval <dlocal.playerlevel>+1>_fee>gps.
+        return 1
+    elif (<src.dtag.skill_<dtag.skill>_trainer_gold_paid> == <dvar.trainer_<eval <dlocal.playerlevel>+1>_fee>)
+        SAY You have already paid for that.
+        Return 1
+    endif
+    src.tag.level_<eval <dlocal.playerlevel>+1>_skill_<dtag.skill>_trainer_gold_paid <argo.amount>
+    Message <SRC.Name> your fee has been paid! Thank you.
+     if (<src.tag0.level_<argo.dtag.level>_skill_<dtag.skill>_trainer_stone_given>)
+            src.tag.level_<argo.dtag.level>_skill_<dtag.skill>_trainer_gold_paid
+            src.tag.level_<argo.dtag.level>_skill_<dtag.skill>_trainer_stone_given
+            src.f_increase_trained_skill <dtag.skill>,<eval <dlocal.playerlevel>+1>
+        endif
+else
+    SAY I do not want that stuff...go away
+    return 1
+endif
+
+ON=@Click
+    Message @,,1 [<title>]
+    Message @0a45,,1 <name>
+    Return 1
+
+ON=@Attack
+return 1
+
+ON=@HitTry
+return 1
+
+ON=@GetHit
+return 1
+
+ON=@PetDesert
+return 1
+
+ON=@SpellEffect
+return 1
+
+ON=@Hunger
+return 1

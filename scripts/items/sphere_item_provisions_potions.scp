@@ -1,0 +1,1121 @@
+
+// FILE LAST UPDATED: March 8th, 2017
+
+[DEFNAME COLORPOTS]
+COLOR_O_MANABOOST 0532
+COLOR_O_LIFEBOOST 0026
+COLOR_O_REFILING 017f
+COLOR_O_MANAREFRESH 1152
+COLOR_O_AGILITY 0ce
+COLOR_O_EXPLO 24
+COLOR_O_HEAL 099
+COLOR_O_SHRINK 076
+COLOR_O_INVIS 17969
+COLOR_O_CURE 08f
+COLOR_O_REFRESH 022
+
+[ITEMDEF i_lelel]
+NAME=Explosion delay
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@Create
+	LINK <SRC.UID>
+
+ON=@EQUIP
+	TIMER 1
+
+ON=@TIMER
+	EMOTE LALALA
+	TIMER 1
+	RETURN 1
+
+[ITEMDEF i_potion_control]
+NAME=Controle de pocoes
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@CREATE
+	ATTR 096
+	LINK=<SRC.UID>
+
+ON=@TIMER
+	IF <TAG0.HASMODDEX> > 0
+		LINK.MODDEX -= <TAG.HASMODDEX>
+		TAG.HASMODDEX
+	ENDIF
+
+	IF <TAG0.HASMODSTR> > 0
+		LINK.MODSTR -= <TAG.HASMODSTR>
+		TAG.HASMODSTR
+	ENDIF
+	RETURN 1
+
+[ITEMDEF i_explo_delay]
+NAME=Explosion delay
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@Create
+LINK=<SRC.UID>
+
+ON=@Timer
+RETURN 0
+
+[ITEMDEF i_potion_release_delay]
+NAME=Release Potion delay
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@Create
+LINK=<SRC.UID>
+
+ON=@Timer
+RETURN 0
+
+[TYPEDEF t_potion]
+
+ON=@PICKUP_PACK
+	MORE2 016d
+	LINK 04fffffff
+
+ON=@PICKUP_GROUND
+	MORE2 016d
+	LINK 04fffffff
+
+on=@click
+	if <attr>&attr_identified
+		attr = <attr>&~attr_identified
+	endif
+
+ON=@DCLICK
+	IF <ID>==0f0d
+		RETURN 0
+	ENDIF
+
+IF <BASEID>==i_potion_shrink
+	RETURN 0
+ENDIF
+
+IF !(<TOPOBJ.UID>==<SRC.UID>) || (<CONT.UID>==<SRC.FINDLAYER.29.UID>)
+	SRC.SYSMESSAGE A pocao deve estar na sua mochila para ser usada.
+	RETURN 1
+ENDIF
+
+IF (<SRC.FINDID.i_potion_control.UID>==0)
+	NEWITEM i_potion_control
+	NEW.EQUIP
+ENDIF
+
+//if !(<BASEID> == i_potion_CureGreat) && !(<BASEID> == i_potion_Cure)
+IF (<SRC.FINDID.i_potion_control.timer> > -1)
+	SRC.SYSMESSAGE Voce ainda nao pode tomar outra pocao.
+	SRC.message Tempo restante POT: <eval <SRC.FINDID.I_POTION_CONTROL.TIMER>>
+	RETURN 1
+ENDIF
+//ENDIF
+
+[ITEMDEF i_potion_release]
+ID=i_bottle_empty
+NAME=Release Potion
+TYPE=T_POTION
+TDATA1=i_bottle_empty
+RESOURCES=i_magical_fish, i_dark_log 10, i_bottle_empty
+SKILLMAKE=ALCHEMY 100.0, t_mortar
+WEIGHT=0.1
+VALUE=10
+
+ON=@Create
+	COLOR=0796
+
+ON=@DCLICK
+	if (<SRC.FINDID.i_potion_release_delay.UID>)
+		SRC.SYSMESSAGE You can't use another release potion yet.
+		SRC.message Remaining time: <eval <SRC.FINDID.i_potion_release_delay.TIMER>> s
+		RETURN 1
+	ENDIF
+
+	SRC.SYSMESSAGE Which animal do you want to release from it's owner?
+	SRC.TARGETF f_release_animal <UID>
+
+	RETURN 1
+
+
+[FUNCTION f_release_animal]
+IF (<ARGV> != 1)
+	RETURN 1
+ENDIF
+
+IF (<ARGO.NPC> != brain_animal)
+	SRC.SYSMESSAGE @,,1 You should target an animal.
+	RETURN 1
+ENDIF
+
+IF (<ARGO.REGION.SAFE>)
+	SRC.SYSMESSAGE @,,1 You can't use this potion in a safe area !
+	RETURN 1
+ENDIF
+
+IF !(<ARGO.OWNER>)
+	SRC.SYSMESSAGE @,,1 This animal is already released !
+	RETURN 1
+ENDIF
+
+IF (<ARGO.OWNER.UID> == <SRC.UID>)
+	SRC.SYSMESSAGE @,,1 You should use '<ARGO.NAME> release' to release your own mount !
+	RETURN 1
+ENDIF
+
+IF !(<ARGO.OWNER.FLAGS> & statf_dead) && (<SRC.DISTANCE <ARGO.OWNER.UID>> < 200)
+	SRC.SYSMESSAGE @,,1 The owner must be dead or far away in order to release this animal !
+	RETURN 1
+ENDIF
+
+UID.<ARGV[0]>.CONSUME
+
+SERV.NEWITEM i_bottle_empty
+NEW.CONT <SRC>
+
+SERV.NEWITEM i_potion_release_delay
+NEW.CONT <SRC>
+NEW.TIMER 60
+
+ARGO.FLAGS &= ~statf_pet
+ARGO.MEMORYFINDTYPE.MEMORY_SPEAK.REMOVE
+ARGO.MEMORYFINDTYPE.MEMORY_IPET.REMOVE
+ARGO.MEMORYFINDTYPE.042.REMOVE
+
+SRC.SYSMESSAGE @,,1 You have confused <argo.name>, he no longer knows who his owner is...
+
+RETURN 1
+
+[ITEMDEF i_potion_Agility]
+ID=i_bottle_empty
+NAME=Agility Potion
+TYPE=T_POTION
+TDATA1=i_bottle_empty
+RESOURCES=i_reag_blood_moss, i_bottle_empty
+SKILLMAKE=ALCHEMY 15.1, t_mortar
+WEIGHT=0.1
+VALUE=10
+
+ON=@Create
+	COLOR=0ce
+	TAG.MODSTAT=10
+
+ON=@DCLICK
+	IF <AMOUNT> > 1
+		AMOUNT -=1
+	ELSE
+		REMOVE
+	ENDIF
+
+	SRC.MODDEX +=<TAG0.MODSTAT>
+	SRC.SYSMESSAGE Voce bebeu a <NAME>.
+	NEWITEM i_bottle_empty
+	NEW.BOUNCE
+	SRC.SALUTE
+	SRC.FINDID.i_potion_control.timer 25
+	SRC.FINDID.i_potion_control.tag.hasmoddex <TAG0.MODSTAT>
+	RETURN 1
+
+[ITEMDEF i_potion_AgilityGreat]
+ID=i_bottle_empty
+TYPE=T_POTION
+NAME=Greater Agility Potion
+TDATA1=i_bottle_empty
+RESOURCES=i_reag_blood_moss 3, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 50.1, t_mortar
+WEIGHT=0.1
+VALUE=20
+
+ON=@Create
+	COLOR=0ce
+	TAG.MODSTAT=25
+
+ON=@DCLICK
+	IF <AMOUNT> > 1
+		AMOUNT -=1
+	ELSE
+		REMOVE
+	ENDIF
+
+	SRC.MODDEX +=<TAG0.MODSTAT>
+	SRC.SYSMESSAGE Voce bebeu a <NAME>.
+	NEWITEM i_bottle_empty
+	NEW.BOUNCE
+	SRC.SALUTE
+	SRC.FINDID.i_potion_control.timer 25
+	SRC.FINDID.i_potion_control.tag.hasmoddex <TAG0.MODSTAT>
+	RETURN 1
+
+[ITEMDEF i_potion_Strength]
+ID=i_bottle_empty
+NAME=Strength Potion
+TYPE=T_POTION
+TDATA1=i_bottle_empty
+RESOURCES=i_reag_mandrake_root 2, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 25.1, t_mortar
+WEIGHT=0.1
+VALUE=14
+
+ON=@Create
+	COLOR 03e9
+	TAG.MODSTAT 25
+
+ON=@DCLICK
+	IF <AMOUNT> > 1
+		AMOUNT -=1
+	ELSE
+		REMOVE
+	ENDIF
+
+	SRC.MODSTR +=<TAG0.MODSTAT>
+	SRC.SYSMESSAGE Voce bebeu a <NAME>.
+	NEWITEM i_bottle_empty
+	NEW.BOUNCE
+	SRC.SALUTE
+	SRC.FINDID.i_potion_control.timer 25
+	SRC.FINDID.i_potion_control.tag.hasmodstr <TAG0.MODSTAT>
+	RETURN 1
+
+[ITEMDEF i_potion_StrengthGreat]
+NAME=Greater Strength Potion
+ID=i_bottle_empty
+TYPE=T_POTION
+TDATA1=i_bottle_empty
+RESOURCES=i_reag_mandrake_root 5, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 55.1, t_mortar
+WEIGHT=0.1
+VALUE=25
+
+ON=@Create
+	COLOR=03e9
+	TAG.MODSTAT=25
+
+ON=@DCLICK
+	IF <AMOUNT> > 1
+		AMOUNT -=1
+	ELSE
+		REMOVE
+	ENDIF
+
+	SRC.MODSTR +=<TAG0.MODSTAT>
+	SRC.SYSMESSAGE Voce bebeu a <NAME>.
+	NEWITEM i_bottle_empty
+	NEW.BOUNCE
+	SRC.SALUTE
+	SRC.FINDID.i_potion_control.timer 25
+	SRC.FINDID.i_potion_control.tag.hasmodstr <TAG0.MODSTAT>
+	RETURN 1
+
+[ITEMDEF i_potion_ExplosionLess]
+NAME=Lesser Explosion
+ID=0f02
+TYPE=T_POTION
+TDATA1=0
+RESOURCES=i_reag_sulfur_ash 3, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 25.1, t_mortar
+WEIGHT=0.1
+VALUE=20
+
+ON=@Create
+	MORE1=s_explosion
+	MORE2=1.0
+
+ON=@DCLICK
+	if !(<SRC.findid.i_explo_delay.UID>==0)
+		SRC.SYSMESSAGE Voce nao pode usar explosions tao rapido.
+		RETURN 1
+	ELSE
+		NEWITEM i_explo_delay
+		NEW.EQUIP
+		NEW.TIMER 8
+	ENDIF
+
+ON=@DAMAGE
+	//IF <REGION.GUARDED>
+	//RETURN 1
+	//ENDIF
+	IF (<CONT>)
+		IF !(<TAG0.EXPLO>)
+			RETURN 1
+		ENDIF
+	ENDIF
+
+ON=@TARGON_GROUND
+	SERV.LOG @Explosion: SRC = <SRC.NAME> I = <NAME> CONT = <CONT.NAME>
+
+[ITEMDEF i_potion_Explosion]
+NAME=Explosion
+ID=0f02
+TYPE=T_POTION
+TDATA1=0
+RESOURCES=i_reag_sulfur_ash 5, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 50.1, t_mortar
+WEIGHT=0.1
+VALUE=30
+
+ON=@Create
+	MORE1=s_explosion
+	MORE2=5.0
+
+ON=@DCLICK
+	if !(<SRC.findid.i_explo_delay.UID>==0)
+		SRC.SYSMESSAGE Voce nao pode usar explosions tao rapido.
+		RETURN 1
+	ELSE
+		NEWITEM i_explo_delay
+		NEW.EQUIP
+		NEW.TIMER 8
+	ENDIF
+
+ON=@DAMAGE
+	//IF <REGION.GUARDED>
+	//RETURN 1
+	//ENDIF
+	IF (<CONT>)
+		IF !(<TAG0.EXPLO>)
+			RETURN 1
+		ENDIF
+	ENDIF
+
+[ITEMDEF i_potion_ExplosionGreat]
+NAME=Greater Explosion
+ID=0f02
+TYPE=T_POTION
+TDATA1=0
+RESOURCES=i_reag_sulfur_ash 10, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 70.0, t_mortar
+WEIGHT=0.1
+VALUE=60
+
+ON=@Create
+	MORE1=s_explosion
+	MORE2=4.0
+
+ON=@DCLICK
+	if !(<SRC.findid.i_explo_delay.UID>==0)
+		SRC.SYSMESSAGE Voce nao pode usar explosions tao rapido.
+		RETURN 1
+	ELSE
+		NEWITEM i_explo_delay
+		NEW.EQUIP
+		NEW.TIMER 8
+	ENDIF
+
+
+ON=@DAMAGE
+//IF <REGION.GUARDED>
+//RETURN 1
+//ENDIF
+	IF (<CONT>)
+		IF !(<TAG0.EXPLO>)
+			RETURN 1
+		ENDIF
+	ENDIF
+
+[ITEMDEF i_potion_HealLesser]
+NAME=Lesser Heal Potion
+ID=i_bottle_empty
+RESOURCES=i_reag_ginseng, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 1.0, t_mortar
+TYPE=T_POTION
+TDATA1=i_bottle_empty
+WEIGHT=0.1
+VALUE=12
+
+ON=@Create
+	COLOR 099
+	TAG.REGEN 10
+
+ON=@DCLICK
+	IF (<SRC.FLAGS>&080)
+		SRC.SYSMESSAGE Voce nao pode se curar estando envenenado.
+		RETURN 1
+	ENDIF
+
+	IF <SRC.HITS> == <SRC.MAXHITS>
+		SRC.SYSMESSAGE Sua energia esta cheia.
+		RETURN 1
+	ENDIF
+
+	IF <AMOUNT> > 1
+		AMOUNT -=1
+	ELSE
+		REMOVE
+	ENDIF
+
+	IF ( (<SRC.HITS>) > (<EVAL <SRC.MAXHITS> - <TAG.REGEN>>))
+		SRC.HITS=<SRC.MAXHITS>
+	ELSE
+		SRC.HITS +=<dTAG.REGEN>
+	ENDIF
+
+	SRC.FINDID.i_potion_control.timer 8
+	SRC.SYSMESSAGE Voce bebeu a <NAME>.
+	NEWITEM i_bottle_empty
+	NEW.BOUNCE
+	SRC.SALUTE
+	RETURN 1
+
+[ITEMDEF i_potion_Heal]
+NAME=Heal Potion
+ID=i_bottle_empty
+RESOURCES=i_reag_ginseng 3, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 15.1, t_mortar
+TYPE=T_POTION
+TDATA1=i_bottle_empty
+WEIGHT=0.1
+VALUE=19
+
+ON=@Create
+	COLOR 099
+	TAG.REGEN 20
+
+ON=@DCLICK
+IF (<SRC.FLAGS>&080)
+	SRC.SYSMESSAGE Voce nao pode se curar estando envenenado.
+	RETURN 1
+ENDIF
+
+IF <SRC.HITS> == <SRC.MAXHITS>
+SRC.SYSMESSAGE Sua energia esta cheia.
+RETURN 1
+ENDIF
+
+IF <AMOUNT> > 1
+AMOUNT -=1
+ELSE
+REMOVE
+ENDIF
+
+IF ( (<SRC.HITS>) > (<EVAL <SRC.MAXHITS> - <TAG.REGEN>>))
+SRC.HITS=<SRC.MAXHITS>
+ELSE
+SRC.HITS +=<dTAG.REGEN>
+ENDIF
+SRC.FINDID.i_potion_control.timer 8
+SRC.SYSMESSAGE Voce bebeu a <NAME>.
+NEWITEM i_bottle_empty
+NEW.BOUNCE
+SRC.SALUTE
+RETURN 1
+
+[ITEMDEF i_potion_HealGreat]
+NAME=Greater Heal Potion
+ID=i_bottle_empty
+TYPE=T_POTION
+TDATA1=i_bottle_empty
+RESOURCES=i_reag_ginseng 7, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 55.1, t_mortar
+WEIGHT=0.1
+VALUE=50
+
+ON=@Create
+	COLOR 099
+	TAG.REGEN 35
+
+ON=@DCLICK
+IF (<SRC.FLAGS>&080)
+	SRC.SYSMESSAGE Voce nao pode se curar estando envenenado.
+	RETURN 1
+ENDIF
+
+IF <SRC.HITS> == <SRC.MAXHITS>
+	SRC.SYSMESSAGE Sua energia esta cheia.
+	RETURN 1
+ENDIF
+
+IF <AMOUNT> > 1
+	AMOUNT -=1
+ELSE
+	REMOVE
+ENDIF
+
+IF ( (<SRC.HITS>) > (<EVAL <SRC.MAXHITS> - <TAG.REGEN>>))
+	SRC.HITS=<SRC.MAXHITS>
+ELSE
+	SRC.HITS +=<dTAG.REGEN>
+ENDIF
+
+SRC.SYSMESSAGE Voce bebeu a <NAME>.
+NEWITEM i_bottle_empty
+NEW.BOUNCE
+SRC.SALUTE
+SRC.FINDID.i_potion_control.timer 8
+RETURN 1
+
+[ITEMDEF i_potion_Nightsight]
+NAME=Nightsight Potion
+ID=i_bottle_empty
+TYPE=T_POTION
+TDATA1=i_bottle_empty
+RESOURCES=i_reag_spider_silk 1, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 5.1, t_mortar
+VALUE=10
+
+ON=@Create
+	COLOR 0455
+
+ON=@DCLICK
+IF <AMOUNT> > 1
+	AMOUNT -=1
+ELSE
+	REMOVE
+ENDIF
+
+SRC.SPELLEFFECT 6,1000
+SRC.SYSMESSAGE Voce bebeu a <NAME>.
+NEWITEM i_bottle_empty
+NEW.BOUNCE
+SRC.SALUTE
+SRC.FINDID.i_potion_control.timer 6
+RETURN 1
+
+[ITEMDEF i_potion_Refresh]
+NAME=Refresh
+ID=i_bottle_empty
+TYPE=T_POTION
+TDATA1=i_bottle_empty
+RESOURCES=i_reag_black_pearl, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 5.0, t_mortar
+VALUE=10
+
+ON=@Create
+	COLOR 022
+	TAG.REGEN 50
+
+ON=@DCLICK
+IF <SRC.STAM> == <SRC.MAXSTAM>
+	SRC.SYSMESSAGE Sua estamina esta cheia.
+	RETURN 1
+ENDIF
+
+IF <AMOUNT> > 1
+	AMOUNT -=1
+ELSE
+	REMOVE
+ENDIF
+
+IF ( (<SRC.STAM>) > (<EVAL <SRC.MAXSTAM> - <TAG.REGEN>>))
+	SRC.STAM=<SRC.MAXSTAM>
+ELSE
+	SRC.STAM +=<dTAG.REGEN>
+ENDIF
+SRC.SYSMESSAGE Voce bebeu a <NAME>.
+NEWITEM i_bottle_empty
+NEW.BOUNCE
+SRC.SALUTE
+SRC.FINDID.i_potion_control.timer 10
+RETURN 1
+
+
+[ITEMDEF i_potion_RefreshTotal]
+ID=i_bottle_empty
+NAME=Total Refresh Potion
+TYPE=T_POTION
+TDATA1=i_bottle_empty
+RESOURCES=i_reag_black_pearl 5, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 40.1, t_mortar
+WEIGHT=0.1
+VALUE=26
+
+ON=@Create
+	COLOR 022
+
+ON=@DCLICK
+	IF <SRC.STAM> == <SRC.MAXSTAM>
+		SRC.SYSMESSAGE Sua estamina esta cheia.
+		RETURN 1
+	ENDIF
+
+	IF <AMOUNT> > 1
+		AMOUNT -=1
+	ELSE
+		REMOVE
+	ENDIF
+
+	SRC.STAM=<SRC.MAXSTAM>
+
+	SRC.SYSMESSAGE Voce bebeu a <NAME>.
+	NEWITEM i_bottle_empty
+	NEW.BOUNCE
+	SRC.SALUTE
+	SRC.FINDID.i_potion_control.timer 10
+	RETURN 1
+
+[ITEMDEF i_potion_shrink]
+ID=i_bottle_empty
+NAME=Potion of Shrink
+VALUE=130
+TYPE=T_NORMAL
+RESOURCES=i_reag_batwing 2, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 60.0, t_mortar
+
+ON=@Create
+	COLOR=076
+
+ON=@DCLICK
+IF !(<CONT.UID> == <SRC.FINDLAYER.21.UID>)
+ SRC.SYSMESSAGE @0480 A pocao deve estar na BAG.
+ELSE
+ TARGET Escolha o animal que quer Shrinkar.
+ENDIF
+RETURN 1
+
+ON=@TARGON_CHAR
+IF (<SRC.TARG.TAG0.UNSHRINKABLE>)
+ SRC.SYSMESSAGE Voce nao pode shrinkar <SRC.TARG.NAME>.
+ RETURN 1
+ENDIF
+IF !(<SRC.TARG.NPC>) || ((<SRC.TARG.NPC> != 1) && (<SRC.TARG.NPC> != 10) && (<SRC.TARG.NPC> != 13))
+ SRC.SYSMESSAGE Voce nao pode shrinkar <SRC.TARG.NAME>.
+ RETURN 1
+ENDIF
+IF !(<SRC.TARG.CANSEELOS>)
+ SRC.SYSMESSAGE @0480 Voce nao alcanca o alvo.
+ RETURN 1
+ENDIF
+IF (<SRC.TARG.DISTANCE> > 2)
+ SRC.SYSMESSAGE @0480 Voce nao alcanca o alvo.
+ RETURN 1
+ENDIF
+IF (<SRC.TARG.HITS> < <eval (<src.targ.str>*0.8)/10>)
+ SRC.SYSMESSAGE @0480 O animal precisa estar com 80% do seu Life total.
+ RETURN 1
+ENDIF
+IF (<SRC.TARG.FLAGS> & statf_conjured)
+ SRC.SYSMESSAGE @0480 O animal nao pode ser summoned.
+ RETURN 1
+ENDIF
+IF (<SRC.TARG.ISMYPET>)
+ SERV.NEWITEM=<SRC.TARG.ICON>
+ NEW.COLOR=<SRC.TARG.COLOR>
+ NEW.NAME=<SRC.TARG.NAME>
+ NEW.MORE1=<SRC.TARG.BASEID>
+ NEW.CONT=<SRC.FINDLAYER.21.UID>
+ SRC.TARG.REMOVE
+ SRC.CONSUME I_POTION_SHRINK
+ELSE
+ SRC.SYSMESSAGE @0480 Esse Animal nao eh seu.
+ENDIF
+RETURN 1
+
+ON=@TARGON_ITEM
+SRC.SYSMESSAGE Voce nao pode Shrinkar um item.
+RETURN 1
+
+[ITEMDEF PET_SMALL]
+ID=I_MEMORY
+NAME=The Shrunk Pet
+TYPE=T_SCRIPT
+
+ON=@DCLICK
+IF (<TAG.PET> = 01)
+	SRC.NEWNPC=<TAG.ID>
+	SRC.ACT.NAME=<NAME>
+	SRC.ACT.P=<SRC.P>
+	SRC.ACT.COLOR=<COLOR>
+	SRC.ACT.STR=<EVAL <TAG.STR>>
+	SRC.ACT.INT=<EVAL <TAG.INT>>
+	SRC.ACT.DEX=<EVAL <TAG.DEX>>
+	SRC.ACT.HITS=<EVAL <TAG.STR>>
+	SRC.ACT.MANA=<EVAL <TAG.INT>>
+	SRC.ACT.STAM=<EVAL <TAG.DEX>>
+	SRC.ACT.KARMA=<EVAL <TAG.KARMA>>
+	SRC.ACT.FAME=<EVAL <TAG.FAME>>
+	SRC.ACT.KILLS=<EVAL <TAG.KILLS>>
+	SRC.ACT.FLAGS=<TAG.FLAGS>
+	SRC.ACT.FOOD=<EVAL <TAG.FOOD>>
+	SRC.ACT.PARRYING=<EVAL <TAG.PARRYING>>
+	SRC.ACT.MAGERY=<EVAL <TAG.MAGERY>>
+	SRC.ACT.MAGICRESISTANCE=<EVAL <TAG.MAGICRESISTANCE>>
+	SRC.ACT.TACTICS=<EVAL <TAG.TACTICS>>
+	SRC.ACT.WRESTLING=<EVAL <TAG.WRESTLING>>
+	SRC.ACT.TAMING=<EVAL <TAG.TAMING>>
+	TAG.STR=
+	TAG.INT=
+	TAG.DEX=
+	//TAG.FOOD=
+	TAG.FAME=
+	TAG.KARMA=
+	TAG.ID=
+	TAG.PET=
+	TAG.FLAGS=
+	TAG.PARRYING=
+	TAG.MAGERY=
+	TAG.MAGICRESISTANCE=
+	TAG.TACTICS=
+	TAG.WRESTLING=
+	TAG.TAMING=
+ENDIF
+src.act.newitem=i_memory
+src.act.act.color=01
+src.act.act.link=<src.uid>
+src.act.act.cont <src.act.uid>
+src.act.flags=<src.act.flags>|statf_pet
+src.act.findlayer(layer_pack).remove
+remove
+return 1
+
+[ITEMDEF i_potion_Invisibility]
+ID=i_bottle_empty
+NAME=Invisibility
+TYPE=T_POTION
+TDATA1=i_bottle_empty
+RESOURCES=i_reag_worm_heart 4, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 65.1, t_mortar
+VALUE=40
+
+ON=@Create
+	MORE1=s_invisibility
+	MORE2=1000
+	COLOR=COLOR_SPECTRAL
+
+ON=@DCLICK
+IF <AMOUNT> > 1
+AMOUNT -=1
+ELSE
+REMOVE
+ENDIF
+
+SRC.SPELLEFFECT s_invisibility,1000
+
+SRC.SYSMESSAGE Voce bebeu a <NAME>.
+NEWITEM i_bottle_empty
+NEW.BOUNCE
+SRC.SALUTE
+SRC.FINDID.i_potion_control.timer 15
+RETURN 1
+
+[ITEMDEF i_potion_Mana]
+ID=i_bottle_empty
+NAME=Mana Refresh
+TYPE=T_POTION
+TDATA1=i_bottle_empty
+RESOURCES=i_reag_eye_of_newt 3, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 65.1, t_mortar
+VALUE=20
+ON=@Create
+	COLOR color_ice
+	TAG.REGEN 21
+
+ON=@DCLICK
+IF (<SRC.FLAGS>&080)
+	SRC.SYSMESSAGE Voce nao pode se curar estando envenenado.
+	RETURN 1
+ENDIF
+
+IF <SRC.MANA> == <SRC.MAXMANA>
+SRC.SYSMESSAGE Sua energia esta cheia.
+RETURN 1
+ENDIF
+
+IF <AMOUNT> > 1
+AMOUNT -=1
+ELSE
+REMOVE
+ENDIF
+
+IF ( <SRC.MANA> > <SRC.MAXMANA> - <dTAG.REGEN>)
+SRC.MANA=<SRC.MAXMANA>
+ELSE
+SRC.MANA +=<dTAG.REGEN>
+ENDIF
+SRC.FINDID.i_potion_control.timer 8
+SRC.SYSMESSAGE Voce bebeu a <NAME>.
+NEWITEM i_bottle_empty
+NEW.BOUNCE
+SRC.SALUTE
+RETURN 1
+
+[ITEMDEF i_potion_ManaTotal]
+ID=i_bottle_empty
+NAME=Total Mana Refresh
+TYPE=T_POTION
+TDATA1=i_bottle_empty
+RESOURCES=i_reag_eye_of_newt 6, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 70.0, t_mortar
+WEIGHT=0.1
+VALUE=120
+
+ON=@Create
+	COLOR color_ice
+	TAG.REGEN 42
+
+ON=@DCLICK
+	IF (<SRC.FLAGS>&080)
+		SRC.SYSMESSAGE Voce nao pode se curar estando envenenado.
+		RETURN 1
+	ENDIF
+
+	IF <SRC.MANA> == <SRC.MAXMANA>
+		SRC.SYSMESSAGE Sua energia esta cheia.
+		RETURN 1
+	ENDIF
+
+	IF <AMOUNT> > 1
+		AMOUNT -=1
+	ELSE
+		REMOVE
+	ENDIF
+
+	IF ( <SRC.MANA> > <SRC.MAXMANA> - <dTAG.REGEN>)
+		SRC.MANA=<SRC.MAXMANA>
+	ELSE
+		SRC.MANA +=<dTAG.REGEN>
+	ENDIF
+
+	SRC.FINDID.i_potion_control.timer 8
+	SRC.SYSMESSAGE Voce bebeu a <NAME>.
+	NEWITEM i_bottle_empty
+	NEW.BOUNCE
+	SRC.SALUTE
+	RETURN 1
+
+[ITEMDEF i_potion_life_boost_great]
+id=0f82
+NAME=Great Life Boost
+TYPE=T_POTION
+TDATA1=i_bottle_empty
+RESOURCES=6 i_reag_obsidian, 6 i_reag_mandrake_root, 6 i_reag_ginseng, i_bottle_empty
+SKILLMAKE=ALCHEMY 70.0, t_mortar
+WEIGHT=0.1
+VALUE=180
+
+ON=@Create
+	COLOR 0026
+
+ON=@DCLICK
+IF (<SRC.FLAGS>&080)
+	SRC.SYSMESSAGE Voce nao pode se curar estando envenenado.
+	RETURN 1
+ENDIF
+
+IF <SRC.HITS> > <SRC.MAXHITS>
+	SRC.SYSMESSAGE Voce nao precisa de um Life Boost no momento.
+	RETURN 1
+ENDIF
+
+IF <AMOUNT> > 1
+	AMOUNT -=1
+ELSE
+	REMOVE
+ENDIF
+
+SRC.SYSMESSAGE Voce bebeu a <NAME>.
+NEWITEM i_bottle_empty
+NEW.BOUNCE
+SRC.SALUTE
+SRC.FINDID.i_potion_control.timer 12
+
+//IF (<SRC.HITS> > <SRC.MAXHITS>)
+//	SRC.SYSMESSAGE Voce nao precisa de um Life Boost no momento, voce tomou a pocao mas ela fez pouco efeito.
+//	RETURN 1
+//ENDIF
+
+SRC.HITS += 80
+RETURN 1
+
+[ITEMDEF i_potion_mana_boost_great]
+id=0f82
+NAME=Great Mana Boost
+TYPE=T_POTION
+TDATA1=i_bottle_empty
+RESOURCES=6 i_reag_fertile_dirt, 6 i_reag_eye_of_newt, 1 i_BOTTLE_EMPTY
+SKILLMAKE=ALCHEMY 70.0, t_mortar
+WEIGHT=0.1
+VALUE=180
+
+ON=@Create
+	COLOR 0532
+	TAG.REGEN 80
+
+ON=@DCLICK
+
+IF (<SRC.FLAGS>&080)
+	SRC.SYSMESSAGE Voce nao pode usar mana boost estando envenenado.
+	RETURN 1
+ENDIF
+
+IF <SRC.MANA> > <SRC.MAXMANA> +20
+	SRC.SYSMESSAGE Voce nao precisa de um Mana Boost no momento.
+	RETURN 1
+ENDIF
+
+IF <AMOUNT> > 1
+AMOUNT -=1
+ELSE
+REMOVE
+ENDIF
+
+SRC.SYSMESSAGE Voce bebeu a <NAME>.
+NEWITEM i_bottle_empty
+NEW.BOUNCE
+SRC.SALUTE
+SRC.FINDID.i_potion_control.timer 12
+
+//IF (<SRC.MANA> > <eval <SRC.MAXMANA> + 20>)
+//	SRC.SYSMESSAGE Voce nao precisa de um Mana Boost no momento, voce bebeu a pocao mas ela fez pouco efeito.
+//	RETURN 1
+//ENDIF
+
+SRC.MANA += 80
+RETURN 1
+
+[ITEMDEF I_POTION_ANTIDOTE]
+//Pocao de Antidoto
+NAME=Antidote potion
+ID=0F0E
+WEIGHT=0.1
+TYPE=T_POTION
+TDATA1=I_BOTTLE_EMPTY
+VALUE=8
+RESOURCES=8 i_reag_dragon_blood, 1 i_bottle_empty
+SKILLMAKE=ALCHEMY 70.0, t_mortar
+
+ON=@CREATE
+	COLOR=041b
+
+ON=@DCLICK
+	TARGET
+	RETURN 1
+
+ON=@TARGON_CHAR
+	RETURN 1
+
+ON=@TARGON_ITEM
+
+	if (<src.targ.baseid>==i_robe_of_cure) || (<src.targ.baseid>==i_dress_of_cure)
+		if <argo.tag0.charges> < 5
+			local.EmptyCharges = <eval 5 - <argo.tag0.charges>>
+			local.PossibleCharges = <qval (<local.EmptyCharges> <= <amount>)?<local.EmptyCharges>:<amount>>
+			if (<amount> > 1)
+				argo.tag0.charges += <local.PossibleCharges>
+				amount -= <local.PossibleCharges>
+				update
+			else
+				argo.tag0.charges += 1
+				remove
+			endif
+			src.sysmessage @,,1 Voce embebeu <argo.name> em antidoto.
+			return 1
+		else
+			src.sysmessage @,,1 <argo.name> ja esta muito embebido em antidoto.
+			return 1
+		endif
+	endif
+
+	IF (<SRC.TARG.AMOUNT> == 500) && (<SRC.TARG.BASEID> == i_cloth_box) && (<AMOUNT> == 1)
+		SRC.TARG.REMOVE
+		SRC.NEWITEM=i_cloth_antidote
+		NEW.AMOUNT=500
+		NEW.BOUNCE
+		REMOVE
+		RETURN 1
+	ELIF (<SRC.TARG.AMOUNT> == 500) && (<SRC.TARG.BASEID> == i_cloth_box) && (<AMOUNT> > 1)
+			SRC.TARG.REMOVE
+			SRC.NEWITEM=i_cloth_antidote
+			NEW.AMOUNT=500
+			NEW.BOUNCE
+			AMOUNT=<AMOUNT>+ (-1)
+			RETURN 1
+	ELSE
+			SRC.SYSMESSAGE=Antidote potion works only in 500 cloth box, theres no effect in other objects.
+			RETURN 1
+	ENDIF
+
+// Porque esta porra esta repetida?
+[ITEMDEF I_POTION_ANTIDOTE_TFG]
+//Pocao de Antidoto
+NAME=Antidote potion
+ID=i_bottle_empty
+WEIGHT=0.1
+TYPE=T_POTION
+TDATA1=I_BOTTLE_EMPTY
+VALUE=8
+RESOURCES=8 i_reag_dragon_blood, 1 i_bottle_empty
+SKILLMAKE=ALCHEMY 70.0, t_mortar
+
+ON=@CREATE
+	COLOR=041b
+
+ON=@DCLICK
+	TARGET
+	RETURN 1
+
+ON=@TARGON_CHAR
+	RETURN 1
+
+ON=@TARGON_ITEM
+
+IF (<SRC.TARG.AMOUNT> == 500) && (<SRC.TARG.BASEID> == i_cloth_box) && (<AMOUNT> == 1)
+	SRC.TARG.REMOVE
+	SRC.NEWITEM=i_cloth_antidote
+	NEW.AMOUNT=500
+	NEW.BOUNCE
+	REMOVE
+	RETURN 1
+ELSE
+	IF (<SRC.TARG.AMOUNT> == 500) && (<SRC.TARG.BASEID> == i_cloth_box) && (<AMOUNT> > 1)
+		SRC.TARG.REMOVE
+		SRC.NEWITEM=i_cloth_antidote
+	NEW.AMOUNT=500
+	NEW.BOUNCE
+	AMOUNT=<AMOUNT>+ (-1)
+	RETURN 1
+ELSE
+	SRC.SYSMESSAGE Antidote potion works only in 500 cloth box, theres no effect in other objects.
+	RETURN 1
+ENDIF
+
+[ITEMDEF i_potion_refilling_great]
+id=0f82
+NAME=Great Refilling
+TYPE=T_POTION
+TDATA1=i_bottle_empty
+RESOURCES=6 i_reag_blood_spawn, 6 i_reag_eye_of_newt, 6 i_reag_mandrake_root, 6 i_reag_ginseng, 1 i_BOTTLE_EMPTY
+SKILLMAKE=ALCHEMY 70.0, t_mortar
+WEIGHT=0.1
+VALUE=180
+
+ON=@Create
+	COLOR 017f
+	TAG.REGEN 60
+
+ON=@DCLICK
+
+IF (<SRC.FLAGS>&080)
+	SRC.SYSMESSAGE Voce nao pode se curar estando envenenado.
+	RETURN 1
+ENDIF
+
+IF ((<SRC.MANA> > <SRC.MAXMANA> +20) || (<SRC.HITS> > <SRC.MAXHITS>))
+	SRC.SYSMESSAGE Voce nao precisa de um Refilling no momento.
+	RETURN 1
+ENDIF
+
+IF <AMOUNT> > 1
+	AMOUNT -= 1
+ELSE
+	REMOVE
+ENDIF
+
+SRC.SYSMESSAGE Voce bebeu a <NAME>.
+NEWITEM i_bottle_empty
+NEW.BOUNCE
+SRC.SALUTE
+SRC.FINDID.i_potion_control.timer 12
+
+//IF ((<SRC.MANA> > <eval <SRC.MAXMANA> + 20>) || (<SRC.HITS> > <SRC.MAXHITS>))
+//	SRC.SYSMESSAGE Voce nao precisa de um Refilling no momento, voce bebeu a pocao mas ela fez pouco efeito.
+//	RETURN 1
+//ENDIF
+
+SRC.MANA +=<dTAG.REGEN>
+SRC.HITS +=<dTAG.REGEN>
+
+RETURN 1
+
+[EOF]

@@ -1,0 +1,92 @@
+//  Arquivos de correcoes
+
+[FUNCTION f_kegs_new_colors]
+forinstances i_keg_shrink1
+	color = color_o_shrink
+	local.ct ++
+endfor
+forinstances i_keg_invis1
+	color = color_o_invis
+	local.ct ++
+endfor
+forinstances i_keg_glb1
+	color = color_o_lifeboost
+	local.ct ++
+endfor
+forinstances i_keg_gmb1
+	color = color_o_manaboost
+	local.ct ++
+endfor
+forinstances i_keg_grf1
+	color = color_o_refiling
+	local.ct ++
+endfor
+forinstances i_keg_gheal1
+	color = color_o_heal
+	local.ct ++
+endfor
+forinstances i_keg_gcure1
+	color = color_o_cure
+	local.ct ++
+endfor
+forinstances i_keg_refreshtotal1
+	color = color_o_refresh
+	local.ct ++
+endfor
+forinstances i_keg_manatotal1
+	color = color_o_manarefresh
+	local.ct ++
+endfor
+forinstances i_keg_lexplo1
+	color = color_o_explo
+	local.ct ++
+endfor
+forinstances i_keg_gexplo1
+	color = color_o_explo
+	local.ct ++
+endfor
+forinstances i_keg_shrink
+	color = color_o_shrink
+	local.ct ++
+endfor
+forinstances i_keg_invis
+	color = color_o_invis
+	local.ct ++
+endfor
+forinstances i_keg_glb
+	color = color_o_lifeboost
+	local.ct ++
+endfor
+forinstances i_keg_gmb
+	color = color_o_manaboost
+	local.ct ++
+endfor
+forinstances i_keg_grf
+	color = color_o_refiling
+	local.ct ++
+endfor
+forinstances i_keg_gheal
+	color = color_o_heal
+	local.ct ++
+endfor
+forinstances i_keg_gcure
+	color = color_o_cure
+	local.ct ++
+endfor
+forinstances i_keg_refreshtotal
+	color = color_o_refresh
+	local.ct ++
+endfor
+forinstances i_keg_manatotal
+	color = color_o_manarefresh
+	local.ct ++
+endfor
+forinstances i_keg_lexplo
+	color = color_o_explo
+	local.ct ++
+endfor
+forinstances i_keg_gexplo
+	color = color_o_explo
+	local.ct ++
+endfor
+sysmessage @,,1 <dlocal.ct> kegs pintadas!

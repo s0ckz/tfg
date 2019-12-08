@@ -1,0 +1,22 @@
+
+
+////
+[COMMENT oi]
+SERV.NEWITEM i_basebingo3
+NEW.P 1190,57,28
+NEW.ATTR 010
+SERV.NEWITEM i_basebingo4
+NEW.P 1190,58,28
+NEW.ATTR 010
+SERV.NEWITEM i_basebingo5
+NEW.P 1190,55,28
+NEW.ATTR 010
+//[ITEMDEF i_basebingo3]
+ID=07bc
+NAME=Mesa de Bingo
+//[ITEMDEF i_basebingo4]
+ID=07c7
+NAME=Mesa de Bingo
+//[ITEMDEF i_basebingo5]
+ID=07c8
+NAME=Mesa de Bingo

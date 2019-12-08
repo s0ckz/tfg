@@ -1,0 +1,405 @@
+[DEFNAME defnames_writetable]
+writetable_body <BODY BGCOLOR=#aaaaaa LEFTMARGIN=0 TOPMARGIN=0 MARGINWIDTH=0 MARGINHEIGHT=0>
+writetable_body_end </BODY>
+writetable_td <td align="center"><font size="1" face="Arial" color="#ffffff">
+writetable_td_end </font></td>
+writetable_td_header <td nowrap bgcolor="#444444" align="center"><strong><font size="1" face="Arial Black" color="#ffffff">
+writetable_td_header_end </font></strong></td>
+writetable_table <table border="1" cellpadding="2" width="100%">
+writetable_table_end </table>
+writetable_tr <tr>
+writetable_tr_end </tr>
+
+td <td>
+tde </td>
+
+writetable_bs blacksmithing.html
+writetable_bow bowcraft.html
+writetable_carp carpentry.html
+writetable_tail tailoring.html
+writetable_tink tinkering.html
+writetable_insc inscription.html
+writetable_alch alchemy.html
+
+[FUNCTION writetables]
+IF (<ISEMPTY <ARGS>>)
+    SERV.B READING SCRIPT CONTENT...
+    writetables scripts\items\sphere_item_profession_tailor_tanner.scp
+    writetables scripts\items\sphere_item_profession_alchemist_mage.scp
+    writetables scripts\items\sphere_item_profession_carpentry.scp
+    writetables scripts\items\sphere_item_profession_cartographer.scp
+    writetables scripts\items\sphere_item_deco_furniture.scp
+    writetables scripts\items\sphere_item_provisions_weapons.scp
+    writetables scripts\items\sphere_item_provisions_armor_color.scp
+    writetables scripts\items\sphere_item_provisions_chainmail.scp
+    writetables scripts\items\sphere_item_provisions_armor.scp
+    writetables scripts\items\sphere_item_provisions_ringmail.scp
+    writetables scripts\items\sphere_item_provisions_shields.scp
+    writetables scripts\custom-tfg\sphere_custom_bows_hcbs.scp
+    writetables scripts\custom-tfg\sphere_custom_leathers.scp
+    writetables scripts\custom-tfg\sphere_except_weapons.scp
+    writetables scripts\custom-tfg\advalchemy.scp
+    writetables scripts\items\sphere_item_provisions_potions.scp
+    writetables scripts\items\sphere_item_profession.scp
+    writetables scripts\items\sphere_item_misc.scp
+    writetables scripts\items\sphere_item_profession_carpentry.scp
+    writetables scripts\items\sphere_item_provisions_alchemy_magic.scp
+    writetables scripts\custom-tfg\sphere_magic_craftable_items.scp
+    writetables scripts\custom-tfg\sphere_custom_clothes.scp
+    writetables scripts\TreasureSys\tfg_treasure_items.scp
+    writetables scripts\custom-tfg\sphere_color_logs.scp
+
+//    writetables scripts\skills\sphere_skills_tailor_pirates.scp
+
+    SERV.B FINISHED WRITING HTML CONTENT
+ELSE
+    LOCAL.OLD_MAXLOOPTIMES=<SERV.MAXLOOPTIMES>
+    SERV.MAXLOOPTIMES=0
+    IF !( <SERV.OPTIONFLAGS> & 080 )
+        LOCAL.OPTIONFLAGS=<SERV.OPTIONFLAGS>
+        SERV.OPTIONFLAGS=<SERV.OPTIONFLAGS> | 080
+    ENDIF
+    IF (<FILE.OPEN <ARGS>>)
+        FOR 1 <FILE.FILELINES <ARGS>>
+            LOCAL.PROCESSING += 1
+            WRITETABLES_BROADCAST <LOCAL.PROCESSING>
+            IF (STRMATCH("*itemdef*","<FILE.READLINE <DLOCAL._FOR>>"))
+			LOCAL.ITEMM = 0
+                IF !(<ISEMPTY <SERV.ITEMDEF.<STREAT <FILE.READLINE <DLOCAL._FOR>>>.SKILLMAKE>>) && !(<ISEMPTY <SERV.ITEMDEF.<STREAT <FILE.READLINE <DLOCAL._FOR>>>.RESOURCES>>)
+                    IF (STRMATCH("*alchemy*","<SERV.ITEMDEF.<STREAT <FILE.READLINE <DLOCAL._FOR>>>.SKILLMAKE>"))
+			if !<local.color_wrote>
+				LOCAL.ALCH_<DLOCAL.ALCH>=<DEF.writetable_td>null<DEF.br><LOCAL.ALCH_<DLOCAL.ALCH>>
+			endif
+			local.color_wrote = 0
+                        LOCAL.ALCH += 1
+			LOCAL.ITEMM = 1
+			VAR.NAME_TYPE=ALCH_<dLOCAL.ALCH>
+                        LOCAL.ALCH_<DLOCAL.ALCH>=<hval <SERV.ITEMDEF.<STREAT <FILE.READLINE <DLOCAL._FOR>>>.ID>><DEF.writetable_td_end><DEF.writetable_td><SERV.ITEMDEF.<STREAT <FILE.READLINE <DLOCAL._FOR>>>.NAME><DEF.writetable_td_end><DEF.writetable_td><WRITETABLESRESOURCES <SERV.ITEMDEF.<STREAT <FILE.READLINE <DLOCAL._FOR>>>.RESOURCES>><DEF.writetable_td_end><DEF.writetable_td><SERV.ITEMDEF.<STREAT <FILE.READLINE <DLOCAL._FOR>>>.SKILLMAKE><DEF.writetable_td_end><DEF.writetable_td><WRITETABLES_SPECIAL <SERV.ITEMDEF.<STREAT <FILE.READLINE <DLOCAL._FOR>>>.BASEID>><DEF.writetable_td_end>
+                    ENDIF
+                    IF (STRMATCH("*blacksmithing*","<SERV.ITEMDEF.<STREAT <FILE.READLINE <DLOCAL._FOR>>>.SKILLMAKE>"))
+			if !<local.color_wrote>
+				LOCAL.BS_<DLOCAL.BS>=<DEF.writetable_td>null<DEF.br><LOCAL.BS_<DLOCAL.BS>>
+			endif
+			local.color_wrote = 0
+                        LOCAL.BS += 1
+			LOCAL.ITEMM = 1
+			VAR.NAME_TYPE=BS_<dLOCAL.BS>
+			LOCAL.<VAR.NAME_TYPE>_LAST = 1
+                        LOCAL.BS_<DLOCAL.BS>=<hval <SERV.ITEMDEF.<STREAT <FILE.READLINE <DLOCAL._FOR>>>.ID>><DEF.writetable_td_end><DEF.writetable_td><SERV.ITEMDEF.<STREAT <FILE.READLINE <DLOCAL._FOR>>>.NAME><DEF.writetable_td_end><DEF.writetable_td><WRITETABLESRESOURCES <SERV.ITEMDEF.<STREAT <FILE.READLINE <DLOCAL._FOR>>>.RESOURCES>><DEF.writetable_td_end><DEF.writetable_td><SERV.ITEMDEF.<STREAT <FILE.READLINE <DLOCAL._FOR>>>.SKILLMAKE><DEF.writetable_td_end><DEF.writetable_td><WRITETABLES_SPECIAL <SERV.ITEMDEF.<STREAT <FILE.READLINE <DLOCAL._FOR>>>.BASEID>><DEF.writetable_td_end>
+                    ENDIF
+                ENDIF
+                    IF (STRMATCH("*bowcraft*","<SERV.ITEMDEF.<STREAT <FILE.READLINE <DLOCAL._FOR>>>.SKILLMAKE>"))
+			if !<local.color_wrote>
+				LOCAL.BOW_<DLOCAL.BOW>=<DEF.writetable_td>null<DEF.br><LOCAL.BOW_<DLOCAL.BOW>>
+			endif
+			local.color_wrote = 0
+                        LOCAL.BOW += 1
+			LOCAL.ITEMM = 1
+			VAR.NAME_TYPE=BOW_<dLOCAL.BOW>
+			LOCAL.<VAR.NAME_TYPE>_LAST = 1
+                        LOCAL.BOW_<DLOCAL.BOW>=<hval <SERV.ITEMDEF.<STREAT <FILE.READLINE <DLOCAL._FOR>>>.ID>><DEF.writetable_td_end><DEF.writetable_td><SERV.ITEMDEF.<STREAT <FILE.READLINE <DLOCAL._FOR>>>.NAME><DEF.writetable_td_end><DEF.writetable_td><WRITETABLESRESOURCES <SERV.ITEMDEF.<STREAT <FILE.READLINE <DLOCAL._FOR>>>.RESOURCES>><DEF.writetable_td_end><DEF.writetable_td><SERV.ITEMDEF.<STREAT <FILE.READLINE <DLOCAL._FOR>>>.SKILLMAKE><DEF.writetable_td_end><DEF.writetable_td><WRITETABLES_SPECIAL <SERV.ITEMDEF.<STREAT <FILE.READLINE <DLOCAL._FOR>>>.BASEID>><DEF.writetable_td_end>
+                    ENDIF
+                    IF (STRMATCH("*carpentry*","<SERV.ITEMDEF.<STREAT <FILE.READLINE <DLOCAL._FOR>>>.SKILLMAKE>"))
+			if !<local.color_wrote>
+				LOCAL.CARP_<DLOCAL.CARP>=<DEF.writetable_td>null<DEF.br><LOCAL.CARP_<DLOCAL.CARP>>
+			endif
+			local.color_wrote = 0
+                        LOCAL.CARP += 1
+			LOCAL.ITEMM = 1
+			VAR.NAME_TYPE=CARP_<dLOCAL.CARP>
+			LOCAL.CARP_<dLOCAL.CARP>_LAST = 1
+			LOCAL.CARP_<dLOCAL.CARP>_LAST = 1
+                        LOCAL.CARP_<DLOCAL.CARP>=<hval <SERV.ITEMDEF.<STREAT <FILE.READLINE <DLOCAL._FOR>>>.ID>><DEF.writetable_td_end><DEF.writetable_td><SERV.ITEMDEF.<STREAT <FILE.READLINE <DLOCAL._FOR>>>.NAME><DEF.writetable_td_end><DEF.writetable_td><WRITETABLESRESOURCES <SERV.ITEMDEF.<STREAT <FILE.READLINE <DLOCAL._FOR>>>.RESOURCES>><DEF.writetable_td_end><DEF.writetable_td><SERV.ITEMDEF.<STREAT <FILE.READLINE <DLOCAL._FOR>>>.SKILLMAKE><DEF.writetable_td_end><DEF.writetable_td><WRITETABLES_SPECIAL <SERV.ITEMDEF.<STREAT <FILE.READLINE <DLOCAL._FOR>>>.BASEID>><DEF.writetable_td_end>
+                    ENDIF
+//
+		IF (STRMATCH("*inscription*","<SERV.ITEMDEF.<STREAT <FILE.READLINE <DLOCAL._FOR>>>.SKILLMAKE>"))
+			if !<local.color_wrote>
+				LOCAL.INSC_<DLOCAL.INSC>=<DEF.writetable_td>null<DEF.br><LOCAL.INSC_<DLOCAL.INSC>>
+			endif
+			local.color_wrote = 0
+                        LOCAL.INSC += 1
+			LOCAL.ITEMM = 1
+			VAR.NAME_TYPE=INSC_<dLOCAL.INSC>
+			LOCAL.INSC_<dLOCAL.INSC>_LAST = 1
+                        LOCAL.INSC_<DLOCAL.INSC>=<hval <SERV.ITEMDEF.<STREAT <FILE.READLINE <DLOCAL._FOR>>>.ID>><DEF.writetable_td_end><DEF.writetable_td><SERV.ITEMDEF.<STREAT <FILE.READLINE <DLOCAL._FOR>>>.NAME><DEF.writetable_td_end><DEF.writetable_td><WRITETABLESRESOURCES <SERV.ITEMDEF.<STREAT <FILE.READLINE <DLOCAL._FOR>>>.RESOURCES>><DEF.writetable_td_end><DEF.writetable_td><SERV.ITEMDEF.<STREAT <FILE.READLINE <DLOCAL._FOR>>>.SKILLMAKE><DEF.writetable_td_end><DEF.writetable_td><WRITETABLES_SPECIAL <SERV.ITEMDEF.<STREAT <FILE.READLINE <DLOCAL._FOR>>>.BASEID>><DEF.writetable_td_end>
+                    ENDIF
+                    IF (STRMATCH("*tailoring*","<SERV.ITEMDEF.<STREAT <FILE.READLINE <DLOCAL._FOR>>>.SKILLMAKE>"))
+			if !<local.color_wrote>
+				LOCAL.TAIL_<DLOCAL.TAIL>=<DEF.writetable_td>null<DEF.br><LOCAL.TAIL_<DLOCAL.TAIL>>
+			endif
+			local.color_wrote = 0
+                        LOCAL.TAIL += 1
+			LOCAL.ITEMM = 1
+			VAR.NAME_TYPE=TAIL_<dLOCAL.TAIL>
+			LOCAL.TAIL_<dLOCAL.TAIL>_LAST = 1
+                        LOCAL.TAIL_<DLOCAL.TAIL>=<hval <SERV.ITEMDEF.<STREAT <FILE.READLINE <DLOCAL._FOR>>>.ID>><DEF.writetable_td_end><DEF.writetable_td><SERV.ITEMDEF.<STREAT <FILE.READLINE <DLOCAL._FOR>>>.NAME><DEF.writetable_td_end><DEF.writetable_td><WRITETABLESRESOURCES <SERV.ITEMDEF.<STREAT <FILE.READLINE <DLOCAL._FOR>>>.RESOURCES>><DEF.writetable_td_end><DEF.writetable_td><SERV.ITEMDEF.<STREAT <FILE.READLINE <DLOCAL._FOR>>>.SKILLMAKE><DEF.writetable_td_end><DEF.writetable_td><WRITETABLES_SPECIAL <SERV.ITEMDEF.<STREAT <FILE.READLINE <DLOCAL._FOR>>>.BASEID>><DEF.writetable_td_end>
+                    ENDIF
+                    IF (STRMATCH("*tinkering*","<SERV.ITEMDEF.<STREAT <FILE.READLINE <DLOCAL._FOR>>>.SKILLMAKE>"))
+			if !<local.color_wrote> && !(STRMATCH("*blacksmithing*","<SERV.ITEMDEF.<STREAT <FILE.READLINE <DLOCAL._FOR>>>.SKILLMAKE>"))
+				LOCAL.TINK_<DLOCAL.TINK>=<DEF.writetable_td>null<DEF.br><LOCAL.TINK_<DLOCAL.TINK>>
+			endif
+			local.color_wrote = 0
+                        LOCAL.TINK += 1
+			LOCAL.ITEMM = 1
+			VAR.NAME_TYPE=TINK_<dLOCAL.TINK>
+			LOCAL.TINK_<dLOCAL.TINK>_LAST = 1
+                        LOCAL.TINK_<DLOCAL.TINK>=<hval <SERV.ITEMDEF.<STREAT <FILE.READLINE <DLOCAL._FOR>>>.ID>><DEF.writetable_td_end><DEF.writetable_td><SERV.ITEMDEF.<STREAT <FILE.READLINE <DLOCAL._FOR>>>.NAME><DEF.writetable_td_end><DEF.writetable_td><WRITETABLESRESOURCES <SERV.ITEMDEF.<STREAT <FILE.READLINE <DLOCAL._FOR>>>.RESOURCES>><DEF.writetable_td_end><DEF.writetable_td><SERV.ITEMDEF.<STREAT <FILE.READLINE <DLOCAL._FOR>>>.SKILLMAKE><DEF.writetable_td_end><DEF.writetable_td><WRITETABLES_SPECIAL <SERV.ITEMDEF.<STREAT <FILE.READLINE <DLOCAL._FOR>>>.BASEID>><DEF.writetable_td_end>
+                    ENDIF
+           ELIF (STRMATCH("*color*","<FILE.READLINE <DLOCAL._FOR>>")) && !(STRMATCH("*new*","<FILE.READLINE <DLOCAL._FOR>>")) && !(STRMATCH("*colored*","<FILE.READLINE <DLOCAL._FOR>>"))
+		  LOCAL.COLOR = Cor: <FILE.READLINE <DLOCAL._FOR>>
+			local.color_verify = 1	
+	   ENDIF	
+	if <local.itemm> && <local.color_verify>
+		LOCAL.<VAR.NAME_TYPE>=<DEF.writetable_td><local.color><def.br><LOCAL.<VAR.NAME_TYPE>>
+		local.color_wrote = 1
+		LOCAL.<VAR.NAME_TYPE>_LAST = 0
+	endif 
+			local.color_verify = 0
+        ENDFOR
+    ENDIF
+    FILE.CLOSE
+    IF (<LOCAL.ALCH>)
+        IF (<FILE.OPEN <DEF.writetable_alch>>)
+            FILE.WRITELINE <DEF.writetable_body>
+            FILE.WRITELINE <DEF.writetable_table>
+            FILE.WRITELINE <DEF.writetable_td_header>Imagem<DEF.writetable_td_header_end><DEF.writetable_td_header>Name<DEF.writetable_td_header_end><DEF.writetable_td_header>Resources<DEF.writetable_td_header_end><DEF.writetable_td_header>Skillmake<DEF.writetable_td_header_end><DEF.writetable_td_header>Attributes<DEF.writetable_td_header_end>
+            FILE.WRITELINE <DEF.writetable_tr_end>
+            FOR 1 <LOCAL.ALCH>
+                LOCAL.PROCESSING += 1
+                WRITETABLES_BROADCAST <LOCAL.PROCESSING>
+                FILE.WRITELINE <DEF.writetable_tr>
+                FILE.WRITELINE <LOCAL.ALCH_<DLOCAL._FOR>>
+                FILE.WRITELINE <DEF.writetable_tr_end>
+            ENDFOR
+            FILE.WRITELINE <DEF.writetable_table_end>
+            FILE.WRITELINE <DEF.writetable_body_end>
+        ENDIF
+    ENDIF
+    FILE.CLOSE
+    IF (<LOCAL.BS>)
+	if <LOCAL.<VAR.NAME_TYPE>_LAST>
+			LOCAL.BS_<DLOCAL.BS>=<DEF.writetable_td>null<DEF.br><LOCAL.BS_<DLOCAL.BS>>
+	endif
+        IF (<FILE.OPEN <DEF.writetable_bs>>)
+            FILE.WRITELINE <DEF.writetable_body>
+            FILE.WRITELINE <DEF.writetable_table>
+            FILE.WRITELINE <DEF.writetable_td_header>Imagem<DEF.writetable_td_header_end><DEF.writetable_td_header>Name<DEF.writetable_td_header_end><DEF.writetable_td_header>Resources<DEF.writetable_td_header_end><DEF.writetable_td_header>Skillmake<DEF.writetable_td_header_end><DEF.writetable_td_header>Attributes<DEF.writetable_td_header_end>
+            FILE.WRITELINE <DEF.writetable_tr_end>
+            FOR 1 <LOCAL.BS>
+                LOCAL.PROCESSING += 1
+                WRITETABLES_BROADCAST <LOCAL.PROCESSING>
+                FILE.WRITELINE <DEF.writetable_tr>
+                FILE.WRITELINE <LOCAL.BS_<DLOCAL._FOR>>
+                FILE.WRITELINE <DEF.writetable_tr_end>
+            ENDFOR
+            FILE.WRITELINE <DEF.writetable_table_end>
+            FILE.WRITELINE <DEF.writetable_body_end>
+        ENDIF
+    ENDIF
+    FILE.CLOSE
+    IF (<LOCAL.BOW>)
+	if <LOCAL.BOW_<DLOCAL.BOW>_LAST>
+			LOCAL.BOW_<DLOCAL.BOW>=<DEF.writetable_td>null<DEF.br><LOCAL.BOW_<DLOCAL.BOW>>
+	endif
+        IF (<FILE.OPEN <DEF.writetable_bow>>)
+            FILE.WRITELINE <DEF.writetable_body>
+            FILE.WRITELINE <DEF.writetable_table>
+            FILE.WRITELINE <DEF.writetable_tr>
+            FILE.WRITELINE <DEF.writetable_td_header>Imagem<DEF.writetable_td_header_end><DEF.writetable_td_header>Name<DEF.writetable_td_header_end><DEF.writetable_td_header>Resources<DEF.writetable_td_header_end><DEF.writetable_td_header>Skillmake<DEF.writetable_td_header_end><DEF.writetable_td_header>Attributes<DEF.writetable_td_header_end>
+            FILE.WRITELINE <DEF.writetable_tr_end>
+            FOR 1 <LOCAL.BOW>
+                LOCAL.PROCESSING += 1
+                WRITETABLES_BROADCAST <LOCAL.PROCESSING>
+                FILE.WRITELINE <DEF.writetable_tr>
+                FILE.WRITELINE <LOCAL.BOW_<DLOCAL._FOR>>
+                FILE.WRITELINE <DEF.writetable_tr_end>
+            ENDFOR
+            FILE.WRITELINE <DEF.writetable_table_end>
+            FILE.WRITELINE <DEF.writetable_body_end>
+        ENDIF
+    ENDIF
+    FILE.CLOSE
+    IF (<LOCAL.CARP>)
+		//LOCAL.CARP_<DLOCAL.CARP>=<DEF.writetable_td><LOCAL.CARP_<DLOCAL.CARP>_LAST><DEF.br>LOCAL.CARP_<DLOCAL.CARP>_LAST<def.br><dlocal.carp>
+	if <LOCAL.CARP_<DLOCAL.CARP>_LAST>
+			LOCAL.CARP_<DLOCAL.CARP>=<DEF.writetable_td>null<DEF.br><LOCAL.CARP_<DLOCAL.CARP>>
+	endif
+        IF (<FILE.OPEN <DEF.writetable_carp>>)
+            FILE.WRITELINE <DEF.writetable_body>
+            FILE.WRITELINE <DEF.writetable_table>
+            FILE.WRITELINE <DEF.writetable_tr>
+            FILE.WRITELINE <DEF.writetable_td_header>Imagem<DEF.writetable_td_header_end><DEF.writetable_td_header>Name<DEF.writetable_td_header_end><DEF.writetable_td_header>Resources<DEF.writetable_td_header_end><DEF.writetable_td_header>Skillmake<DEF.writetable_td_header_end><DEF.writetable_td_header>Attributes<DEF.writetable_td_header_end>
+            FILE.WRITELINE <DEF.writetable_tr_end>
+            FOR 1 <LOCAL.CARP>
+                LOCAL.PROCESSING += 1
+                WRITETABLES_BROADCAST <LOCAL.PROCESSING>
+                FILE.WRITELINE <DEF.writetable_tr>
+                FILE.WRITELINE <LOCAL.CARP_<DLOCAL._FOR>>
+                FILE.WRITELINE <DEF.writetable_tr_end>
+            ENDFOR
+            FILE.WRITELINE <DEF.writetable_table_end>
+            FILE.WRITELINE <DEF.writetable_body_end>
+        ENDIF
+    ENDIF
+    FILE.CLOSE
+    IF (<LOCAL.INSC>)
+	if <LOCAL.INSC_<DLOCAL.INSC>_LAST>
+			LOCAL.INSC_<DLOCAL.INSC>=<DEF.writetable_td>null<DEF.br><LOCAL.INSC_<DLOCAL.INSC>>
+	endif
+        IF (<FILE.OPEN <DEF.writetable_insc>>)
+            FILE.WRITELINE <DEF.writetable_body>
+            FILE.WRITELINE <DEF.writetable_table>
+            FILE.WRITELINE <DEF.writetable_tr>
+            FILE.WRITELINE <DEF.writetable_td_header>Imagem<DEF.writetable_td_header_end><DEF.writetable_td_header>Name<DEF.writetable_td_header_end><DEF.writetable_td_header>Resources<DEF.writetable_td_header_end><DEF.writetable_td_header>Skillmake<DEF.writetable_td_header_end><DEF.writetable_td_header>Attributes<DEF.writetable_td_header_end>
+            FILE.WRITELINE <DEF.writetable_tr_end>
+            FOR 1 <LOCAL.INSC>
+                LOCAL.PROCESSING += 1
+                WRITETABLES_BROADCAST <LOCAL.PROCESSING>
+                FILE.WRITELINE <DEF.writetable_tr>
+                FILE.WRITELINE <LOCAL.INSC_<DLOCAL._FOR>>
+                FILE.WRITELINE <DEF.writetable_tr_end>
+            ENDFOR
+            FILE.WRITELINE <DEF.writetable_table_end>
+            FILE.WRITELINE <DEF.writetable_body_end>
+        ENDIF
+    ENDIF
+    FILE.CLOSE
+    IF (<LOCAL.TAIL>)
+	if <LOCAL.TAIL_<DLOCAL.TAIL>_LAST>
+			LOCAL.TAIL_<DLOCAL.TAIL>=<DEF.writetable_td>null<DEF.br><LOCAL.TAIL_<DLOCAL.TAIL>>
+	endif
+        IF (<FILE.OPEN <DEF.writetable_tail>>)
+            FILE.WRITELINE <DEF.writetable_body>
+            FILE.WRITELINE <DEF.writetable_table>
+            FILE.WRITELINE <DEF.writetable_tr>
+            FILE.WRITELINE <DEF.writetable_td_header>Imagem<DEF.writetable_td_header_end><DEF.writetable_td_header>Name<DEF.writetable_td_header_end><DEF.writetable_td_header>Resources<DEF.writetable_td_header_end><DEF.writetable_td_header>Skillmake<DEF.writetable_td_header_end><DEF.writetable_td_header>Attributes<DEF.writetable_td_header_end>
+            FILE.WRITELINE <DEF.writetable_tr_end>
+            FOR 1 <LOCAL.TAIL>
+                LOCAL.PROCESSING += 1
+                WRITETABLES_BROADCAST <LOCAL.PROCESSING>
+                FILE.WRITELINE <DEF.writetable_tr>
+                FILE.WRITELINE <LOCAL.TAIL_<DLOCAL._FOR>>
+                FILE.WRITELINE <DEF.writetable_tr_end>
+            ENDFOR
+            FILE.WRITELINE <DEF.writetable_table_end>
+            FILE.WRITELINE <DEF.writetable_body_end>
+        ENDIF
+    ENDIF
+    FILE.CLOSE
+    IF (<LOCAL.TINK>)
+	if <LOCAL.TINK_<DLOCAL.TINK>_LAST>
+			LOCAL.TINK_<DLOCAL.TINK>=<DEF.writetable_td>null<DEF.br><LOCAL.TINK_<DLOCAL.TINK>>
+	endif
+        IF (<FILE.OPEN <DEF.writetable_tink>>)
+            FILE.WRITELINE <DEF.writetable_body>
+            FILE.WRITELINE <DEF.writetable_table>
+            FILE.WRITELINE <DEF.writetable_tr>
+            FILE.WRITELINE <DEF.writetable_td_header>Imagem<DEF.writetable_td_header_end><DEF.writetable_td_header>Name<DEF.writetable_td_header_end><DEF.writetable_td_header>Resources<DEF.writetable_td_header_end><DEF.writetable_td_header>Skillmake<DEF.writetable_td_header_end><DEF.writetable_td_header>Attributes<DEF.writetable_td_header_end>
+            FILE.WRITELINE <DEF.writetable_tr_end>
+            FOR 1 <LOCAL.TINK>
+                LOCAL.PROCESSING += 1
+                WRITETABLES_BROADCAST <LOCAL.PROCESSING>
+                FILE.WRITELINE <DEF.writetable_tr>
+                FILE.WRITELINE <LOCAL.TINK_<DLOCAL._FOR>>
+                FILE.WRITELINE <DEF.writetable_tr_end>
+            ENDFOR
+            FILE.WRITELINE <DEF.writetable_table_end>
+            FILE.WRITELINE <DEF.writetable_body_end>
+        ENDIF
+    ENDIF
+    FILE.CLOSE
+    IF (<LOCAL.OPTIONFLAGS>)
+        SERV.OPTIONFLAGS=<LOCAL.OPTIONFLAGS>
+    ENDIF
+    SERV.MAXLOOPTIMES=<LOCAL.OLD_MAXLOOPTIMES>
+ENDIF
+SERV.LOG FINISHED 
+
+[FUNCTION writetablesresources]
+VAR.WRITETABLESTEMP=
+IF (<ARGV>)
+    FOR <ARGV>
+        IF (<SERV.ITEMDEF.<STREAT <ARGV[<EVAL <LOCAL._FOR> +-1>]>>>)
+            IF ( <DEF.<STREAT <ARGV[<EVAL <LOCAL._FOR> +-1>]>>> & 09c000000 )
+                IF (<ISEMPTY <VAR.WRITETABLESTEMP>>)
+                    VAR.WRITETABLESTEMP=<EVAL <STRARG <ARGV[<EVAL <LOCAL._FOR> +-1>]>>> <SERV.ITEMDEF.<STREAT <ARGV[<EVAL <LOCAL._FOR> +-1>]>>.NAME>
+                ELSE
+                    VAR.WRITETABLESTEMP=<VAR.WRITETABLESTEMP>, <EVAL <STRARG <ARGV[<EVAL <LOCAL._FOR> +-1>]>>> <SERV.ITEMDEF.<STREAT <ARGV[<EVAL <LOCAL._FOR> +-1>]>>.NAME>
+                ENDIF
+            ENDIF
+        ELSEIF (<SERV.ITEMDEF.<ARGV[<EVAL <LOCAL._FOR> +-1>]>>)
+            IF ( <DEF.<ARGV[<EVAL <LOCAL._FOR> +-1>]>> & 09c000000 )
+                IF (<ISEMPTY <VAR.WRITETABLESTEMP>>)
+                    VAR.WRITETABLESTEMP=<SERV.ITEMDEF.<ARGV[<EVAL <LOCAL._FOR> +-1>]>.NAME>
+                ELSE
+                    VAR.WRITETABLESTEMP=<VAR.WRITETABLESTEMP>, <SERV.ITEMDEF.<ARGV[<EVAL <LOCAL._FOR> +-1>]>.NAME>
+                ENDIF
+            ENDIF
+        ENDIF
+    ENDFOR
+ENDIF
+RETURN <VAR.WRITETABLESTEMP>
+
+[FUNCTION writetables_special]
+IF !(<ISEMPTY <ARGS>>)
+    SERV.NEWITEM=<ARGS>
+    IF (<NEW.ISWEAPON>)
+        IF (STRMATCH(<LOCAL.SPECIAL>,0))
+            LOCAL.SPECIAL=Damage: <STRARG <NEW.DAM>> - <STRARG <STREAT <NEW.DAM>>>
+        ELSE
+            LOCAL.SPECIAL=<LOCAL.SPECIAL><DEF.BR>Damage: <STRARG <NEW.DAM>> - <STRARG <STREAT <NEW.DAM>>>
+        ENDIF
+        IF (STRMATCH(<LOCAL.SPECIAL>,0))
+            IF (<NEW.SPEED> > 45)
+                LOCAL.SPECIAL=Speed: Very Fast
+            ELSEIF (<NEW.SPEED> > 35)
+                LOCAL.SPECIAL=Speed: Fast
+            ELSEIF (<NEW.SPEED> > 25)
+                LOCAL.SPECIAL=Speed: Slow
+            ELSE
+                LOCAL.SPECIAL=Speed: Very Slow
+            ENDIF
+        ELSE
+            IF (<NEW.SPEED> > 45)
+                LOCAL.SPECIAL=<LOCAL.SPECIAL><DEF.BR>Speed: Very Fast
+            ELSEIF (<NEW.SPEED> > 35)
+                LOCAL.SPECIAL=<LOCAL.SPECIAL><DEF.BR>Speed: Fast
+            ELSEIF (<NEW.SPEED> > 25)
+                LOCAL.SPECIAL=<LOCAL.SPECIAL><DEF.BR>Speed: Slow
+            ELSE
+                LOCAL.SPECIAL=<LOCAL.SPECIAL><DEF.BR>Speed: Very Slow
+            ENDIF
+        ENDIF
+    ELSEIF (<NEW.ISARMOR>) || (<NEW.TYPE>==t_clothing)
+        IF (STRMATCH(<LOCAL.SPECIAL>,0))
+            LOCAL.SPECIAL=Armor: <STRARG <STREAT <NEW.ARMOR>>>
+        ELSE
+            LOCAL.SPECIAL=<LOCAL.SPECIAL><DEF.BR>Armor: <STREAT <NEW.ARMOR>>
+        ENDIF
+    ELSEIF (<NEW.TYPE>==t_potion)
+        IF (STRMATCH(<LOCAL.SPECIAL>,0))
+            LOCAL.SPECIAL=Spell: <SERV.SPELL.<NEW.MORE1>.NAME><DEF.BR>Strength: <EVAL <NEW.MORE2> /10>.<EVAL <NEW.MORE2> +-<EVAL <EVAL <NEW.MORE2> /10> *10>>
+        ELSE
+            LOCAL.SPECIAL=<LOCAL.SPECIAL><DEF.BR>Spell: <SERV.SPELL.<NEW.MORE1>.NAME><DEF.BR>Strength: <EVAL <NEW.MORE2> /10>.<EVAL <NEW.MORE2> +-<EVAL <EVAL <NEW.MORE2> /10> *10>>
+        ENDIF
+    ELSEIF (<NEW.TYPE>==t_scroll)
+        IF (STRMATCH(<LOCAL.SPECIAL>,0))
+            LOCAL.SPECIAL=Spell: <SERV.SPELL.<NEW.MOREX>.NAME><DEF.BR>Strength: <EVAL <NEW.MOREY> /10>.<EVAL <NEW.MOREY> +-<EVAL <EVAL <NEW.MOREY> /10> *10>>
+        ELSE
+            LOCAL.SPECIAL=<LOCAL.SPECIAL><DEF.BR>Spell: <SERV.SPELL.<NEW.MOREX>.NAME><DEF.BR>Strength: <EVAL <NEW.MOREY> /10>.<EVAL <NEW.MOREY> +-<EVAL <EVAL <NEW.MOREY> /10> *10>>
+        ENDIF
+    ENDIF
+    NEW.REMOVE
+ENDIF
+IF (STRMATCH(<LOCAL.SPECIAL>,0))
+    RETURN None
+ELSE
+    RETURN <LOCAL.SPECIAL>
+ENDIF
+
+[FUNCTION writetables_broadcast]
+IF (<EVAL <EVAL <ARGN1> /2500> *2500>==<DARGN1>)
+    SERV.B Processing... please wait.
+ENDIF
+
+[EOF]

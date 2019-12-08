@@ -1,0 +1,291 @@
+[CHARDEF c_pirata_sanna]
+NAME=Susanah, the Pirate Leader
+ID=C_WOMAN
+AVERSIONS=t_TRAP,t_eerie_stuff
+TSPEECH=spk_pirate_chef
+
+ON=@GETHIT
+	IF <SRC.REGION.GUARDED> == 1
+		GO <HOME>
+		RETURN 1
+	ENDIF
+
+ON=@Create
+	events=+e_poison_immune
+	COLOR=colors_skin
+	STR={ 200 250 }
+	DEX={ 200 250 }
+	INT={ 100 100 }
+	MAXHITS={300 400}
+	KARMA={-5000 -3000 }
+	FENCING={ 99.0 99.0 }
+	PARRYING={65.0 88.0}
+	SWORDSMANSHIP={95.0 99.0}
+	WRESTLING={45.0 68.0}
+	MACEFIGHTING={25.0 48.0}
+	TACTICS={95.0 98.0}
+	STEALING={98.0 100.0}
+	NPC=brain_human
+	ITEMNEWBIE=random_male_hair
+	COLOR=colors_hair
+	ITEMNEWBIE=random_facial_hair
+	COLOR=match_hair
+	ITEMNEWBIE=i_dread_pirate_hat
+	COLOR=0455
+	flags = <flags>&statf_invul
+	events +e_quest_joia_inv
+
+ON=@NPCRestock
+	ITEM=RANDOM_LIGHT
+	ITEM=i_shirt_plain
+	COLOR=colors_all
+	ITEM=random_pants
+	COLOR=colors_all
+	ITEM=i_CUTLASS
+	//ITEM={ i_bandana 1 i_skull_cap 1 }
+	//COLOR=colors_red
+	ITEM=i_boots_thigh
+	COLOR=colors_neutral
+	ITEM=random_coin_purse
+	item=i_dread_pirate_hat,R40
+	COLOR=0455
+
+
+[CHARDEF c_pirata_quest_joias]
+NAME=#NAMES_HUMANMALE the Pirate
+ID=C_MAN
+AVERSIONS=t_TRAP,t_eerie_stuff
+TSPEECH=jobpirate
+
+ON=@GETHIT
+	IF <SRC.REGION.GUARDED> == 1
+		GO <HOME>
+		RETURN 1
+	ENDIF
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	events=+e_poison_immune
+	COLOR=colors_skin
+	STR={ 260 290 }
+	DEX={ 200 250 }
+	INT={ 100 100 }
+	MAXHITS={300 400}
+	KARMA={-5000 -3000 }
+	FENCING={ 99.0 99.0 }
+	PARRYING={65.0 88.0}
+	SWORDSMANSHIP={95.0 99.0}
+	WRESTLING={45.0 68.0}
+	MACEFIGHTING={25.0 48.0}
+	TACTICS={95.0 98.0}
+	STEALING={98.0 100.0}
+	NPC=brain_human
+	ITEMNEWBIE=random_male_hair
+	COLOR=colors_hair
+	ITEMNEWBIE=random_facial_hair
+	COLOR=match_hair
+	ITEMNEWBIE=i_dread_pirate_hat
+	COLOR=0455
+
+ON=@NPCRestock
+	ITEM=RANDOM_LIGHT
+	ITEM=i_shirt_plain
+	COLOR=colors_all
+	ITEM=random_pants
+	COLOR=colors_all
+	ITEM=i_CUTLASS
+	//ITEM={ i_bandana 1 i_skull_cap 1 }
+	//COLOR=colors_red
+	ITEM=i_boots_thigh
+	COLOR=colors_neutral
+	ITEM=random_coin_purse
+	item=i_dread_pirate_hat,R40
+	COLOR=0455
+	ITEM={i_treasure_map_lvl_1 70 i_treasure_map_lvl_2 25 i_treasure_map_lvl_3 5}
+
+ON=@DEATHCORPSE
+	 if (strmatch(i_sword_blackthorne_ally*,<uid.<argo.more2>.weapon.baseid>)) || (strmatch(i_sword_british_ally*,<uid.<argo.more2>.weapon.baseid>))
+		uid.<argo.more2>.tag0.piratasmortos += 1
+		ref1 = <argo.more2>
+		ref1.sysmessage "@,,1 Você ja matou <ref1.dtag0.piratasmortos> piratas deste cais sem morrer!
+	endif
+
+[CHARDEF c_andarilho_quest_joias]
+ID=c_man
+NAME=Jurgen
+DESIRES=i_gold
+AVERSIONS=t_trap
+TSPEECH=spk_andarilho_quest_joias
+
+ON=@Create
+   TITLE=drifter
+   COLOR=colors_skin
+   NPC=brain_human
+   NEED=i_gold
+   STR={66 77}
+   DEX={75 100}
+   INT={45 55}
+   flags = <flags>&statf_invul
+   events +e_quest_joia_inv
+
+   DETECTINGHIDDEN={20.0 30.0}
+   FENCING={20.0 30.0}
+   HIDING={50.0 75.0}
+   ITEMID={50.0 75.0}
+   LOCKPICKING={50.0 75.0}
+   WRESTLING={20.0 30.0}
+
+   ITEMNEWBIE=i_hair_long
+   COLOR=0
+   ITEMNEWBIE=i_beard_long
+   COLOR=match_hair
+   ITEM=random_shirts_human
+   COLOR=colors_all
+   ITEM=random_pants_human
+   COLOR=colors_all
+   ITEM=random_footwear_human
+   COLOR=colors_all
+   ITEM=random_hats
+   COLOR=colors_all
+
+[events e_tortuga_quest]
+on=@death
+tag0.piratasmortos
+
+[CHARDEF c_sonnah_jeweler]
+NAME=Sonnah, the Jeweler
+ID=C_WOMAN
+DESIRES=i_gold,e_notoriety
+AVERSIONS=t_TRAP,t_eerie_stuff
+TSPEECH=spk_jewler_quest
+
+ON=@Create
+	tag.name.hue=0481
+	NPC=brain_human
+	COLOR=colors_skin
+	STR={36 50}
+	DEX=0
+	stam=0
+	INT={41 55}
+	ItemID={55.0 78.0}
+	FENCING={15.0 38.0}
+	SWORDSMANSHIP={15.0 38.0}
+	WRESTLING={15.0 38.0}
+	TACTICS={15.0 38.0}
+	ITEMNEWBIE=i_hair_afro
+	COLOR=colors_hair
+	flags = <flags>&statf_invul
+
+ON=@NPCRestock
+	ITEM=i_shirt_fancy
+	COLOR=023b
+	ITEM=i_skirt_long
+	COLOR=0dc
+	ITEM=i_sandals
+	COLOR=0716
+	ITEM=random_necklace
+
+[CHARDEF c_mago_white_quest_joias]
+NAME=White Wizard, the Dialects Wiseman
+ID=C_MAN
+CAN=MT_EQUIP|MT_USEHANDS|MT_WALK|MT_MALE
+TSPEECH=spk_white_wizard
+TEVENTS=e_quest_mago_decifreur
+
+ON=@Create
+	COLOR=0599
+	STR={80 120}
+	DEX={81 95}
+	INT={80 100}
+	MAGICRESISTANCE={90.0 95.0}
+	TACTICS={70.0 90.0}
+	WRESTLING={40.0 55.0}
+	MAGERY={95.0 100.0}
+	NPC=BRAIN_human
+	KARMA={3000 5000}
+	FAME={2500 4000}
+	ITEMNEWBIE=i_hair_long
+	COLOR=0
+	ITEMNEWBIE=i_spellbook
+	MORE1=0ffffffff
+	MORE2=0ffffffff
+	flags = <flags>&statf_invul
+	events +e_quest_joia_inv
+	events +e_quest_mago_decifreur
+	tag.enemy = 000001
+
+ON=@NPCRestock
+	ITEMNEWBIE=i_robe_true_white
+	ITEMNEWBIE=i_true_white_hat
+	ITEMNEWBIE=i_boots_calf
+
+[CHARDEF c_mago_black_quest_joias]
+NAME=Black Wizard, the Dialects Wiseman
+ID=C_MAN
+CAN=MT_EQUIP|MT_USEHANDS|MT_WALK|MT_MALE
+TSPEECH=spk_black_wizard
+TEVENTS=e_quest_mago_decifreur
+
+ON=@Create
+	COLOR=0599
+	STR={80 120}
+	DEX=0
+	INT=0
+	MAGICRESISTANCE={90.0 95.0}
+	TACTICS={70.0 90.0}
+	WRESTLING={40.0 55.0}
+	MAGERY={95.0 100.0}
+	NPC=BRAIN_human
+	KARMA={-100 -500}
+	FAME={2500 4000}
+	ITEMNEWBIE=i_hair_long
+	COLOR=0
+	ITEMNEWBIE=i_spellbook
+	MORE1=0ffffffff
+	MORE2=0ffffffff
+	invul=1
+	events +e_quest_joia_inv
+	events +e_quest_mago_decifreur
+	tag.enemy = 000002
+
+ON=@NPCRestock
+	ITEMNEWBIE=i_robe_true_black
+	ITEMNEWBIE=i_true_black_hat
+	ITEMNEWBIE=i_boots_calf
+
+[CHARDEF c_brady_quest]
+NAME=Brady the Carpenter
+ID=C_MAN
+DESIRES=i_gold,e_notoriety,t_log,t_board
+AVERSIONS=t_TRAP,t_eerie_stuff
+TSPEECH=spk_pirate_deguised
+
+ON=@Create
+	tag.name.hue=0481
+	NPC=brain_human
+	COLOR=colors_skin
+	STR={71 85}
+	DEX={66 80}
+	INT={51 65}
+	CARPENTRY={96.0 100.0}
+	SWORDSMANSHIP={15.0 38.0}
+	MACEFIGHTING={15.0 38.0}
+	TACTICS={45.0 68.0}
+	LUMBERJACKING={50.0 70.0}
+	ITEMNEWBIE=i_hair_mohawk
+	COLOR=046e
+	ITEMNEWBIE=i_beard_vandyke
+	COLOR=match_hair
+	flags = <flags>&statf_invul
+	events +e_quest_joia_inv
+
+ON=@NPCRestock
+	ITEM=RANDOM_LIGHT
+	ITEM=i_shirt_plain
+	COLOR=039
+	ITEM=i_pants_short
+	COLOR=0176
+	ITEM=random_shoes
+	COLOR=colors_neutral
+
+

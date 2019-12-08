@@ -1,0 +1,8 @@
+[SPAWN spw_all_snow_mounts]
+DEFNAME=spw_all_snow_mounts
+CATEGORY=Spawn Groups
+SUBSECTION=Mounts
+DESCRIPTION=Snow
+ID=c_snow_llama
+ID=c_snow_musta
+ID=c_snow_zos

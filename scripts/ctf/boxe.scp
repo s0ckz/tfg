@@ -1,0 +1,426 @@
+// fazer todas melhorias verificacoes que fiz no 1x1 aqui, no trigger do death, kill, no boxe_arena, etc
+
+
+// Funcoes extras pra cons habilitados
+// Futuro, transformas esses e os do  1x1 em 1 soh, 
+// ou melhor, tudo por gump
+
+[FUNCTION iniciar_boxe]
+if <tag0.can_i_use_event_cmd>
+	novoboxe <args>
+else
+	sysmessage @,,1 Voce nao pode usar este comando.
+endif
+return 1
+
+[FUNCTION iniciar_luta_boxe]
+if <tag0.can_i_use_event_cmd>
+	boxe_arena
+else
+	sysmessage @,,1 Voce nao pode usar este comando.
+endif
+return 1
+
+[FUNCTION tirar_arena_boxe]
+if <argo.hits> > 0
+	if <argo.isevent.e_evento_boxe>
+ 		argo.f_evento_travar
+  		argo.hits <argo.maxhits>
+  		argo.F_GO <argo.tag.evento_go>
+		argo.f_argo_restock_bandages
+ 		action -1
+	else
+		src.sysmessage @,,1 Este jogador nao esta no evento.
+	endif
+else
+	src.sysmessage @,,1 Este jogador esta morto.
+endif
+return 1
+
+[FUNCTION fecha_gate_boxe]
+if <tag0.can_i_use_event_cmd>
+	FORINSTANCES i_gate_boxe
+		REMOVE
+	ENDFOR 
+	FORINSTANCES i_anuncia_boxe
+		REMOVE
+	ENDFOR
+else
+	sysmessage @,,1 Voce nao pode usar este comando.
+endif
+return 1
+
+
+//
+
+[ITEMDEF i_gate_boxe]
+ID=0f6c
+WEIGHT=1
+TYPE=t_normal
+NAME=Boxe
+
+ON=@Create
+  attr 08000
+  color 079d
+  tag.contagem 0
+  tag.maximo 16
+  return 0
+
+ON=@Click
+  message @0790 <name>
+  return 1
+
+ON=@Step
+if (<tag.contagem> >= <tag.maximo>) && (<tag.maximo> > 0)
+    src.message @0790,,1 Evento Lotado!
+    return 1
+endif
+  src.shrinklayer25_save
+  tag.contagem += 1
+SRC.CANCELLHELPROOM
+src.tag.askills=<src.kills> 
+src.tag.askarma=<src.karma> 
+src.tag.asfame=<src.fame>  
+src.tag.asdeaths=<src.deaths> 
+src.tag.aswrestling=<src.wrestling>
+src.tag.astatics=<src.tatics>
+src.tag.boxe_kills=
+  src.findlayer.31.bounce //layer dragging 
+  src.tag.lastbackpack <src.findlayer.21.uid>
+  src.stripsave
+  ref199=<more2>
+  tag.cortemp=<eval <tag.contagem> * 10>
+  SRC.tag.name.hue=<tag.cortemp>
+  src.tatits 1000
+  src.wrestling 1000
+  src.tag.onevent 1
+  src.findlayer.21.attr 0
+  ref1=<src.findlayer.21.uid>
+  src.findlayer.21.cont <src.findlayer.29.uid>
+  REF1.updatex
+  src.newitem i_backpack
+  src.act.color <tag.cortemp>
+  src.act.equip
+
+	// itens do boxe
+  src.newitem i_mw_gloves // gloves
+  src.act.name Boxe Gloves 
+  src.act.color <tag.cortemp>
+  src.act.attr 010
+  src.act.equip
+  
+  src.newitem i_pants_long
+  src.act.name TFG Shard Evento
+  src.act.color <tag.cortemp>
+  src.act.attr 010
+  src.act.equip
+
+  src.newitem i_shoes_plain
+  src.act.name TFG Shard Evento
+  src.act.color <tag.cortemp>
+  src.act.attr 010
+  src.act.equip
+  
+  src.newitem i_bandage
+  src.act.amount 15
+  src.act.bounce
+
+  // body 
+  SRC.BODY c_woman
+
+  
+  //5208,1740
+IF (<tag.contagem> < 6)
+    src.tag.evento_go <eval 5206 + <eval 2 * <tag.contagem>>>,1740
+	src.F_GO <src.tag.evento_go>
+ELIF (<tag.contagem> < 12)
+	local.contagem = <eval <tag.contagem> - 5>
+    src.tag.evento_go 5218,<eval 1740 + <eval 2 * <local.contagem>>>
+	src.F_GO <src.tag.evento_go>
+ELif (<tag.contagem> < 17)
+	local.contagem = <eval <tag.contagem> - 11>
+	src.tag.evento_go <eval 5218 - <eval 2 * <local.contagem>>>,1753
+	src.F_GO <src.tag.evento_go>
+else 
+	src.tag.evento_go 5208,1757
+	src.F_GO <src.tag.evento_go>
+endif
+
+  SRC.RESENDALL
+  src.events +e_evento_boxe
+  src.f_evento_travar
+  
+IF (<tag.contagem> == <tag.maximo>)
+  SERV.B @55 Evento Completo!
+  FORINSTANCES i_anuncia_boxe
+  REMOVE
+  ENDFOR
+  REMOVE
+ENDIF
+return 1
+
+[ITEMDEF i_anuncia_boxe]
+ID=i_crystal_ball
+NAME=Boxe [DO NOT REMOVE]
+WEIGHT=200
+TYPE=t_eq_script
+
+ON=@Create
+    ATTR=attr_decay|attr_invis
+    TIMER=15
+
+ON=@TIMER
+REF1=<TAG.GATE>
+  SERV.B @55 Restam <eval <ref1.tag.maximo> - <ref1.tag.contagem>> vagas para o Camp Boxe! Gate na Commerce Room!
+TIMER 15
+RETURN 1
+
+[EVENTS e_evento_boxe]
+ON=@CLICK
+	MESSAGE @<TAG.NAME.HUE>,,1 K: <dTAG.boxe_KILLS>
+
+ON=@KILLBOXE
+  TAG0.boxe_KILLS += 1
+  say @33,,1 <name> ganhou a disputa!
+  f_evento_travar
+  hits <str>
+  F_GO <tag.evento_go>
+	forcontid i_bandage
+		remove
+	endfor
+	forcontid i_bandage_bloody
+		remove
+	endfor
+	newitem i_bandage
+	new.amount 15
+	trysrc <uid> new.bounce
+	action -1
+
+ON=@Death
+	CTF_DEATH_FIX
+	hits <str>
+	action -1
+	src.F_GO 5201,1748
+	message @0790 Voce morreu!
+	IF <ATTACKER>
+		REF1=<ATTACKER.MAX>
+		REF1.TRIGGER @KILLBOXE
+	ENDIF
+	return 1
+
+ON=@Logout
+  message @32,,1 [Logout!]
+
+ON=@Login
+  message @478,,1 [Login!]
+
+
+
+ON=@EnvironChange
+if ((<p.x> < 5196) || (<p.x> > 5227) || (<p.y> < 1724) || (<p.y> > 1763)) && (STRCMPI("<REGION.DEFNAME>","a_dungeon_17"))
+    stripremove
+  src.kills=<tag.askills> 	
+  src.karma=<tag.askarma> 	
+  src.fame=<tag.asfame>   	
+  src.deaths=<tag.asdeaths> 	
+  src.tatics=<tag.astatics>
+  src.wrestling=<tag.aswrestling>
+  src.memoryfindtype.memory_harmedby.remove
+  src.memoryfindtype.memory_iaggressor.remove
+  src.memoryfindtype.memory_fight.remove
+  src.memoryfindtype.memory_sawcrime.remove
+  src.memoryfindtype.memory_aggreived.remove
+  src.memoryfindtype.memory_war_targ.remove
+  src.memoryfindtype.memory_harmedby.remove
+  src.memoryfindtype.memory_iaggressor.remove
+  src.memoryfindtype.memory_fight.remove
+  src.memoryfindtype.memory_sawcrime.remove
+  src.memoryfindtype.memory_aggreived.remove
+  src.memoryfindtype.memory_war_targ.remove
+  tag.askills=
+  tag.askarma=
+  tag.asfame=
+  tag.asdeaths=
+  tag.astatics=
+  tag.aswrestling=
+  tag.evento_go=
+  src.criminal 0
+    findlayer.21.remove
+    findlayer.25.remove
+    findlayer.31.remove
+    newitem i_gold
+    act.link 0<tag.lastbackpack>
+    act.link.cont <uid>
+    act.remove
+    events -e_evento_boxe
+	f_evento_destravar
+    tag.team
+    if (<findlayer.21> = 0)
+      SERV.ALLCLIENTS MSTAFF2 @0790 [SYSTEM]: Err... <name> saiu do evento e nao foi possivel recuperar sua backpack!
+      SERV.ALLCLIENTS MSTAFF2 @0790 [SYSTEM]: Root: <uid> - Act: <act.uid> - Src: <src.uid> - Action: <action> - Backpack: <tag.lastbackpack>
+    endif
+BODY=<OBODY>
+RESENDALL
+REEQUIPALL 
+   tag.lastbackpack=
+   tag.onevent=
+   TAG.NOPREMIO=   // pra que eu sirvo?
+   TAG.NAME.HUE=
+   TAG.boxe_KILLS=
+   endif	
+  return 0
+  
+[FUNCTION novoboxe]
+  serv.newitem i_gate_boxe
+  new.tag.maximo <args>
+  new.p 2341,541,1
+  new.updatex
+  ref455=<new.uid>
+  serv.newitem i_anuncia_boxe
+  new.p <ref455.p>
+  new.tag.gate <ref455>
+  new.update
+SERV.B @55 Foram liberadas <dargs> vagas para o Camp Boxe. Gate na Commerce Room!
+
+[FUNCTION boxe_arena]
+TARGETF boxe_arena2 <src.uid>
+
+[FUNCTION boxe_arena2]
+ref2 = <args>
+if !<ref2.tag0.boxe_duel_create>
+	ARGO.F_GO 5210,1749,6
+	ref2.tag.boxe_duel_adv_1 = <argo.uid>
+	ref2.tag.boxe_duel_create 1
+else
+	ARGO.F_GO 5215,1744,6
+	ref1 = <src.tag.boxe_duel_adv_1>
+	ref2.say @33 O duelo vai iniciar em 10 segundos!
+	argo.timerf 10,boxe_duel_start
+	ref1.timerf 10,boxe_duel_start
+	ref2.tag.boxe_duel_create=
+endif
+
+[FUNCTION boxe_duel_start]
+MODSTR = 0 
+HITS = <STR>
+SAY @33 Fight!
+f_evento_destravar
+
+[FUNCTION f_evento_travar]
+EVENTS +e_trava_evento
+TAG.NOMOVETILL <eval <SERV.TIME> + (60*60*10)>
+DSPEECH +spk_trava_evento
+
+[FUNCTION f_evento_destravar]
+EVENTS -e_trava_evento
+TAG.NOMOVETILL=
+DSPEECH -spk_trava_evento
+
+[SPEECH spk_trava_evento]
+ON=*
+//SAY @31,,1 Eu estou travado e nao posso falar!
+RETURN 1
+
+[EVENTS e_trava_evento]
+ON=@SPELLEFFECT
+RETURN 1
+
+ON=@SPELLSELECT
+RETURN 1
+
+//ON=@LOGIN
+//RETURN 1
+
+On=@ATTACK
+RETURN 1
+
+On=@CallGuards
+RETURN 1
+
+on=@CharAttack
+RETURN 1
+
+ON=@CharClick
+RETURN 1
+
+On=@CharDCLICK
+RETURN 1
+
+On=@CharTradeAccepted
+RETURN 1
+
+On=@ContextMenuSelect
+RETURN 1
+
+On=@Criminal
+RETURN 1
+
+on=@SkillPreStart
+SYSMESSAGE @,,1 Voce nao possui skills.
+RETURN 1
+
+ON=@SkillSelect
+SYSMESSAGE @,,1 Voce nao possui skills.
+RETURN 1
+
+On=@ItemBuy
+RETURN 1
+
+On=@ItemCreate
+RETURN 1
+
+On=@ItemDropOn_Char
+RETURN 1
+
+On=@ItemDropOn_Item
+RETURN 1
+
+On=@ItemDropOn_Ground
+RETURN 1
+
+On=@ItemPickUp_Ground
+RETURN 1
+
+On=@ItemPickUp_Pack
+RETURN 1
+
+On=@ItemPickUp_Stack
+RETURN 1
+
+On=@ItemSell
+RETURN 1
+
+On=@ItemTargOn_Char
+RETURN 1
+
+On=@ItemTargOn_Item
+RETURN 1
+
+On=@ItemTargOn_Ground
+RETURN 1
+
+On=@KILL
+RETURN 1
+
+On=@TradeAccepted
+RETURN 1
+
+ON=@CLICK
+MESSAGE @31,0 [Em Espera Evento]
+MESSAGE @31,,1 <NAME>
+RETURN 1
+
+ON=@ITEMCLICK
+RETURN 1
+
+ON=@ITEMDCLICK
+RETURN 1
+
+ON=@GETHIT
+RETURN 1
+
+ON=@SPELLCAST
+RETURN 1
+
+ON=@HITTRY
+RETURN 1

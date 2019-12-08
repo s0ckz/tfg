@@ -1,0 +1,4390 @@
+[itemdef i_misterious_bait]
+name=Misterious Bait
+id=i_fish_cooked_small
+type=t_food
+SKILLMAKE=cooking 60.0, Magery 90.0, t_cooking
+RESOURCES=1 i_magical_fish, 300 i_reag_blood_vial
+
+on=@create
+	color = 0a25
+
+on=@dclick
+	return 1
+
+//////Runebook by ClouD_BR////////
+///please leave the credits ;)////
+
+[DEFNAME clouds_runebook]
+///messages
+runebook_nothingatthisslot @07ad There's nothing at this slot.
+runebook_alreadyusingmagic @07ad You're already using this magic.
+runebook_cantusethisbook @07a1 You can't use this book like that.
+runebook_cantcastthismagic @07a1 You can't cast this magic.
+runebook_placeblocked @07a1 Place blocked.
+runebook_cantusethishere @07a1 You can't use this book here.
+runebook_magicfails @07a1 Your magic fails.
+runebook_thatsnotarune @0ad That's not a rune!
+runebook_therunemustbewithyou @0ad The rune must be with you.
+runebook_runenotmarked @0ad That rune isn't marked.
+
+////settings
+RUNEBOOK_CANCELMAGIC_WARMODE 1 //will recall/gate be canceled when the player enters warmode? (1=yes, 0=no)
+RUNEBOOK_CANCELMAGIC_GETHIT 1 //will recall/gate be canceled when the player gets hit? (1=yes, 0=no)
+RUNEBOOK_CANCELMAGIC_HIT 1 //will recall/gate be canceled when the player hits another player? (1=yes, 0=no)
+
+[itemdef 8901]
+DEFNAME=i_runebook
+NAME=Rune Book
+TYPE=t_normal
+DYE=1
+VALUE=8000
+RESOURCES=20 i_scroll_blank, 10 i_scroll_recall
+SKILLMAKE=INSCRIPTION 70.0
+
+
+on=@create
+color 0bb1
+attr=attr_newbie
+DISPID=i_spellbook
+
+on=@dclick
+//IF (<src.findid.i_recall_timer>) || (<src.findid.i_gate_timer>)
+//src.sysmessage <def.runebook_alreadyusingmagic>
+//ELIF (<src.flags>&statf_freeze)
+IF (<src.flags>&statf_freeze)
+src.sysmessage <def.runebook_cantusethisbook>
+ELSE
+src.sound 85
+sdialog d_runebook
+ENDIF
+return 1
+
+on=@targon_char
+src.sysmessage <def.runebook_thatsnotarune>
+return 1
+
+ON=@Click
+MESSAGE @07ad <NAME>
+RETURN 1
+
+on=@DropOn_Item
+	if (<argo.baseid> == i_x_runebook)
+		f_new_rb_transfer <argo.uid>
+	endif
+
+on=@targon_item
+IF (<SRC.TARG.BASEID>!=i_rune_marker)
+SRC.SYSMESSAGE <def.runebook_thatsnotarune>
+ELIF (<src.targ.topobj.uid>!=<src>)
+src.sysmessage <def.runebook_therunemustbewithyou>
+ELIF !(<SRC.TARG.MOREP>)
+SRC.SYSMESSAGE <def.runebook_runenotmarked>
+ELSE
+FOR 40
+IF !(<tag0.runa<eval <local._for>>>)
+try tag.runa<eval <local._for>>=<src.targ.morep>
+try tag.runanome<eval <local._for>>=<src.targ.name>
+src.sysmessage @07a0 Rune added.
+src.targ.remove
+return 1
+ENDIF
+ENDFOR
+src.sysmessage @33,,1 The book already has 40 runes.
+ENDIF
+return 1
+
+/////////////////////////////
+
+[DIALOG d_runebook]
+100, 0
+//src.sendpacket 02c 1
+PAGE 0
+gumppic 72 115 500
+gumppic 460 350 028ac
+gumppic 460 200 028ab
+gumppic 460 50 028aa
+dtext 140 130 88 <NAME>
+button 312 122 01523 01523 1 0 127
+dtext 332 122 2010 Add Rune
+button 312 312 037 038 1 0 128
+dtext 328 310 2010 Change Name
+PAGE 1
+button 435 130 2226 2226 0 2
+FOR 1 7
+button 105 <EVAL (<LOCAL._FOR>*20)+140> 093A 0939 1 0 <EVAL <LOCAL._FOR>>
+button 125 <EVAL (<LOCAL._FOR>*20)+140> 093A 0939 1 0 <EVAL <LOCAL._FOR>+14>
+dcroppedtext 145 <EVAL (<LOCAL._FOR>*20)+135> 100 20 1152 <QVAL <ISEMPTY <TAG.RUNA<EVAL <LOCAL._FOR>>>> ? Empty:<TAG0.RUNANOME<EVAL <LOCAL._FOR>>>>
+button 260 <EVAL (<LOCAL._FOR>*20)+140> 093A 0939 1 0 <EVAL <LOCAL._FOR>+28>
+ENDFOR
+FOR 8 14
+button 305 <EVAL ((<LOCAL._FOR>-7)*20)+140> 093A 0939 1 0 <EVAL <LOCAL._FOR>>
+button 325 <EVAL ((<LOCAL._FOR>-7)*20)+140> 093A 0939 1 0 <EVAL <LOCAL._FOR>+14>
+dcroppedtext 345 <EVAL ((<LOCAL._FOR>-7)*20)+135> 100 20 1152 <QVAL <ISEMPTY <TAG.RUNA<EVAL <LOCAL._FOR>>>> ? Empty:<TAG0.RUNANOME<EVAL <LOCAL._FOR>>>>
+button 450 <EVAL ((<LOCAL._FOR>-7)*20)+140> 093A 0939 1 0 <EVAL <LOCAL._FOR>+28>
+ENDFOR
+dtext 108 307 0 --Recall
+dtext 108 295 0 |
+dtext 128 295 0 |____Gate
+dtext 258 295 0 |
+dtext 226 310 0 Remove
+PAGE 2
+button 110 130 2225 2225 0 1
+button 435 130 2227 2227 0 3
+FOR 15 21
+button 105 <EVAL (<LOCAL._FOR>*20)-140> 093A 0939 1 0 <EVAL <LOCAL._FOR>+28>
+button 125 <EVAL (<LOCAL._FOR>*20)-140> 093A 0939 1 0 <EVAL <LOCAL._FOR>+42>
+dcroppedtext 145 <EVAL (<LOCAL._FOR>*20)-145> 100 20 1152 <QVAL <ISEMPTY <TAG.RUNA<EVAL <LOCAL._FOR>>>> ? Empty:<TAG0.RUNANOME<EVAL <LOCAL._FOR>>>>
+button 260 <EVAL (<LOCAL._FOR>*20)-140> 093A 0939 1 0 <EVAL <LOCAL._FOR>+56>
+ENDFOR
+FOR 22 28
+button 305 <EVAL ((<LOCAL._FOR>-7)*20)-140> 093A 0939 1 0 <EVAL <LOCAL._FOR>+28>
+button 325 <EVAL ((<LOCAL._FOR>-7)*20)-140> 093A 0939 1 0 <EVAL <LOCAL._FOR>+42>
+dcroppedtext 345 <EVAL ((<LOCAL._FOR>-7)*20)-145> 100 20 1152 <QVAL <ISEMPTY <TAG.RUNA<EVAL <LOCAL._FOR>>>> ? Empty:<TAG0.RUNANOME<EVAL <LOCAL._FOR>>>>
+button 450 <EVAL ((<LOCAL._FOR>-7)*20)-140> 093A 0939 1 0 <EVAL <LOCAL._FOR>+56>
+ENDFOR
+dtext 108 307 0 --Recall
+dtext 108 295 0 |
+dtext 128 295 0 |____Gate
+dtext 258 295 0 |
+dtext 226 310 0 Remove
+PAGE 3
+button 110 130 2226 2226 0 2
+FOR 29 35
+button 105 <EVAL (<LOCAL._FOR>*20)-420> 093A 0939 1 0 <EVAL <LOCAL._FOR>+56>
+button 125 <EVAL (<LOCAL._FOR>*20)-420> 093A 0939 1 0 <EVAL <LOCAL._FOR>+70>
+dcroppedtext 145 <EVAL (<LOCAL._FOR>*20)-425> 100 20 1152 <QVAL <ISEMPTY <TAG.RUNA<EVAL <LOCAL._FOR>>>> ? Empty:<TAG0.RUNANOME<EVAL <LOCAL._FOR>>>>
+button 260 <EVAL (<LOCAL._FOR>*20)-420> 093A 0939 1 0 <EVAL <LOCAL._FOR>+84>
+ENDFOR
+FOR 36 42
+button 305 <EVAL ((<LOCAL._FOR>-7)*20)-420> 093A 0939 1 0 <EVAL <LOCAL._FOR>+56>
+button 325 <EVAL ((<LOCAL._FOR>-7)*20)-420> 093A 0939 1 0 <EVAL <LOCAL._FOR>+70>
+dcroppedtext 345 <EVAL ((<LOCAL._FOR>-7)*20)-425> 100 20 1152 <QVAL <ISEMPTY <TAG.RUNA<EVAL <LOCAL._FOR>>>> ? Empty:<TAG0.RUNANOME<EVAL <LOCAL._FOR>>>>
+button 450 <EVAL ((<LOCAL._FOR>-7)*20)-420> 093A 0939 1 0 <EVAL <LOCAL._FOR>+84>
+ENDFOR
+dtext 108 307 0 --Recall
+dtext 108 295 0 |
+dtext 128 295 0 |____Gate
+dtext 258 295 0 |
+dtext 226 310 0 Remove
+
+
+[DIALOG d_runebook BUTTON]
+ON=1 14
+IF !(<TAG0.RUNA<ARGN>>)
+src.sysmessage <def.runebook_nothingatthisslot>
+//ELIF (<src.findid.i_recall_timer>) || (<src.findid.i_gate_timer>)
+//src.sysmessage <def.runebook_alreadyusingmagic>
+ELIF (<src.flags>&statf_freeze)
+src.sysmessage <def.runebook_cantusethisbook>
+ELIF (<src.tag0.event.id>)
+src.sysmessage @07a1 You can't use this book in an event.
+ELIF !(<SRC.CANCAST s_recall>)
+src.sysmessage <def.runebook_cantcastthismagic>
+ELSE
+MOREP=<TAG0.RUNA<ARGN>>
+	IF (<src.findid.i_recall_timer>) || (<src.findid.i_gate_timer>)
+		SRC.FINDID.i_recall_timer.REMOVE
+		SRC.FINDID.i_gate_timer.REMOVE
+		SRC.SYSMESSAGE <def.runebook_magicfails>
+		SRC.EFFECT 3,i_fx_smoke,20,20
+		SRC.EVENTS -e_runadano
+	ENDIF
+SRC.rb_using_verify
+SERV.NEWITEM i_gold
+NEW.ATTR=ATTR_INVIS
+NEW.P=<MOREP>
+LOCAL.COIN=<NEW>
+IF (<NEW.REGION.FLAGS>&region_antimagic_recall_in) || (<UID.<NEW.REGION.UID>.TYPE>==t_multi)
+SRC.SYSMESSAGE <def.runebook_placeblocked>
+ELIF (<SRC.REGION.FLAGS>&region_antimagic_recall_out)
+SRC.SYSMESSAGE <def.runebook_cantusethishere>
+ELSE
+IF !(<SRC.ISGM>)
+SRC.MANA -= <SERV.SPELL.s_recall.MANAUSE>
+SRC.CONSUME 1 i_reag_black_pearl
+SRC.CONSUME 1 i_reag_blood_moss
+SRC.CONSUME 1 i_reag_mandrake_root
+ENDIF
+SRC.EVENTS +e_runadano
+SERV.NEWITEM i_recall_timer,1,<SRC>
+NEW.TIMERD=<SERV.SPELL.s_recall.CAST_TIME>
+NEW.MOREP=<MOREP>
+src.sound snd_spell_recall
+SRC.ACTION -1
+
+IF (<SRC.FLAGS> & statf_hidden)
+	SRC.FLAGS = <SRC.FLAGS> & ~statf_hidden
+	SRC.SYSMESSAGE @,,1 <DEFMSG.hiding_revealed>
+ENDIF
+
+src.say Kal Ort Por
+SRC.FINDLAYER.1.UNEQUIP
+SRC.FINDLAYER.2.UNEQUIP
+
+
+src.anim 17
+ENDIF
+TRY UID.<LOCAL.COIN>.REMOVE
+ENDIF
+
+ON=15 28
+IF !(<TAG0.RUNA<EVAL <ARGN>-14>>)
+src.sysmessage <def.runebook_nothingatthisslot>
+//ELIF (<src.findid.i_recall_timer>) || (<src.findid.i_gate_timer>)
+//src.sysmessage <def.runebook_alreadyusingmagic>
+ELIF (<src.flags>&statf_freeze)
+src.sysmessage <def.runebook_cantusethisbook>
+ELIF (<src.tag0.event.id>)
+src.sysmessage @07a1 You can't use this book in an event.
+ELIF !(<SRC.CANCAST s_gate_travel>)
+src.sysmessage <def.runebook_cantcastthismagic>
+ELSE
+MOREP=<TAG0.RUNA<EVAL <ARGN>-14>>
+	IF (<src.findid.i_recall_timer>) || (<src.findid.i_gate_timer>)
+		SRC.FINDID.i_recall_timer.REMOVE
+		SRC.FINDID.i_gate_timer.REMOVE
+		SRC.SYSMESSAGE <def.runebook_magicfails>
+		SRC.EFFECT 3,i_fx_smoke,20,20
+		SRC.EVENTS -e_runadano
+	ENDIF
+SRC.rb_using_verify
+SERV.NEWITEM i_gold
+NEW.ATTR=ATTR_INVIS
+NEW.P=<MOREP>
+LOCAL.COIN=<NEW>
+IF (<NEW.REGION.FLAGS>&region_antimagic_gate) || (<UID.<NEW.REGION.UID>.TYPE>==t_multi)
+SRC.SYSMESSAGE <def.runebook_placeblocked>
+ELIF (<SRC.REGION.FLAGS>&region_antimagic_recall_out)
+SRC.SYSMESSAGE <def.runebook_cantusethishere>
+ELSE
+IF !(<SRC.ISGM>)
+SRC.MANA -= <SERV.SPELL.s_gate_travel.MANAUSE>
+SRC.CONSUME 1 i_reag_black_pearl
+SRC.CONSUME 1 i_reag_sulfur_ash
+SRC.CONSUME 1 i_reag_mandrake_root
+ENDIF
+SRC.EVENTS +e_runadano
+SERV.NEWITEM i_gate_timer,1,<SRC>
+NEW.TIMERD=<SERV.SPELL.s_gate_travel.CAST_TIME>
+NEW.MOREP=<MOREP>
+src.sound snd_spell_recall
+
+IF (<SRC.FLAGS> & statf_hidden)
+	SRC.FLAGS = <SRC.FLAGS> & ~statf_hidden
+	SRC.SYSMESSAGE @,,1 <DEFMSG.hiding_revealed>
+ENDIF
+
+if !(<src.isgm>)
+	src.say Vas Rel Por
+endif
+SRC.ACTION -1
+src.anim 17
+SRC.FINDLAYER.1.UNEQUIP
+SRC.FINDLAYER.2.UNEQUIP
+ENDIF
+TRY UID.<LOCAL.COIN>.REMOVE
+ENDIF
+
+ON=29 42
+IF !(<TAG0.RUNA<EVAL <ARGN>-28>>)
+src.sysmessage <def.runebook_nothingatthisslot>
+ELSE
+serv.newitem=i_rune_marker
+new.name=<tag0.runanome<eval <argn>-28>>
+new.morep=<tag0.runa<eval <argn>-28>>
+new.more1=10
+try tag.runa<eval <argn>-28>
+try tag.runanome<eval <argn>-28>
+new.bounce
+sdialog d_runebook
+ENDIF
+
+
+ON=43 56
+ARGN -=28
+IF !(<TAG0.RUNA<ARGN>>)
+src.sysmessage <def.runebook_nothingatthisslot>
+//ELIF (<src.findid.i_recall_timer>) || (<src.findid.i_gate_timer>)
+//src.sysmessage <def.runebook_alreadyusingmagic>
+ELIF (<src.flags>&statf_freeze)
+src.sysmessage <def.runebook_cantusethisbook>
+ELIF (<src.tag0.event.id>)
+src.sysmessage @07a1 You can't use this book in an event.
+ELIF !(<SRC.CANCAST s_recall>)
+src.sysmessage <def.runebook_cantcastthismagic>
+ELSE
+MOREP=<TAG0.RUNA<ARGN>>
+	IF (<src.findid.i_recall_timer>) || (<src.findid.i_gate_timer>)
+		SRC.FINDID.i_recall_timer.REMOVE
+		SRC.FINDID.i_gate_timer.REMOVE
+		SRC.SYSMESSAGE <def.runebook_magicfails>
+		SRC.EFFECT 3,i_fx_smoke,20,20
+		SRC.EVENTS -e_runadano
+	ENDIF
+SRC.rb_using_verify
+SERV.NEWITEM i_gold
+NEW.ATTR=ATTR_INVIS
+NEW.P=<MOREP>
+LOCAL.COIN=<NEW>
+IF (<NEW.REGION.FLAGS>&region_antimagic_recall_in) || (<UID.<NEW.REGION.UID>.TYPE>==t_multi)
+SRC.SYSMESSAGE <def.runebook_placeblocked>
+ELIF (<SRC.REGION.FLAGS>&region_antimagic_recall_out)
+SRC.SYSMESSAGE <def.runebook_cantusethishere>
+ELSE
+IF !(<SRC.ISGM>)
+SRC.MANA -= <SERV.SPELL.s_recall.MANAUSE>
+SRC.CONSUME 1 i_reag_black_pearl
+SRC.CONSUME 1 i_reag_blood_moss
+SRC.CONSUME 1 i_reag_mandrake_root
+ENDIF
+SRC.EVENTS +e_runadano
+SERV.NEWITEM i_recall_timer,1,<SRC>
+NEW.TIMERD=<SERV.SPELL.s_recall.CAST_TIME>
+NEW.MOREP=<MOREP>
+src.sound snd_spell_recall
+
+IF (<SRC.FLAGS> & statf_hidden)
+	SRC.FLAGS = <SRC.FLAGS> & ~statf_hidden
+	SRC.SYSMESSAGE @,,1 <DEFMSG.hiding_revealed>
+ENDIF
+
+src.say Kal Ort Por
+SRC.ACTION -1
+SRC.FINDLAYER.1.UNEQUIP
+SRC.FINDLAYER.2.UNEQUIP
+
+src.anim 17
+ENDIF
+TRY UID.<LOCAL.COIN>.REMOVE
+ENDIF
+
+ON=57 70
+ARGN -=28
+IF !(<TAG0.RUNA<EVAL <ARGN>-14>>)
+src.sysmessage <def.runebook_nothingatthisslot>
+//ELIF (<src.findid.i_recall_timer>) || (<src.findid.i_gate_timer>)
+//src.sysmessage <def.runebook_alreadyusingmagic>
+ELIF (<src.flags>&statf_freeze)
+src.sysmessage <def.runebook_cantusethisbook>
+ELIF (<src.tag0.event.id>)
+src.sysmessage @07a1 You can't use this book in an event.
+ELIF !(<SRC.CANCAST s_gate_travel>)
+src.sysmessage <def.runebook_cantcastthismagic>
+ELSE
+MOREP=<TAG0.RUNA<EVAL <ARGN>-14>>
+	IF (<src.findid.i_recall_timer>) || (<src.findid.i_gate_timer>)
+		SRC.FINDID.i_recall_timer.REMOVE
+		SRC.FINDID.i_gate_timer.REMOVE
+		SRC.SYSMESSAGE <def.runebook_magicfails>
+		SRC.EFFECT 3,i_fx_smoke,20,20
+		SRC.EVENTS -e_runadano
+	ENDIF
+SRC.rb_using_verify
+SERV.NEWITEM i_gold
+NEW.ATTR=ATTR_INVIS
+NEW.P=<MOREP>
+LOCAL.COIN=<NEW>
+IF (<NEW.REGION.FLAGS>&region_antimagic_gate) || (<UID.<NEW.REGION.UID>.TYPE>==t_multi)
+SRC.SYSMESSAGE <def.runebook_placeblocked>
+ELIF (<SRC.REGION.FLAGS>&region_antimagic_recall_out)
+SRC.SYSMESSAGE <def.runebook_cantusethishere>
+ELSE
+IF !(<SRC.ISGM>)
+SRC.MANA -= <SERV.SPELL.s_gate_travel.MANAUSE>
+SRC.CONSUME 1 i_reag_black_pearl
+SRC.CONSUME 1 i_reag_sulfur_ash
+SRC.CONSUME 1 i_reag_mandrake_root
+ENDIF
+SRC.EVENTS +e_runadano
+SERV.NEWITEM i_gate_timer,1,<SRC>
+NEW.TIMERD=<SERV.SPELL.s_gate_travel.CAST_TIME>
+NEW.MOREP=<MOREP>
+src.sound snd_spell_recall
+
+IF (<SRC.FLAGS> & statf_hidden)
+	SRC.FLAGS = <SRC.FLAGS> & ~statf_hidden
+	SRC.SYSMESSAGE @,,1 <DEFMSG.hiding_revealed>
+ENDIF
+
+if !(<src.isgm>)
+	src.say Vas Rel Por
+endif
+SRC.ACTION -1
+SRC.FINDLAYER.1.UNEQUIP
+SRC.FINDLAYER.2.UNEQUIP
+src.anim 17
+ENDIF
+TRY UID.<LOCAL.COIN>.REMOVE
+ENDIF
+
+ON=71 84
+ARGN -=28
+IF !(<TAG0.RUNA<EVAL <ARGN>-28>>)
+src.sysmessage <def.runebook_nothingatthisslot>
+ELSE
+serv.newitem=i_rune_marker
+new.name=<tag0.runanome<eval <argn>-28>>
+new.morep=<tag0.runa<eval <argn>-28>>
+new.more1=10
+try tag.runa<eval <argn>-28>
+try tag.runanome<eval <argn>-28>
+new.bounce
+sdialog d_runebook
+ENDIF
+
+
+ON=85 98
+ARGN -=56
+IF !(<TAG0.RUNA<ARGN>>)
+src.sysmessage <def.runebook_nothingatthisslot>
+//ELIF (<src.findid.i_recall_timer>) || (<src.findid.i_gate_timer>)
+//src.sysmessage <def.runebook_alreadyusingmagic>
+ELIF (<src.flags>&statf_freeze)
+src.sysmessage <def.runebook_cantusethisbook>
+ELIF (<src.tag0.event.id>)
+src.sysmessage @07a1 You can't use this book in an event.
+ELIF !(<SRC.CANCAST s_recall>)
+src.sysmessage <def.runebook_cantcastthismagic>
+ELSE
+MOREP=<TAG0.RUNA<ARGN>>
+	IF (<src.findid.i_recall_timer>) || (<src.findid.i_gate_timer>)
+		SRC.FINDID.i_recall_timer.REMOVE
+		SRC.FINDID.i_gate_timer.REMOVE
+		SRC.SYSMESSAGE <def.runebook_magicfails>
+		SRC.EFFECT 3,i_fx_smoke,20,20
+		SRC.EVENTS -e_runadano
+	ENDIF
+SRC.rb_using_verify
+SERV.NEWITEM i_gold
+NEW.ATTR=ATTR_INVIS
+NEW.P=<MOREP>
+LOCAL.COIN=<NEW>
+IF (<NEW.REGION.FLAGS>&region_antimagic_recall_in) || (<UID.<NEW.REGION.UID>.TYPE>==t_multi)
+SRC.SYSMESSAGE <def.runebook_placeblocked>
+ELIF (<SRC.REGION.FLAGS>&region_antimagic_recall_out)
+SRC.SYSMESSAGE <def.runebook_cantusethishere>
+ELSE
+IF !(<SRC.ISGM>)
+SRC.MANA -= <SERV.SPELL.s_recall.MANAUSE>
+SRC.CONSUME 1 i_reag_black_pearl
+SRC.CONSUME 1 i_reag_blood_moss
+SRC.CONSUME 1 i_reag_mandrake_root
+ENDIF
+SRC.EVENTS +e_runadano
+SERV.NEWITEM i_recall_timer,1,<SRC>
+NEW.TIMERD=<SERV.SPELL.s_recall.CAST_TIME>
+NEW.MOREP=<MOREP>
+src.sound snd_spell_recall
+
+IF (<SRC.FLAGS> & statf_hidden)
+	SRC.FLAGS = <SRC.FLAGS> & ~statf_hidden
+	SRC.SYSMESSAGE @,,1 <DEFMSG.hiding_revealed>
+ENDIF
+
+src.say Kal Ort Por
+SRC.ACTION -1
+SRC.FINDLAYER.1.UNEQUIP
+SRC.FINDLAYER.2.UNEQUIP
+
+src.anim 17
+ENDIF
+TRY UID.<LOCAL.COIN>.REMOVE
+ENDIF
+
+ON=99 112
+ARGN -=56
+IF !(<TAG0.RUNA<EVAL <ARGN>-14>>)
+src.sysmessage <def.runebook_nothingatthisslot>
+//ELIF (<src.findid.i_recall_timer>) || (<src.findid.i_gate_timer>)
+//src.sysmessage <def.runebook_alreadyusingmagic>
+ELIF (<src.flags>&statf_freeze)
+src.sysmessage <def.runebook_cantusethisbook>
+ELIF (<src.tag0.event.id>)
+src.sysmessage @07a1 You can't use this book in an event.
+ELIF !(<SRC.CANCAST s_gate_travel>)
+src.sysmessage <def.runebook_cantcastthismagic>
+ELSE
+	IF (<src.findid.i_recall_timer>) || (<src.findid.i_gate_timer>)
+		SRC.FINDID.i_recall_timer.REMOVE
+		SRC.FINDID.i_gate_timer.REMOVE
+		SRC.SYSMESSAGE <def.runebook_magicfails>
+		SRC.EFFECT 3,i_fx_smoke,20,20
+		SRC.EVENTS -e_runadano
+	ENDIF
+SRC.rb_using_verify
+MOREP=<TAG0.RUNA<EVAL <ARGN>-14>>
+SERV.NEWITEM i_gold
+NEW.ATTR=ATTR_INVIS
+NEW.P=<MOREP>
+LOCAL.COIN=<NEW>
+IF (<NEW.REGION.FLAGS>&region_antimagic_gate) || (<UID.<NEW.REGION.UID>.TYPE>==t_multi)
+SRC.SYSMESSAGE <def.runebook_placeblocked>
+ELIF (<SRC.REGION.FLAGS>&region_antimagic_recall_out)
+SRC.SYSMESSAGE <def.runebook_cantusethishere>
+ELSE
+IF !(<SRC.ISGM>)
+SRC.MANA -= <SERV.SPELL.s_gate_travel.MANAUSE>
+SRC.CONSUME 1 i_reag_black_pearl
+SRC.CONSUME 1 i_reag_sulfur_ash
+SRC.CONSUME 1 i_reag_mandrake_root
+ENDIF
+SRC.EVENTS +e_runadano
+SERV.NEWITEM i_gate_timer,1,<SRC>
+NEW.TIMERD=<SERV.SPELL.s_gate_travel.CAST_TIME>
+NEW.MOREP=<MOREP>
+src.sound snd_spell_recall
+
+IF (<SRC.FLAGS> & statf_hidden)
+	SRC.FLAGS = <SRC.FLAGS> & ~statf_hidden
+	SRC.SYSMESSAGE @,,1 <DEFMSG.hiding_revealed>
+ENDIF
+
+if !(<src.isgm>)
+	src.say Vas Rel Por
+endif
+SRC.ACTION -1
+SRC.FINDLAYER.1.UNEQUIP
+SRC.FINDLAYER.2.UNEQUIP
+src.anim 17
+ENDIF
+TRY UID.<LOCAL.COIN>.REMOVE
+ENDIF
+
+ON=113 126
+ARGN -=56
+IF !(<TAG0.RUNA<EVAL <ARGN>-28>>)
+src.sysmessage <def.runebook_nothingatthisslot>
+ELSE
+serv.newitem=i_rune_marker
+new.name=<tag0.runanome<eval <argn>-28>>
+new.morep=<tag0.runa<eval <argn>-28>>
+new.more1=10
+try tag.runa<eval <argn>-28>
+try tag.runanome<eval <argn>-28>
+new.bounce
+sdialog d_runebook
+ENDIF
+
+ON=127
+IF (<TOPOBJ.UID>==<SRC>)
+target @07a1 Choose a rune.
+ELSE
+src.sysmessage @07a1 The book needs to be with you.
+ENDIF
+
+
+ON=128
+IF (<TOPOBJ.UID>==<SRC>)
+SDIALOG d_runebook_mudarnome
+ENDIF
+
+[ITEMDEF i_recall_timer]
+ID=i_memory
+NAME=Recall Timer
+TYPE=t_eq_script
+
+ON=@Timer
+SERV.NEWITEM i_gold
+NEW.ATTR=attr_invis
+NEW.P=<MOREP>
+IF (<NEW.REGION.FLAGS>&region_antimagic_recall_in) || (<UID.<NEW.REGION.UID>.TYPE>==t_multi) || (<NEW.P.TYPE>==t_water)
+CONT.SYSMESSAGE <def.runebook_placeblocked>
+CONT.EFFECT 3,i_fx_smoke,20,20
+ELIF (<CONT.REGION.FLAGS>&region_antimagic_recall_out)
+CONT.SYSMESSAGE <def.runebook_cantusethishere>
+CONT.EFFECT 3,i_fx_smoke,20,20
+ELIF (<cont.flags>&statf_freeze)
+cont.sysmessage <def.runebook_cantusethisbook>
+CONT.EFFECT 3,i_fx_smoke,20,20
+ELIF (<cont.tag0.event.id>)
+cont.sysmessage @07a1 You can't use this book in an event.
+CONT.EFFECT 3,i_fx_smoke,20,20
+CONT.EFFECT 3,i_fx_smoke,20,20
+//ELIF !(<cont.CANCAST s_recall>)
+//cont.sysmessage <def.runebook_cantcastthismagic>
+//CONT.EFFECT 3,i_fx_smoke,20,20
+ELSE
+CONT.F_GO <MOREP>
+ENDIF
+CONT.EVENTS -e_runadano
+NEW.REMOVE
+REMOVE
+RETURN 1
+
+/////////////////////////////////
+
+[ITEMDEF i_gate_timer]
+ID=i_memory
+NAME=Gate Timer
+TYPE=t_eq_script
+
+ON=@Timer
+SERV.NEWITEM i_gold
+NEW.ATTR=attr_invis
+NEW.P=<MOREP>
+LOCAL.NAME=<NEW.REGION.NAME>
+LOCAL.COIN=<NEW>
+IF (<NEW.REGION.FLAGS>&region_antimagic_gate) || (<UID.<NEW.REGION.UID>.TYPE>==t_multi) || (<NEW.P.TYPE> == t_water)
+CONT.SYSMESSAGE <def.runebook_placeblocked>
+CONT.EFFECT 3,i_fx_smoke,20,20
+ELIF (<CONT.REGION.FLAGS>&region_antimagic_recall_out)
+CONT.SYSMESSAGE <def.runebook_cantusethishere>
+CONT.EFFECT 3,i_fx_smoke,20,20
+ELIF (<CONT.REGION.FLAGS>&region_antimagic_recall_in)
+CONT.SYSMESSAGE <def.runebook_cantusethishere>
+CONT.EFFECT 3,i_fx_smoke,20,20
+
+ELIF (<cont.flags>&statf_freeze)
+cont.sysmessage <def.runebook_cantusethisbook>
+CONT.EFFECT 3,i_fx_smoke,20,20
+ELIF (<cont.tag0.event.id>)
+cont.sysmessage @07a1 You can't use this book in an event.
+CONT.EFFECT 3,i_fx_smoke,20,20
+//ELIF !(<cont.CANCAST s_gate_travel>)
+//cont.sysmessage <def.runebook_cantcastthismagic>
+//CONT.EFFECT 3,i_fx_smoke,20,20
+ELSE
+serv.newitem=i_moongate_blue
+new.p=<cont.p>
+new.type t_telepad
+//NEW.TAG.PGATE 1
+NEW.TAG.CRIADOR <CONT.UID>
+REF100=<NEW.UID>
+IF (<REF100.GATE_VERIFY2 <CONT.UID>>)
+	TRY UID.<LOCAL.COIN>.REMOVE
+ 	CONT.EFFECT 3,i_fx_smoke_small,20,20
+ 	CONT.EVENTS -e_runadano
+ 	REF100.LINK.REMOVE
+ 	REF100.REMOVE
+ 	REMOVE
+ 	RETURN 1
+ENDIF
+REF69 <LOCAL.COIN>
+IF <REF69.REGION.GUARDED>==0
+REF100.COLOR 026
+ELSE
+REF100.COLOR 063
+ENDIF
+ref100.morep=<morep>
+ref100.name=<LOCAL.NAME>
+ref100.attr=attr_static|attr_decay
+ref100.timer=16
+ref100.fix
+serv.newitem=i_moongate_blue
+new.p=<morep>
+new.type t_telepad
+new.link=<ref100.UID>
+//NEW.TAG.PGATE 1
+NEW.TAG.CRIADOR <CONT.UID>
+NEW.TAG.GATE <ref100.UID>
+REF100.LINK=<NEW.UID>
+REF100=<NEW.UID>
+IF (<REF100.GATE_VERIFY3 <CONT.UID>>)
+	TRY UID.<LOCAL.COIN>.REMOVE
+ 	CONT.EFFECT 3,i_fx_smoke_small,20,20
+ 	CONT.EVENTS -e_runadano
+ 	REF100.LINK.REMOVE
+ 	REF100.REMOVE
+ 	REMOVE
+ 	RETURN 1
+ENDIF
+REF100.TAG.GATE <NEW.UID>
+IF <CONT.REGION.GUARDED>==0
+REF100.COLOR 026
+ELSE
+REF100.COLOR 063
+ENDIF
+REF100.morep=<cont.p>
+REF100.name=<cont.region.name>
+REF100.attr=attr_static|attr_decay
+REF100.timer=16
+REF100.fix
+ENDIF
+TRY UID.<LOCAL.COIN>.REMOVE
+CONT.EVENTS -e_runadano
+REMOVE
+RETURN 1
+
+/////////////////////////////////
+
+[EVENTS e_runadano]
+ON=@UserWarMode
+IF (<DEF.RUNEBOOK_CANCELMAGIC_WARMODE>)
+	FINDID.i_recall_timer.REMOVE
+	FINDID.i_gate_timer.REMOVE
+	SYSMESSAGE <def.runebook_magicfails>
+	EFFECT 3,i_fx_smoke,20,20
+	EVENTS -e_runadano
+ENDIF
+
+ON=@GetHit
+IF (<DEF.RUNEBOOK_CANCELMAGIC_GETHIT>)
+FINDID.i_recall_timer.REMOVE
+FINDID.i_gate_timer.REMOVE
+SYSMESSAGE <def.runebook_magicfails>
+EFFECT 3,i_fx_smoke,20,20
+EVENTS -e_runadano
+ENDIF
+
+ON=@Hit
+IF (<DEF.RUNEBOOK_CANCELMAGIC_HIT>)
+FINDID.i_recall_timer.REMOVE
+FINDID.i_gate_timer.REMOVE
+SYSMESSAGE <def.runebook_magicfails>
+EFFECT 3,i_fx_smoke,20,20
+EVENTS -e_runadano
+ENDIF
+
+ON=@LogOut
+FINDID.i_recall_timer.REMOVE
+FINDID.i_gate_timer.REMOVE
+SYSMESSAGE <def.runebook_magicfails>
+EFFECT 3,i_fx_smoke,20,20
+EVENTS -e_runadano
+
+ON=@SpellCast
+IF (<ARGN>==s_recall) || (<ARGN>==s_gate_travel)
+ACTION -1
+RETURN 1
+ENDIF
+
+ON=@SKILLPRESTART
+FINDID.i_recall_timer.REMOVE
+FINDID.i_gate_timer.REMOVE
+SYSMESSAGE <def.runebook_magicfails>
+EFFECT 3,i_fx_smoke,20,20
+EVENTS -e_runadano
+
+/////////////////////////////////
+
+[DIALOG d_runebook_mudarnome]
+10,30
+page 0
+resizepic 185 190 3600 340 140
+resizepic 195 200 3500 320 120
+dtext 230 210 0 Actual Name: <NAME>
+button 250 250 5224 5003 1 0 1
+dtextentry 270 250 300 25 55 0 1
+
+[DIALOG d_runebook_mudarnome BUTTON]
+on=0
+if (<topobj.uid>==<src>)
+sdialog d_runebook
+endif
+
+on=1
+IF (<topobj.uid>==<src>)
+name=<strsub 0 15 <argtxt[0]>>
+ENDIF
+
+///////////////////////////////////////////
+/////////////// TINKERING /////////////////
+///////////////////////////////////////////
+
+[ITEMDEF i_bs_hammer]
+ID=i_hammer_smith
+NAME=+5 Blacksmithing Hammer
+SKILLMAKE=TINKERING 70.0, Blacksmithing 70.0, ARMSLORE 70.0, t_tinker_tools
+RESOURCES=5 i_ingot_blackrock, 3 i_hickory_log, 3 i_gem_diamond, 1 i_hammer_smith
+VALUE=1100
+TEVENTS=t_skill_mod
+TAG.MOD_SKILLS=7
+TAG.MOD_SKILL_7=50
+
+on=@create
+	color 07a1
+	HITPOINTS 100
+
+////////////////////////////////////+5 Itens///////////////////////////////////////////////////
+
+[ITEMDEF i_Massive_ring]
+ID=i_ring_gold
+NAME=Massive Ring
+TYPE=t_jewelry
+WEIGHT=0
+SKILLMAKE=TINKERING 65.0, MAGERY 75.0, t_tinker_tools
+RESOURCES= 40 i_ingot_silver, i_gem_star_sapphire 4
+
+on=@create
+	color 0231
+
+ON=@EQUIP
+SRC.MODSTR += 5
+
+ON=@UNEQUIP
+SRC.MODSTR -= 5
+
+[ITEMDEF i_hurry_ring]
+ID=i_ring_gold
+NAME=Hurry Ring
+TYPE=t_jewelry
+WEIGHT=0
+SKILLMAKE=TINKERING 65.0, MAGERY 75.0, t_tinker_tools
+RESOURCES= 40 i_ingot_silver, i_gem_star_sapphire 4
+
+on=@create
+	color 0231
+
+ON=@EQUIP
+SRC.MODDEX += 5
+
+ON=@UNEQUIP
+SRC.MODDEX -= 5
+
+[ITEMDEF i_Smarty_ring]
+ID=i_ring_gold
+NAME=Smarty Ring
+TYPE=t_jewelry
+WEIGHT=0
+SKILLMAKE=TINKERING 65.0, MAGERY 75.0, t_tinker_tools
+RESOURCES= 40 i_ingot_silver, i_gem_star_sapphire 4
+
+on=@create
+	color 0231
+
+ON=@EQUIP
+SRC.MODINT += 5
+
+ON=@UNEQUIP
+SRC.MODINT -= 5
+
+[ITEMDEF i_5life_necklace]
+ID=i_necklace_gold
+NAME=+5 Necklace of Life
+TYPE=t_jewelry
+WEIGHT=0
+SKILLMAKE=TINKERING 65.0, MAGERY 75.0, t_tinker_tools
+RESOURCES= 40 i_ingot_silver, i_gem_star_sapphire 4
+
+on=@create
+	color 0231
+
+ON=@EQUIP
+SRC.HITS += 5
+
+ON=@UNEQUIP
+SRC.HITS -= 5
+
+[ITEMDEF i_5Stamina_necklace]
+ID=i_necklace_gold
+NAME=+5 Necklace of Stamina
+TYPE=t_jewelry
+WEIGHT=0
+SKILLMAKE=TINKERING 65.0, MAGERY 75.0, t_tinker_tools
+RESOURCES= 40 i_ingot_silver, i_gem_star_sapphire 4
+
+on=@create
+	color 0231
+
+on=@equiptest
+if <src.stam> < 10
+SRC.SYSMESSAGE Voce nao pode usar este item com menos de 10 de stamina.
+return 1
+endif
+
+ON=@DCLICK
+IF (<SRC.FINDID.i_stamneck_control.UID>==0)
+	serv.NEWITEM i_stamneck_control
+	NEW.EQUIP
+	SRC.FINDID.i_stamneck_control.timer 240
+ELIF (<SRC.FINDID.i_stamneck_control.timer> > 0)
+	SRC.SYSMESSAGE Voce precisa esperar para usar o efeito do colar novamente.
+	RETURN 1
+ENDIF
+
+ON=@EQUIP
+SRC.STAM += 5
+
+ON=@UNEQUIP
+SRC.STAM -= 5
+
+[ITEMDEF i_5Mana_necklace]
+ID=i_necklace_gold
+NAME=+5 Necklace of Mana
+TYPE=t_jewelry
+WEIGHT=0
+SKILLMAKE=TINKERING 65.0, MAGERY 75.0, t_tinker_tools
+RESOURCES= 40 i_ingot_silver, i_gem_star_sapphire 4
+
+ON=@EQUIP
+SRC.MANA +=5
+
+ON=@UNEQUIP
+SRC.MANA -=5
+
+////////////////////////////////////+10 Itens///////////////////////////////////////////////////
+
+[ITEMDEF i_Fortified_ring]
+ID=i_ring_gold
+NAME=Fortified Ring
+TYPE=t_jewelry
+WEIGHT=0
+SKILLMAKE=tinkering 70.0, MAGERY 78.0, t_tinker_tools
+RESOURCES= 40 i_ingot_valorite, i_gem_emerald 4
+
+on=@create
+	color = 0515
+
+ON=@EQUIP
+SRC.MODSTR += 10
+
+ON=@UNEQUIP
+SRC.MODSTR -= 10
+
+[ITEMDEF i_Quick_ring]
+ID=i_ring_gold
+NAME=Quick Ring
+TYPE=t_jewelry
+WEIGHT=0
+SKILLMAKE=tinkering 70.0, MAGERY 78.0, t_tinker_tools
+RESOURCES= 40 i_ingot_valorite, i_gem_emerald 4
+
+on=@create
+	color = 0515
+
+ON=@EQUIP
+SRC.MODDEX += 10
+
+ON=@UNEQUIP
+SRC.MODDEX -= 10
+
+[ITEMDEF i_Cleaver_ring]
+ID=i_ring_gold
+NAME=Cleaver Ring
+TYPE=t_jewelry
+WEIGHT=0
+SKILLMAKE=tinkering 70.0, MAGERY 78.0, t_tinker_tools
+RESOURCES= 40 i_ingot_valorite, i_gem_emerald 4
+
+on=@create
+	color = 0515
+
+ON=@EQUIP
+SRC.MODINT += 10
+
+ON=@UNEQUIP
+SRC.MODINT -= 10
+
+[ITEMDEF i_10life_necklace]
+ID=i_necklace_gold
+NAME=+10 Necklace of Life
+TYPE=t_jewelry
+WEIGHT=0
+SKILLMAKE=tinkering 70.0, MAGERY 78.0, t_tinker_tools
+RESOURCES= 40 i_ingot_valorite, i_gem_emerald 4
+
+on=@create
+	color = 0515
+
+ON=@EQUIP
+SRC.HITS +=10
+
+ON=@UNEQUIP
+SRC.HITS -=10
+
+[ITEMDEF i_10Stamina_necklace]
+ID=i_necklace_gold
+NAME=+10 Necklace of Stamina
+TYPE=t_jewelry
+WEIGHT=0
+SKILLMAKE=tinkering 70.0, MAGERY 78.0, t_tinker_tools
+RESOURCES= 40 i_ingot_valorite, i_gem_emerald 4
+
+on=@create
+	color = 0515
+
+on=@equiptest
+if <src.stam> < 10
+SRC.SYSMESSAGE Voce nao pode usar este item com menos de 10 de stamina.
+return 1
+endif
+
+ON=@DCLICK
+IF (<SRC.FINDID.i_stamneck_control.UID>==0)
+	serv.NEWITEM i_stamneck_control
+	NEW.EQUIP
+	SRC.FINDID.i_stamneck_control.timer 240
+ELIF (<SRC.FINDID.i_stamneck_control.timer> > 0)
+	SRC.SYSMESSAGE Voce precisa esperar para usar o efeito do colar novamente.
+	RETURN 1
+ENDIF
+
+ON=@EQUIP
+SRC.STAM +=10
+
+ON=@UNEQUIP
+SRC.STAM -=10
+
+[ITEMDEF i_10Mana_necklace]
+ID=i_necklace_gold
+NAME=+10 Necklace of Mana
+TYPE=t_jewelry
+WEIGHT=0
+SKILLMAKE=tinkering 70.0, MAGERY 78.0, t_tinker_tools
+RESOURCES= 40 i_ingot_valorite, i_gem_emerald 4
+
+on=@create
+	color = 0515
+
+ON=@EQUIP
+SRC.MANA +=10
+
+ON=@UNEQUIP
+SRC.MANA -=10
+
+////////////////////////////////////+15 Itens///////////////////////////////////////////////////
+
+[ITEMDEF i_Strong_ring]
+ID=i_ring_gold
+NAME=Strong Ring
+TYPE=t_jewelry
+WEIGHT=0
+SKILLMAKE=TINKERING 70.0, MAGERY 100.0, t_tinker_tools
+RESOURCES= 40 i_ingot_gold, i_gem_ruby 4
+
+ON=@EQUIP
+SRC.MODSTR += 15
+
+ON=@UNEQUIP
+SRC.MODSTR -= 15
+
+[ITEMDEF i_Speedy_ring]
+ID=i_ring_gold
+NAME=Speedy Ring
+TYPE=t_jewelry
+WEIGHT=0
+SKILLMAKE=TINKERING 70.0, MAGERY 100.0, t_tinker_tools
+RESOURCES= 40 i_ingot_gold, i_gem_ruby 4
+
+ON=@EQUIP
+SRC.MODDEX += 15
+
+ON=@UNEQUIP
+SRC.MODDEX -= 15
+
+[ITEMDEF i_Knowledge_ring]
+ID=i_ring_gold
+NAME=Ring of Knowledge
+TYPE=t_jewelry
+WEIGHT=0
+SKILLMAKE=TINKERING 70.0, MAGERY 100.0, t_tinker_tools
+RESOURCES= 40 i_ingot_gold, i_gem_ruby 4
+
+ON=@EQUIP
+SRC.MODINT += 15
+
+ON=@UNEQUIP
+SRC.MODINT -= 15
+
+[ITEMDEF i_15life_necklace]
+ID=i_necklace_gold
+NAME=+15 Necklace of Life
+TYPE=t_jewelry
+WEIGHT=0
+SKILLMAKE=TINKERING 70.0, MAGERY 100.0, t_tinker_tools
+RESOURCES= 40 i_ingot_gold, i_gem_ruby 4
+
+ON=@EQUIP
+SRC.HITS +=15
+
+ON=@UNEQUIP
+SRC.HITS -=15
+
+[ITEMDEF i_15Stamina_necklace]
+ID=i_necklace_gold
+NAME=+15 Necklace of Stamina
+TYPE=t_jewelry
+WEIGHT=0
+SKILLMAKE=TINKERING 70.0, MAGERY 100.0, t_tinker_tools
+RESOURCES= 40 i_ingot_gold, i_gem_ruby 4
+
+on=@equiptest
+if <src.stam> < 10
+SRC.SYSMESSAGE Voce nao pode usar este item com menos de 10 de stamina.
+return 1
+endif
+
+ON=@DCLICK
+IF (<SRC.FINDID.i_stamneck_control.UID>==0)
+	serv.NEWITEM i_stamneck_control
+	NEW.EQUIP
+	SRC.FINDID.i_stamneck_control.timer 240
+ELIF (<SRC.FINDID.i_stamneck_control.timer> > 0)
+	SRC.SYSMESSAGE Voce precisa esperar para usar o efeito do colar novamente.
+	RETURN 1
+ENDIF
+
+ON=@EQUIP
+SRC.STAM += 15
+
+ON=@UNEQUIP
+SRC.STAM -= 15
+
+[ITEMDEF i_15Mana_necklace]
+ID=i_necklace_gold
+NAME=+15 Necklace of Mana
+TYPE=t_jewelry
+WEIGHT=0
+SKILLMAKE=TINKERING 70.0, MAGERY 100.0, t_tinker_tools
+RESOURCES= 40 i_ingot_gold, i_gem_ruby 4
+
+ON=@EQUIP
+SRC.MANA += 15
+
+ON=@UNEQUIP
+SRC.MANA -= 15
+
+
+////////////////////////////////////+20 Itens///////////////////////////////////////////////////
+
+[ITEMDEF i_Titan_ring]
+ID=i_ring_gold
+NAME=Titan Ring
+TYPE=t_jewelry
+WEIGHT=0
+SKILLMAKE=TINKERING 70.0, MAGERY 100.0, t_tinker_tools
+RESOURCES= 50 i_ingot_blackrock, i_gem_diamond 4
+
+ON=@CREATE
+COLOR = color_o_blackrock
+
+ON=@EQUIP
+SRC.MODSTR += 20
+
+ON=@UNEQUIP
+SRC.MODSTR -= 20
+
+[ITEMDEF i_Haste_ring]
+ID=i_ring_gold
+NAME=Ring of the Haste
+TYPE=t_jewelry
+WEIGHT=0
+SKILLMAKE=TINKERING 70.0, MAGERY 100.0, t_tinker_tools
+RESOURCES= 50 i_ingot_blackrock, i_gem_diamond 4
+
+ON=@CREATE
+COLOR = color_o_blackrock
+
+ON=@EQUIP
+SRC.MODDEX += 20
+
+ON=@UNEQUIP
+SRC.MODDEX -= 20
+
+[ITEMDEF i_Wizardry_ring]
+ID=i_ring_gold
+NAME=Ring of Wizardry
+TYPE=t_jewelry
+WEIGHT=0
+SKILLMAKE=TINKERING 70.0, MAGERY 100.0, t_tinker_tools
+RESOURCES= 50 i_ingot_blackrock, i_gem_diamond 4
+
+ON=@CREATE
+COLOR = color_o_blackrock
+
+ON=@EQUIP
+SRC.MODINT += 20
+
+ON=@UNEQUIP
+SRC.MODINT -= 20
+
+[ITEMDEF i_20life_necklace]
+ID=i_necklace_gold
+NAME=+20 Necklace of Life
+TYPE=t_jewelry
+WEIGHT=0
+SKILLMAKE=TINKERING 70.0, MAGERY 100.0, t_tinker_tools
+RESOURCES= 50 i_ingot_blackrock, i_gem_diamond 4
+
+ON=@CREATE
+COLOR = color_o_blackrock
+
+ON=@EQUIP
+SRC.HITS +=20
+
+ON=@UNEQUIP
+SRC.HITS -=20
+
+[ITEMDEF i_20Stamina_necklace]
+ID=i_necklace_gold
+NAME=+20 Necklace of Stamina
+TYPE=t_jewelry
+WEIGHT=0
+SKILLMAKE=TINKERING 70.0, MAGERY 100.0, t_tinker_tools
+RESOURCES= 50 i_ingot_blackrock, i_gem_diamond 4
+
+ON=@CREATE
+COLOR = color_o_blackrock
+
+on=@equiptest
+if <src.stam> < 10
+SRC.SYSMESSAGE Voce nao pode usar este item com menos de 10 de stamina.
+return 1
+endif
+
+ON=@DCLICK
+IF (<SRC.FINDID.i_stamneck_control.UID>==0)
+	serv.NEWITEM i_stamneck_control
+	NEW.EQUIP
+	SRC.FINDID.i_stamneck_control.timer 240
+ELIF (<SRC.FINDID.i_stamneck_control.timer> > 0)
+	SRC.SYSMESSAGE Voce precisa esperar para usar o efeito do colar novamente.
+	RETURN 1
+ENDIF
+
+ON=@EQUIP
+SRC.STAM +=20
+
+ON=@UNEQUIP
+SRC.STAM -=20
+
+[ITEMDEF i_20Mana_necklace]
+ID=i_necklace_gold
+NAME=+20 Necklace of Mana
+TYPE=t_jewelry
+WEIGHT=0
+SKILLMAKE=TINKERING 70.0, MAGERY 100.0, t_tinker_tools
+RESOURCES= 50 i_ingot_blackrock, i_gem_diamond 4
+
+ON=@CREATE
+COLOR = color_o_blackrock
+
+ON=@EQUIP
+SRC.MANA +=20
+
+ON=@UNEQUIP
+SRC.MANA -=20
+
+[ITEMDEF i_stamneck_control]
+NAME=Controle de stamina neck
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@CREATE
+ATTR 096
+LINK=<SRC.UID>
+
+ON=@TIMER
+REMOVE
+
+/////picareta////
+
+[typedef t_improved_pickaxe]
+
+ON=@DAMAGE
+	IF <R3> == 2
+		RETURN 1
+	ENDIF
+
+[typedef t_improved_axe]
+
+ON=@DAMAGE
+	IF <R3> == 2
+		RETURN 1
+	ENDIF
+
+[FUNCTION f_get_real_skill]
+IF (<ARGV> != 2)
+	RETURN 0
+ENDIF
+
+REF1 <ARGV[0]>
+LOCAL.SKILL <ARGV[1]>
+
+RETURN <EVAL <REF1.<DLOCAL.SKILL>> - <DREF1.TAG0.MOD_SKILL_<DLOCAL.SKILL>>>
+
+[TYPEDEF t_stat_mod]
+ON=@Click
+	MESSAGE @,,1 [Exceptional]
+
+ON=@EQUIP
+	ARGS = <TAG.MOD_STATS>
+	FOR 0 <EVAL <ARGV> - 1>
+		SRC.MOD<ARGV[<DLOCAL._FOR>]> += <TAG.MOD_STAT_<ARGV[<DLOCAL._FOR>]>>
+		SRC.TAG0.MOD_STAT_<ARGV[<DLOCAL._FOR>]> += <TAG.MOD_STAT_<ARGV[<DLOCAL._FOR>]>>
+	ENDFOR
+
+ON=@UNEQUIP
+	ARGS = <TAG.MOD_STATS>
+	FOR 0 <EVAL <ARGV> - 1>
+		IF (<EVAL <SRC.MOD<ARGV[<DLOCAL._FOR>]>> - <TAG.MOD_STAT_<ARGV[<DLOCAL._FOR>]>>> > 0)
+			SRC.MOD<ARGV[<DLOCAL._FOR>]> -= <TAG.MOD_STAT_<ARGV[<DLOCAL._FOR>]>>
+			SRC.TAG0.MOD_STAT_<ARGV[<DLOCAL._FOR>]> -= <TAG.MOD_STAT_<ARGV[<DLOCAL._FOR>]>>
+		ELSE
+			SRC.MOD<ARGV[<DLOCAL._FOR>]> = 0
+			SRC.TAG.MOD_STAT_<ARGV[<DLOCAL._FOR>]>
+		ENDIF
+	ENDFOR
+
+
+[TYPEDEF t_skill_mod]
+ON=@EQUIP
+	ARGS = <TAG.MOD_SKILLS>
+	FOR 0 <EVAL <ARGV> - 1>
+		SRC.<DARGV[<DLOCAL._FOR>]> += <TAG.MOD_SKILL_<DARGV[<DLOCAL._FOR>]>>
+		SRC.TAG0.MOD_SKILL_<DARGV[<DLOCAL._FOR>]> += <TAG.MOD_SKILL_<DARGV[<DLOCAL._FOR>]>>
+	ENDFOR
+
+ON=@UNEQUIP
+	ARGS = <TAG.MOD_SKILLS>
+	FOR 0 <EVAL <ARGV> - 1>
+		IF (<EVAL <SRC.<DARGV[<DLOCAL._FOR>]>> - <TAG.MOD_SKILL_<DARGV[<DLOCAL._FOR>]>>> > 0)
+			SRC.<DARGV[<DLOCAL._FOR>]> -= <TAG.MOD_SKILL_<DARGV[<DLOCAL._FOR>]>>
+			SRC.TAG0.MOD_SKILL_<DARGV[<DLOCAL._FOR>]> -= <TAG.MOD_SKILL_<DARGV[<DLOCAL._FOR>]>>
+		ELSE
+			SRC.<DARGV[<DLOCAL._FOR>]> = 0
+			SRC.TAG.MOD_SKILL_<DARGV[<DLOCAL._FOR>]>
+		ENDIF
+	ENDFOR
+
+[ITEMDEF i_mahogany_pickaxe]
+id=i_pickaxe
+name=+5 Mahogany Improved Pickaxe
+SKILLMAKE=TINKERING 70.0, carpentry 47.0, MINING 70.0, t_tinker_tools
+RESOURCES=40 i_mahogany_log, 35 i_ingot_rusty, 3 i_gem_emerald
+TEVENTS=t_skill_mod,t_improved_pickaxe
+VALUE=300
+TAG.MOD_SKILLS=45
+TAG.MOD_SKILL_45=50
+
+ON=@CREATE
+	HITPOINTS {230 250}
+	color color_o_mahogany
+
+[ITEMDEF i_hickory_pickaxe]
+id=i_pickaxe
+name=+7 Hickory Improved Pickaxe
+SKILLMAKE=TINKERING 70.0, carpentry 47.0, MINING 70.0, t_tinker_tools
+RESOURCES=40 i_hickory_log, 35 i_ingot_bronze, 3 i_gem_emerald
+TEVENTS=t_skill_mod,t_improved_pickaxe
+VALUE=300
+TAG.MOD_SKILLS=45
+TAG.MOD_SKILL_45=70
+
+ON=@CREATE
+	HITPOINTS {230 250}
+	color color_o_hickory
+
+///////////////////// Skill Braces & Rings ////////////////////////////
+
+////////////////////
+/// Bracelets //////
+////////////////////
+
+[ITEMDEF i_lucky_bracelet]
+ID=i_bracelet_silver
+NAME=Lucky Bracelet
+SKILLMAKE=TINKERING 85.0, MAGERY 100.0, t_tinker_tools
+RESOURCES=90 i_ingot_gold, 3 i_gem_diamond
+VALUE=60
+
+on=@equip
+	src.tag0.luck += 50
+	src.message @,,1 Your luck has just improved!
+
+on=@unequip
+	src.tag0.luck -= 50
+	if (<src.tag0.luck> == 0)
+		src.tag0.luck
+	endif
+	src.message @,,1 Your luck became worse!
+
+
+[ITEMDEF i_brace_miner]
+ID=i_bracelet_gold
+NAME=Bracelet of Miner
+SKILLMAKE=TINKERING 70.0, MAGERY 85.0, MINING 70.0, t_tinker_tools
+RESOURCES=90 i_ingot_gold, 3 i_gem_diamond
+VALUE=60
+
+ON=@EQUIP
+	src.tag0.braceletequiped 1
+	SRC.MINING += 50
+
+ON=@UNEQUIP
+	if <src.mining> >= 50
+        src.mining -= 50
+    else
+        src.mining = 0
+    endif
+	src.tag0.braceletequiped
+
+[ITEMDEF i_brace_fisher]
+ID=i_bracelet_gold
+NAME=Bracelet of Fisher
+SKILLMAKE=TINKERING 70.0, MAGERY 85.0, FISHING 70.0, t_tinker_tools
+RESOURCES=90 i_ingot_gold, 3 i_gem_diamond
+VALUE=60
+
+ON=@EQUIP
+	src.tag0.braceletequiped 1
+	SRC.FISHING += 50
+
+ON=@UNEQUIP
+	if <src.Fishing> >= 50
+        src.FISHING -= 50
+    else
+        src.Fishing = 0
+    endif
+	src.tag0.braceletequiped
+
+[ITEMDEF i_brace_lumber]
+ID=i_bracelet_gold
+NAME=Bracelet of LumberJacking
+SKILLMAKE=TINKERING 70.0, MAGERY 85.0, LUMBERJACKING 70.0, t_tinker_tools
+RESOURCES=90 i_ingot_gold, 3 i_gem_diamond
+VALUE=60
+
+ON=@EQUIP
+	src.tag0.braceletequiped 1
+	SRC.LUMBERJACKING += 50
+
+ON=@UNEQUIP
+	if <src.LUMBERJACKING> >= 50
+        src.LUMBERJACKING -= 50
+    else
+        src.LUMBERJACKING = 0
+    endif
+	src.tag0.braceletequiped
+
+[ITEMDEF i_brace_tamer]
+ID=i_bracelet_gold
+NAME=Bracelet of Control
+SKILLMAKE=TINKERING 70.0, MAGERY 85.0, TAMING 70.0, t_tinker_tools
+RESOURCES=90 i_ingot_verite, 3 i_gem_diamond
+TEVENTS=t_skill_mod
+VALUE=60
+TAG.MOD_SKILLS=35
+TAG.MOD_SKILL_35=50
+
+ON=@CREATE
+COLOR = color_o_verite
+
+ON=@EQUIP
+	src.tag0.braceletequiped 1
+
+ON=@UNEQUIP
+	src.tag0.braceletequiped
+
+[ITEMDEF i_brace_steal]
+ID=i_bracelet_gold
+NAME=Bracelet of Pickpocket
+SKILLMAKE=TINKERING 70.0, MAGERY 85.0, SNOOPING 70.0, Stealing 70.0, t_tinker_tools
+RESOURCES=90 i_ingot_gold, 3 i_gem_diamond
+VALUE=60
+
+ON=@EQUIP
+	src.tag0.braceletequiped 1
+	SRC.STEALING += 50
+	SRC.SNOOPING += 50
+
+ON=@UNEQUIP
+	if <src.Stealing> >= 50
+		SRC.STEALING -= 50
+	else
+		src.Stealing = 0
+	endif
+	if <src.SNOOPING> >= 50
+		SRC.SNOOPING -= 50
+	else
+		src.SNOOPING = 0
+	endif
+	src.tag0.braceletequiped
+
+///////////////////////////////
+////// Rings //////////////////
+///////////////////////////////
+
+[ITEMDEF i_ring_medical]
+ID=i_ring_gold
+NAME=Medical Ring
+TYPE=t_jewelry
+WEIGHT=0
+SKILLMAKE=TINKERING 70.0, MAGERY 85.0, HEALING 40.0, t_tinker_tools
+RESOURCES= 80 i_ingot_valorite, 5 i_gem_star_sapphire
+
+ON=@CREATE
+COLOR = color_o_valorite
+
+ON=@equip
+SRC.HEALING += 100
+
+ON=@unequip
+if <src.HEALING> >= 100
+	SRC.HEALING -= 100
+else
+	src.healing = 0
+endif
+
+
+[ITEMDEF i_ring_Dead]
+ID=i_ring_gold
+NAME=Ring of the Deads
+TYPE=t_jewelry
+WEIGHT=0
+SKILLMAKE=TINKERING 70.0, MAGERY 85.0, t_tinker_tools
+RESOURCES= 80 i_ingot_valorite, 5 i_gem_star_sapphire
+
+ON=@CREATE
+COLOR = color_o_valorite
+
+ON=@equip
+SRC.SPIRITSPEAK += 200
+
+ON=@unequip
+if <src.SPIRITSPEAK> >= 200
+	SRC.SPIRITSPEAK -= 200
+else
+	src.SPIRITSPEAK = 0
+endif
+
+
+[ITEMDEF i_ring_magic]
+ID=i_ring_gold
+NAME=Magic Ring
+TYPE=t_jewelry
+WEIGHT=0
+SKILLMAKE=TINKERING 70.0, MAGERY 90.0, t_tinker_tools
+RESOURCES= 120 i_ingot_mytheril, i_gem_diamond 5
+
+ON=@CREATE
+COLOR = color_o_mytheril
+
+ON=@equip
+SRC.MAGERY += 50
+
+ON=@unequip
+if <src.MAGERY> >= 50
+	SRC.MAGERY -= 50
+else
+	src.MAGERY = 0
+endif
+
+
+[ITEMDEF i_ring_dodger]
+ID=i_ring_gold
+NAME=Ring of the Dodger
+TYPE=t_jewelry
+WEIGHT=0
+SKILLMAKE=TINKERING 70.0, MAGERY 85.0, PARRYING 40.0, t_tinker_tools
+RESOURCES= 80 i_ingot_mytheril, 5 i_gem_diamond
+
+ON=@CREATE
+COLOR = color_o_mytheril
+
+ON=@equip
+SRC.PARRYING += 200
+
+ON=@unequip
+if <src.PARRYING> >= 200
+	SRC.PARRYING -= 200
+else
+	src.PARRYING = 0
+endif
+
+
+[ITEMDEF i_ring_blade]
+ID=i_ring_gold
+NAME=Blade Ring
+TYPE=t_jewelry
+WEIGHT=0
+SKILLMAKE=TINKERING 70.0, MAGERY 85.0, SWORDSMANSHIP 40.0, t_tinker_tools
+RESOURCES= 80 i_ingot_mytheril, 5 i_gem_diamond
+
+ON=@CREATE
+COLOR = color_o_mytheril
+
+ON=@equip
+SRC.SWORDSMANSHIP += 200
+
+ON=@unequip
+if <src.SWORDSMANSHIP> >= 200
+	SRC.SWORDSMANSHIP -= 200
+else
+	src.SWORDSMANSHIP = 0
+endif
+
+
+[ITEMDEF i_ring_mace]
+ID=i_ring_gold
+NAME=Mace Ring
+TYPE=t_jewelry
+WEIGHT=0
+SKILLMAKE=TINKERING 70.0, MAGERY 85.0, MACEFIGHTING 40.0, t_tinker_tools
+RESOURCES= 120 i_ingot_mytheril, 5 i_gem_diamond
+
+ON=@CREATE
+COLOR = color_o_mytheril
+
+ON=@equip
+SRC.MACEFIGHTING += 200
+
+ON=@unequip
+if <src.MACEFIGHTING> >= 200
+	SRC.MACEFIGHTING -= 200
+else
+	src.MACEFIGHTING = 0
+endif
+
+
+[ITEMDEF i_ring_fencer]
+ID=i_ring_gold
+NAME=Fencer's Ring
+TYPE=t_jewelry
+WEIGHT=0
+SKILLMAKE=TINKERING 70.0, MAGERY 85.0, FENCING 40.0, t_tinker_tools
+RESOURCES= 80 i_ingot_mytheril, 5 i_gem_diamond
+
+ON=@CREATE
+COLOR = color_o_mytheril
+
+ON=@equip
+SRC.FENCING += 200
+
+ON=@unequip
+if <src.FENCING> >= 200
+	SRC.FENCING -= 200
+else
+	src.FENCING = 0
+endif
+
+
+[ITEMDEF i_ring_elven]
+ID=i_ring_gold
+NAME=Elven Ring
+TYPE=t_jewelry
+WEIGHT=0
+SKILLMAKE=TINKERING 70.0, MAGERY 85.0, ARCHERY 40.0, t_tinker_tools
+RESOURCES= 80 i_ingot_mytheril, 5 i_gem_diamond
+
+ON=@CREATE
+COLOR = color_o_mytheril
+
+ON=@equip
+SRC.ARCHERY += 200
+
+ON=@unequip
+if <src.ARCHERY> >= 200
+	SRC.ARCHERY -= 200
+else
+	src.ARCHERY = 0
+endif
+////////
+
+///////////////////////////////////
+//////////// Bone Plates //////////////
+///////////////////////////////////////
+
+
+
+
+/////////////////// White bone ///////////////////////////////////
+
+[ITEMDEF i_White_bone_ARMS]
+DEFNAME=i_White_bone_ARMS
+NAME=White Bone Arms
+TEVENTS=t_bone_armor_magic
+ID=i_bone_arms
+ARMOR=25
+REQSTR=40
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 50.0, TINKERING 50.0, Magery 90.0, t_tinker_tools
+RESOURCES=15 i_reag_daemon_bone
+
+ON=@Create
+COLOR=0481
+HITPOINTS={110 130}
+
+ON=@equip
+	src.modint += 2
+
+ON=@unequip
+	src.modint -= 2
+
+
+
+[ITEMDEF i_White_bone_helmet]
+DEFNAME=i_White_bone_helmet
+NAME=White Bone Helmet
+TEVENTS=t_bone_armor_magic
+ID=i_bone_helmet
+ARMOR=25
+REQSTR=40
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 50.0, TINKERING 50.0, Magery 90.0, t_tinker_tools
+RESOURCES=15 i_reag_daemon_bone
+
+ON=@Create
+COLOR=0481
+HITPOINTS={110 130}
+ON=@equip
+	src.modint += 2
+
+ON=@unequip
+	src.modint -= 2
+
+[ITEMDEF i_White_bone_plate]
+DEFNAME=i_White_bone_plate
+NAME=White Bone Plate
+TEVENTS=t_bone_armor_magic
+ID=i_bone_chest
+ARMOR=25
+REQSTR=40
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 50.0, TINKERING 50.0, Magery 90.0, t_tinker_tools
+RESOURCES=15 i_reag_daemon_bone
+
+ON=@Create
+COLOR=0481
+HITPOINTS={110 130}
+
+ON=@equip
+	src.modint += 2
+
+ON=@unequip
+	src.modint -= 2
+
+
+[ITEMDEF i_White_bone_gloves]
+DEFNAME=i_White_bone_gloves
+NAME=White Bone Gloves
+TEVENTS=t_bone_armor_magic
+ID=i_bone_gloves
+ARMOR=25
+REQSTR=40
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 50.0, TINKERING 50.0, Magery 90.0, t_tinker_tools
+RESOURCES=15 i_reag_daemon_bone
+
+ON=@Create
+COLOR=0481
+HITPOINTS={110 130}
+
+ON=@equip
+	src.modint += 2
+
+ON=@unequip
+	src.modint -= 2
+
+
+[ITEMDEF i_White_bone_leggings]
+DEFNAME=i_White_bone_leggings
+NAME=White Bone Leggings
+TEVENTS=t_bone_armor_magic
+ID=i_bone_leggings
+ARMOR=25
+REQSTR=40
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 50.0, TINKERING 50.0, Magery 90.0, t_tinker_tools
+RESOURCES=15 i_reag_daemon_bone
+
+ON=@Create
+COLOR=0481
+HITPOINTS={110 130}
+ON=@equip
+	src.modint += 2
+
+ON=@unequip
+	src.modint -= 2
+
+//////////////////////////////////////////Yellow Bone Plate//////////////////////////////////////////////////
+
+[ITEMDEF i_Yellow_bone_ARMS]
+DEFNAME=i_Yellow_bone_ARMS
+NAME=Yellow Bone Arms
+TEVENTS=t_bone_armor_magic
+ID=i_bone_arms
+ARMOR=29
+REQSTR=40
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 60.0, TINKERING 60.0, Magery 90.0, t_tinker_tools
+RESOURCES=30 i_reag_daemon_bone
+
+ON=@Create
+COLOR=035
+HITPOINTS={110 130}
+
+ON=@equip
+	src.modint += 4
+
+ON=@unequip
+	src.modint -= 4
+
+
+[ITEMDEF i_Yellow_bone_helmet]
+DEFNAME=i_Yellow_bone_helmet
+NAME=Yellow Bone Helmet
+TEVENTS=t_bone_armor_magic
+ID=i_bone_helmet
+ARMOR=29
+REQSTR=40
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 60.0, TINKERING 60.0, Magery 90.0, t_tinker_tools
+RESOURCES=10 i_reag_daemon_bone
+
+ON=@Create
+COLOR=035
+HITPOINTS={110 130}
+ON=@equip
+	src.modint += 4
+
+ON=@unequip
+	src.modint -= 4
+
+
+
+[ITEMDEF i_Yellow_bone_plate]
+DEFNAME=i_Yellow_bone_plate
+NAME=Yellow Bone Plate
+TEVENTS=t_bone_armor_magic
+ID=i_bone_chest
+ARMOR=29
+REQSTR=40
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 60.0, TINKERING 60.0, Magery 90.0, t_tinker_tools
+RESOURCES=30 i_reag_daemon_bone
+
+ON=@Create
+COLOR=035
+HITPOINTS={110 130}
+
+ON=@equip
+	src.modint += 4
+
+ON=@unequip
+	src.modint -= 4
+
+
+[ITEMDEF i_Yellow_bone_gloves]
+DEFNAME=i_Yellow_bone_gloves
+NAME=Yellow Bone Gloves
+TEVENTS=t_bone_armor_magic
+ID=i_bone_gloves
+ARMOR=29
+REQSTR=40
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 60.0, TINKERING 60.0, Magery 90.0, t_tinker_tools
+RESOURCES=20 i_reag_daemon_bone
+
+ON=@Create
+COLOR=035
+HITPOINTS={110 130}
+
+ON=@equip
+	src.modint += 4
+
+ON=@unequip
+	src.modint -= 4
+
+[ITEMDEF i_Yellow_bone_leggings]
+DEFNAME=i_Yellow_bone_leggings
+NAME=Yellow Bone Leggings
+TEVENTS=t_bone_armor_magic
+ID=i_bone_leggings
+ARMOR=29
+REQSTR=40
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 60.0, TINKERING 60.0, Magery 90.0, t_tinker_tools
+RESOURCES=20 i_reag_daemon_bone
+
+ON=@Create
+COLOR=035
+HITPOINTS={110 130}
+
+ON=@equip
+	src.modint += 4
+
+ON=@unequip
+	src.modint -= 4
+
+//////////////////////////////////////////Green Bone Plate//////////////////////////////////////////////////
+
+[ITEMDEF i_Green_bone_ARMS]
+DEFNAME=i_Green_bone_ARMS
+NAME=Green Bone Arms
+TEVENTS=t_bone_armor_magic
+ID=i_bone_arms
+ARMOR=33
+REQSTR=40
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 68.0, TINKERING 68.0, Magery 90.0, t_tinker_tools
+RESOURCES=15 i_reag_daemon_bone
+
+ON=@Create
+COLOR=044
+HITPOINTS={110 130}
+
+ON=@equip
+	src.modint += 6
+
+ON=@unequip
+	src.modint -= 6
+
+
+[ITEMDEF i_Green_bone_helmet]
+DEFNAME=i_Green_bone_helmet
+NAME=Green Bone Helmet
+TEVENTS=t_bone_armor_magic
+ID=i_bone_helmet
+ARMOR=33
+REQSTR=40
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 68.0, TINKERING 68.0, Magery 90.0, t_tinker_tools
+RESOURCES=25 i_reag_daemon_bone
+
+ON=@Create
+COLOR=044
+HITPOINTS={110 130}
+
+
+ON=@equip
+	src.modint += 6
+
+ON=@unequip
+	src.modint -= 6
+
+
+[ITEMDEF i_Green_bone_plate]
+DEFNAME=i_Green_bone_plate
+NAME=Green Bone Plate
+TEVENTS=t_bone_armor_magic
+ID=i_bone_chest
+ARMOR=33
+REQSTR=40
+WEIGHT=5
+RESOURCES=35 i_reag_daemon_bone
+SKILLMAKE=BLACKSMITHING 68.0, TINKERING 68.0, Magery 90.0, t_tinker_tools
+
+ON=@Create
+COLOR=044
+HITPOINTS={110 130}
+
+
+ON=@equip
+	src.modint += 6
+
+ON=@unequip
+	src.modint -= 6
+
+
+[ITEMDEF i_Green_bone_gloves]
+DEFNAME=i_Green_bone_gloves
+NAME=Green Bone Gloves
+TEVENTS=t_bone_armor_magic
+ID=i_bone_gloves
+ARMOR=33
+REQSTR=40
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 68.0, TINKERING 68.0, Magery 90.0, t_tinker_tools
+RESOURCES=25 i_reag_daemon_bone
+
+ON=@Create
+COLOR=044
+HITPOINTS={110 130}
+
+ON=@equip
+	src.modint += 6
+
+ON=@unequip
+	src.modint -= 6
+
+
+[ITEMDEF i_Green_bone_leggings]
+DEFNAME=i_Green_bone_leggings
+NAME=Green Bone Leggings
+TEVENTS=t_bone_armor_magic
+ID=i_bone_leggings
+ARMOR=33
+REQSTR=40
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 68.0, TINKERING 68.0, Magery 90.0, t_tinker_tools
+RESOURCES=25 i_reag_daemon_bone
+
+ON=@Create
+COLOR=044
+HITPOINTS={110 130}
+
+ON=@equip
+	src.modint += 6
+
+ON=@unequip
+	src.modint -= 6
+
+//////////////////////////////////////////Blue Bone Plate//////////////////////////////////////////////////
+
+[ITEMDEF i_Blue_bone_ARMS]
+DEFNAME=i_Blue_bone_ARMS
+NAME=Blue Bone Arms
+TEVENTS=t_bone_armor_magic
+ID=i_bone_arms
+ARMOR=38
+REQSTR=40
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 70.0, TINKERING 70.0, Magery 90.0, t_tinker_tools
+RESOURCES=20 i_reag_daemon_bone
+
+ON=@Create
+COLOR=02
+HITPOINTS={110 130}
+
+ON=@equip
+	src.modint += 8
+
+ON=@unequip
+	src.modint -= 8
+
+
+[ITEMDEF i_Blue_bone_helmet]
+DEFNAME=i_Blue_bone_helmet
+NAME=Blue Bone Helmet
+TEVENTS=t_bone_armor_magic
+ID=i_bone_helmet
+ARMOR=38
+REQSTR=40
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 70.0, TINKERING 70.0, Magery 90.0, t_tinker_tools
+RESOURCES=30 i_reag_daemon_bone
+
+ON=@Create
+COLOR=02
+HITPOINTS={110 130}
+
+ON=@equip
+	src.modint += 8
+
+ON=@unequip
+	src.modint -= 8
+
+
+
+[ITEMDEF i_Blue_bone_plate]
+DEFNAME=i_Blue_bone_plate
+NAME=Blue Bone Plate
+TEVENTS=t_bone_armor_magic
+ID=i_bone_chest
+ARMOR=38
+REQSTR=40
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 70.0, TINKERING 70.0, Magery 90.0, t_tinker_tools
+RESOURCES=40 i_reag_daemon_bone
+
+ON=@Create
+COLOR=02
+HITPOINTS={110 130}
+
+ON=@equip
+	src.modint += 8
+
+ON=@unequip
+	src.modint -= 8
+
+[ITEMDEF i_Blue_bone_gloves]
+DEFNAME=i_Blue_bone_gloves
+NAME=Blue Bone Gloves
+TEVENTS=t_bone_armor_magic
+ID=i_bone_gloves
+ARMOR=38
+REQSTR=40
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 70.0, TINKERING 70.0, Magery 90.0, t_tinker_tools
+RESOURCES=30 i_reag_daemon_bone
+
+ON=@Create
+COLOR=02
+HITPOINTS={110 130}
+
+ON=@equip
+	src.modint += 8
+
+ON=@unequip
+	src.modint -= 8
+
+[ITEMDEF i_Blue_bone_leggings]
+DEFNAME=i_Blue_bone_leggings
+NAME=Blue Bone Leggings
+TEVENTS=t_bone_armor_magic
+ID=i_bone_leggings
+ARMOR=38
+REQSTR=40
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 70.0, TINKERING 70.0, Magery 90.0, t_tinker_tools
+RESOURCES=30 i_reag_daemon_bone
+
+ON=@Create
+COLOR=02
+HITPOINTS={110 130}
+
+ON=@equip
+	src.modint += 8
+
+ON=@unequip
+	src.modint -= 8
+
+//////////////////////////////////////////Red Bone Plate//////////////////////////////////////////////////
+
+[ITEMDEF i_Red_bone_ARMS]
+DEFNAME=i_Red_bone_ARMS
+NAME=Red Bone Arms
+TEVENTS=t_bone_armor_magic
+ID=i_bone_arms
+ARMOR=43
+REQSTR=40
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 73.0, TINKERING 73.0, Magery 90.0, t_tinker_tools
+RESOURCES=20 i_reag_daemon_bone
+
+ON=@Create
+COLOR=021
+HITPOINTS={110 130}
+
+ON=@equip
+	src.modint += 10
+
+ON=@unequip
+	src.modint -= 10
+
+
+
+[ITEMDEF i_Red_bone_helmet]
+DEFNAME=i_Red_bone_helmet
+NAME=Red Bone Helmet
+TEVENTS=t_bone_armor_magic
+ID=i_bone_helmet
+ARMOR=43
+REQSTR=40
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 73.0, TINKERING 73.0, Magery 90.0, t_tinker_tools
+RESOURCES=30 i_reag_daemon_bone
+
+ON=@Create
+COLOR=021
+HITPOINTS={110 130}
+
+ON=@equip
+	src.modint += 10
+
+ON=@unequip
+	src.modint -= 10
+
+
+[ITEMDEF i_Red_bone_plate]
+DEFNAME=i_Red_bone_plate
+NAME=Red Bone Plate
+TEVENTS=t_bone_armor_magic
+ID=i_bone_chest
+ARMOR=43
+REQSTR=40
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 73.0, TINKERING 73.0, Magery 90.0, t_tinker_tools
+RESOURCES=40 i_reag_daemon_bone
+
+ON=@Create
+COLOR=021
+HITPOINTS={110 130}
+
+ON=@equip
+	src.modint += 10
+
+ON=@unequip
+	src.modint -= 10
+
+[ITEMDEF i_Red_bone_gloves]
+DEFNAME=i_Red_bone_gloves
+NAME=Red Bone Gloves
+TEVENTS=t_bone_armor_magic
+ID=i_bone_gloves
+ARMOR=43
+REQSTR=40
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 73.0, TINKERING 73.0, Magery 90.0, t_tinker_tools
+RESOURCES=30 i_reag_daemon_bone
+
+ON=@Create
+COLOR=021
+HITPOINTS={110 130}
+
+ON=@equip
+	src.modint += 10
+
+ON=@unequip
+	src.modint -= 10
+
+[ITEMDEF i_Red_bone_leggings]
+DEFNAME=i_Red_bone_leggings
+NAME=Red Bone Leggings
+TEVENTS=t_bone_armor_magic
+ID=i_bone_leggings
+ARMOR=43
+REQSTR=40
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 73.0, TINKERING 73.0, Magery 90.0, t_tinker_tools
+RESOURCES=30 i_reag_daemon_bone
+
+ON=@Create
+COLOR=021
+HITPOINTS={110 130}
+ON=@equip
+	src.modint += 10
+
+ON=@unequip
+	src.modint -= 10
+
+//////////////////////////////////////////Dark Bone Plate//////////////////////////////////////////////////
+
+[ITEMDEF i_Dark_bone_ARMS]
+DEFNAME=i_Dark_bone_ARMS
+NAME=Dark Bone Arms
+TEVENTS=t_bone_armor_magic
+ID=i_bone_arms
+ARMOR=49
+REQSTR=40
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 75.0, TINKERING 76.0, Magery 90.0, t_tinker_tools
+RESOURCES=35 i_reag_daemon_bone
+
+ON=@Create
+COLOR=0387
+HITPOINTS={110 130}
+
+ON=@equip
+	src.modint += 12
+
+ON=@unequip
+	src.modint -= 12
+
+[ITEMDEF i_Dark_bone_helmet]
+DEFNAME=i_Dark_bone_helmet
+NAME=Dark Bone Helmet
+TEVENTS=t_bone_armor_magic
+ID=i_bone_helmet
+ARMOR=49
+REQSTR=40
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 75.0, TINKERING 76.0, Magery 90.0, t_tinker_tools
+RESOURCES=40 i_reag_daemon_bone
+
+ON=@Create
+COLOR=0387
+HITPOINTS={110 130}
+
+ON=@equip
+	src.modint += 12
+
+ON=@unequip
+	src.modint -= 12
+
+[ITEMDEF i_Dark_bone_plate]
+DEFNAME=i_Dark_bone_plate
+NAME=Dark Bone Plate
+TEVENTS=t_bone_armor_magic
+ID=i_bone_chest
+ARMOR=49
+REQSTR=40
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 75.0, TINKERING 76.0, Magery 90.0, t_tinker_tools
+RESOURCES=50 i_reag_daemon_bone
+
+ON=@Create
+COLOR=0387
+HITPOINTS={110 130}
+
+ON=@equip
+	src.modint += 12
+
+ON=@unequip
+	src.modint -= 12
+
+
+[ITEMDEF i_Dark_bone_gloves]
+DEFNAME=i_Dark_bone_gloves
+NAME=Dark Bone Gloves
+TEVENTS=t_bone_armor_magic
+ID=i_bone_gloves
+ARMOR=49
+REQSTR=40
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 75.0, TINKERING 76.0, Magery 90.0, t_tinker_tools
+RESOURCES=35 i_reag_daemon_bone
+
+ON=@Create
+COLOR=0387
+HITPOINTS={110 130}
+
+ON=@equip
+	src.modint += 12
+
+ON=@unequip
+	src.modint -= 12
+
+[ITEMDEF i_Dark_bone_leggings]
+DEFNAME=i_Dark_bone_leggings
+NAME=Dark Bone Leggings
+TEVENTS=t_bone_armor_magic
+ID=i_bone_leggings
+ARMOR=49
+REQSTR=40
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 75.0, TINKERING 76.0, Magery 90.0, t_tinker_tools
+RESOURCES=40 i_reag_daemon_bone
+
+ON=@Create
+COLOR=0387
+HITPOINTS={110 130}
+
+ON=@equip
+	src.modint += 12
+
+ON=@unequip
+	src.modint -= 12
+
+//////////////////////////////////////
+/////////// TAILORING ////////////////
+//////////////////////////////////////
+
+[itemdef i_ghealsash] //2017
+NAME=Sash of Greater Heal
+ID=i_sash
+TYPE=t_wand
+WEIGHT=4
+SKILLMAKE=TAILORING 65.0, t_sewing_kit
+RESOURCES=50 i_cloth, 30 i_reag_garlic, 30 i_reag_ginseng, 30 i_reag_mandrake_root, 30 i_reag_spider_silk
+LAYER=17
+DYE=1
+VALUE=60
+
+ON=@Create
+HITPOINTS=20
+
+ON=@EQUIP
+	SRC.MODSTR += 5
+
+ON=@UNEQUIP
+	SRC.MODSTR -= 5
+
+[ITEMDEF i_magic_mask] //2017
+NAME=Magic Mask
+ID=i_mask_tribal_red
+TYPE=t_clothing
+WEIGHT=4
+SKILLMAKE=TAILORING 70.0, MAGERY 80.0, t_sewing_kit
+RESOURCES=10 i_cloth, 50 i_reag_garlic , 50 i_reag_mandrake_root, I_MASK_TRIBAL_RED
+DYE=1
+VALUE=60
+ON=@Create
+HITPOINTS=100
+
+ON=@EQUIP
+	SRC.MODSTR += 5
+	SRC.MODINT += 5
+	SRC.MODDEX += 5
+
+ON=@UNEQUIP
+	SRC.MODSTR -= 5
+	SRC.MODINT -= 5
+	SRC.MODDEX -= 5
+
+[ITEMDEF i_magic_mask_tribal] //2017
+NAME=Magic Tribal Mask
+ID=i_mask_blue
+TYPE=t_clothing
+WEIGHT=4
+SKILLMAKE=TAILORING 70.0, MAGERY 80.0, t_sewing_kit
+RESOURCES=50 i_cloth, 50 i_reag_garlic , 50 i_reag_mandrake_root, i_mask_blue
+DYE=1
+VALUE=60
+ON=@Create
+HITPOINTS=100
+
+ON=@EQUIP
+	SRC.MODSTR += 5
+	SRC.MODINT += 5
+	SRC.MODDEX += 5
+
+ON=@UNEQUIP
+	SRC.MODSTR -= 5
+	SRC.MODINT -= 5
+	SRC.MODDEX -= 5
+
+[ITEMDEF i_magic_mask_orc]//2017
+NAME=Magic Orc Mask
+ID=i_mask_orc
+TYPE=t_clothing
+WEIGHT=4
+SKILLMAKE=TAILORING 72.0, MAGERY 80.0, t_sewing_kit
+RESOURCES=50 i_cloth, 50 i_reag_garlic , 50 i_reag_mandrake_root,i_mask_orc
+DYE=1
+VALUE=60
+ON=@Create
+HITPOINTS=100
+
+ON=@EQUIP
+	SRC.MODSTR += 5
+	SRC.MODINT += 5
+	SRC.MODDEX += 5
+
+ON=@UNEQUIP
+	SRC.MODSTR -= 5
+	SRC.MODINT -= 5
+	SRC.MODDEX -= 5
+
+[ITEMDEF i_magic_helm_orc] //2017
+NAME=Magic Orc Helm
+ID=i_helm_orc
+TYPE=t_clothing
+WEIGHT=4
+SKILLMAKE=TAILORING 72.0, MAGERY 80.0, t_sewing_kit
+RESOURCES=100 i_cloth, 100 i_reag_garlic , 100 i_reag_mandrake_root,i_helm_orc
+DYE=1
+VALUE=60
+ON=@Create
+HITPOINTS=100
+
+ON=@EQUIP
+	SRC.MODSTR += 6
+	SRC.MODINT += 6
+	SRC.MODDEX += 6
+
+ON=@UNEQUIP
+	SRC.MODSTR -= 6
+	SRC.MODINT -= 6
+	SRC.MODDEX -= 6
+
+[ITEMDEF i_magic_mask_deer] //2017
+NAME=Magic Deer Mask
+ID=i_mask_deer
+TYPE=t_clothing
+WEIGHT=4
+SKILLMAKE=TAILORING 72.0, MAGERY 90.0, t_sewing_kit
+RESOURCES=50 i_cloth, 50 i_reag_garlic , 50 i_reag_mandrake_root,i_mask_deer
+DYE=1
+VALUE=60
+ON=@Create
+HITPOINTS=100
+
+ON=@EQUIP
+	SRC.MODSTR += 5
+	SRC.MODINT += 5
+	SRC.MODDEX += 5
+ON=@UNEQUIP
+	SRC.MODSTR -= 5
+	SRC.MODINT -= 5
+	SRC.MODDEX -= 5
+
+[ITEMDEF i_plague_mask]
+ID=0154b
+NAME=Unknown Mask
+TYPE=T_CLOTHING
+DYE=0
+ARMOR=20
+SKILLMAKE=TAILORING 65.0, t_sewing_kit, MAGERY 95.0
+RESOURCES=200 i_cloth , 50 i_reag_nightshade
+VALUE=50
+WEIGHT=3
+
+ON=@CREATE
+    HITPOINTS {25 30}
+    COLOR 054
+    ATTR 02
+
+ON=@EQUIP
+    LINK=<SRC.SERIAL>
+    TIMER=15
+    NAME=Plague Mask
+
+ON=@UNEQUIP
+    SRC.SOUND=snd_SPELL_POISON
+    SRC.hits= -= 90
+
+    IF <SRC.HITPOINTS> > 0
+        SRC.EMOTE feel the pain
+    ELSE
+        SRC.SYSMESSAGE The Mask belong to your face now
+    ENDIF
+
+    NAME an Unknown Mask
+    TIMER -1
+    LINK 00
+
+ON=@TIMER
+    IF (<LINK> == 00)
+        RETURN 0
+    ELSE
+        TIMER 6
+        link.hits -= 20
+        LINK.EMOTE feel extremely sick
+        RETURN 1
+    ENDIF
+
+[ITEMDEF i_trap_mask]
+ID=0154b
+NAME=Unknown Mask
+TYPE=T_CLOTHING
+DYE=0
+ARMOR=50
+SKILLMAKE=TAILORING 65.0, t_sewing_kit, MAGERY 95.0
+RESOURCES=200 i_cloth , 50 i_reag_nightshade
+VALUE=50
+WEIGHT=3
+
+ON=@CREATE
+    COLOR 030
+    HITPOINTS {25 30}
+    ATTR 02
+
+ON=@EQUIP
+    NAME Trap Mask
+    SRC.SYSMESSAGE Fell the evil spirits and you will have power, mortal!! or pay with your life
+
+ON=@UNEQUIP
+    SRC.EFFECT=3,03709,6,15,1
+    SRC.SOUND=snd_SPELL_FLAMESTRIKE
+    SRC.DAMAGE=666
+    SRC.SYSMESSAGE Die for desrespecting the Evil Spirits
+    NAME Unknown Mask
+
+[ITEMDEF i_magic_mask_bear] //2017
+NAME=Magic Bear Mask
+ID=i_mask_bear
+TYPE=t_clothing
+WEIGHT=4
+SKILLMAKE=TAILORING 73.0, MAGERY 80.0, t_sewing_kit
+RESOURCES= 1 i_mask_bear, 50 i_cloth, 50 i_reag_garlic , 50 i_reag_mandrake_root
+DYE=0
+VALUE=60
+
+ON=@Create
+    HITPOINTS 100
+
+ON=@EQUIP
+	SRC.MODSTR += 5
+	SRC.MODINT += 5
+	SRC.MODDEX += 5
+
+ON=@UNEQUIP
+	SRC.MODSTR -= 5
+	SRC.MODINT -= 5
+	SRC.MODDEX -= 5
+
+[ITEMDEF i_magic_mask_bear_polar] //2017
+NAME=Magic Polar Bear Mask
+ID=i_mask_bear
+TYPE=t_clothing
+WEIGHT=4
+SKILLMAKE=TAILORING 73.0, MAGERY 80.0, t_sewing_kit
+RESOURCES= 1 i_mask_polarbear, 50 i_cloth, 50 i_reag_garlic , 50 i_reag_mandrake_root
+DYE=0
+VALUE=60
+
+ON=@Create
+    HITPOINTS 100
+    COLOR 0481
+
+ON=@EQUIP
+	SRC.MODSTR += 5
+	SRC.MODINT += 5
+	SRC.MODDEX += 5
+
+ON=@UNEQUIP
+	SRC.MODSTR -= 5
+	SRC.MODINT -= 5
+	SRC.MODDEX -= 5
+
+[ITEMDEF i_magic_mask_bear_black] //2017
+NAME=Magic Black Bear Mask
+ID=i_mask_bear
+TYPE=t_clothing
+WEIGHT=4
+SKILLMAKE=TAILORING 73.0, MAGERY 80.0, t_sewing_kit
+RESOURCES=1 i_mask_blackbear, 50 i_cloth, 50 i_reag_garlic , 50 i_reag_mandrake_root
+DYE=0
+VALUE=60
+
+ON=@Create
+    HITPOINTS 100
+    COLOR 0455
+
+ON=@EQUIP
+	SRC.MODSTR += 5
+	SRC.MODINT += 5
+	SRC.MODDEX += 5
+
+ON=@UNEQUIP
+	SRC.MODSTR -= 5
+	SRC.MODINT -= 5
+	SRC.MODDEX -= 5
+
+[ITEMDEF i_mage_robe] //2017
+NAME=Mage Robe
+ID=i_robe
+TYPE=t_clothing
+WEIGHT=4
+SKILLMAKE=TAILORING 60.0, MAGERY 80.0, t_sewing_kit
+RESOURCES=50 i_cloth
+DYE=01
+VALUE=60
+
+ON=@Create
+    HITPOINTS 100
+
+ON=@EQUIPTEST
+IF (<SRC.MAGERY> < 700)
+    SRC.SYSMESSAGE Apenas magos avancados podem equipar este robe.
+    RETURN 1
+ENDIF
+
+FOR 1 25
+    IF (<SRC.FINDLAYER.<dLOCAL._FOR>.TYPE>==t_armor)
+        SRC.SYSMESSAGE Voce nao pode equipar o Mage Robe usando armaduras.
+        RETURN 1
+    ENDIF
+ENDFOR
+
+FOR 1 25
+    IF (<SRC.FINDLAYER.<dLOCAL._FOR>.TYPE>==t_armor_leather)
+        IF !((<SRC.FINDLAYER.<dLOCAL._FOR>.ID>==0144e) || (<SRC.FINDLAYER.<dLOCAL._FOR>.ID>==0144f) || (<SRC.FINDLAYER.<dLOCAL._FOR>.ID>==01450) || (<SRC.FINDLAYER.<dLOCAL._FOR>.ID>==01451) || (<SRC.FINDLAYER.<dLOCAL._FOR>.ID>==01452))
+            SRC.SYSMESSAGE Voce nao pode equipar o Mage Robe usando armaduras.
+            RETURN 1
+        ENDIF
+    ENDIF
+ENDFOR
+
+IF (<SRC.FINDLAYER.1.UID>)
+    SRC.SYSMESSAGE Voce nao pode equipar o Mage Robe usando esta arma.
+    RETURN 1
+ENDIF
+
+IF (<SRC.FINDLAYER.2.UID>)
+    IF !(<SRC.FINDLAYER.2.TYPE>==t_weapon_mace_staff)
+        SRC.SYSMESSAGE Voce nao pode equipar o Mage Robe usando esta arma.
+        RETURN 1
+    ENDIF
+ENDIF
+
+ON=@EQUIP
+    TIMER 1
+
+ON=@TIMER
+IF <CONT.MANA> < <CONT.MAXMANA>
+	IF <CONT.MEDITATION> > 999
+		IF <CONT.tag0.boneparts>==5
+			CONT.MANA +=2
+		else
+			CONT.MANA +=1
+		ENDIF
+	ELIF <CONT.MEDITATION> > 899
+		IF <CONT.tag0.boneparts>==5
+			CONT.MANA +=2
+		else
+			CONT.MANA +=1
+		ENDIF
+	ELIF <CONT.MEDITATION> > 799
+		IF <CONT.tag0.boneparts>==5
+			CONT.MANA +=2
+		else
+			CONT.MANA +=1
+		ENDIF
+	ELIF <CONT.MEDITATION> > 699
+		CONT.MANA +=1
+	ENDIF
+ENDIF
+TIMER 1
+RETURN 1
+
+[ITEMDEF i_bless_robe] //2017
+NAME=Robe of Bless
+ID=i_robe
+TYPE=t_clothing
+WEIGHT=4
+SKILLMAKE=TAILORING 69.0, MAGERY 80.0, t_sewing_kit
+RESOURCES=100 i_cloth, 100 i_reag_garlic, 100 i_reag_mandrake_root
+DYE=01
+VALUE=60
+
+ON=@Create
+	IF <SRC>
+    	HITPOINTS <eval (<SRC.TAILORING>*<src.TAILORING>)/10000>
+    ENDIF
+
+ON=@EQUIP
+	SRC.MODSTR += 5
+	SRC.MODINT += 5
+	SRC.MODDEX += 5
+
+ON=@UNEQUIP
+	SRC.MODSTR -= 5
+	SRC.MODINT -= 5
+	SRC.MODDEX -= 5
+
+[ITEMDEF i_bless_dress_plain] //2017
+NAME=Plain Dress of Bless
+ID=i_dress_plain
+TYPE=t_clothing
+WEIGHT=4
+SKILLMAKE=TAILORING 69.0, MAGERY 80.0, t_sewing_kit
+RESOURCES=100 i_cloth, 100 i_reag_garlic, 100 i_reag_mandrake_root
+DYE=01
+VALUE=60
+
+ON=@Create
+    HITPOINTS <eval (<SRC.TAILORING>*<src.TAILORING>)/10000>
+
+ON=@EQUIP
+	SRC.MODSTR += 5
+	SRC.MODINT += 5
+	SRC.MODDEX += 5
+
+ON=@UNEQUIP
+	SRC.MODSTR -= 5
+	SRC.MODINT -= 5
+	SRC.MODDEX -= 5
+
+[ITEMDEF i_bless_dress_full] //2017
+NAME=Fancy Dress of Bless
+ID=i_dress_full
+TYPE=t_clothing
+WEIGHT=4
+SKILLMAKE=TAILORING 70.0, MAGERY 80.0, t_sewing_kit
+RESOURCES=200 i_cloth, 100 i_reag_garlic, 100 i_reag_mandrake_root
+DYE=01
+VALUE=60
+
+ON=@Create
+    HITPOINTS <eval (<SRC.TAILORING>*<src.TAILORING>)/10000>
+
+ON=@EQUIP
+	SRC.MODSTR += 5
+	SRC.MODINT += 5
+	SRC.MODDEX += 5
+
+ON=@UNEQUIP
+	SRC.MODSTR -= 5
+	SRC.MODINT -= 5
+	SRC.MODDEX -= 5
+
+[itemdef i_scroll_seamstress]
+id=i_scroll_heal
+name=Scroll of the Seamtress
+type=t_normal
+
+on=@create
+	color=084d
+
+on=@click
+	message @,,1 [Effect Lasts: 3min]
+	if <amount> < 2
+		message @084d,,1 a <name>
+	else
+		message @084d,,1 <eval <amount>> Scrolls of the Seamtress
+	endif
+	return 1
+
+on=@dclick
+	if (<CONT> != <src.findlayer.21.uid>)
+		src.smsg @,,1 This scroll must be in your bag to use it.
+		return 1
+	endif
+	if !(<src.tag0.tailorscroll>)
+		src.tailoring += 20
+		src.tag0.tailorscroll += 20
+		SRC.EFFECT 3,i_fx_bless_effect,6,15,1
+		src.sound snd_spell_bless
+		src.timerf 180, f_reduz_tailor 20
+		src.timerf 180, tag0.tailorscroll
+		src.consume 1 i_scroll_seamstress
+		return 1
+	else
+		src.sysmessage @,,1 You must wait a few minutes to use this.
+		return 1
+	endif
+
+[itemdef i_scroll_tailor]
+id=i_scroll_heal
+name=Scroll of the Tailor
+type=t_normal
+
+on=@create
+	color=084c
+
+on=@click
+	message @,,1 [Effect Lasts: 3min]
+	if <amount> < 2
+		message @084c,,1 a <name>
+	else
+		message @084c,,1 <eval <amount>> Scrolls of the Tailor
+	endif
+	return 1
+
+on=@dclick
+	if (<CONT> != <src.findlayer.21.uid>)
+		src.smsg @,,1 This scroll must be in your bag to use it.
+		return 1
+	endif
+	if !(<src.tag0.tailorscroll>)
+		src.tailoring += 30
+		src.tag0.tailorscroll += 30
+		SRC.EFFECT 3,i_fx_bless_effect,6,15,1
+		src.sound snd_spell_bless
+		src.timerf 180, f_reduz_tailor 30
+		src.timerf 180, tag0.tailorscroll
+		src.consume 1 i_scroll_tailor
+		return 1
+	else
+		src.sysmessage @,,1 You must wait a few minutes to use this.
+		return 1
+	endif
+
+[FUNCTION f_reduz_tailor]
+if (<src.tailoring> >= <eval <args>>)
+	src.tailoring -= <eval <args>>
+else
+	src.tailoring = 0
+endif
+
+[itemdef i_scroll_navigator]
+id=i_scroll_heal
+name=Navigation Scroll
+type=t_normal
+
+on=@create
+	color=0803
+
+on=@click
+	message @,,1 [Effect Lasts: 3min]
+	if <amount> < 2
+		message @0803,,1 a <name>
+	else
+		message @0803,,1 <eval <amount>> Navigation Scrolls
+	endif
+	return 1
+
+on=@dclick
+	if (<CONT> != <src.findlayer.21.uid>)
+		src.smsg @,,1 This scroll must be in your bag to use it.
+		return 1
+	endif
+	if !(<src.tag0.cartoscroll>)
+		src.cartography += 30
+		src.tag0.cartoscroll += 30
+		SRC.EFFECT 3,i_fx_bless_effect,6,15,1
+		src.sound snd_spell_bless
+		src.timerf 180, f_reduz_carto 30
+		src.timerf 180, tag0.cartoscroll
+		src.consume 1 i_scroll_navigator
+		return 1
+	else
+		src.sysmessage @,,1 You must wait a few minutes to use this.
+		return 1
+	endif
+
+[FUNCTION f_reduz_carto]
+if (<src.cartography> >= <eval <args>>)
+	src.cartography -= <eval <args>>
+else
+	src.cartography = 0
+endif
+
+[itemdef i_scroll_dwarf]
+id=i_scroll_heal
+name=Dwarf Scroll
+type=t_normal
+
+on=@create
+	color=0641
+
+on=@click
+	message @,,1 [Effect Lasts: 3min]
+	if <amount> < 2
+		message @0641,,1 a <name>
+	else
+		message @0641,,1 <eval <amount>> Dwarf Scrolls
+	endif
+	return 1
+
+on=@dclick
+	if (<CONT> != <src.findlayer.21.uid>)
+		src.smsg @,,1 This scroll must be in your bag to use it.
+		return 1
+	endif
+	if !(<src.tag0.miningscroll>)
+		src.mining += 30
+		src.tag0.miningscroll += 30
+		SRC.EFFECT 3,i_fx_bless_effect,6,15,1
+		src.sound snd_spell_bless
+		src.timerf 180, f_reduz_mining 30
+		src.timerf 180, tag0.miningscroll
+		src.consume 1 i_scroll_dwarf
+		return 1
+	else
+		src.sysmessage @,,1 You must wait a few minutes to use this.
+		return 1
+	endif
+
+[FUNCTION f_reduz_mining]
+if (<src.mining> >= <eval <args>>)
+	src.mining -= <eval <args>>
+else
+	src.mining = 0
+endif
+
+
+//////////////////////////////////
+//////////////////////////////////
+//////// DEATH SHROUDS ///////////
+//////////////////////////////////
+//////////////////////////////////
+[ITEMDEF i_shroud_stone]
+id=i_gravestone_3
+name=Robes Stone
+TYPE=t_normal
+
+ON=@CREATE
+ATTR 010
+
+ON=@DCLICK
+
+SRC.MENU ROBE
+RETURN 1
+
+[PLEVEL 1]
+toggle_special_robe_gump
+
+[FUNCTION toggle_special_robe_gump]
+IF !(<TAG0.DISABLE_SPECIAL_ROBE_GUMP>)
+	SYSMESSAGE @,,1 The robe gump format is now disabled.
+	TAG0.DISABLE_SPECIAL_ROBE_GUMP 1
+ELSE
+	SYSMESSAGE @,,1 The robe gump format is now enabled.
+	TAG0.DISABLE_SPECIAL_ROBE_GUMP
+ENDIF
+
+[ITEMDEF i_worker_robe]
+id=0204e
+name=Worker Robe
+TYPE=T_CLOTHING
+weight=0
+
+ON=@Create
+	HITPOINTS={5000 5000}
+	COLOR=00
+	ATTR=attr_newbie
+
+ON=@DClick
+	IF (<CONT> == <SRC.UID>) && !(<SRC.TAG0.DISABLE_SPECIAL_ROBE_GUMP>)
+		SDIALOG d_vip_robe_format
+	ENDIF
+
+ON=@CLICK
+IF (<dTAG0.LEVEL>) && !(<TAG0.HIDE_LEVEL>)
+	MESSAGE @<COLOR> <NAME> (+<dTAG.LEVEL>)
+ELSE
+	MESSAGE @<COLOR> <NAME>
+ENDIF
+return 1
+
+ON=@equip
+IF (<LINK> == 04fffffff)
+ LINK = <SRC.UID>
+ENDIF
+IF (<LINK> == <SRC.UID>)
+ IF !(<TAG0.HIDE_LEVEL>)
+  name = <Link.name>'s Worker Robe
+ ENDIF
+
+ hits <maxhits>
+
+ src.modstr += 10
+ src.moddex += 10
+ src.modint += 10
+
+IF (<dTAG0.LEVEL> >= 1)
+ src.modstr += 3
+ src.moddex += 3
+ src.modint += 3
+ENDIF
+
+IF (<dTAG0.LEVEL> >= 3)
+ SRC.TAG.GOLD_INCREASE_PERCENTAGE 50
+ SRC.TAG.SPECIAL_LOOT_INCREASE_PERCENTAGE 50
+ SRC.TAG.PVM_HIT_INCREASE_PERCENTAGE 25
+ SRC.TAG.PVM_GET_HIT_DECREASE_PERCENTAGE 25
+ENDIF
+
+
+ TIMER = 1
+ SRC.SOUND=snd_SPELL_BLESS
+ELSE
+ IF (<LINK.FINDLAYER(21).UID> != 0)
+  SRC.SYSMESSAGE Esse Robe nao te pertence!
+  CONT = <LINK.FINDLAYER(21).UID>
+ ELSE
+  SRC.SYSMESSAGE O robe foi enviado ao dono.
+  REMOVE
+ ENDIF
+ENDIF
+
+ON=@unequip
+	SRC.DIALOGCLOSE D_VIP_ROBE_FORMAT
+	SRC.TAG.GOLD_INCREASE_PERCENTAGE
+	SRC.TAG.SPECIAL_LOOT_INCREASE_PERCENTAGE
+	SRC.TAG.PVM_HIT_INCREASE_PERCENTAGE
+	SRC.TAG.PVM_GET_HIT_DECREASE_PERCENTAGE
+
+        TIMER = -1
+		src.modstr -= 10
+		src.moddex -= 10
+		src.modint -= 10
+
+		IF (<dTAG0.LEVEL> >= 1)
+			src.modstr -= 3
+			src.moddex -= 3
+			src.modint -= 3
+		ENDIF
+
+        SRC.SOUND=snd_SPELL_BLESS
+
+ON=@TIMER
+IF (<CONT>)
+	IF !(<CONT.FLAGS>&020) && (<CONT.MANA> < <CONT.INT>) && !(<CONT.FLAGS>&statf_freeze)
+		CONT.MANA += 1
+	ENDIF
+	IF (<dTAG0.LEVEL> >= 2)
+		tag0.tempousado += 1
+		TIMER 1
+	ELSE
+		tag0.tempousado += 3
+		TIMER 3
+	ENDIF
+	RETURN 1
+ENDIF
+
+[ITEMDEF i_combat_robe]
+id=0204e
+name=Warrior Robe
+TYPE=T_CLOTHING
+weight=0
+ARMOR=0
+TEVENTS=t_safe_drop
+
+ON=@Create
+	HITPOINTS={5000 5000}
+	DISPID = 02683
+	COLOR=00
+	ATTR=04
+
+on=@equiptest
+if !(<src.uid>==<link.uid>)
+return 1
+endif
+
+ON=@DClick
+	IF (<CONT> == <SRC.UID>) && !(<SRC.TAG0.DISABLE_SPECIAL_ROBE_GUMP>)
+		SDIALOG d_vip_robe_format
+	ENDIF
+
+ON=@CLICK
+IF (<dTAG0.LEVEL>) && !(<TAG0.HIDE_LEVEL>)
+	MESSAGE @<COLOR> <NAME> (+<dTAG.LEVEL>)
+ELSE
+	MESSAGE @<COLOR> <NAME>
+ENDIF
+return 1
+
+ON=@equip
+	IF !(<TAG0.HIDE_LEVEL>)
+		name <Link.name>'s Warrior Robe
+	ENDIF
+
+	hits <maxhits>
+
+	src.modstr += 7
+	src.moddex += 7
+	src.modint += 7
+
+	IF (<dTAG0.LEVEL> >= 1)
+		src.modstr += 3
+		src.moddex += 3
+		src.modint += 3
+	ENDIF
+
+	SRC.MODAR += 15
+
+	IF (<dTAG0.LEVEL> >= 2)
+		src.modar += 10
+	ENDIF
+
+	IF (<dTAG0.LEVEL> >= 3)
+		SRC.TAG.GOLD_INCREASE_PERCENTAGE 25
+		SRC.TAG.SPECIAL_LOOT_INCREASE_PERCENTAGE 25
+		SRC.TAG.PVM_HIT_INCREASE_PERCENTAGE 50
+		SRC.TAG.PVM_GET_HIT_DECREASE_PERCENTAGE 50
+	ENDIF
+
+ON=@unequip
+	SRC.DIALOGCLOSE D_VIP_ROBE_FORMAT
+
+	SRC.TAG.GOLD_INCREASE_PERCENTAGE
+	SRC.TAG.SPECIAL_LOOT_INCREASE_PERCENTAGE
+	SRC.TAG.PVM_HIT_INCREASE_PERCENTAGE
+	SRC.TAG.PVM_GET_HIT_DECREASE_PERCENTAGE
+
+	src.modstr -= 7
+	src.moddex -= 7
+	src.modint -= 7
+
+	IF (<dTAG0.LEVEL> >= 1)
+		src.modstr -= 3
+		src.moddex -= 3
+		src.modint -= 3
+	ENDIF
+
+	SRC.MODAR -= 15
+
+	IF (<dTAG0.LEVEL> >= 2)
+		src.modar -= 10
+	ENDIF
+
+	IF <SRC.MODAR> < 0
+		SRC.MODAR = 0
+	ENDIF
+
+[MENU ROBE]
+Escolha a opcao
+
+on=0 Fazer Warrior Robe
+src.menu ROBE2
+
+on=0 Fazer Worker Robe
+src.menu ROBE3
+
+on=0 Aumentar Nivel do Robe
+f_robes_level_increase
+
+on=0 Fazer Ethereal Bear
+SRC.MENU ETHEREAL_BEAR
+
+on=0 Trocar True Robes ou True Wizard's Hats por Panos True
+f_true_robes_hats_exchange
+
+on=0 Exibir quantidades de panos bound
+f_bound_clothes_show
+
+on=0 Sacar panos bound
+f_bound_clothes_withdraw
+
+on=0 Depositar panos bound
+f_bound_clothes_deposit
+
+on=0 Converter panos em bound
+f_bound_clothes_convert
+
+[MENU ROBE2]
+Escolha a cor do Robe
+
+on=0 Cinza
+f_warrior_robe 0450
+
+on=0 Laranja
+
+f_warrior_robe 030
+
+On=0 Verde Claro
+f_warrior_robe 03f
+
+on=0 Verde Escuro
+f_warrior_robe 029b
+
+on=0 Rosa
+f_warrior_robe 018
+
+on=0 Vermelho
+f_warrior_robe 026
+on=0 Dourado
+f_warrior_robe 045e
+
+on=0 Azul
+f_warrior_robe 01ed
+
+[MENU ROBE3]
+Escolha a cor do Robe
+
+on=0 Cinza
+f_worker_robe 0450
+
+on=0 Laranja
+f_worker_robe 030
+
+on=0 Verde Claro
+f_worker_robe 03f
+
+on=0 Verde Escuro
+f_worker_robe 029b
+
+on=0 Rosa
+f_worker_robe 018
+
+on=0 Vermelho
+f_worker_robe 026
+
+on=0 Dourado
+f_worker_robe 045e
+
+on=0 Azul
+f_worker_robe 01ed
+
+[MENU ETHEREAL_BEAR]
+Escolha a cor do Urso
+
+on=0 Spectral
+f_ethereal_bear color_spectral
+
+on=0 Preto
+f_ethereal_bear 1
+
+on=0 Branco
+f_ethereal_bear 0481
+
+on=0 Cinza
+f_ethereal_bear 0482
+
+[DEFNAME robes_defs]
+TRUE_CLOTH_LEVEL_1_REQUIREMENTS 20
+TRUE_CLOTH_LEVEL_2_REQUIREMENTS 30
+TRUE_CLOTH_LEVEL_3_REQUIREMENTS 50
+ROBE_MAX_LEVEL 3
+
+[DEFNAME Worker_skills]
+work1	0 //alchemy
+work2	7 //BS
+work3	8 // BC
+work4	11 // carpentry
+work5	13 // cooking
+work6	18 // Fishing
+work7	23 // inscript
+work8	34 //tailor
+work9	35 // taming
+work10	37// Tinkering
+work11	44 //Lumber
+work12	45 //Mining
+work13	30 // Poison
+work14  12 //cartography
+work_min 1
+work_max 14
+
+[DEFNAME warrior_skills]
+warrior1	5
+warrior2	27
+warrior3	31
+warrior4	40
+warrior5	41
+warrior6	42
+warrior7	43
+
+[FUNCTION f_worker_robe]
+IF ((<SRC.RESTEST 50 i_bound_panotrue_w>) && (<SRC.RESTEST 50 i_bound_panotrue_g>) && (<SRC.RESTEST 50 i_bound_panotrue_b>)) || (<SRC.ISGM>)
+	FOR 1 24
+		IF !((<dLOCAL._FOR>==11) || (<dLOCAL._FOR>==21) || (<dLOCAL._FOR>==15))
+			TRY UID.<FINDLAYER.<dLOCAL._FOR>.UID>.UNEQUIP
+		ENDIF
+	ENDFOR
+
+	FOR <def.work_min> <def.work_max>
+		IF <src.<def0.work<dLOCAL._FOR>>> < 700
+			src.sysmessage Voce nao possui a skill necessaria em <SERV.SKILL.<def0.work<dLOCAL._FOR>>.NAME> pra receber o Robe.
+			return 1
+		endif
+	ENDFOR
+
+
+	if <SRC.TAG.WORKER>==1
+	src.sysmessage Voce ja retirou seu Worker Robe.
+	return 1
+	endif
+
+	src.newitem i_worker_robe
+	src.act.color <ARGV[0]>
+	src.act.link = <src.uid>
+	src.act.cont=<src.findlayer(21).uid>
+	SRC.TAG.WORKER=1
+	SRC.CONSUME=50 i_bound_panotrue_w
+	SRC.CONSUME=50 i_bound_panotrue_g
+	SRC.CONSUME=50 i_bound_panotrue_b
+	SRC.SYSMESSAGE Voce retirou seu Worker Robe com sucesso!
+ELSE
+	SRC.SYSMESSAGE Voce precisa ter 50 panos trues bound de cada cor em sua bag.
+ENDIF
+
+
+
+[FUNCTION f_ethereal_bear]
+IF (<ARGV> != 1)
+	RETURN 1
+ENDIF
+
+LOCAL.COLOR <ARGV[0]>
+LOCAL.CRAFTABLE 0
+
+IF (<LOCAL.COLOR> == color_spectral) && (<SRC.RESTEST 50 i_bound_panotrue_w>) && (<SRC.RESTEST 50 i_bound_panotrue_g>) && (<SRC.RESTEST 50 i_bound_panotrue_b>)
+	LOCAL.CRAFTABLE 1
+ELSEIF (<LOCAL.COLOR> == 1) && (<SRC.RESTEST 100 i_bound_panotrue_b>)
+	LOCAL.CRAFTABLE 1
+ELSEIF (<LOCAL.COLOR> == 0481) && (<SRC.RESTEST 100 i_bound_panotrue_w>)
+	LOCAL.CRAFTABLE 1
+ELSEIF (<LOCAL.COLOR> == 0482) && (<SRC.RESTEST 100 i_bound_panotrue_g>)
+	LOCAL.CRAFTABLE 1
+ENDIF
+
+IF (<LOCAL.CRAFTABLE>)
+	src.newitem i_ethereal_bear
+
+	IF (<LOCAL.COLOR> != color_spectral)
+		src.act.color <LOCAL.COLOR>
+		src.act.tag.special_color <LOCAL.COLOR>
+	ENDIF
+
+	src.act.link = <src.uid>
+	src.act.cont=<src.findlayer(21).uid>
+
+	IF (<LOCAL.COLOR> == color_spectral)
+		SRC.CONSUME=50 i_bound_panotrue_w
+		SRC.CONSUME=50 i_bound_panotrue_g
+		SRC.CONSUME=50 i_bound_panotrue_b
+	ELSEIF (<LOCAL.COLOR> == 1)
+		SRC.CONSUME=100 i_bound_panotrue_b
+	ELSEIF (<LOCAL.COLOR> == 0481)
+		SRC.CONSUME=100 i_bound_panotrue_w
+	ELSEIF (<LOCAL.COLOR> == 0482)
+		SRC.CONSUME=100 i_bound_panotrue_g
+	ENDIF
+
+	SRC.SYSMESSAGE Voce retirou seu Bear com sucesso!
+ELSE
+	SRC.SYSMESSAGE Voce nao possui a quantidade suficiente de panos na bag.
+ENDIF
+
+[function f_robes_level_increase]
+LOCAL.CURRENT_ROBE_UID 0
+
+LOCAL.CURRENT_ROBE_UID <SRC.FINDID.i_worker_robe>
+
+IF !(<dLOCAL.CURRENT_ROBE_UID>)
+	LOCAL.CURRENT_ROBE_UID <SRC.FINDID.i_combat_robe>
+ENDIF
+
+IF !(<dLOCAL.CURRENT_ROBE_UID>)
+	src.sysmessage Voce nao possui um Worker Robe ou Combat Robe.
+	RETURN 1
+ENDIF
+
+IF (<UID.<LOCAL.CURRENT_ROBE_UID>.TAG0.LEVEL> < <DEF.ROBE_MAX_LEVEL>)
+	LOCAL.NEW_LEVEL <EVAL <UID.<LOCAL.CURRENT_ROBE_UID>.TAG0.LEVEL> + 1>
+	LOCAL.TRUE_CLOTH_REQUIREMENTS <DEF.TRUE_CLOTH_LEVEL_<dLOCAL.NEW_LEVEL>_REQUIREMENTS>
+	IF (<SRC.RESTEST <dLOCAL.TRUE_CLOTH_REQUIREMENTS> i_bound_panotrue_w>) && (<SRC.RESTEST <dLOCAL.TRUE_CLOTH_REQUIREMENTS> i_bound_panotrue_g>) && (<SRC.RESTEST <dLOCAL.TRUE_CLOTH_REQUIREMENTS> i_bound_panotrue_b>)
+		UID.<LOCAL.CURRENT_ROBE_UID>.TAG.LEVEL <dLOCAL.NEW_LEVEL>
+		SRC.CONSUME=<dLOCAL.TRUE_CLOTH_REQUIREMENTS> i_bound_panotrue_w
+		SRC.CONSUME=<dLOCAL.TRUE_CLOTH_REQUIREMENTS> i_bound_panotrue_g
+		SRC.CONSUME=<dLOCAL.TRUE_CLOTH_REQUIREMENTS> i_bound_panotrue_b
+		SRC.STATSFIX
+		SRC.SYSMESSAGE @,,1 O nivel do seu robe foi aumentado para +<dLOCAL.NEW_LEVEL>. Parabens!
+	ELSE
+		SRC.SYSMESSAGE @,,1 Voce precisa ter <dLOCAL.TRUE_CLOTH_REQUIREMENTS> panos bound de cada na sua bag para subir para o nivel +<dLOCAL.NEW_LEVEL>!
+	ENDIF
+ELSE
+	SRC.SYSMESSAGE @,,1 O nivel do seu robe estah no maximo possivel!
+ENDIF
+
+[FUNCTION f_true_robes_hats_exchange]
+LOCAL.CONSUMED 0
+CALL f_true_robes_hats_consume i_true_white_hat
+CALL f_true_robes_hats_consume i_true_gray_hat
+CALL f_true_robes_hats_consume i_true_black_hat
+CALL f_true_robes_hats_consume i_robe_true_white
+CALL f_true_robes_hats_consume i_true_gray_robe
+CALL f_true_robes_hats_consume i_true_black_robe
+
+IF !(<LOCAL.CONSUMED>)
+	SRC.SYSMESSAGE Voce nao possui True Robes ou Wizard's Hats para troca!
+ENDIF
+
+[FUNCTION f_true_robes_hats_consume]
+IF !(<ARGS>)
+	RETURN
+ENDIF
+
+LOCAL.ITEM_ID <ARGS>
+
+WHILE (<SRC.RESTEST 1 <LOCAL.ITEM_ID>>)
+	LOCAL.TRUE_CLOTH_ID <STRARG <STREAT <SERV.ITEMDEF.<LOCAL.ITEM_ID>.RESOURCES>>>
+	LOCAL.TRUE_CLOTH_AMOUNT <STRARG <SERV.ITEMDEF.<LOCAL.ITEM_ID>.RESOURCES>>
+	LOCAL.TRADE_AMOUNT <R<EVAL (<LOCAL.TRUE_CLOTH_AMOUNT> * 50) / 100>,<LOCAL.TRUE_CLOTH_AMOUNT>>
+
+	SRC.SYSMESSAGE Transformando <SRC.FINDID.<LOCAL.ITEM_ID>.NAME> em <dLOCAL.TRADE_AMOUNT> <SERV.ITEMDEF.<LOCAL.TRUE_CLOTH_ID>.NAME>.
+	SERV.LOG Transformando <SRC.FINDID.<LOCAL.ITEM_ID>.NAME> de <SRC.NAME> em <dLOCAL.TRADE_AMOUNT> <SERV.ITEMDEF.<LOCAL.TRUE_CLOTH_ID>.NAME>.
+
+	SRC.CONSUME=1 <LOCAL.ITEM_ID>
+
+	SERV.NEWITEM <LOCAL.TRUE_CLOTH_ID>
+	NEW.AMOUNT <LOCAL.TRADE_AMOUNT>
+	NEW.BOUNCE
+
+	LOCAL.CONSUMED += 1
+ENDWHILE
+
+[FUNCTION f_warrior_robe]
+IF (<SRC.RESTEST 50 i_bound_panotrue_w>) && (<SRC.RESTEST 50 i_bound_panotrue_g>) && (<SRC.RESTEST 50 i_bound_panotrue_b>)
+	FOR 1 24
+		IF !((<dLOCAL._FOR>==11) || (<dLOCAL._FOR>==21) || (<dLOCAL._FOR>==15))
+			TRY UID.<FINDLAYER.<dLOCAL._FOR>.UID>.UNEQUIP
+		ENDIF
+	ENDFOR
+
+	FOR 1 7
+		IF <src.<def0.warrior<dLOCAL._FOR>>> < 1000
+			src.sysmessage Voce nao possui a skill necessaria em <SERV.SKILL.<def0.warrior<dLOCAL._FOR>>.NAME> pra receber o Robe.
+			return 1
+		endif
+	ENDFOR
+
+
+	if <SRC.TAG.WARRIOR>==1
+		src.sysmessage Voce ja retirou seu Warrior Robe.
+		return 1
+	endif
+
+	src.newitem i_combat_robe
+	new.color <ARGV[0]>
+	new.link = <src.uid>
+	new.cont=<src.findlayer(21).uid>
+	SRC.TAG.WARRIOR=1
+	SRC.CONSUME=50 i_bound_panotrue_w
+	SRC.CONSUME=50 i_bound_panotrue_g
+	SRC.CONSUME=50 i_bound_panotrue_b
+ELSE
+	SRC.SYSMESSAGE Voce precisa ter 50 panos trues bound de cada cor em sua bag.
+ENDIF
+
+[ITEMDEF i_robe_of_cure]
+id=i_robe
+name=Robe of Cure
+TYPE=T_CLOTHING
+weight=0
+SKILLMAKE=TAILORING 70.0, MAGERY 80.0, t_sewing_kit
+RESOURCES=50 i_cloth, 50 i_reag_garlic
+DYE=01
+VALUE=6000
+
+
+ON=@Create
+	HITPOINTS={50 100}
+
+//On=@CLICK
+//message @,,1 [<tag0.charges> cargas]
+
+ON=@EQUIPTEST
+//IF !(<SRC.FINDID.i_poison_effect.UID>)
+//SRC.SYSMESSAGE Voce nao esta envenenado.
+//RETURN 1
+//ELIF <SRC.FINDID.I_poison_effect.more2> > 2
+//SRC.SYSMESSAGE Este tipo de veneno So pode ser curado com Pocoes.
+//RETURN 1
+//ENDIF
+//IF !(<SRC.FINDID.i_poison_effect.UID>) || (<SRC.FINDID.I_poison_effect.more2> > 2)
+//	SRC.SYSMESSAGE Voce nao esta envenenado ou este tipo de veneno so pode ser curado com pocoes.
+//	SRC.barraverde
+//	SRC.TIMERF 1,barraverde
+//	RETURN 1
+//ENDIF
+
+ON=@equip
+//if <tag0.charges> > 0
+//	tag0.charges -= 1
+	IF (<SRC.FINDID.i_poison_effect.UID>) && !(<SRC.FINDID.I_poison_effect.more2> > 2)
+		SRC.FINDID.i_poison_effect.REMOVE
+		SRC.EFFECT 2,i_fx_sparkle,16,20
+		SRC.SOUND 488 // arche cure sound
+		//SRC.SYSMESSAGE Voce se sente melhor.
+		SRC.FLAGS <SRC.FLAGS>&~080
+		SRC.f_updateplayer
+		//SRC.barraverde
+	ENDIF
+//endif
+
+[ITEMDEF i_dress_of_cure]
+id=i_dress_plain
+name=Plain Dress of Cure
+TYPE=T_CLOTHING
+weight=0
+SKILLMAKE=TAILORING 70.0, MAGERY 80.0, t_sewing_kit
+RESOURCES=50 i_cloth, 50 i_reag_garlic
+DYE=01
+VALUE=6000
+
+
+ON=@Create
+	HITPOINTS={50 100}
+
+//On=@CLICK
+//message @,,1 [<tag0.charges> cargas]
+
+//ON=@EQUIPTEST
+//IF !(<SRC.FINDID.i_poison_effect.UID>)
+//SRC.SYSMESSAGE Voce nao esta envenenado.
+//RETURN 1
+//ELIF <SRC.FINDID.I_poison_effect.more2> > 2
+//SRC.SYSMESSAGE Este tipo de veneno So pode ser curado com Pocoes.
+//RETURN 1
+//ENDIF
+
+ON=@equip
+//if <tag0.charges> > 0
+//	tag0.charges -= 1
+	IF (<SRC.FINDID.i_poison_effect.UID>) && !(<SRC.FINDID.I_poison_effect.more2> > 2)
+		SRC.FINDID.i_poison_effect.REMOVE
+		SRC.EFFECT 2,i_fx_sparkle,16,20
+		SRC.SOUND 488 // arche cure sound
+		//SRC.SYSMESSAGE Voce se sente melhor.
+		SRC.FLAGS <SRC.FLAGS>&~080
+		SRC.f_updateplayer
+	ENDIF
+//endif
+
+[ITEMDEF i_robe_true_white]
+id=i_robe
+name=True White Robe of Bless
+TYPE=T_CLOTHING
+SKILLMAKE=TAILORING 70.0, MAGERY 80.0, t_sewing_kit
+RESOURCES=3 i_panotrue_W
+ARMOR=0
+DYE=01
+VALUE=6000
+
+ON=@Create
+	HITPOINTS={50 100}
+	COLOR=0481
+
+ON=@equip
+	src.MODSTR += 20
+	src.MODDEX += 20
+	src.MODINT += 20
+	src.MODAR += 20
+	src.sound=snd_SPELL_BLESS
+	TIMER 3
+ON=@unequip
+	src.MODSTR -= 20
+	src.MODDEX -= 20
+	src.MODINT -= 20
+	src.MODAR -= 20
+	src.sound=snd_SPELL_BLESS
+ON=@TIMER
+IF (<CONT>)
+	IF (<CONT.MANA> < <CONT.INT>) && !(<CONT.FLAGS>&statf_freeze)
+		CONT.MANA += 1
+	ENDIF
+	TIMER 2
+	RETURN 1
+ENDIF
+
+[ITEMDEF i_true_black_robe]
+id=i_robe
+name=True Black Robe of Bless
+TYPE=T_CLOTHING
+weight=0
+SKILLMAKE=TAILORING 70.0, MAGERY 80.0, t_sewing_kit
+RESOURCES=3 i_panotrue_b
+ARMOR=0
+DYE=01
+VALUE=6000
+
+ON=@Create
+	HITPOINTS={50 100}
+	COLOR=1
+ON=@equip
+	src.MODSTR += 20
+	src.MODDEX += 20
+	src.MODINT += 20
+	src.MODAR += 20
+	src.sound=snd_SPELL_BLESS
+	TIMER 3
+ON=@unequip
+	src.MODSTR -= 20
+	src.MODDEX -= 20
+	src.MODINT -= 20
+	src.MODAR -= 20
+	src.sound=snd_SPELL_BLESS
+ON=@TIMER
+IF (<CONT>)
+	IF (<CONT.MANA> < <CONT.INT>) && !(<CONT.FLAGS>&statf_freeze)
+		CONT.MANA += 1
+	ENDIF
+	TIMER 2
+	RETURN 1
+ENDIF
+
+[ITEMDEF i_true_gray_robe]
+id=i_robe
+name=True Gray Robe of Bless
+TYPE=T_CLOTHING
+weight=0
+SKILLMAKE=TAILORING 70.0, MAGERY 80.0, t_sewing_kit
+RESOURCES=3 i_panotrue_g
+ARMOR=0
+DYE=01
+VALUE=6000
+
+ON=@Create
+	HITPOINTS={50 100}
+	COLOR=0482
+ON=@equip
+	src.MODSTR += 20
+	src.MODDEX += 20
+	src.MODINT += 20
+	src.MODAR += 20
+	src.sound=snd_SPELL_BLESS
+	TIMER 3
+ON=@unequip
+	src.MODSTR -= 20
+	src.MODDEX -= 20
+	src.MODINT -= 20
+	src.MODAR -= 20
+	src.sound=snd_SPELL_BLESS
+ON=@TIMER
+IF (<CONT>)
+	IF (<CONT.MANA> < <CONT.INT>) && !(<CONT.FLAGS>&statf_freeze)
+		CONT.MANA += 1
+	ENDIF
+	TIMER 2
+	RETURN 1
+ENDIF
+
+[ITEMDEF i_bound_robe_true_white]
+id=i_robe
+name=Bound True White Robe of Bless
+TYPE=T_CLOTHING
+SKILLMAKE=TAILORING 70.0, MAGERY 80.0, t_sewing_kit
+RESOURCES=3 i_bound_panotrue_W
+ARMOR=0
+DYE=01
+VALUE=6000
+
+ON=@Create
+	HITPOINTS={50 100}
+	COLOR=0481
+
+ON=@equip
+	src.MODSTR += 20
+	src.MODDEX += 20
+	src.MODINT += 20
+	src.MODAR += 20
+	src.sound=snd_SPELL_BLESS
+	TIMER 3
+ON=@unequip
+	src.MODSTR -= 20
+	src.MODDEX -= 20
+	src.MODINT -= 20
+	src.MODAR -= 20
+	src.sound=snd_SPELL_BLESS
+ON=@TIMER
+IF (<CONT>)
+	IF (<CONT.MANA> < <CONT.INT>) && !(<CONT.FLAGS>&statf_freeze)
+		CONT.MANA += 1
+	ENDIF
+	TIMER 2
+	RETURN 1
+ENDIF
+
+[ITEMDEF i_bound_true_black_robe]
+id=i_robe
+name=Bound True Black Robe of Bless
+TYPE=T_CLOTHING
+weight=0
+SKILLMAKE=TAILORING 70.0, MAGERY 80.0, t_sewing_kit
+RESOURCES=3 i_bound_panotrue_b
+ARMOR=0
+DYE=01
+VALUE=6000
+
+ON=@Create
+	HITPOINTS={50 100}
+	COLOR=1
+ON=@equip
+	src.MODSTR += 20
+	src.MODDEX += 20
+	src.MODINT += 20
+	src.MODAR += 20
+	src.sound=snd_SPELL_BLESS
+	TIMER 3
+ON=@unequip
+	src.MODSTR -= 20
+	src.MODDEX -= 20
+	src.MODINT -= 20
+	src.MODAR -= 20
+	src.sound=snd_SPELL_BLESS
+ON=@TIMER
+IF (<CONT>)
+	IF (<CONT.MANA> < <CONT.INT>) && !(<CONT.FLAGS>&statf_freeze)
+		CONT.MANA += 1
+	ENDIF
+	TIMER 2
+	RETURN 1
+ENDIF
+
+[ITEMDEF i_bound_true_gray_robe]
+id=i_robe
+name=Bound True Gray Robe of Bless
+TYPE=T_CLOTHING
+weight=0
+SKILLMAKE=TAILORING 70.0, MAGERY 80.0, t_sewing_kit
+RESOURCES=3 i_bound_panotrue_g
+ARMOR=0
+DYE=01
+VALUE=6000
+
+ON=@Create
+	HITPOINTS={50 100}
+	COLOR=0482
+ON=@equip
+	src.MODSTR += 20
+	src.MODDEX += 20
+	src.MODINT += 20
+	src.MODAR += 20
+	src.sound=snd_SPELL_BLESS
+	TIMER 3
+ON=@unequip
+	src.MODSTR -= 20
+	src.MODDEX -= 20
+	src.MODINT -= 20
+	src.MODAR -= 20
+	src.sound=snd_SPELL_BLESS
+ON=@TIMER
+IF (<CONT>)
+	IF (<CONT.MANA> < <CONT.INT>) && !(<CONT.FLAGS>&statf_freeze)
+		CONT.MANA += 1
+	ENDIF
+	TIMER 2
+	RETURN 1
+ENDIF
+
+[ITEMDEF i_true_gray_hat]
+id=i_hat_wizards
+name=True Gray Wizard's Hat
+TYPE=T_CLOTHING
+weight=0
+SKILLMAKE=TAILORING 70.0, MAGERY 80.0, t_sewing_kit
+RESOURCES=2 i_panotrue_g
+DYE=01
+VALUE=6000
+
+ON=@Create
+	HITPOINTS={50 100}
+	COLOR=0482
+ON=@equip
+	src.MODSTR += 10
+	src.MODDEX += 10
+	src.MODINT += 10
+	src.sound=snd_SPELL_BLESS
+
+	TIMER 2
+ON=@unequip
+	src.MODSTR -= 10
+	src.MODDEX -= 10
+	src.MODINT -= 10
+	src.sound=snd_SPELL_BLESS
+ON=@Timer
+	IF (<CONT>)
+		IF (<CONT.MANA> < <CONT.INT>) && !(<CONT.FLAGS> & statf_freeze)
+			CONT.MANA += 1
+		ENDIF
+		TIMER 2
+		RETURN 1
+	ENDIF
+
+[ITEMDEF i_true_white_hat]
+id=i_hat_wizards
+name=True White Wizard's Hat
+TYPE=T_CLOTHING
+weight=0
+SKILLMAKE=TAILORING 70.0, MAGERY 80.0, t_sewing_kit
+RESOURCES=2 i_panotrue_w
+DYE=01
+VALUE=6000
+
+ON=@Create
+	HITPOINTS={50 100}
+	COLOR=0481
+ON=@equip
+	src.MODSTR += 10
+	src.MODDEX += 10
+	src.MODINT += 10
+	src.sound=snd_SPELL_BLESS
+
+	TIMER 2
+ON=@unequip
+	src.MODSTR -= 10
+	src.MODDEX -= 10
+	src.MODINT -= 10
+	src.sound=snd_SPELL_BLESS
+ON=@Timer
+	IF (<CONT>)
+		IF (<CONT.MANA> < <CONT.INT>) && !(<CONT.FLAGS> & statf_freeze)
+			CONT.MANA += 1
+		ENDIF
+		TIMER 2
+		RETURN 1
+	ENDIF
+
+[ITEMDEF i_true_black_hat]
+id=i_hat_wizards
+name=True Black Wizard's Hat
+TYPE=T_CLOTHING
+weight=0
+SKILLMAKE=TAILORING 70.0, MAGERY 80.0, t_sewing_kit
+RESOURCES=2 i_panotrue_b
+DYE=01
+VALUE=6000
+
+ON=@Create
+	HITPOINTS={50 100}
+	COLOR=1
+ON=@equip
+	src.MODSTR += 10
+	src.MODDEX += 10
+	src.MODINT += 10
+	src.sound=snd_SPELL_BLESS
+
+	TIMER 2
+ON=@unequip
+	src.MODSTR -= 10
+	src.MODDEX -= 10
+	src.MODINT -= 10
+	src.sound=snd_SPELL_BLESS
+ON=@Timer
+	IF (<CONT>)
+		IF (<CONT.MANA> < <CONT.INT>) && !(<CONT.FLAGS> & statf_freeze)
+			CONT.MANA += 1
+		ENDIF
+		TIMER 2
+		RETURN 1
+	ENDIF
+
+[ITEMDEF i_bound_true_gray_hat]
+id=i_hat_wizards
+name=Bound True Gray Wizard's Hat
+TYPE=T_CLOTHING
+weight=0
+SKILLMAKE=TAILORING 70.0, MAGERY 80.0, t_sewing_kit
+RESOURCES=2 i_bound_panotrue_g
+DYE=01
+VALUE=6000
+
+ON=@Create
+	HITPOINTS={50 100}
+	COLOR=0482
+ON=@equip
+	src.MODSTR += 10
+	src.MODDEX += 10
+	src.MODINT += 10
+	src.sound=snd_SPELL_BLESS
+
+	TIMER 2
+ON=@unequip
+	src.MODSTR -= 10
+	src.MODDEX -= 10
+	src.MODINT -= 10
+	src.sound=snd_SPELL_BLESS
+ON=@Timer
+	IF (<CONT>)
+		IF (<CONT.MANA> < <CONT.INT>) && !(<CONT.FLAGS> & statf_freeze)
+			CONT.MANA += 1
+		ENDIF
+		TIMER 2
+		RETURN 1
+	ENDIF
+
+[ITEMDEF i_bound_true_white_hat]
+id=i_hat_wizards
+name=Bound True White Wizard's Hat
+TYPE=T_CLOTHING
+weight=0
+SKILLMAKE=TAILORING 70.0, MAGERY 80.0, t_sewing_kit
+RESOURCES=2 i_bound_panotrue_w
+DYE=01
+VALUE=6000
+
+ON=@Create
+	HITPOINTS={50 100}
+	COLOR=0481
+ON=@equip
+	src.MODSTR += 10
+	src.MODDEX += 10
+	src.MODINT += 10
+	src.sound=snd_SPELL_BLESS
+
+	TIMER 2
+ON=@unequip
+	src.MODSTR -= 10
+	src.MODDEX -= 10
+	src.MODINT -= 10
+	src.sound=snd_SPELL_BLESS
+ON=@Timer
+	IF (<CONT>)
+		IF (<CONT.MANA> < <CONT.INT>) && !(<CONT.FLAGS> & statf_freeze)
+			CONT.MANA += 1
+		ENDIF
+		TIMER 2
+		RETURN 1
+	ENDIF
+
+[ITEMDEF i_bound_true_black_hat]
+id=i_hat_wizards
+name=Bound True Black Wizard's Hat
+TYPE=T_CLOTHING
+weight=0
+SKILLMAKE=TAILORING 70.0, MAGERY 80.0, t_sewing_kit
+RESOURCES=2 i_bound_panotrue_b
+DYE=01
+VALUE=6000
+
+ON=@Create
+	HITPOINTS={50 100}
+	COLOR=1
+ON=@equip
+	src.MODSTR += 10
+	src.MODDEX += 10
+	src.MODINT += 10
+	src.sound=snd_SPELL_BLESS
+
+	TIMER 2
+ON=@unequip
+	src.MODSTR -= 10
+	src.MODDEX -= 10
+	src.MODINT -= 10
+	src.sound=snd_SPELL_BLESS
+ON=@Timer
+	IF (<CONT>)
+		IF (<CONT.MANA> < <CONT.INT>) && !(<CONT.FLAGS> & statf_freeze)
+			CONT.MANA += 1
+		ENDIF
+		TIMER 2
+		RETURN 1
+	ENDIF
+
+[ITEMDEF i_true_gray_dexterity_sandals]
+ID=i_sandals
+NAME=True Gray Dexterity Sandals
+TYPE=t_clothing
+WEIGHT=0
+SKILLMAKE=TAILORING 95.0, MAGERY 100.0, t_sewing_kit
+RESOURCES=1 i_panotrue_g
+VALUE=6000
+
+ON=@Create
+	HITPOINTS={50 100}
+	COLOR=0482
+
+ON=@equip
+	src.MODDEX += 3
+	src.sound=snd_SPELL_BLESS
+
+	TIMER 5
+ON=@unequip
+	src.MODDEX -= 3
+	src.sound=snd_SPELL_BLESS
+ON=@Timer
+	IF (<CONT>)
+		IF (<CONT.STAM> < <CONT.DEX>) && !(<CONT.FLAGS> & statf_freeze)
+			CONT.STAM += 1
+		ENDIF
+
+		IF (<CONT.STAM> == 1)
+			TIMER 30
+		ELSE
+			TIMER 4
+		ENDIF
+
+		RETURN 1
+	ENDIF
+
+[ITEMDEF i_true_black_dexterity_sandals]
+ID=i_sandals
+NAME=True Black Dexterity Sandals
+TYPE=t_clothing
+WEIGHT=0
+SKILLMAKE=TAILORING 95.0, MAGERY 100.0, t_sewing_kit
+RESOURCES=1 i_panotrue_b
+VALUE=6000
+
+ON=@Create
+	HITPOINTS={50 100}
+	COLOR=1
+
+ON=@equip
+	src.MODDEX += 3
+	src.sound=snd_SPELL_BLESS
+
+	TIMER 5
+ON=@unequip
+	src.MODDEX -= 3
+	src.sound=snd_SPELL_BLESS
+ON=@Timer
+	IF (<CONT>)
+		IF (<CONT.STAM> < <CONT.DEX>) && !(<CONT.FLAGS> & statf_freeze)
+			CONT.STAM += 1
+		ENDIF
+
+		IF (<CONT.STAM> == 1)
+			TIMER 30
+		ELSE
+			TIMER 4
+		ENDIF
+
+		RETURN 1
+	ENDIF
+
+[ITEMDEF i_true_white_dexterity_sandals]
+ID=i_sandals
+NAME=True White Dexterity Sandals
+TYPE=t_clothing
+WEIGHT=0
+SKILLMAKE=TAILORING 95.0, MAGERY 100.0, t_sewing_kit
+RESOURCES=1 i_panotrue_w
+VALUE=6000
+
+ON=@Create
+	HITPOINTS={50 100}
+	COLOR=0481
+
+ON=@equip
+	src.MODDEX += 3
+	src.sound=snd_SPELL_BLESS
+
+	TIMER 5
+ON=@unequip
+	src.MODDEX -= 3
+	src.sound=snd_SPELL_BLESS
+ON=@Timer
+	IF (<CONT>)
+		IF (<CONT.STAM> < <CONT.DEX>) && !(<CONT.FLAGS> & statf_freeze)
+			CONT.STAM += 1
+		ENDIF
+
+		IF (<CONT.STAM> == 1)
+			TIMER 30
+		ELSE
+			TIMER 4
+		ENDIF
+
+		RETURN 1
+	ENDIF
+
+[ITEMDEF i_bound_true_gray_dexterity_sandals]
+ID=i_sandals
+NAME=Bound True Gray Dexterity Sandals
+TYPE=t_clothing
+WEIGHT=0
+SKILLMAKE=TAILORING 95.0, MAGERY 100.0, t_sewing_kit
+RESOURCES=1 i_bound_panotrue_g
+VALUE=6000
+
+ON=@Create
+	HITPOINTS={50 100}
+	COLOR=0482
+
+ON=@equip
+	src.MODDEX += 3
+	src.sound=snd_SPELL_BLESS
+
+	TIMER 5
+ON=@unequip
+	src.MODDEX -= 3
+	src.sound=snd_SPELL_BLESS
+ON=@Timer
+	IF (<CONT>)
+		IF (<CONT.STAM> < <CONT.DEX>) && !(<CONT.FLAGS> & statf_freeze)
+			CONT.STAM += 1
+		ENDIF
+
+		IF (<CONT.STAM> == 1)
+			TIMER 30
+		ELSE
+			TIMER 4
+		ENDIF
+
+		RETURN 1
+	ENDIF
+
+[ITEMDEF i_bound_true_black_dexterity_sandals]
+ID=i_sandals
+NAME=Bound True Black Dexterity Sandals
+TYPE=t_clothing
+WEIGHT=0
+SKILLMAKE=TAILORING 95.0, MAGERY 100.0, t_sewing_kit
+RESOURCES=1 i_bound_panotrue_b
+VALUE=6000
+
+ON=@Create
+	HITPOINTS={50 100}
+	COLOR=1
+
+ON=@equip
+	src.MODDEX += 3
+	src.sound=snd_SPELL_BLESS
+
+	TIMER 5
+ON=@unequip
+	src.MODDEX -= 3
+	src.sound=snd_SPELL_BLESS
+ON=@Timer
+	IF (<CONT>)
+		IF (<CONT.STAM> < <CONT.DEX>) && !(<CONT.FLAGS> & statf_freeze)
+			CONT.STAM += 1
+		ENDIF
+
+		IF (<CONT.STAM> == 1)
+			TIMER 30
+		ELSE
+			TIMER 4
+		ENDIF
+
+		RETURN 1
+	ENDIF
+
+[ITEMDEF i_bound_true_white_dexterity_sandals]
+ID=i_sandals
+NAME=Bound True White Dexterity Sandals
+TYPE=t_clothing
+WEIGHT=0
+SKILLMAKE=TAILORING 95.0, MAGERY 100.0, t_sewing_kit
+RESOURCES=1 i_bound_panotrue_w
+VALUE=6000
+
+ON=@Create
+	HITPOINTS={50 100}
+	COLOR=0481
+
+ON=@equip
+	src.MODDEX += 3
+	src.sound=snd_SPELL_BLESS
+
+	TIMER 5
+ON=@unequip
+	src.MODDEX -= 3
+	src.sound=snd_SPELL_BLESS
+ON=@Timer
+	IF (<CONT>)
+		IF (<CONT.STAM> < <CONT.DEX>) && !(<CONT.FLAGS> & statf_freeze)
+			CONT.STAM += 1
+		ENDIF
+
+		IF (<CONT.STAM> == 1)
+			TIMER 30
+		ELSE
+			TIMER 4
+		ENDIF
+
+		RETURN 1
+	ENDIF
+
+[ITEMDEF i_earrings_blessed]
+id=i_earrings_gold
+NAME=Magic Blessed Earrings
+SKILLMAKE=TAILORING 70.0, MAGERY 80.0
+RESOURCES=800 i_ingot_mytheril
+VALUE=510100
+
+ON=@Click
+MESSAGE @026 [STR/DEX/INT]
+MESSAGE @0481 <dTAG0.STR> / <dTAG0.DEX> / <dTAG0.INT>
+
+ON=@Create
+	HITPOINTS {200 300}
+	TAG.STR <R1,25>
+	TAG.DEX <R1,25>
+	TAG.INT <R1,25>
+	COLOR=00
+
+ON=@equip
+	src.MODSTR += <TAG.STR>
+	src.MODDEX += <TAG.DEX>
+	src.MODINT += <TAG.INT>
+	src.sound=snd_SPELL_BLESS
+ON=@unequip
+	src.MODSTR -= <TAG.STR>
+	src.MODDEX -= <TAG.DEX>
+	src.MODINT -= <TAG.INT>
+	src.sound=snd_SPELL_BLESS
+
+[ITEMDEF i_worker_robes]
+id=0204e
+name=Worker Robe
+TYPE=T_CLOTHING
+weight=0
+TEVENTS=t_safe_drop
+
+ON=@Create
+	HITPOINTS={5000 5000}
+	COLOR=
+	ATTR=00004
+
+ON=@DClick
+	IF (<CONT> == <SRC.UID>) && !(<SRC.TAG0.DISABLE_SPECIAL_ROBE_GUMP>)
+		SDIALOG d_vip_robe_format
+	ENDIF
+
+ON=@equip
+	src.modstr += 15
+	src.moddex += 15
+	src.modint += 15
+TIMER 1
+
+ON=@TIMER
+IF <CONT.MANA> < <CONT.MAXMANA>
+	IF <CONT.MEDITATION> > 999
+		IF <CONT.tag0.boneparts>==5
+			CONT.MANA +=4
+		else
+			CONT.MANA +=2
+		ENDIF
+	ELIF <CONT.MEDITATION> > 899
+		IF <CONT.tag0.boneparts>==5
+			CONT.MANA +=3
+		else
+			CONT.MANA +=2
+		ENDIF
+	ELIF <CONT.MEDITATION> > 799
+		IF <CONT.tag0.boneparts>==5
+			CONT.MANA +=2
+		else
+			CONT.MANA +=1
+		ENDIF
+	ELIF <CONT.MEDITATION> > 699
+		CONT.MANA +=1
+	ENDIF
+ENDIF
+TIMER 1
+RETURN 1
+
+ON=@unequip
+	SRC.DIALOGCLOSE d_vip_robe_format
+
+	src.modstr -= 15
+	src.moddex -= 15
+	src.modint -= 15
+
+[FUNCTION f_convert_true_clothes]
+f_convert_true_cloth i_panotrue_w
+f_convert_true_cloth i_panotrue_g
+f_convert_true_cloth i_panotrue_b
+
+[FUNCTION f_convert_true_cloth]
+IF (<ARGV> != 1)
+	RETURN 1
+ENDIF
+
+LOCAL.COUNT_GROUND 0
+LOCAL.COUNT_HOUSE 0
+LOCAL.COUNT_PLAYER 0
+LOCAL.COUNT_NPC 0
+
+FORINSTANCES <ARGV[0]>
+	LOCAL.UID 0
+
+	IF (<TOPOBJ.ISPLAYER>)
+		LOCAL.COUNT_PLAYER += <AMOUNT>
+		LOCAL.UID <TOPOBJ.UID>
+	ELSEIF (<TOPOBJ.ISNPC>)
+		LOCAL.COUNT_NPC += <AMOUNT>
+	ELSE
+		IF (<REGION.ISEVENT.r_house_private>)
+			LOCAL.COUNT_HOUSE += <AMOUNT>
+			LOCAL.UID <UID.<REGION.UID>.MORE1>
+		ELSE
+			LOCAL.COUNT_GROUND += <AMOUNT>
+		ENDIF
+	ENDIF
+
+	IF (<LOCAL.UID>)
+		REF1 <LOCAL.UID>
+		SERV.LOG Transferring <AMOUNT> <NAME> to <REF1.NAME>.
+		REF1.TAG0.BOUND_<ARGV[0]> += <AMOUNT>
+		REMOVE
+	ENDIF
+ENDFOR
+
+SERV.LOG <ARGV[0]> on ground: <DLOCAL.COUNT_GROUND>
+SERV.LOG <ARGV[0]> on houses: <DLOCAL.COUNT_HOUSE>
+SERV.LOG <ARGV[0]> on players: <DLOCAL.COUNT_PLAYER>
+SERV.LOG <ARGV[0]> on npcs: <DLOCAL.COUNT_NPC>
+
+[FUNCTION f_bound_clothes_show]
+SRC.SYSMESSAGE @,,1 Panos True Black: <SRC.DTAG0.BOUND_i_panotrue_b>
+SRC.SYSMESSAGE @,,1 Panos True White: <SRC.DTAG0.BOUND_i_panotrue_w>
+SRC.SYSMESSAGE @,,1 Panos True Gray: <SRC.DTAG0.BOUND_i_panotrue_g>
+
+[FUNCTION f_bound_clothes_withdraw]
+IF !(<SRC.ISGM>) && (<SRC.WEIGHT> >= <SRC.MAXWEIGHT>)
+	SRC.SYSMESSAGE @,,1 Voce nao consegue carregar os panos!
+	RETURN 1
+ENDIF
+
+IF (<SRC.DTAG0.BOUND_i_panotrue_b> > 0)
+	SERV.NEWITEM i_bound_panotrue_b
+	NEW.AMOUNT <SRC.DTAG0.BOUND_i_panotrue_b>
+	NEW.BOUNCE
+	SRC.TAG.BOUND_i_panotrue_b
+ENDIF
+
+IF (<SRC.DTAG0.BOUND_i_panotrue_w> > 0)
+	SERV.NEWITEM i_bound_panotrue_w
+	NEW.AMOUNT <SRC.DTAG0.BOUND_i_panotrue_w>
+	NEW.BOUNCE
+	SRC.TAG.BOUND_i_panotrue_w
+ENDIF
+
+IF (<SRC.DTAG0.BOUND_i_panotrue_g> > 0)
+	SERV.NEWITEM i_bound_panotrue_g
+	NEW.AMOUNT <SRC.DTAG0.BOUND_i_panotrue_g>
+	NEW.BOUNCE
+	SRC.TAG.BOUND_i_panotrue_g
+ENDIF
+
+[FUNCTION f_bound_clothes_prize]
+IF (<ARGV> != 2)
+	RETURN 1
+ENDIF
+
+REF1 <SERV.ACCOUNT.<ARGV[0]>.CHAR.0>
+LOCAL.COUNT <ARGV[1]>
+
+FOR 1 <LOCAL.COUNT>
+	LOCAL.CLOTH_BASE_ID <EVAL {i_panotrue_b 1 i_panotrue_w 1 i_panotrue_g 1}>
+	REF1.TAG0.BOUND_<SERV.ITEMDEF.<LOCAL.CLOTH_BASE_ID>.BASEID> += 1
+ENDFOR
+
+SERV.LOG Gave <DLOCAL.COUNT> bound true clothes to <REF1.NAME>. BGW: <REF1.DTAG.BOUND_i_panotrue_b> <REF1.DTAG.BOUND_i_panotrue_g> <REF1.DTAG.BOUND_i_panotrue_w>
+
+[FUNCTION f_bound_clothes_deposit]
+FORCONT <SRC.FINDLAYER.layer_pack> 0
+	IF (<BASEID> == i_bound_panotrue_b)
+		SRC.TAG0.BOUND_i_panotrue_b += <AMOUNT>
+		REMOVE
+	ELSEIF (<BASEID> == i_bound_panotrue_w)
+		SRC.TAG0.BOUND_i_panotrue_w += <AMOUNT>
+		REMOVE
+	ELSEIF (<BASEID> == i_bound_panotrue_g)
+		SRC.TAG0.BOUND_i_panotrue_g += <AMOUNT>
+		REMOVE
+	ENDIF
+ENDIF
+
+[FUNCTION f_bound_clothes_convert]
+FORCONT <SRC.FINDLAYER.layer_pack> 0
+	IF (<BASEID> == i_panotrue_b)
+		SRC.TAG0.BOUND_i_panotrue_b += <AMOUNT>
+		REMOVE
+	ELSEIF (<BASEID> == i_panotrue_w)
+		SRC.TAG0.BOUND_i_panotrue_w += <AMOUNT>
+		REMOVE
+	ELSEIF (<BASEID> == i_panotrue_g)
+		SRC.TAG0.BOUND_i_panotrue_g += <AMOUNT>
+		REMOVE
+	ENDIF
+ENDIF

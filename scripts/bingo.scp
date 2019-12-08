@@ -1,0 +1,896 @@
+//colocar tapetes
+//colocar escadinhas
+// .bingo chegar linha
+////////////////////////////
+// [PLEVEL 1]
+// BINGO
+
+[FUNCTION bancosok]
+FORINSTANCES i_bancobingo
+REMOVE
+ENDFOR
+FOR Y 0 4
+FOR K 0 7
+SERV.NEWITEM i_bancobingo
+NEW.P <eval 1181 + (<LOCAL.K>*2)> <eval 66 + (<LOCAL.Y>*2)> 23
+NEW.ATTR 010
+ENDFOR
+ENDFOR
+
+[ITEMDEF i_casebingo]
+ID=i_displaycase_2_base
+NAME=Mesa de Bingo
+
+ON=@CREATE
+COLOR=01
+
+[ITEMDEF i_basebingo]
+ID=i_carpet_rostrum
+NAME=Mesa de Bingo
+
+[ITEMDEF i_basebingo2]
+ID=07bb
+NAME=Mesa de Bingo
+
+[ITEMDEF i_bancobingo]
+ID=i_bench_marble
+NAME=Banco do Bingo
+
+ON=@CREATE
+COLOR=0790
+
+[FUNCTION GERACASES]
+FOR FILEIRA 1 5
+FOR K 1 15
+SERV.NEWITEM i_casebingo
+NEW.P <eval 5627 + <LOCAL.K>> <eval 1178 + <LOCAL.FILEIRA>>
+NEW.ATTR 010
+ENDFOR
+ENDFOR
+SERV.NEWITEM i_basebingo
+NEW.P 5636,1176,5
+NEW.ATTR 010
+SERV.NEWITEM i_basebingo
+NEW.P 5635,1176,5
+NEW.ATTR 010
+SERV.NEWITEM i_basebingo
+NEW.P 5634,1176,5
+NEW.ATTR 010
+SERV.NEWITEM i_basebingo2
+NEW.P 5636,1177,5
+NEW.ATTR 010
+SERV.NEWITEM i_basebingo2
+NEW.P 5635,1177,5
+NEW.ATTR 010
+SERV.NEWITEM i_basebingo2
+NEW.P 5634,1177,5
+NEW.ATTR 010
+FOR Y 0 4
+FOR K 0 7
+SERV.NEWITEM i_bancobingo
+NEW.P <eval 5628 + (<LOCAL.K>*2)> <eval 1185 + (<LOCAL.Y>*2)>
+NEW.ATTR 010
+ENDFOR
+ENDFOR
+
+[FUNCTION BINGO]
+IF !(<ISEMPTY <VAR.BINGOWINNER>>)
+SRC.SYSMESSAGE @,,1 <VAR.BINGOWINNER> ja declarou bingo!
+RETURN 1
+ENDIF
+IF (<VAR.NUMEROSBINGO>==0) || (<ISEMPTY <VAR.NUMEROSBINGO>>)
+SRC.SYSMESSAGE @,,1 O bingo ainda nao foi iniciado.
+RETURN 1
+ENDIF
+IF (<SRC.RESTEST i_cartela_bingo>)
+TARGETF bingo2
+SRC.SYSMESSAGE @,,1 Selecione a cartela que deseja verificar.
+ELSE
+SRC.SYSMESSAGE @,,1 Voce nao possui nenhuma cartela.
+ENDIF
+
+[FUNCTION BINGO2]
+IF !(<ISEMPTY <VAR.BINGOWINNER>>)
+SRC.SYSMESSAGE @,,1 <VAR.BINGOWINNER> ja declarou bingo!
+RETURN 1
+ENDIF
+IF !(<ARGO.TOPOBJ>==<SRC.UID>)
+SRC.SYSMESSAGE @,,1 Isto nao esta com voce.
+RETURN 1
+ENDIF
+IF !(<ARGO.BASEID>==i_cartela_bingo)
+SRC.SYSMESSAGE @,,1 Isto nao e uma cartela de bingo.
+RETURN 1
+ENDIF
+IF (<ISEMPTY <ARGO.TAG.NUMEROS>>)
+SRC.SYSMESSAGE @,,1 Voce ainda nao abriu esta cartela.
+RETURN 1
+ENDIF
+IF (<ARGO.CARTELA_FULL>)
+SRC.SYSMESSAGE @,,1 Sua cartela nao esta completamente marcada.
+RETURN 1
+ENDIF
+IF (<CHECACARTELA <ARGO.TAG.NUMEROS>>==0)
+ANOUNCEBINGO
+ELSE
+SRC.SAY @32,,1 Qua Qua Qua Qua! Bingo FAIL! <eval <CHECACARTELA <ARGO.TAG.NUMEROS>>> nao foi sorteado!
+SRC.SYSMESSAGE @,,1 Voce bingou errado e perdeu sua cartela.
+ARGO.NAME <SRC.NAME>
+ARGO.CONT=04003bfff
+ARGO.UPDATEX
+//ARGO.REMOVE
+ENDIF
+
+[FUNCTION ANOUNCEBINGO]
+IF !(<ISEMPTY <VAR.BINGOWINNER>>)
+SRC.SYSMESSAGE @,,1 <VAR.BINGOWINNER> ja declarou bingo!
+RETURN 1
+ENDIF
+SERV.B @88 <NAME>: Bingooooooo!
+SERV.B @110 <NAME>: Bingoooooooooo!
+SERV.B @150 <NAME>: Bingoooo!
+SERV.B @170 <NAME>: Bingoooooooooo!
+SERV.B @200 <NAME>: Bingooooo!
+SERV.B @88 <NAME> fez a cartela cheia e ganhou o bingo.
+VAR.BINGOWINNER=<NAME>
+FORINSTANCES i_globo_bingo
+TIMER -1
+REF1=<UID>
+ENDFOR
+DORAND 5
+SERV.NEWITEM i_fragmento_green
+SERV.NEWITEM i_fragmento_red
+SERV.NEWITEM i_fragmento_blue
+SERV.NEWITEM i_fragmento_yellow
+SERV.NEWITEM i_fragmento_white
+ENDDO
+//SERV.NEWITEMS i_cards
+//NEW.COLOR 0796
+//NEW.NAME Vale Premio Bingo
+NEW.BOUNCE
+SRC.SYSMESSAGE @,,1 Seu premio foi colocado em sua bag.
+REF2=<REF1.TAG.DEALER>
+REF3=<REF1.TAG.DEALER2>
+GO <REF1.P>
+REF2.SAY @0799,,1 Smack!
+REF3.SAY @0799,,1 Smack!
+REF2.SAY @0799,,1 Parabens, campeao!
+REF3.SAY @0799,,1 Parabens, campeao!
+TIMERF 5,STOPBINGO
+
+[FUNCTION checacartela]
+FOR 0 <eval <ARGV> - 1>
+IF !(<CHECKFORBINGO <dARGV[<dLOCAL._FOR>]>,<VAR.NUMEROSBINGO>>)
+RETURN <dARGV[<dLOCAL._FOR>]>
+ENDIF
+ENDFOR
+RETURN 0
+
+[FUNCTION REFAZCARTELAS]
+FORINSTANCES i_cartela_bingo
+GERATAGNUMEROS
+ENDFOR
+
+[ITEMDEF i_entrada_bingo]
+ID=i_floor_marble
+Name=Entrada e Bingo
+
+ON=@STEP
+IF !(<SRC.RESTEST i_cartela_bingo>)
+SRC.SYSMESSAGE @,,1 Voce nao pode entrar sem ter uma cartela!
+SRC.GO COMMERCE
+RETURN 1
+ENDIF
+IF (<SRC.FINDLAYER.25>)
+SRC.f_bancoanimal
+SRC.SYSMESSAGE @,,1 Seu animal foi enviado para o banco.
+ENDIF
+
+[FUNCTION f_bancoanimal]
+ref1=<SRC.UID>
+IF (<findlayer(25)>)
+    obj = <findlayer(25).more2>
+    args = <uid>
+    dclick
+    obj.shrink
+    foritems 2
+        IF (<more2> == <obj>)
+            cont=<ref1.findlayer.29.uid>
+		updatex
+        ENDIF
+    endfor
+ENDIF
+
+/////////////////////////////////////////
+
+[ITEMDEF i_esfera_bingo]
+ID=i_virtstone_7
+Name=Esfera de Bingo
+
+On=@CREATE
+COLOR=0790
+
+On=@Click
+MESSAGE @,,1 <NAME>
+RETURN 1
+
+[FUNCTION startbingox]
+VAR.EVENTO BINGO
+FORINSTANCES i_casebingo
+REMOVE
+ENDFOR
+FORINSTANCES i_bancobingo
+REMOVE
+ENDFOR
+FORINSTANCES i_basebingo
+REMOVE
+ENDFOR
+FORINSTANCES i_basebingo2
+REMOVE
+ENDFOR
+FORINSTANCES i_cartela_bingo
+REMOVE
+ENDFOR
+FORINSTANCES i_globo_bingo
+REMOVE
+ENDFOR
+FORINSTANCES i_esfera_bingo
+REMOVE
+ENDFOR
+FORINSTANCES c_bing_new
+REMOVE
+ENDFOR
+FORINSTANCES c_bing_new2
+REMOVE
+ENDFOR
+VAR.BINGOWINNER=
+VAR.NUMEROSBINGO=0
+GERACASES
+//SERV.B @0790 Um novo bingo ira comecar em 5 minutos, para participar va para a commerce e compre sua cartela com as vendedoras!
+SERV.NEWITEM i_globo_bingo
+NEW.P 5635,1176,10
+NEW.ATTR 010
+NEW.TIMER 60
+NEW.MORE1 4
+REF1=<NEW>
+SERV.NEWNPC c_bing_new
+NEW.TAG.VENDORMARKUP -15
+NEW.P 5627,1196
+NEW.UPDATEX
+SERV.NEWNPC c_bing_new
+NEW.TAG.VENDORMARKUP -15
+NEW.P 5644,1196
+NEW.UPDATEX
+SERV.NEWNPC c_bing_new2
+NEW.P 5634,1176,10
+NEW.UPDATEX
+REF1.TAG.DEALER=<NEW>
+SERV.NEWNPC c_bing_new2
+NEW.P 5636,1176,10
+NEW.UPDATEX
+REF1.TAG.DEALER2=<NEW>
+
+[FUNCTION stopbingo]
+//SERV.B @0790 O bingo foi finalizado.
+FORINSTANCES i_casebingo
+REMOVE
+ENDFOR
+FORINSTANCES i_bancobingo
+REMOVE
+ENDFOR
+FORINSTANCES i_basebingo
+REMOVE
+ENDFOR
+FORINSTANCES i_basebingo2
+REMOVE
+ENDFOR
+FORINSTANCES i_cartela_bingo
+REMOVE
+ENDFOR
+FORINSTANCES i_globo_bingo
+REMOVE
+ENDFOR
+FORINSTANCES i_esfera_bingo
+REMOVE
+ENDFOR
+FORINSTANCES c_bing_new
+REMOVE
+ENDFOR
+FORINSTANCES c_bing_new2
+REMOVE
+ENDFOR
+VAR.NUMEROSBINGO=
+VAR.BINGOWINNER=
+VAR.EVENTO=
+
+[ITEMDEF i_globo_bingo]
+ID=i_globe
+Name=Globo de bingo
+
+On=@Create
+COLOR=0790
+
+On=@TIMER
+IF <MORE1>
+//SERV.B @0790 Faltam <dMORE1> minutos para comecar o bingo. Compre suas cartelas com as vendedoras que estao no alto da commerce room e divirta-se.
+MORE1 --
+TIMER 60
+RETURN 1
+ENDIF
+IF (<VAR.NUMEROSBINGO>==0)
+//SERV.B @0790 O bingo acaba de comecar na parte alta da Commerce Room!
+ENDIF
+IF <CHECAFIMBINGO <VAR.NUMEROSBINGO>>
+TIMER -1
+SAY @,,1 Todos os numeros ja foram sorteados!
+RETURN 1
+ENDIF
+SORTEIANUMEROBINGO
+TIMER 15
+RETURN 1
+
+[FUNCTION CHECAFIMBINGO]
+IF <ARGV> >= 76
+RETURN 1
+ENDIF
+RETURN 0
+
+[FUNCTION SORTEIANUMEROBINGO]
+REF1=<TAG.DEALER>
+REF2=<TAG.DEALER2>
+REF1.ANIM <r15,20>
+REF2.ANIM <r15,20>
+WHILE (<LOCAL.CT> < 1)
+LOCAL.NEWNUMBER=<r1,75>
+LOCAL.DE=<r1,2>
+IF !(<CHECKFORBINGO <LOCAL.NEWNUMBER>,<VAR.NUMEROSBINGO>>)
+IF (<dLOCAL.NEWNUMBER>==22)
+REF<dLOCAL.DE>.SAY @,,1 Sorteado o numero: <dLOCAL.NEWNUMBER>, dois patinhos na lagoa!
+//SERV.B @0790 Sorteado o numero: <dLOCAL.NEWNUMBER>, dois patinhos na lagoa!
+ELIF (<dLOCAL.NEWNUMBER>==51)
+REF<dLOCAL.DE>.SAY @,,1 Sorteado o numero: <dLOCAL.NEWNUMBER>, uma boa ideia!
+//SERV.B @0790 Sorteado o numero: <dLOCAL.NEWNUMBER>, uma boa ideia!
+ELIF (<dLOCAL.NEWNUMBER>==66)
+REF<dLOCAL.DE>.SAY @,,1 Sorteado o numero: <dLOCAL.NEWNUMBER>, meia meia, tapa na oreia!
+//SERV.B @0790 Sorteado o numero: <dLOCAL.NEWNUMBER>, meia meia, tapa na oreia!
+ELIF (<dLOCAL.NEWNUMBER>==1)
+REF<dLOCAL.DE>.SAY @,,1 Sorteado o numero: <dLOCAL.NEWNUMBER>, agora comecou o bingo!
+//SERV.B @0790 Sorteado o numero: <dLOCAL.NEWNUMBER>, agora comecou o bingo!
+ELIF (<dLOCAL.NEWNUMBER>==10)
+REF<dLOCAL.DE>.SAY @,,1 Sorteado o numero: <dLOCAL.NEWNUMBER>, camisa do Zico!
+//SERV.B @0790 Sorteado o numero: <dLOCAL.NEWNUMBER>, camisa do Zico!
+ELIF (<dLOCAL.NEWNUMBER>==11)
+REF<dLOCAL.DE>.SAY @,,1 Sorteado o numero: <dLOCAL.NEWNUMBER>, camisa do Romario!
+//SERV.B @0790 Sorteado o numero: <dLOCAL.NEWNUMBER>, camisa do Romario!
+ELIF (<dLOCAL.NEWNUMBER>==24)
+REF<dLOCAL.DE>.SAY @,,1 Sorteado o numero: <dLOCAL.NEWNUMBER>, o numero dos indecisos!
+//SERV.B @0790 Sorteado o numero: <dLOCAL.NEWNUMBER>, o numero dos indecisos!
+ELIF (<dLOCAL.NEWNUMBER>==38)
+REF<dLOCAL.DE>.SAY @,,1 Sorteado o numero: <dLOCAL.NEWNUMBER>, o calibre de revolver!
+//SERV.B @0790 Sorteado o numero: <dLOCAL.NEWNUMBER>, o calibre de revolver!
+ELIF (<dLOCAL.NEWNUMBER>==38)
+REF<dLOCAL.DE>.SAY @,,1 Sorteado o numero: <dLOCAL.NEWNUMBER>, o calibre de revolver!
+//SERV.B @0790 Sorteado o numero: <dLOCAL.NEWNUMBER>, o calibre de revolver!
+ELIF (<dLOCAL.NEWNUMBER>==69)
+REF<dLOCAL.DE>.SAY @,,1 Sorteado o numero: <dLOCAL.NEWNUMBER>, um pra cima e um pra baixo!
+//SERV.B @0790 Sorteado o numero: <dLOCAL.NEWNUMBER>, um pra cima e um pra baixo!
+ELIF (<dLOCAL.NEWNUMBER>==6)
+REF<dLOCAL.DE>.SAY @,,1 Sorteado o numero: <dLOCAL.NEWNUMBER>,  Se não tiver na cartela, serve meia duzia tambem!
+//SERV.B @0790 Sorteado o numero: <dLOCAL.NEWNUMBER>,  Se não tiver na cartela, serve meia duzia tambem!
+ELIF (<dLOCAL.NEWNUMBER>==75)
+REF<dLOCAL.DE>.SAY @,,1 Sorteado o numero: <dLOCAL.NEWNUMBER>, ihhh chegou no fim!
+//SERV.B @0790 Sorteado o numero: <dLOCAL.NEWNUMBER>, ihhh chegou no fim!
+ELSE
+REF<dLOCAL.DE>.SAY @,,1 Sorteado o numero: <dLOCAL.NEWNUMBER>!
+//SERV.B @0790 Sorteado o numero: <dLOCAL.NEWNUMBER>!
+ENDIF
+REF1.ANIM <r15,20>
+REF2.ANIM <r15,20>
+IF !(<r0,5>)
+//SERV.B @0799 Lembrando que so vale cartela cheia! Completou? Use .bingo! Errou? Perdeu a cartela!
+ENDIF
+SERV.NEWITEM i_esfera_bingo
+NEW.NAME <dLOCAL.NEWNUMBER>
+NEW.ATTR 010
+NEW.P <new_GERAPESFERA <dLOCAL.NEWNUMBER>>
+NEW.UPDATEX
+VAR.NUMEROSBINGO=<VAR.NUMEROSBINGO>,<LOCAL.NEWNUMBER>
+LOCAL.CT ++
+ENDIF
+ENDWHILE
+
+[FUNCTION GERAPESFERA]
+LOCAL.FILEIRA=<eval <eval <ARGV> - 1> / 15>
+LOCAL.K=<eval (<ARGV> - 1) - <eval <LOCAL.FILEIRA>*15>>
+RETURN <eval 1181 + <LOCAL.K>> <eval 60 + <LOCAL.FILEIRA>> 28
+
+[FUNCTION new_GERAPESFERA]
+LOCAL.FILEIRA=<EVAL <eval <eval <ARGS> - 1> / 15> + 1>
+LOCAL.K=<eval (<ARGS> - 1) - <eval <eval <LOCAL.FILEIRA> - 1> *15>>
+RETURN <eval 1181 + <LOCAL.K>> <eval 65 - <LOCAL.FILEIRA>> 28
+
+[ITEMDEF i_cartela_bingo]
+ID=i_cards
+NAME=Cartela de Bingo
+VALUE=3000
+TYPE=t_normal
+
+On=@Create
+Color=0798
+TAG.CHECKS=0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+TAG.IDS=1
+TAG.FAKES=1
+GERA_N_FAKES
+
+ON=@DCLICK
+IF !(<SRC.FINDLAYER.21.UID>==<CONT.UID>)
+SRC.SYSMESSAGE @,,1 Esta cartela nao esta na sua bag.
+ELSE
+IF (<TAG0.NUMEROS>)
+DIALOG d_bingo
+ELSE
+GERATAGNUMEROS
+DIALOG d_bingo
+ENDIF
+ENDIF
+RETURN 1
+
+[FUNCTION GERATAGNUMEROS]
+TAG.NUMEROS=<r1,15>
+LOCAL.CT=0
+WHILE (<LOCAL.CT> < 23)
+IF <LOCAL.CT> < 4
+LOCAL.NEWNUMBER=<r1,15>
+ELIF <LOCAL.CT> < 9
+LOCAL.NEWNUMBER=<r16,30>
+ELIF <LOCAL.CT> < 13
+LOCAL.NEWNUMBER=<r31,45>
+ELIF <LOCAL.CT> < 18
+LOCAL.NEWNUMBER=<r46,60>
+ELSE
+LOCAL.NEWNUMBER=<r61,75>
+ENDIF
+IF !(<CHECKFORBINGO <LOCAL.NEWNUMBER>,<TAG.NUMEROS>>)
+TAG.NUMEROS=<TAG.NUMEROS>,<LOCAL.NEWNUMBER>
+LOCAL.CT ++
+ENDIF
+ENDWHILE
+
+[FUNCTION CHECKFORBINGO]
+FOR 1 <EVAL <ARGV> - 1>
+IF (<ARGV[0]>==<ARGV[<dLOCAL._FOR>]>)
+RETURN "1"
+ENDIF
+ENDFOR
+RETURN 0
+
+[DIALOG d_bingo]
+100,100
+page 0
+resizepic 0 0 9200 262 275
+//resizepic 12 34 9350 50 47
+//resizepic 59 34 9350 50 47
+resizepic 106 34 9350 50 47
+resizepic 153 34 9350 50 47
+resizepic 200 34 9350 50 47
+//resizepic 12 80 9350 50 47
+//resizepic 59 80 9350 50 47
+resizepic 106 80 9350 50 47
+resizepic 153 80 9350 50 47
+resizepic 200 80 9350 50 47
+//resizepic 12 126 9350 50 47
+//resizepic 59 126 9350 50 47
+resizepic 106 126 9350 50 47
+resizepic 153 126 9350 50 47
+resizepic 200 126 9350 50 47
+//resizepic 12 172 9350 50 47
+//resizepic 59 172 9350 50 47
+resizepic 106 172 9350 50 47
+resizepic 153 172 9350 50 47
+resizepic 200 172 9350 50 47
+//resizepic 12 218 9350 50 47
+//resizepic 59 218 9350 50 47
+resizepic 106 218 9350 50 47
+resizepic 153 218 9350 50 47
+resizepic 200 218 9350 50 47
+dtext 80 7 32 Cartela de Bingo
+///////////////////////////
+GERA_ID_BUTTON
+IF <arrayshow 1,<TAG.FAKES>>
+dtext 18 34 29 <eval <arrayshow 1,<TAG.FAKES>>>
+ENDIF
+resizepic 12 34 9350 50 47
+dtext 18 34 29 <eval <arrayshow 0,<TAG.NUMEROS>>>
+button 35 51 <qval <arrayshow 1,<TAG.CHECKS>>? 9793: 9792> <qval <arrayshow 1,<TAG.CHECKS>>? 9792: 9793> 1 0 <arrayshow 1,<TAG.IDS>>
+//;
+IF <arrayshow 2,<TAG.FAKES>>
+dtext 18 82 29 <eval <arrayshow 2,<TAG.FAKES>>>
+ENDIF
+resizepic 12 80 9350 50 47
+dtext 18 82 29 <eval <arrayshow 1,<TAG.NUMEROS>>>
+button 35 98 <qval <arrayshow 2,<TAG.CHECKS>>? 9793: 9792> <qval <arrayshow 2,<TAG.CHECKS>>? 9792: 9793> 1 0 <arrayshow 2,<TAG.IDS>>
+//;
+IF <arrayshow 3,<TAG.FAKES>>
+dtext 18 128 29 <eval <arrayshow 3,<TAG.FAKES>>>
+ENDIF
+resizepic 12 126 9350 50 47
+dtext 18 128 29 <eval <arrayshow 2,<TAG.NUMEROS>>>
+button 35 145 <qval <arrayshow 3,<TAG.CHECKS>>? 9793: 9792> <qval <arrayshow 3,<TAG.CHECKS>>? 9792: 9793> 1 0 <arrayshow 3,<TAG.IDS>>
+//;
+IF <arrayshow 4,<TAG.FAKES>>
+dtext 18 174 29 <eval <arrayshow 4,<TAG.FAKES>>>
+ENDIF
+resizepic 12 172 9350 50 47
+dtext 18 174 29 <eval <arrayshow 3,<TAG.NUMEROS>>>
+button 35 190 <qval <arrayshow 4,<TAG.CHECKS>>? 9793: 9792> <qval <arrayshow 4,<TAG.CHECKS>>? 9792: 9793> 1 0 <arrayshow 4,<TAG.IDS>>
+//;
+IF <arrayshow 5,<TAG.FAKES>>
+dtext 18 219 29 <eval <arrayshow 5,<TAG.FAKES>>>
+ENDIF
+resizepic 12 218 9350 50 47
+dtext 18 219 29 <eval <arrayshow 4,<TAG.NUMEROS>>>
+button 35 237 <qval <arrayshow 5,<TAG.CHECKS>>? 9793: 9792> <qval <arrayshow 5,<TAG.CHECKS>>? 9792: 9793> 1 0 <arrayshow 5,<TAG.IDS>>
+//////////////////////////////
+IF <arrayshow 6,<TAG.FAKES>>
+dtext 65 34 29 <eval <arrayshow 6,<TAG.FAKES>>>
+ENDIF
+resizepic 59 34 9350 50 47
+dtext 65 34 29 <eval <arrayshow 5,<TAG.NUMEROS>>>
+button 85 51 <qval <arrayshow 6,<TAG.CHECKS>>? 9793: 9792> <qval <arrayshow 6,<TAG.CHECKS>>? 9792: 9793> 1 0 <arrayshow 6,<TAG.IDS>>
+//;
+IF <arrayshow 7,<TAG.FAKES>>
+dtext 65 82 29 <eval <arrayshow 7,<TAG.FAKES>>>
+ENDIF
+resizepic 59 80 9350 50 47
+dtext 65 82 29 <eval <arrayshow 6,<TAG.NUMEROS>>>
+button 85 98 <qval <arrayshow 7,<TAG.CHECKS>>? 9793: 9792> <qval <arrayshow 7,<TAG.CHECKS>>? 9792: 9793> 1 0 <arrayshow 7,<TAG.IDS>>
+//;
+IF <arrayshow 8,<TAG.FAKES>>
+dtext 65 128 29 <eval <arrayshow 8,<TAG.FAKES>>>
+ENDIF
+resizepic 59 126 9350 50 47
+dtext 65 128 29 <eval <arrayshow 7,<TAG.NUMEROS>>>
+button 85 145 <qval <arrayshow 8,<TAG.CHECKS>>? 9793: 9792> <qval <arrayshow 8,<TAG.CHECKS>>? 9792: 9793> 1 0 <arrayshow 8,<TAG.IDS>>
+//;
+IF <arrayshow 9,<TAG.FAKES>>
+dtext 65 174 29 <eval <arrayshow 9,<TAG.FAKES>>>
+ENDIF
+resizepic 59 172 9350 50 47
+dtext 65 174 29 <eval <arrayshow 8,<TAG.NUMEROS>>>
+button 85 190 <qval <arrayshow 9,<TAG.CHECKS>>? 9793: 9792> <qval <arrayshow 9,<TAG.CHECKS>>? 9792: 9793> 1 0 <arrayshow 9,<TAG.IDS>>
+//;
+IF <arrayshow 10,<TAG.FAKES>>
+dtext 65 219 29 <eval <arrayshow 10,<TAG.FAKES>>>
+ENDIF
+resizepic 59 218 9350 50 47
+dtext 65 219 29 <eval <arrayshow 9,<TAG.NUMEROS>>>
+button 85 237 <qval <arrayshow 10,<TAG.CHECKS>>? 9793: 9792> <qval <arrayshow 10,<TAG.CHECKS>>? 9792: 9793> 1 0 <arrayshow 10,<TAG.IDS>>
+//////////////////////////////
+IF <arrayshow 11,<TAG.FAKES>>
+dtext 110 34 29 <eval <arrayshow 11,<TAG.FAKES>>>
+ENDIF
+dtext 110 34 29 <eval <arrayshow 10,<TAG.NUMEROS>>>
+button 130 51 <qval <arrayshow 11,<TAG.CHECKS>>? 9793: 9792> <qval <arrayshow 11,<TAG.CHECKS>>? 9792: 9793> 1 0 <arrayshow 11,<TAG.IDS>>
+//;
+IF <arrayshow 12,<TAG.FAKES>>
+dtext 110 82 29 <eval <arrayshow 12,<TAG.FAKES>>>
+ENDIF
+dtext 110 82 29 <eval <arrayshow 11,<TAG.NUMEROS>>>
+button 130 98 <qval <arrayshow 12,<TAG.CHECKS>>? 9793: 9792> <qval <arrayshow 12,<TAG.CHECKS>>? 9792: 9793> 1 0 <arrayshow 12,<TAG.IDS>>
+//;
+dtext 115 140 478 F2P
+//;
+IF <arrayshow 13,<TAG.FAKES>>
+dtext 110 174 29 <eval <arrayshow 13,<TAG.FAKES>>>
+ENDIF
+dtext 110 174 29 <eval <arrayshow 12,<TAG.NUMEROS>>>
+button 130 190 <qval <arrayshow 13,<TAG.CHECKS>>? 9793: 9792> <qval <arrayshow 13,<TAG.CHECKS>>? 9792: 9793> 1 0 <arrayshow 13,<TAG.IDS>>
+//;
+IF <arrayshow 14,<TAG.FAKES>>
+dtext 110 219 29 <eval <arrayshow 14,<TAG.FAKES>>>
+ENDIF
+dtext 110 219 29 <eval <arrayshow 13,<TAG.NUMEROS>>>
+button 130 237 <qval <arrayshow 14,<TAG.CHECKS>>? 9793: 9792> <qval <arrayshow 14,<TAG.CHECKS>>? 9792: 9793> 1 0 <arrayshow 14,<TAG.IDS>>
+//////////////////////////////
+IF <arrayshow 15,<TAG.FAKES>>
+dtext 156 34 29 <eval <arrayshow 15,<TAG.FAKES>>>
+ENDIF
+dtext 156 34 29 <eval <arrayshow 14,<TAG.NUMEROS>>>
+button 177 51 <qval <arrayshow 15,<TAG.CHECKS>>? 9793: 9792> <qval <arrayshow 15,<TAG.CHECKS>>? 9792: 9793> 1 0 <arrayshow 15,<TAG.IDS>>
+//;
+IF <arrayshow 16,<TAG.FAKES>>
+dtext 156 82 29 <eval <arrayshow 16,<TAG.FAKES>>>
+ENDIF
+dtext 156 82 29 <eval <arrayshow 15,<TAG.NUMEROS>>>
+button 177 98 <qval <arrayshow 16,<TAG.CHECKS>>? 9793: 9792> <qval <arrayshow 16,<TAG.CHECKS>>? 9792: 9793> 1 0 <arrayshow 16,<TAG.IDS>>
+//;
+IF <arrayshow 17,<TAG.FAKES>>
+dtext 156 128 29 <eval <arrayshow 17,<TAG.FAKES>>>
+ENDIF
+dtext 156 128 29 <eval <arrayshow 16,<TAG.NUMEROS>>>
+button 177 145 <qval <arrayshow 17,<TAG.CHECKS>>? 9793: 9792> <qval <arrayshow 17,<TAG.CHECKS>>? 9792: 9793> 1 0 <arrayshow 17,<TAG.IDS>>
+//;
+IF <arrayshow 18,<TAG.FAKES>>
+dtext 156 174 29 <eval <arrayshow 18,<TAG.FAKES>>>
+ENDIF
+dtext 156 174 29 <eval <arrayshow 17,<TAG.NUMEROS>>>
+button 177 190 <qval <arrayshow 18,<TAG.CHECKS>>? 9793: 9792> <qval <arrayshow 18,<TAG.CHECKS>>? 9792: 9793> 1 0 <arrayshow 18,<TAG.IDS>>
+//;
+IF <arrayshow 19,<TAG.FAKES>>
+dtext 156 219 29 <eval <arrayshow 19,<TAG.FAKES>>>
+ENDIF
+dtext 156 219 29 <eval <arrayshow 18,<TAG.NUMEROS>>>
+button 177 237 <qval <arrayshow 19,<TAG.CHECKS>>? 9793: 9792> <qval <arrayshow 19,<TAG.CHECKS>>? 9792: 9793> 1 0 <arrayshow 19,<TAG.IDS>>
+//////////////////////////////
+IF <arrayshow 20,<TAG.FAKES>>
+dtext 203 34 29 <eval <arrayshow 20,<TAG.FAKES>>>
+ENDIF
+dtext 203 34 29 <eval <arrayshow 19,<TAG.NUMEROS>>>
+button 225 51 <qval <arrayshow 20,<TAG.CHECKS>>? 9793: 9792> <qval <arrayshow 20,<TAG.CHECKS>>? 9792: 9793> 1 0 <arrayshow 20,<TAG.IDS>>
+//;
+IF <arrayshow 21,<TAG.FAKES>>
+dtext 203 82 29 <eval <arrayshow 21,<TAG.FAKES>>>
+ENDIF
+dtext 203 82 29 <eval <arrayshow 20,<TAG.NUMEROS>>>
+button 225 98 <qval <arrayshow 21,<TAG.CHECKS>>? 9793: 9792> <qval <arrayshow 21,<TAG.CHECKS>>? 9792: 9793> 1 0 <arrayshow 21,<TAG.IDS>>
+//;
+IF <arrayshow 22,<TAG.FAKES>>
+dtext 203 128 29 <eval <arrayshow 22,<TAG.FAKES>>>
+ENDIF
+dtext 203 128 29 <eval <arrayshow 21,<TAG.NUMEROS>>>
+button 225 145 <qval <arrayshow 22,<TAG.CHECKS>>? 9793: 9792> <qval <arrayshow 22,<TAG.CHECKS>>? 9792: 9793> 1 0 <arrayshow 22,<TAG.IDS>>
+//;
+IF <arrayshow 23,<TAG.FAKES>>
+dtext 203 174 29 <eval <arrayshow 23,<TAG.FAKES>>>
+ENDIF
+dtext 203 174 29 <eval <arrayshow 22,<TAG.NUMEROS>>>
+button 225 190 <qval <arrayshow 23,<TAG.CHECKS>>? 9793: 9792> <qval <arrayshow 23,<TAG.CHECKS>>? 9792: 9793> 1 0 <arrayshow 23,<TAG.IDS>>
+//;
+IF <arrayshow 24,<TAG.FAKES>>
+dtext 203 219 29 <eval <arrayshow 24,<TAG.FAKES>>>
+ENDIF
+dtext 203 219 29 <eval <arrayshow 23,<TAG.NUMEROS>>>
+button 225 237 <qval <arrayshow 24,<TAG.CHECKS>>? 9793: 9792> <qval <arrayshow 24,<TAG.CHECKS>>? 9792: 9793> 1 0 <arrayshow 24,<TAG.IDS>>
+/////////////////////////////////
+
+[DIALOG d_bingo text] // useless
+Cartela de Bingo
+F2P
+
+[DIALOG d_bingo button]
+
+ON=0
+SRC.SYSMESSAGE @,,1 Voce fechou sua cartela.
+
+ON=1 999999
+IF !(<TOPOBJ>==<SRC.UID>)
+SRC.SYSMESSAGE @,,1 Esta cartela nao esta mais com voce.
+RETURN 1
+ENDIF
+MUDASTATS <dARGN>,<TAG.CHECKS>
+//SERV.B <TAG.CHECKS> <dARGN>
+DIALOG d_bingo
+
+[FUNCTION GERA_ID_BUTTON]
+TAG.IDS=1
+FOR 1 24
+LOCAL.ID=<r111111,999999>
+WHILE <ISINLIST_ID_BUTTON <LOCAL.ID>>
+LOCAL.ID=<r111111,999999>
+ENDWHILE
+TAG.IDS=<TAG.IDS>,<LOCAL.ID>
+ENDFOR
+RETURN 1
+
+[FUNCTION ISINLIST_ID_BUTTON]
+LOCAL.S=<ARGS>
+ARGS=<TAG.IDS>
+FOR 1 <eval <ARGV> - 1>
+IF (<LOCAL.S>==<ARGV[<dLOCAL._FOR>]>)
+RETURN 1
+ENDIF
+ENDFOR
+RETURN 0
+
+[FUNCTION CHECKPOS_ID_BUTTON]
+LOCAL.S=<ARGS>
+ARGS=<TAG.IDS>
+FOR 1 <eval <ARGV> - 1>
+IF (<LOCAL.S>==<ARGV[<dLOCAL._FOR>]>)
+RETURN <dLOCAL._FOR>
+ENDIF
+ENDFOR
+RETURN 0
+
+[FUNCTION GERA_N_FAKES]
+FOR 1 24
+IF <r0,1>
+ IF (<dLOCAL._FOR> < 6)
+ LOCAL.N=<r1,15>
+ ELIF (<dLOCAL._FOR> < 11)
+ LOCAL.N=<r16,30>
+ ELIF (<dLOCAL._FOR> < 15)
+ LOCAL.N=<r31,45>
+ ELIF (<dLOCAL._FOR> < 20)
+ LOCAL.N=<r46,60>
+ ELSE
+ LOCAL.N=<r61,75>
+ ENDIF
+ELSE
+LOCAL.N=0
+ENDIF
+TAG.FAKES=<TAG.FAKES>,<LOCAL.N>
+ENDFOR
+RETURN 1
+
+[FUNCTION CARTELA_FULL]
+ARGS=<TAG.CHECKS>
+FOR 1 24
+//SERV.B <dLOCAL._FOR>; <ARGV[<dLOCAL._FOR>]> <ARGS>
+IF !(<ARGV[<dLOCAL._FOR>]>)
+RETURN 1
+ENDIF
+ENDFOR
+RETURN 0
+
+[FUNCTION MUDASTATS]
+LOCAL.POS=<CHECKPOS_ID_BUTTON <ARGV[0]>>
+//SERV.B local pos eh <local.pos>
+FOR 1 <eval <ARGV> - 2>
+IF (<LOCAL._FOR>==<LOCAL.POS>)
+//SERV.B <LOCAL._FOR>==<LOCAL.POS>
+LOCAL.MUDA=1
+IF (<ARGV[<eval <LOCAL._FOR> + 1>]>==0)
+LOCAL.STAT=1
+ELSE
+LOCAL.STAT=0
+ENDIF
+ENDIF
+//
+IF <LOCAL.MUDA>
+//SERV.B result e <LOCAL.RESULT> e stat <LOCAL.STAT>
+LOCAL.RESULT=<LOCAL.RESULT>,<LOCAL.STAT>
+LOCAL.MUDA=0
+ELSE
+//SERV.B result eh <LOCAL.RESULT> e <ARGV[<dLOCAL._FOR>]> loop <dLOCAL._FOR>
+LOCAL.RESULT=<LOCAL.RESULT>,<ARGV[<eval <LOCAL._FOR> + 1>]>
+ENDIF
+ENDFOR
+TAG.CHECKS=<LOCAL.RESULT>
+
+[TEMPLATE VENDOR_S_BINGO]
+CATEGORY=Vendor Templates
+SUBSECTION=Sell Templates
+DESCRIPTION=Bingo
+SELL=i_cartela_bingo,{10 20}
+PRICE=3000
+
+[CHARDEF c_bing_new]
+DEFNAME=C_bing_new
+NAME=#NAMES_HUMANFEMALE Vendedora do Bingo
+ID=C_WOMAN
+DESIRES=i_gold,e_notoriety
+AVERSIONS=t_TRAP,t_eerie_stuff
+
+TSPEECH=spk_human_prime
+TSPEECH=jobTAVERNKEEPER
+TSPEECH=spk_shopkeep
+TSPEECH=spk_needs
+TSPEECH=spk_rehello
+TSPEECH=spk_human_default
+
+TEVENTS=e_Human_HearUnk
+TEVENTS=e_Human_Needs
+TEVENTS=e_Human_ConvInit
+TEVENTS=e_Human_Greet
+TEVENTS=e_Human_Space
+TEVENTS=e_Human_Refuse
+TEVENTS=e_Human_Environ
+
+ON=@Create
+NPC=brain_vendor
+FLAGS=04
+COLOR=083ea
+STR={61 75}
+DEX={66 80}
+INT={51 68}
+HITS=100
+TAG.VENDORMARKUP=-15
+
+FENCING={15.0 38.0}
+PARRYING={15.0 38.0}
+SWORDSMANSHIP={15.0 38.0}
+WRESTLING={15.0 38.0}
+MACEFIGHTING={15.0 38.0}
+TACTICS={15.0 38.0}
+
+ITEMNEWBIE=i_hair_2_pigtails
+COLOR=01
+
+ON=@NPCRestock
+ITEM=i_hat_feather
+COLOR=07ad
+ITEM=i_skirt_long
+COLOR=07ad
+ITEM=i_sandals
+COLOR=01
+
+SELL=VENDOR_S_BINGO
+//BUY=VENDOR_B_TAVERNKEEPER
+
+CATEGORY=Civilized
+SUBSECTION=Tradesmen
+DESCRIPTION=Tavernkeeper (female)
+
+[CHARDEF c_bing_new2]
+DEFNAME=C_bing_new2
+NAME=#NAMES_HUMANFEMALE Dancarina do Bingo
+ID=C_WOMAN
+DESIRES=i_gold,e_notoriety
+AVERSIONS=t_TRAP,t_eerie_stuff
+
+//TEVENTS=e_Human_HearUnk
+//TEVENTS=e_Human_Needs
+//TEVENTS=e_Human_ConvInit
+//TEVENTS=e_Human_Greet
+//TEVENTS=e_Human_Space
+//TEVENTS=e_Human_Refuse
+TEVENTS=e_Human_Environ
+
+ON=@Create
+NPC=brain_vendor
+FLAGS=04
+COLOR=083ea
+STR={61 75}
+DEX={66 80}
+INT={51 68}
+
+FENCING={15.0 38.0}
+PARRYING={15.0 38.0}
+SWORDSMANSHIP={15.0 38.0}
+WRESTLING={15.0 38.0}
+MACEFIGHTING={15.0 38.0}
+TACTICS={15.0 38.0}
+
+ITEMNEWBIE=i_hair_2_pigtails
+COLOR=01
+
+ON=@NPCRestock
+ITEM=i_hat_feather
+COLOR=0799
+ITEM=i_skirt_long
+COLOR=0799
+ITEM=i_sandals
+COLOR=01
+
+//SELL=VENDOR_S_BINGO
+//BUY=VENDOR_B_TAVERNKEEPER
+
+CATEGORY=Civilized
+SUBSECTION=Tradesmen
+DESCRIPTION=Tavernkeeper (female)
+
+
+[EOF]
+
+
+////
+[COMMENT oi]
+SERV.NEWITEM i_basebingo3
+NEW.P 1190,57,28
+NEW.ATTR 010
+SERV.NEWITEM i_basebingo4
+NEW.P 1190,58,28
+NEW.ATTR 010
+SERV.NEWITEM i_basebingo5
+NEW.P 1190,55,28
+NEW.ATTR 010
+//[ITEMDEF i_basebingo3]
+ID=07bc
+NAME=Mesa de Bingo
+//[ITEMDEF i_basebingo4]
+ID=07c7
+NAME=Mesa de Bingo
+//[ITEMDEF i_basebingo5]
+ID=07c8
+NAME=Mesa de Bingo

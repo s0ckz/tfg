@@ -1,0 +1,19 @@
+///SKILLMENU CARTOGRAPHY
+[SKILLMENU sm_cartography]
+What sort of map do you want to draw ?
+
+ON=i_mapadd1 Detail Map
+TEST=CARTOGRAPHY 5.0
+DRAWMAP=200
+
+ON=i_mapadd2 Regional Map
+TEST=CARTOGRAPHY 30.0
+DRAWMAP=400
+
+ON=i_mapadd3 Sea Chart
+TEST=CARTOGRAPHY 45.0
+DRAWMAP=800
+
+ON=i_mapadd4 Full World
+TEST=CARTOGRAPHY 75.0
+DRAWMAP=2048

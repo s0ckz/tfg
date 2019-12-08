@@ -1,0 +1,555 @@
+[ITEMDEF 01026]
+//chisels
+DEFNAME=i_chisels
+RESOURCES=1 i_ingot_iron
+WEIGHT=1
+TYPE=t_carpentry
+CATEGORY=Items by Professions
+SUBSECTION=Carpenter
+DESCRIPTION=Chisels
+DUPELIST=01027
+
+[ITEMDEF 01027]
+//chisels
+DUPEITEM=01026
+
+[ITEMDEF 01028]
+//DEFNAME2=dovetail
+//DEFNAME2=dovetail_saw
+DEFNAME=i_saw_dovetail
+RESOURCES=3 i_ingot_iron,1 i_log
+TYPE=t_carpentry
+WEIGHT=1
+DUPELIST=01029
+CATEGORY=Items by Professions
+SUBSECTION=Carpenter
+DESCRIPTION=Dovetail Saw
+SKILLMAKE=TINKERING 33.2,t_tinker_tools
+
+ON=@CREATE
+ATTR=attr_newbie
+
+
+[ITEMDEF 01029]
+//dovetail saw
+DUPEITEM=01028
+
+[ITEMDEF 0102a]
+//Hammer
+DEFNAME=i_hammer
+RESOURCES=4 i_ingot_iron
+WEIGHT=2
+TYPE=T_WEAPON_MACE_SMITH
+FLIP=1
+CATEGORY=Items by Professions
+SUBSECTION=Carpenter
+DESCRIPTION=Hammer
+DUPELIST=0102b
+
+on=@create
+attr = 04
+
+
+[ITEMDEF 0102b]
+//hammer
+DUPEITEM=0102a
+
+[ITEMDEF 0102e]
+DEFNAME=i_nails
+WEIGHT=2
+TYPE=t_carpentry
+CATEGORY=Items by Professions
+SUBSECTION=Carpenter
+DESCRIPTION=Nails
+DUPELIST=0102f
+RESOURCES=1 i_ingot_iron
+SKILLMAKE=BLACKSMITHING 5.0
+
+[ITEMDEF 0102f]
+//nails
+DUPEITEM=0102e
+
+[ITEMDEF 01030]
+DEFNAME=i_plane_jointing
+RESOURCES=4 i_log
+WEIGHT=1
+TYPE=t_carpentry
+CATEGORY=Items by Professions
+SUBSECTION=Carpenter
+DESCRIPTION=Jointing Plane
+DUPELIST=01031
+SKILLMAKE=TINKERING 30.8,t_tinker_tools
+
+on=@create
+attr = 04
+
+
+[ITEMDEF 01031]
+//jointing plane
+DUPEITEM=01030
+
+[ITEMDEF 01032]
+DEFNAME=i_plane_smoothing
+RESOURCES=4 i_log
+WEIGHT=1
+TYPE=t_carpentry
+CATEGORY=Items by Professions
+SUBSECTION=Carpenter
+DESCRIPTION=Smoothing Plane
+DUPELIST=01033
+SKILLMAKE=TINKERING 30.7,t_tinker_tools
+
+on=@create
+attr = 04
+
+
+[ITEMDEF 01033]
+//smoothing plane
+DUPEITEM=01032
+
+[ITEMDEF 01034]
+DEFNAME=i_saw
+WEIGHT=2
+TYPE=t_carpentry
+RESOURCES=5 i_ingot_iron, 1 i_log
+SKILLMAKE=TINKERING 31.3,t_tinker_tools
+CATEGORY=Items by Professions
+SUBSECTION=Carpenter
+DESCRIPTION=Saw
+DUPELIST=01035
+
+ON=@CREATE
+ATTR=attr_newbie
+
+
+[ITEMDEF 01035]
+//saw
+DUPEITEM=01034
+
+[ITEMDEF 01036]
+DEFNAME=i_hay_bits_scattered_small
+RESOURCES=1 i_STRAW
+CATEGORY=Items by Professions
+SUBSECTION=StableMaster
+DESCRIPTION=Hay Bits
+
+[ITEMDEF 01037]
+DEFNAME=i_hay
+RESOURCES=1 i_STRAW
+CATEGORY=Items by Professions
+SUBSECTION=StableMaster
+DESCRIPTION=Hay
+
+[ITEMDEF 01038]
+DEFNAME=i_wood_curls
+RESOURCES=1 i_board_2
+CATEGORY=Items by Professions
+SUBSECTION=Carpenter
+DESCRIPTION=Wood Curls
+
+[ITEMDEF 01047]
+DEFNAME=i_globe
+RESOURCES=10 i_board_2, 2 i_cloth
+WEIGHT=6
+CATEGORY=Items by Professions
+SUBSECTION=Cartographer
+DESCRIPTION=Globe
+DUPELIST=01048
+SKILLMAKE=CARPENTRY 80.0, CARTOGRAPHY 40.0, t_carpentry
+
+[ITEMDEF 01048]
+//globe
+DUPEITEM=01047
+
+[ITEMDEF 01049]
+// bench - loom bench - n-s
+DEFNAME=i_BENCH_LOOM
+DUPELIST=0104a
+TYPE=T_CHAIR
+FLIP=1
+SKILLMAKE=CARPENTRY 10.0, t_carpentry
+RESOURCES=8 i_board_2
+
+[ITEMDEF 0104a]
+// bench - loom bench - e-w
+DUPEITEM=01049
+
+[ITEMDEF 010e4]
+DEFNAME=i_knife_draw
+RESOURCES=2 i_ingot_iron
+WEIGHT=1
+TYPE=T_WEAPON_FENCE
+FLIP=1
+CATEGORY=Items by Professions
+SUBSECTION=Carpenter
+DESCRIPTION=Draw Knife
+
+[ITEMDEF 010e5]
+DEFNAME=i_froe
+RESOURCES=2 i_ingot_iron
+WEIGHT=1
+TYPE=t_carpentry
+CATEGORY=Items by Professions
+SUBSECTION=Carpenter
+DESCRIPTION=Froe
+
+[ITEMDEF 010e6]
+DEFNAME=i_inshave
+RESOURCES=2 i_ingot_iron
+WEIGHT=1
+TYPE=t_carpentry
+CATEGORY=Items by Professions
+SUBSECTION=Carpenter
+DESCRIPTION=Inshave
+
+[ITEMDEF 010e7]
+DEFNAME=i_scorp
+RESOURCES=2 i_ingot_iron
+WEIGHT=1
+TYPE=t_carpentry
+CATEGORY=Items by Professions
+SUBSECTION=Carpenter
+DESCRIPTION=Scorp
+
+[ITEMDEF 014e9]
+DEFNAME=i_moulding_board
+FLIP=1
+RESOURCES=1 i_LOG, 1 i_board_2
+WEIGHT=3
+TYPE=t_carpentry
+CATEGORY=Items by Professions
+SUBSECTION=Carpenter
+DESCRIPTION=Moulding Board
+DUPELIST=014ea
+
+on=@create
+attr = 04
+
+
+[ITEMDEF 014ea]
+//moulding board
+DUPEITEM=014e9
+
+[ITEMDEF 019f1]
+// bench - Woodworkers bench end - S
+DEFNAME=i_bench_woodworker_end
+DUPELIST=019f3,019f5,019f7
+TYPE=T_CHAIR
+FLIP=1
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=30 i_log
+WEIGHT=8
+CATEGORY=Items by Professions
+SUBSECTION=Carpenter
+DESCRIPTION=Woodworkers Bench
+
+[ITEMDEF 019f3]
+// bench - Woodworkers bench end - N
+DUPEITEM=019F1
+
+[ITEMDEF 019f4]
+DEFNAME=i_vise
+WEIGHT=6
+TYPE=t_carpentry
+CATEGORY=Items by Professions
+SUBSECTION=Carpenter
+DESCRIPTION=Vise
+DUPELIST=019f8
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=30 i_log
+
+[ITEMDEF 019f5]
+// bench - Woodworkers bench end - E
+DUPEITEM=019F1
+
+[ITEMDEF 019f7]
+// bench - Woodworkers bench end - W
+DUPEITEM=019F1
+
+[ITEMDEF 019f8]
+//vise
+DUPEITEM=019f4
+
+[ITEMDEF 019f9]
+// bench - Coopers bench end - S
+DEFNAME=i_bench_cooper
+DUPELIST=019fa,019fb,019fc
+TYPE=T_CHAIR
+FLIP=1
+RESOURCES=30 i_log
+WEIGHT=8
+CATEGORY=Items by Professions
+SUBSECTION=Carpenter
+DESCRIPTION=Coopers Bench
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+
+[ITEMDEF 019fa]
+// bench - Coopers bench end - N
+DUPEITEM=019F9
+
+[ITEMDEF 019fb]
+// bench - Coopers bench end - W
+DUPEITEM=019F9
+
+[ITEMDEF 019fc]
+// bench - Coopers bench end - E
+DUPEITEM=019F9
+
+[ITEMDEF 01e6e]
+DEFNAME=i_board_unfinished
+RESOURCES=1 i_board_2
+CATEGORY=Items by Professions
+SUBSECTION=Carpenter
+DESCRIPTION=Board
+
+[ITEMDEF 01e6f]
+// chair - unfinished fancy wooden chair w/missing cushion - N
+DEFNAME=i_chair_wood_fancy_unfinished
+DUPELIST=01e78
+TYPE=T_CHAIR
+FLIP=1
+RESOURCES=2 i_LATHEWORK_UNFINISHED, i_board_UNFINISHED, I_NAILS
+CATEGORY=Items by Professions
+SUBSECTION=Carpenter
+DESCRIPTION=Unfinished Chair
+
+[ITEMDEF 01e70]
+DEFNAME=i_drawer_unfinished
+RESOURCES=2 i_board_UNFINISHED
+CATEGORY=Items by Professions
+SUBSECTION=Carpenter
+DESCRIPTION=Unfinished Drawer
+
+[ITEMDEF 01e71]
+DEFNAME=i_bureau_unfinished
+RESOURCES=3 i_board_UNFINISHED, I_NAILS
+CATEGORY=Items by Professions
+SUBSECTION=Carpenter
+DESCRIPTION=Unfinished Chest of Drawers
+
+[ITEMDEF 01e72]
+// table - upside down wood table corner - 1
+DEFNAME=i_table_unfinished
+RESOURCES=4 i_board_UNFINISHED, i_TABLE_LEG_UNFINISHED, I_NAILS
+CATEGORY=Items by Professions
+SUBSECTION=Carpenter
+DESCRIPTION=Unfinished Table
+DUPELIST=01e7b
+
+[ITEMDEF 01e73]
+// table - table legs for e-w table
+DEFNAME=i_table_leg_unfinished
+RESOURCES=3 i_board_UNFINISHED
+CATEGORY=Items by Professions
+SUBSECTION=Carpenter
+DESCRIPTION=Table Legs
+DUPELIST=01e7c
+
+[ITEMDEF 01e74]
+// table - single table leg - laying down e-w
+// decoration
+DEFNAME=i_table_leg_unfinished_2
+RESOURCES=1 i_board_UNFINISHED
+CATEGORY=Items by Professions
+SUBSECTION=Carpenter
+DESCRIPTION=Table Leg
+DUPELIST=01e7d
+
+[ITEMDEF 01e75]
+// table - solid table leg end, pair leaning on each other
+DEFNAME=i_table_leg_unfinished_3
+RESOURCES=4 i_board_UNFINISHED
+CATEGORY=Items by Professions
+SUBSECTION=Carpenter
+DESCRIPTION=Table Legs
+
+[ITEMDEF 01e76]
+DEFNAME=i_bookcase_unfinished
+RESOURCES=8 i_board_UNFINISHED
+CATEGORY=Items by Professions
+SUBSECTION=Carpenter
+DESCRIPTION=Unfinished Shelves
+
+[ITEMDEF 01e77]
+DEFNAME=i_board_unfinished_2
+RESOURCES=1 i_board_2
+CATEGORY=Items by Professions
+SUBSECTION=Carpenter
+DESCRIPTION=Board
+
+[ITEMDEF 01e78]
+// chair - unfinished fancy wooden chair w/missing cushion - W
+DUPEITEM=01e6f
+
+[ITEMDEF 01e79]
+DEFNAME=i_drawer_unfinished_2
+RESOURCES=2 i_board_UNFINISHED
+CATEGORY=Items by Professions
+SUBSECTION=Carpenter
+DESCRIPTION=Unfinished Drawer
+
+[ITEMDEF 01e7a]
+DEFNAME=i_bureau_unfinished_2
+RESOURCES=3 i_board_UNFINISHED, I_NAILS
+CATEGORY=Items by Professions
+SUBSECTION=Carpenter
+DESCRIPTION=Unfinished Chest of Drawers
+
+[ITEMDEF 01e7b]
+// table - upside down wood table corner - 2
+DUPEITEM=01e72
+
+[ITEMDEF 01e7c]
+// table - table legs for n-s table
+// decoration
+DUPEITEM=01e73
+
+[ITEMDEF 01e7d]
+// table - single table leg - laying down n-s
+// decoration
+DUPEITEM=01e74
+
+[ITEMDEF 01e7e]
+DEFNAME=i_bookcase_unfinished_2
+RESOURCES=8 i_board_UNFINISHED
+CATEGORY=Items by Professions
+SUBSECTION=Carpenter
+DESCRIPTION=Unfinished Shelves
+
+[ITEMDEF 01e82]
+DEFNAME=i_lathework_unfinished
+RESOURCES=4 i_board_2, i_NAILS
+CATEGORY=Items by Professions
+SUBSECTION=Carpenter
+DESCRIPTION=Lathe Work
+
+[ITEMDEF i_map_Train_roll_50]
+ID=014ed
+NAME=Roll of Map
+RESOURCES=50 i_log
+SKILLMAKE=CARPENTRY 10.0, t_carpentry
+WEIGHT=10
+VALUE=2
+TYPE=t_map_train
+
+ON=@Create
+TAG.AMOUNT 50
+MORE 50
+
+[ITEMDEF i_map_Train_roll_250]
+ID=014ed
+NAME=Roll of Map
+RESOURCES=250 i_log
+SKILLMAKE=CARPENTRY 10.0, t_carpentry
+WEIGHT=10
+VALUE=2
+TYPE=t_map_train
+
+ON=@Create
+TAG.AMOUNT 250
+MORE 250
+
+[ITEMDEF i_map_Train_roll_500]
+ID=014ed
+NAME=Roll of Map
+RESOURCES=500 i_log
+SKILLMAKE=CARPENTRY 10.0, t_carpentry
+WEIGHT=10
+VALUE=2
+TYPE=t_map_train
+
+ON=@Create
+TAG.AMOUNT 500
+MORE 500
+
+[ITEMDEF i_map_train]
+ID=i_scroll_Blank
+NAME=Training Map
+VALUE=1
+WEIGHT=0.1
+
+ON=@CREATE
+COLOR 030
+
+[FUNCTION f_mapmake]
+REF69 <ARGS>
+IF <CTAG0.USINGMAP>
+SYSMESSAGE You are already writing a map.
+ELSE
+REF69.MORE -=1
+timerf 2,f_mapdone
+SRC.CTAG.USINGMAP 1
+ENDIF
+
+[function f_mapdone]
+IF <R800> < <SRC.CARTOGRAPHY>
+SRC.SYSMESSAGE You make a new training map.
+SERV.NEWITEM i_map_train
+NEW.CONT <SRC.UID>
+Skillgain 12 1
+ELSE
+SRC.SYSMESSAGE You fail to make anything.
+ENDIF
+SRC.CTAG.USINGMAP 0
+
+[TYPEDEF t_map_train]
+ON=@CLICK
+MESSAGE <NAME> (<MORE>/<dTAG0.AMOUNT>)
+RETURN 1
+
+ON=@DCLICK
+IF <MORE>==0
+REMOVE
+ELSE
+SRC.f_mapmake, <UID>
+ENDIF
+RETURN 1
+
+[DEFNAME carpentry_quest_settings]
+QUEST_CARPENTRY_CERAMIC_COUNT 30000
+QUEST_CARPENTRY_RUSTY_COUNT 25000
+QUEST_CARPENTRY_OLD_COPPER_COUNT 20000
+QUEST_CARPENTRY_DULL_COPPER_COUNT 20000
+QUEST_CARPENTRY_COPPER_COUNT 20000
+QUEST_CARPENTRY_BRONZE_COUNT 15000
+QUEST_CARPENTRY_SHADOW_COUNT 12500
+QUEST_CARPENTRY_AGAPITE_COUNT 10000
+QUEST_CARPENTRY_ROSE_COUNT 7500
+QUEST_CARPENTRY_SILVER_COUNT 5000
+
+[FUNCTION f_carpentry_quest_consume]
+IF (<ARGV> != 4)
+	RETURN 1
+ENDIF
+
+LOCAL.RECIPE_SCROLL_UID <ARGV[0]>
+LOCAL.BASE_ID <ARGV[1]>
+LOCAL.COUNT <ARGV[2]>
+LOCAL.TAG <ARGV[3]>
+
+IF (!(<ARGO.TOPOBJ>==<SRC.UID>) && (!<SRC.CANSEELOS <ARGO.UID>>)) || (<ARGO.ATTR> & attr_move_never)
+	SRC.SYSMESSAGE @,,1 <DEFMSG.msg_key_targ_reach>
+	RETURN 1
+ENDIF
+
+IF (<ARGO.BASEID> != <LOCAL.BASE_ID>)
+	SRC.SYSMESSAGE @,,1 This is not the right item.
+	RETURN 1
+ENDIF
+
+IF (<ARGO.AMOUNT> > <LOCAL.COUNT>)
+	SRC.SYSMESSAGE @,,1 This is more than the amount needed.
+	RETURN 1
+ENDIF
+
+UID.<LOCAL.RECIPE_SCROLL_UID>.TAG0.<LOCAL.TAG> += <ARGO.AMOUNT>
+
+IF (<ARGO.AMOUNT> < <LOCAL.COUNT>)
+	SRC.SYSMESSAGE @,,1 Now I need more <EVAL <LOCAL.COUNT> - <ARGO.AMOUNT>> <ARGO.NAME>s!
+ELSE
+	SRC.F_GM_QUEST_SKILL_INCREASE 11,<LOCAL.BASE_ID>
+ENDIF
+
+ARGO.REMOVE
+
+[EOF]

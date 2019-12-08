@@ -1,0 +1,19 @@
+[function verifica_nick]
+			for x 0 <eval <serv.accounts> -1>
+				for y 0 <eval <account.chars> -1>
+					ref1 = <serv.account.<dlocal.x>.char.<dlocal.y>>
+					if !(strcmpi(<name>,<ref1.name>)) && !(<uid>==<ref1>)
+						s <name>: nick repetido.
+					endif
+				endfor
+			endfor
+			return 1
+			
+[function f_vnick]
+			for x 0 <eval <serv.accounts> -1>
+				for y 0 <eval <account.chars> -1>
+					ref1 = <serv.account.<dlocal.x>.char.<dlocal.y>>
+					ref1.f_vnick
+				endfor
+			endfor
+			return 1

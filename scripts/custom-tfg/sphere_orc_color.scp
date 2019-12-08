@@ -1,0 +1,1369 @@
+
+////////////////////////////////// ORC COLOR - BY FOGUIRE //////////////////////////////////////
+
+
+
+//Templates
+
+[TEMPLATE tm_orc_1]
+CONTAINER=i_bag
+COLOR=05
+ITEM=i_color_orc_helm_1
+
+on=@create
+ATTR=00
+
+[TEMPLATE tm_orc_2]
+CONTAINER=i_bag
+COLOR=031
+ITEM=i_color_orc_helm_2
+
+on=@create
+ATTR=00
+
+[TEMPLATE tm_orc_3]
+CONTAINER=i_bag
+COLOR=040
+ITEM=i_color_orc_helm_3
+
+on=@create
+ATTR=00
+
+[TEMPLATE tm_orc_4]
+CONTAINER=i_bag
+COLOR=025
+ITEM=i_color_orc_helm_4
+
+on=@create
+ATTR=00
+
+[TEMPLATE tm_orc_5]
+CONTAINER=i_bag
+COLOR=060
+ITEM=i_color_orc_helm_5
+
+on=@create
+ATTR=00
+
+[TEMPLATE tm_orc_6]
+CONTAINER=i_bag
+COLOR=035
+ITEM=i_color_orc_helm_6
+
+on=@create
+ATTR=00
+
+[TEMPLATE tm_orc_7]
+CONTAINER=i_bag
+COLOR=01a
+ITEM=i_color_orc_helm_7
+
+on=@create
+ATTR=00
+
+[TEMPLATE tm_orc_8]
+CONTAINER=i_bag
+COLOR=055
+ITEM=i_color_orc_helm_8
+
+on=@create
+ATTR=00
+
+[TEMPLATE tm_orc_9]
+CONTAINER=i_bag
+COLOR=0227
+ITEM=i_color_orc_helm_9
+
+on=@create
+ATTR=00
+
+[TEMPLATE tm_orc_10]
+CONTAINER=i_bag
+COLOR=052d
+ITEM=i_color_orc_helm_10
+
+on=@create
+ATTR=00
+
+[TEMPLATE tm_orc_11]
+CONTAINER=i_bag
+COLOR=0455
+ITEM=i_color_orc_helm_11
+
+[TEMPLATE tm_orc_12]
+CONTAINER=i_bag
+COLOR=04c2
+ITEM=i_color_orc_helm_12
+
+on=@create
+ATTR=00
+
+on=@create
+ATTR=00
+
+
+//Itens
+
+
+[ITEMDEF i_color_orc_helm_1]
+ID=i_helm_orc
+NAME=Color Orc Helm
+TYPE=t_armor
+WEIGHT=3
+
+ON=@CREATE
+COLOR=05
+ATTR=020
+HITPOINTS=200
+
+ON=@EQUIP
+src.modstr += 7
+src.moddex += 7
+src.modint += 7
+
+ON=@UNEQUIP
+src.modstr -= 7
+src.moddex -= 7
+src.modint -= 7
+
+
+[ITEMDEF i_color_orc_helm_2]
+ID=i_helm_orc
+NAME=Color Orc Helm
+TYPE=t_armor
+WEIGHT=3
+
+ON=@CREATE
+COLOR=031
+ATTR=020
+HITPOINTS=200
+
+ON=@EQUIP
+src.modstr += 7
+src.moddex += 7
+src.modint += 7
+
+ON=@UNEQUIP
+src.modstr -= 7
+src.moddex -= 7
+src.modint -= 7
+
+[ITEMDEF i_color_orc_helm_3]
+ID=i_helm_orc
+NAME=Color Orc Helm
+TYPE=t_armor
+WEIGHT=3
+
+ON=@CREATE
+COLOR=040
+ATTR=020
+HITPOINTS=200
+
+ON=@EQUIP
+src.modstr += 7
+src.moddex += 7
+src.modint += 7
+
+ON=@UNEQUIP
+src.modstr -= 7
+src.moddex -= 7
+src.modint -= 7
+
+
+[ITEMDEF i_color_orc_helm_4]
+ID=i_helm_orc
+NAME=Color Orc Helm
+TYPE=t_armor
+WEIGHT=3
+
+ON=@CREATE
+COLOR=025
+ATTR=020
+HITPOINTS=20
+
+ON=@EQUIP
+src.modstr += 7
+src.moddex += 7
+src.modint += 7
+
+ON=@UNEQUIP
+src.modstr -= 7
+src.moddex -= 7
+src.modint -= 7
+
+[ITEMDEF i_color_orc_helm_5]
+ID=i_helm_orc
+NAME=Color Orc Helm
+TYPE=t_armor
+WEIGHT=3
+
+ON=@CREATE
+COLOR=060
+ATTR=020
+HITPOINTS=200
+
+ON=@EQUIP
+src.modstr += 7
+src.moddex += 7
+src.modint += 7
+
+ON=@UNEQUIP
+src.modstr -= 7
+src.moddex -= 7
+src.modint -= 7
+
+
+[ITEMDEF i_color_orc_helm_6]
+ID=i_helm_orc
+NAME=Color Orc Helm
+TYPE=t_armor
+WEIGHT=3
+
+ON=@CREATE
+COLOR=035
+ATTR=020
+HITPOINTS=200
+
+ON=@EQUIP
+src.modstr += 7
+src.moddex += 7
+src.modint += 7
+
+ON=@UNEQUIP
+src.modstr -= 7
+src.moddex -= 7
+src.modint -= 7
+
+
+[ITEMDEF i_color_orc_helm_7]
+ID=i_helm_orc
+NAME=Color Orc Helm
+TYPE=t_armor
+WEIGHT=3
+
+ON=@CREATE
+COLOR=01a
+ATTR=020
+HITPOINTS=200
+
+ON=@EQUIP
+src.modstr += 7
+src.moddex += 7
+src.modint += 7
+
+ON=@UNEQUIP
+src.modstr -= 7
+src.moddex -= 7
+src.modint -= 7
+
+
+[ITEMDEF i_color_orc_helm_8]
+ID=i_helm_orc
+NAME=Color Orc Helm
+TYPE=t_armor
+WEIGHT=3
+
+ON=@CREATE
+COLOR=055
+ATTR=020
+HITPOINTS=200
+
+ON=@EQUIP
+src.modstr += 7
+src.moddex += 7
+src.modint += 7
+
+ON=@UNEQUIP
+src.modstr -= 7
+src.moddex -= 7
+src.modint -= 7
+
+
+[ITEMDEF i_color_orc_helm_9]
+ID=i_helm_orc
+NAME=Color Orc Helm
+TYPE=t_armor
+WEIGHT=3
+
+ON=@CREATE
+COLOR=0227
+ATTR=020
+HITPOINTS=200
+
+ON=@EQUIP
+src.modstr += 7
+src.moddex += 7
+src.modint += 7
+
+ON=@UNEQUIP
+src.modstr -= 7
+src.moddex -= 7
+src.modint -= 7
+
+[ITEMDEF i_color_orc_helm_10]
+ID=i_helm_orc
+NAME=Color Orc Helm
+TYPE=t_armor
+WEIGHT=3
+
+ON=@CREATE
+COLOR=052d
+ATTR=020
+HITPOINTS=200
+
+ON=@EQUIP
+src.modstr += 7
+src.moddex += 7
+src.modint += 7
+
+ON=@UNEQUIP
+src.modstr -= 7
+src.moddex -= 7
+src.modint -= 7
+
+
+[ITEMDEF i_color_orc_helm_11]
+ID=i_helm_orc
+NAME=Color Orc Helm
+TYPE=t_armor
+WEIGHT=3
+
+ON=@CREATE
+COLOR=0455
+ATTR=020
+HITPOINTS=200
+
+ON=@EQUIP
+src.modstr += 7
+src.moddex += 7
+src.modint += 7
+
+ON=@UNEQUIP
+src.modstr -= 7
+src.moddex -= 7
+src.modint -= 7
+
+[ITEMDEF i_color_orc_helm_12]
+ID=i_helm_orc
+NAME=Color Orc Helm
+TYPE=t_armor
+WEIGHT=3
+
+ON=@CREATE
+COLOR=04c2
+ATTR=020
+HITPOINTS=200
+
+ON=@EQUIP
+src.modstr += 7
+src.moddex += 7
+src.modint += 7
+
+ON=@UNEQUIP
+src.modstr -= 7
+src.moddex -= 7
+src.modint -= 7
+
+//NPC
+
+[CHARDEF Color Orc 1]
+DEFNAME=c_m_color_orc_1
+NAME=Color Orc
+ID=c_orc_lord
+ICON=i_pet_orc
+DAM=90,100
+ARMOR=20
+RESOURCES=8 i_ribs_raw //, ORCCAMP
+FOODTYPE=15 t_meat_raw
+//ALIGNMENT=EVIL
+//SPELLCIRCLES=3,6
+
+DESIRES=i_gold,spk_orc
+TSPEECH=spk_orc
+
+ON=@SpellEffect
+IF (<ARGN>=49)
+src.sysmessage Chain lightning is not usefull in color orc's.
+RETURN 1
+ENDIF
+
+ON=@Create
+TAG.LOOTPROPRIO 1
+COLOR=05
+STR={500 700}
+DEX={900 1200}
+INT={860 900}
+
+
+SWORDSMANSHIP={100.0 110.0}
+PARRYING={70.0 95.0}
+MAGICRESISTANCE={70.0 85.0}
+TACTICS={85.0 100.0}
+TAMING=80.0
+
+NPC=brain_monster
+
+FAME={1000 2000}
+KARMA={-2000 -2999}
+
+CONTAINER=i_backpack
+ITEM=i_gold,{2000 6000}
+ITEM={ tm_orc_1 1 0 5 }
+
+On=@NPCSeeNewPlayer
+DORAND 14
+SAY Uckta Ucfa Hit'tha
+SAY Bam arth Migfa humana
+SAY Pfffffft Thow Arcta Weak
+SAY Ummph Thy Hit'ith Like Girl
+SAY Harg Taken Bartha
+SAY Arrrgh!
+SAY Ugha Youhama wimp Hit'arth
+SAY Thow Hitith likith lil Girl Pfffftt..
+SAY Uhhg thy blow scornths
+SAY BumHug
+SAY Icta Barkt haa hah ahahaha
+SAY Errrr...
+SAY Iftak Hermal Barkinta
+SAY Hugma BumHug
+ENDDO
+
+on=@gethit
+DORAND 14
+SAY Uckta Ucfa Hit'tha
+SAY Bam arth Migfa humana
+SAY Pfffffft Thow Arcta Weak
+SAY Ummph Thy Hit'ith Like Girl
+SAY Harg Taken Bartha
+SAY Arrrgh!
+SAY Ugha Youhama wimp Hit'arth
+SAY Thow Hitith likith lil Girl Pfffftt..
+SAY Uhhg thy blow scornths
+SAY BumHug
+SAY Icta Barkt haa hah ahahaha
+SAY Errrr...
+SAY Iftak Hermal Barkinta
+SAY Hugma BumHug
+ENDDO
+
+
+[CHARDEF Color Orc 2]
+DEFNAME=c_m_color_orc_2
+NAME=Color Orc
+ID=c_orc_lord
+ICON=i_pet_orc
+DAM=90,100
+ARMOR=20
+RESOURCES=8 i_ribs_raw //, ORCCAMP
+FOODTYPE=15 t_meat_raw
+//ALIGNMENT=EVIL
+//SPELLCIRCLES=3,6
+
+DESIRES=i_gold,spk_orc
+TSPEECH=spk_orc
+
+ON=@SpellEffect
+IF (<ARGN>=49)
+src.sysmessage Chain lightning is not usefull in color orc's.
+RETURN 1
+ENDIF
+
+ON=@Create
+TAG.LOOTPROPRIO 1
+COLOR=031
+STR={500 700}
+DEX={900 1200}
+INT={860 900}
+
+
+SWORDSMANSHIP={100.0 110.0}
+PARRYING={70.0 95.0}
+MAGICRESISTANCE={70.0 85.0}
+TACTICS={85.0 100.0}
+TAMING=80.0
+
+NPC=brain_monster
+
+FAME={1000 2000}
+KARMA={-2000 -2999}
+
+CONTAINER=i_backpack
+ITEM=i_gold,{2000 6000}
+ITEM={ tm_orc_2 1 0 5 }
+
+On=@NPCSeeNewPlayer
+DORAND 14
+SAY Uckta Ucfa Hit'tha
+SAY Bam arth Migfa humana
+SAY Pfffffft Thow Arcta Weak
+SAY Ummph Thy Hit'ith Like Girl
+SAY Harg Taken Bartha
+SAY Arrrgh!
+SAY Ugha Youhama wimp Hit'arth
+SAY Thow Hitith likith lil Girl Pfffftt..
+SAY Uhhg thy blow scornths
+SAY BumHug
+SAY Icta Barkt haa hah ahahaha
+SAY Errrr...
+SAY Iftak Hermal Barkinta
+SAY Hugma BumHug
+ENDDO
+
+on=@gethit
+DORAND 14
+SAY Uckta Ucfa Hit'tha
+SAY Bam arth Migfa humana
+SAY Pfffffft Thow Arcta Weak
+SAY Ummph Thy Hit'ith Like Girl
+SAY Harg Taken Bartha
+SAY Arrrgh!
+SAY Ugha Youhama wimp Hit'arth
+SAY Thow Hitith likith lil Girl Pfffftt..
+SAY Uhhg thy blow scornths
+SAY BumHug
+SAY Icta Barkt haa hah ahahaha
+SAY Errrr...
+SAY Iftak Hermal Barkinta
+SAY Hugma BumHug
+ENDDO
+
+
+[CHARDEF Color Orc 3]
+DEFNAME=c_m_color_orc_3
+NAME=Color Orc
+ID=c_orc_lord
+ICON=i_pet_orc
+DAM=90,100
+ARMOR=20
+RESOURCES=8 i_ribs_raw //, ORCCAMP
+FOODTYPE=15 t_meat_raw
+//ALIGNMENT=EVIL
+//SPELLCIRCLES=3,6
+
+DESIRES=i_gold,spk_orc
+TSPEECH=spk_orc
+
+ON=@SpellEffect
+IF (<ARGN>=49)
+src.sysmessage Chain lightning is not usefull in color orc's.
+RETURN 1
+ENDIF
+
+ON=@Create
+TAG.LOOTPROPRIO 1
+COLOR=040
+STR={500 700}
+DEX={900 1200}
+INT={860 900}
+
+SWORDSMANSHIP={100.0 110.0}
+PARRYING={70.0 95.0}
+MAGICRESISTANCE={70.0 85.0}
+TACTICS={85.0 100.0}
+TAMING=80.0
+
+NPC=brain_monster
+
+FAME={1000 2000}
+KARMA={-2000 -2999}
+
+CONTAINER=i_backpack
+ITEM=i_gold,{2000 6000}
+ITEM={ tm_orc_3 1 0 5 }
+
+On=@NPCSeeNewPlayer
+DORAND 14
+SAY Uckta Ucfa Hit'tha
+SAY Bam arth Migfa humana
+SAY Pfffffft Thow Arcta Weak
+SAY Ummph Thy Hit'ith Like Girl
+SAY Harg Taken Bartha
+SAY Arrrgh!
+SAY Ugha Youhama wimp Hit'arth
+SAY Thow Hitith likith lil Girl Pfffftt..
+SAY Uhhg thy blow scornths
+SAY BumHug
+SAY Icta Barkt haa hah ahahaha
+SAY Errrr...
+SAY Iftak Hermal Barkinta
+SAY Hugma BumHug
+ENDDO
+
+on=@gethit
+DORAND 14
+SAY Uckta Ucfa Hit'tha
+SAY Bam arth Migfa humana
+SAY Pfffffft Thow Arcta Weak
+SAY Ummph Thy Hit'ith Like Girl
+SAY Harg Taken Bartha
+SAY Arrrgh!
+SAY Ugha Youhama wimp Hit'arth
+SAY Thow Hitith likith lil Girl Pfffftt..
+SAY Uhhg thy blow scornths
+SAY BumHug
+SAY Icta Barkt haa hah ahahaha
+SAY Errrr...
+SAY Iftak Hermal Barkinta
+SAY Hugma BumHug
+ENDDO
+
+
+[CHARDEF Color Orc 4]
+DEFNAME=c_m_color_orc_4
+NAME=Color Orc
+ID=c_orc_lord
+ICON=i_pet_orc
+DAM=90,100
+ARMOR=20
+RESOURCES=8 i_ribs_raw //, ORCCAMP
+FOODTYPE=15 t_meat_raw
+//ALIGNMENT=EVIL
+//SPELLCIRCLES=3,6
+
+DESIRES=i_gold,spk_orc
+TSPEECH=spk_orc
+
+ON=@SpellEffect
+IF (<ARGN>=49)
+src.sysmessage Chain lightning is not usefull in color orc's.
+RETURN 1
+ENDIF
+
+ON=@Create
+TAG.LOOTPROPRIO 1
+COLOR=025
+STR={500 700}
+DEX={900 1200}
+INT={860 900}
+
+SWORDSMANSHIP={100.0 110.0}
+PARRYING={70.0 95.0}
+MAGICRESISTANCE={70.0 85.0}
+TACTICS={85.0 100.0}
+TAMING=80.0
+
+NPC=brain_monster
+
+FAME={1000 2000}
+KARMA={-2000 -2999}
+
+CONTAINER=i_backpack
+ITEM=i_gold,{2000 6000}
+ITEM={ tm_orc_4 1 0 5 }
+
+On=@NPCSeeNewPlayer
+DORAND 14
+SAY Uckta Ucfa Hit'tha
+SAY Bam arth Migfa humana
+SAY Pfffffft Thow Arcta Weak
+SAY Ummph Thy Hit'ith Like Girl
+SAY Harg Taken Bartha
+SAY Arrrgh!
+SAY Ugha Youhama wimp Hit'arth
+SAY Thow Hitith likith lil Girl Pfffftt..
+SAY Uhhg thy blow scornths
+SAY BumHug
+SAY Icta Barkt haa hah ahahaha
+SAY Errrr...
+SAY Iftak Hermal Barkinta
+SAY Hugma BumHug
+ENDDO
+
+on=@gethit
+DORAND 14
+SAY Uckta Ucfa Hit'tha
+SAY Bam arth Migfa humana
+SAY Pfffffft Thow Arcta Weak
+SAY Ummph Thy Hit'ith Like Girl
+SAY Harg Taken Bartha
+SAY Arrrgh!
+SAY Ugha Youhama wimp Hit'arth
+SAY Thow Hitith likith lil Girl Pfffftt..
+SAY Uhhg thy blow scornths
+SAY BumHug
+SAY Icta Barkt haa hah ahahaha
+SAY Errrr...
+SAY Iftak Hermal Barkinta
+SAY Hugma BumHug
+ENDDO
+
+
+[CHARDEF Color Orc 5]
+DEFNAME=c_m_color_orc_5
+NAME=Color Orc
+ID=c_orc_lord
+ICON=i_pet_orc
+DAM=90,100
+ARMOR=20
+RESOURCES=8 i_ribs_raw //, ORCCAMP
+FOODTYPE=15 t_meat_raw
+//ALIGNMENT=EVIL
+//SPELLCIRCLES=3,6
+
+DESIRES=i_gold,spk_orc
+TSPEECH=spk_orc
+
+ON=@SpellEffect
+IF (<ARGN>=49)
+src.sysmessage Chain lightning is not usefull in color orc's.
+RETURN 1
+ENDIF
+
+ON=@Create
+TAG.LOOTPROPRIO 1
+COLOR=060
+STR={500 700}
+DEX={900 1200}
+INT={860 900}
+
+
+SWORDSMANSHIP={100.0 110.0}
+PARRYING={70.0 95.0}
+MAGICRESISTANCE={70.0 85.0}
+TACTICS={85.0 100.0}
+TAMING=80.0
+
+NPC=brain_monster
+
+FAME={1000 2000}
+KARMA={-2000 -2999}
+
+CONTAINER=i_backpack
+ITEM=i_gold,{2000 6000}
+ITEM={ tm_orc_5 1 0 5 }
+
+On=@NPCSeeNewPlayer
+DORAND 14
+SAY Uckta Ucfa Hit'tha
+SAY Bam arth Migfa humana
+SAY Pfffffft Thow Arcta Weak
+SAY Ummph Thy Hit'ith Like Girl
+SAY Harg Taken Bartha
+SAY Arrrgh!
+SAY Ugha Youhama wimp Hit'arth
+SAY Thow Hitith likith lil Girl Pfffftt..
+SAY Uhhg thy blow scornths
+SAY BumHug
+SAY Icta Barkt haa hah ahahaha
+SAY Errrr...
+SAY Iftak Hermal Barkinta
+SAY Hugma BumHug
+ENDDO
+
+on=@gethit
+DORAND 14
+SAY Uckta Ucfa Hit'tha
+SAY Bam arth Migfa humana
+SAY Pfffffft Thow Arcta Weak
+SAY Ummph Thy Hit'ith Like Girl
+SAY Harg Taken Bartha
+SAY Arrrgh!
+SAY Ugha Youhama wimp Hit'arth
+SAY Thow Hitith likith lil Girl Pfffftt..
+SAY Uhhg thy blow scornths
+SAY BumHug
+SAY Icta Barkt haa hah ahahaha
+SAY Errrr...
+SAY Iftak Hermal Barkinta
+SAY Hugma BumHug
+ENDDO
+
+
+[CHARDEF Color Orc 6]
+DEFNAME=c_m_color_orc_6
+NAME=Color Orc
+ID=c_orc_lord
+ICON=i_pet_orc
+DAM=90,100
+ARMOR=20
+RESOURCES=8 i_ribs_raw //, ORCCAMP
+FOODTYPE=15 t_meat_raw
+//ALIGNMENT=EVIL
+//SPELLCIRCLES=3,6
+
+DESIRES=i_gold,spk_orc
+TSPEECH=spk_orc
+
+ON=@SpellEffect
+IF (<ARGN>=49)
+src.sysmessage Chain lightning is not usefull in color orc's.
+RETURN 1
+ENDIF
+
+ON=@Create
+TAG.LOOTPROPRIO 1
+COLOR=035
+STR={500 700}
+DEX={900 1200}
+INT={860 900}
+
+SWORDSMANSHIP={100.0 110.0}
+PARRYING={70.0 95.0}
+MAGICRESISTANCE={70.0 85.0}
+TACTICS={85.0 100.0}
+TAMING=80.0
+
+NPC=brain_monster
+
+FAME={1000 2000}
+KARMA={-2000 -2999}
+
+CONTAINER=i_backpack
+ITEM=i_gold,{2000 6000}
+ITEM={ tm_orc_6 1 0 5 }
+
+On=@NPCSeeNewPlayer
+DORAND 14
+SAY Uckta Ucfa Hit'tha
+SAY Bam arth Migfa humana
+SAY Pfffffft Thow Arcta Weak
+SAY Ummph Thy Hit'ith Like Girl
+SAY Harg Taken Bartha
+SAY Arrrgh!
+SAY Ugha Youhama wimp Hit'arth
+SAY Thow Hitith likith lil Girl Pfffftt..
+SAY Uhhg thy blow scornths
+SAY BumHug
+SAY Icta Barkt haa hah ahahaha
+SAY Errrr...
+SAY Iftak Hermal Barkinta
+SAY Hugma BumHug
+ENDDO
+
+on=@gethit
+DORAND 14
+SAY Uckta Ucfa Hit'tha
+SAY Bam arth Migfa humana
+SAY Pfffffft Thow Arcta Weak
+SAY Ummph Thy Hit'ith Like Girl
+SAY Harg Taken Bartha
+SAY Arrrgh!
+SAY Ugha Youhama wimp Hit'arth
+SAY Thow Hitith likith lil Girl Pfffftt..
+SAY Uhhg thy blow scornths
+SAY BumHug
+SAY Icta Barkt haa hah ahahaha
+SAY Errrr...
+SAY Iftak Hermal Barkinta
+SAY Hugma BumHug
+ENDDO
+
+
+[CHARDEF Color Orc 7]
+DEFNAME=c_m_color_orc_7
+NAME=Color Orc
+ID=c_orc_lord
+ICON=i_pet_orc
+DAM=90,100
+ARMOR=20
+RESOURCES=8 i_ribs_raw //, ORCCAMP
+FOODTYPE=15 t_meat_raw
+//ALIGNMENT=EVIL
+//SPELLCIRCLES=3,6
+
+DESIRES=i_gold,spk_orc
+TSPEECH=spk_orc
+
+ON=@SpellEffect
+IF (<ARGN>=49)
+src.sysmessage Chain lightning is not usefull in color orc's.
+RETURN 1
+ENDIF
+
+ON=@Create
+TAG.LOOTPROPRIO 1
+COLOR=01a
+STR={500 700}
+DEX={900 1200}
+INT={860 900}
+
+SWORDSMANSHIP={100.0 110.0}
+PARRYING={70.0 95.0}
+MAGICRESISTANCE={70.0 85.0}
+TACTICS={85.0 100.0}
+TAMING=80.0
+
+NPC=brain_monster
+
+FAME={1000 2000}
+KARMA={-2000 -2999}
+
+CONTAINER=i_backpack
+ITEM=i_gold,{2000 6000}
+ITEM={ tm_orc_7 1 0 5 }
+
+On=@NPCSeeNewPlayer
+DORAND 14
+SAY Uckta Ucfa Hit'tha
+SAY Bam arth Migfa humana
+SAY Pfffffft Thow Arcta Weak
+SAY Ummph Thy Hit'ith Like Girl
+SAY Harg Taken Bartha
+SAY Arrrgh!
+SAY Ugha Youhama wimp Hit'arth
+SAY Thow Hitith likith lil Girl Pfffftt..
+SAY Uhhg thy blow scornths
+SAY BumHug
+SAY Icta Barkt haa hah ahahaha
+SAY Errrr...
+SAY Iftak Hermal Barkinta
+SAY Hugma BumHug
+ENDDO
+
+on=@gethit
+DORAND 14
+SAY Uckta Ucfa Hit'tha
+SAY Bam arth Migfa humana
+SAY Pfffffft Thow Arcta Weak
+SAY Ummph Thy Hit'ith Like Girl
+SAY Harg Taken Bartha
+SAY Arrrgh!
+SAY Ugha Youhama wimp Hit'arth
+SAY Thow Hitith likith lil Girl Pfffftt..
+SAY Uhhg thy blow scornths
+SAY BumHug
+SAY Icta Barkt haa hah ahahaha
+SAY Errrr...
+SAY Iftak Hermal Barkinta
+SAY Hugma BumHug
+ENDDO
+
+
+[CHARDEF Color Orc 8]
+DEFNAME=c_m_color_orc_8
+NAME=Color Orc
+ID=c_orc_lord
+ICON=i_pet_orc
+DAM=90,100
+ARMOR=20
+RESOURCES=8 i_ribs_raw //, ORCCAMP
+FOODTYPE=15 t_meat_raw
+//ALIGNMENT=EVIL
+//SPELLCIRCLES=3,6
+
+DESIRES=i_gold,spk_orc
+TSPEECH=spk_orc
+
+ON=@SpellEffect
+IF (<ARGN>=49)
+src.sysmessage Chain lightning is not usefull in color orc's.
+RETURN 1
+ENDIF
+
+ON=@Create
+TAG.LOOTPROPRIO 1
+COLOR=055
+STR={500 700}
+DEX={900 1200}
+INT={860 900}
+
+SWORDSMANSHIP={100.0 110.0}
+PARRYING={70.0 95.0}
+MAGICRESISTANCE={70.0 85.0}
+TACTICS={85.0 100.0}
+TAMING=80.0
+
+NPC=brain_monster
+
+FAME={1000 2000}
+KARMA={-2000 -2999}
+
+CONTAINER=i_backpack
+ITEM=i_gold,{2000 6000}
+ITEM={ tm_orc_8 1 0 5 }
+
+On=@NPCSeeNewPlayer
+DORAND 14
+SAY Uckta Ucfa Hit'tha
+SAY Bam arth Migfa humana
+SAY Pfffffft Thow Arcta Weak
+SAY Ummph Thy Hit'ith Like Girl
+SAY Harg Taken Bartha
+SAY Arrrgh!
+SAY Ugha Youhama wimp Hit'arth
+SAY Thow Hitith likith lil Girl Pfffftt..
+SAY Uhhg thy blow scornths
+SAY BumHug
+SAY Icta Barkt haa hah ahahaha
+SAY Errrr...
+SAY Iftak Hermal Barkinta
+SAY Hugma BumHug
+ENDDO
+
+on=@gethit
+DORAND 14
+SAY Uckta Ucfa Hit'tha
+SAY Bam arth Migfa humana
+SAY Pfffffft Thow Arcta Weak
+SAY Ummph Thy Hit'ith Like Girl
+SAY Harg Taken Bartha
+SAY Arrrgh!
+SAY Ugha Youhama wimp Hit'arth
+SAY Thow Hitith likith lil Girl Pfffftt..
+SAY Uhhg thy blow scornths
+SAY BumHug
+SAY Icta Barkt haa hah ahahaha
+SAY Errrr...
+SAY Iftak Hermal Barkinta
+SAY Hugma BumHug
+ENDDO
+
+
+[CHARDEF Color Orc 9]
+DEFNAME=c_m_color_orc_9
+NAME=Color Orc
+ID=c_orc_lord
+ICON=i_pet_orc
+DAM=90,100
+ARMOR=20
+RESOURCES=8 i_ribs_raw //, ORCCAMP
+FOODTYPE=15 t_meat_raw
+//ALIGNMENT=EVIL
+//SPELLCIRCLES=3,6
+
+DESIRES=i_gold,spk_orc
+TSPEECH=spk_orc
+
+ON=@SpellEffect
+IF (<ARGN>=49)
+src.sysmessage Chain lightning is not usefull in color orc's.
+RETURN 1
+ENDIF
+
+ON=@Create
+TAG.LOOTPROPRIO 1
+COLOR=0227
+STR={500 700}
+DEX={900 1200}
+INT={860 900}
+
+SWORDSMANSHIP={100.0 110.0}
+PARRYING={70.0 95.0}
+MAGICRESISTANCE={70.0 85.0}
+TACTICS={85.0 100.0}
+TAMING=80.0
+
+NPC=brain_monster
+
+FAME={1000 2000}
+KARMA={-2000 -2999}
+
+CONTAINER=i_backpack
+ITEM=i_gold,{2000 6000}
+ITEM={ tm_orc_9 1 0 5 }
+
+On=@NPCSeeNewPlayer
+DORAND 14
+SAY Uckta Ucfa Hit'tha
+SAY Bam arth Migfa humana
+SAY Pfffffft Thow Arcta Weak
+SAY Ummph Thy Hit'ith Like Girl
+SAY Harg Taken Bartha
+SAY Arrrgh!
+SAY Ugha Youhama wimp Hit'arth
+SAY Thow Hitith likith lil Girl Pfffftt..
+SAY Uhhg thy blow scornths
+SAY BumHug
+SAY Icta Barkt haa hah ahahaha
+SAY Errrr...
+SAY Iftak Hermal Barkinta
+SAY Hugma BumHug
+ENDDO
+
+on=@gethit
+DORAND 14
+SAY Uckta Ucfa Hit'tha
+SAY Bam arth Migfa humana
+SAY Pfffffft Thow Arcta Weak
+SAY Ummph Thy Hit'ith Like Girl
+SAY Harg Taken Bartha
+SAY Arrrgh!
+SAY Ugha Youhama wimp Hit'arth
+SAY Thow Hitith likith lil Girl Pfffftt..
+SAY Uhhg thy blow scornths
+SAY BumHug
+SAY Icta Barkt haa hah ahahaha
+SAY Errrr...
+SAY Iftak Hermal Barkinta
+SAY Hugma BumHug
+ENDDO
+
+
+[CHARDEF Color Orc 10]
+DEFNAME=c_m_color_orc_10
+NAME=Color Orc
+ID=c_orc_lord
+ICON=i_pet_orc
+DAM=90,100
+ARMOR=20
+RESOURCES=8 i_ribs_raw //, ORCCAMP
+FOODTYPE=15 t_meat_raw
+//ALIGNMENT=EVIL
+//SPELLCIRCLES=3,6
+
+DESIRES=i_gold,spk_orc
+TSPEECH=spk_orc
+
+ON=@SpellEffect
+IF (<ARGN>=49)
+src.sysmessage Chain lightning is not usefull in color orc's.
+RETURN 1
+ENDIF
+
+ON=@Create
+TAG.LOOTPROPRIO 1
+COLOR=052d
+STR={500 700}
+DEX={900 1200}
+INT={860 900}
+
+SWORDSMANSHIP={100.0 110.0}
+PARRYING={70.0 95.0}
+MAGICRESISTANCE={70.0 85.0}
+TACTICS={85.0 100.0}
+TAMING=80.0
+
+NPC=brain_monster
+
+FAME={1000 2000}
+KARMA={-2000 -2999}
+
+CONTAINER=i_backpack
+ITEM=i_gold,{2000 6000}
+ITEM={ tm_orc_10 1 0 5 }
+
+On=@NPCSeeNewPlayer
+DORAND 14
+SAY Uckta Ucfa Hit'tha
+SAY Bam arth Migfa humana
+SAY Pfffffft Thow Arcta Weak
+SAY Ummph Thy Hit'ith Like Girl
+SAY Harg Taken Bartha
+SAY Arrrgh!
+SAY Ugha Youhama wimp Hit'arth
+SAY Thow Hitith likith lil Girl Pfffftt..
+SAY Uhhg thy blow scornths
+SAY BumHug
+SAY Icta Barkt haa hah ahahaha
+SAY Errrr...
+SAY Iftak Hermal Barkinta
+SAY Hugma BumHug
+ENDDO
+
+on=@gethit
+DORAND 14
+SAY Uckta Ucfa Hit'tha
+SAY Bam arth Migfa humana
+SAY Pfffffft Thow Arcta Weak
+SAY Ummph Thy Hit'ith Like Girl
+SAY Harg Taken Bartha
+SAY Arrrgh!
+SAY Ugha Youhama wimp Hit'arth
+SAY Thow Hitith likith lil Girl Pfffftt..
+SAY Uhhg thy blow scornths
+SAY BumHug
+SAY Icta Barkt haa hah ahahaha
+SAY Errrr...
+SAY Iftak Hermal Barkinta
+SAY Hugma BumHug
+ENDDO
+
+
+[CHARDEF Color Orc 11]
+DEFNAME=c_m_color_orc_11
+NAME=Color Orc
+ID=c_orc_lord
+ICON=i_pet_orc
+DAM=90,100
+ARMOR=20
+RESOURCES=8 i_ribs_raw //, ORCCAMP
+FOODTYPE=15 t_meat_raw
+//ALIGNMENT=EVIL
+//SPELLCIRCLES=3,6
+
+DESIRES=i_gold,spk_orc
+TSPEECH=spk_orc
+
+ON=@SpellEffect
+IF (<ARGN>=49)
+src.sysmessage Chain lightning is not usefull in color orc's.
+RETURN 1
+ENDIF
+
+ON=@Create
+TAG.LOOTPROPRIO 1
+COLOR=0455
+STR={500 700}
+DEX={900 1200}
+INT={860 900}
+
+SWORDSMANSHIP={100.0 110.0}
+PARRYING={70.0 95.0}
+MAGICRESISTANCE={70.0 85.0}
+TACTICS={85.0 100.0}
+TAMING=80.0
+
+NPC=brain_monster
+
+FAME={1000 2000}
+KARMA={-2000 -2999}
+
+CONTAINER=i_backpack
+ITEM=i_gold,{2000 6000}
+ITEM={ tm_orc_11 1 0 5 }
+
+On=@NPCSeeNewPlayer
+DORAND 14
+SAY Uckta Ucfa Hit'tha
+SAY Bam arth Migfa humana
+SAY Pfffffft Thow Arcta Weak
+SAY Ummph Thy Hit'ith Like Girl
+SAY Harg Taken Bartha
+SAY Arrrgh!
+SAY Ugha Youhama wimp Hit'arth
+SAY Thow Hitith likith lil Girl Pfffftt..
+SAY Uhhg thy blow scornths
+SAY BumHug
+SAY Icta Barkt haa hah ahahaha
+SAY Errrr...
+SAY Iftak Hermal Barkinta
+SAY Hugma BumHug
+ENDDO
+
+on=@gethit
+DORAND 14
+SAY Uckta Ucfa Hit'tha
+SAY Bam arth Migfa humana
+SAY Pfffffft Thow Arcta Weak
+SAY Ummph Thy Hit'ith Like Girl
+SAY Harg Taken Bartha
+SAY Arrrgh!
+SAY Ugha Youhama wimp Hit'arth
+SAY Thow Hitith likith lil Girl Pfffftt..
+SAY Uhhg thy blow scornths
+SAY BumHug
+SAY Icta Barkt haa hah ahahaha
+SAY Errrr...
+SAY Iftak Hermal Barkinta
+SAY Hugma BumHug
+ENDDO
+
+
+[CHARDEF Color Orc 12]
+DEFNAME=c_m_color_orc_12
+NAME=Color Orc
+ID=c_orc_lord
+ICON=i_pet_orc
+DAM=90,100
+ARMOR=20
+RESOURCES=8 i_ribs_raw //, ORCCAMP
+FOODTYPE=15 t_meat_raw
+//ALIGNMENT=EVIL
+//SPELLCIRCLES=3,6
+
+DESIRES=i_gold,spk_orc
+TSPEECH=spk_orc
+
+ON=@SpellEffect
+IF (<ARGN>=49)
+src.sysmessage Chain lightning is not usefull in color orc's.
+RETURN 1
+ENDIF
+
+ON=@Create
+TAG.LOOTPROPRIO 1
+COLOR=04c2
+STR={500 700}
+DEX={900 1200}
+INT={860 900}
+
+SWORDSMANSHIP={100.0 110.0}
+PARRYING={70.0 95.0}
+MAGICRESISTANCE={70.0 85.0}
+TACTICS={85.0 100.0}
+TAMING=80.0
+
+NPC=brain_monster
+
+FAME={1000 2000}
+KARMA={-2000 -2999}
+
+CONTAINER=i_backpack
+ITEM=i_gold,{2000 6000}
+ITEM={ tm_orc_12 1 0 5 }
+
+On=@NPCSeeNewPlayer
+DORAND 14
+SAY Uckta Ucfa Hit'tha
+SAY Bam arth Migfa humana
+SAY Pfffffft Thow Arcta Weak
+SAY Ummph Thy Hit'ith Like Girl
+SAY Harg Taken Bartha
+SAY Arrrgh!
+SAY Ugha Youhama wimp Hit'arth
+SAY Thow Hitith likith lil Girl Pfffftt..
+SAY Uhhg thy blow scornths
+SAY BumHug
+SAY Icta Barkt haa hah ahahaha
+SAY Errrr...
+SAY Iftak Hermal Barkinta
+SAY Hugma BumHug
+ENDDO
+
+on=@gethit
+DORAND 14
+SAY Uckta Ucfa Hit'tha
+SAY Bam arth Migfa humana
+SAY Pfffffft Thow Arcta Weak
+SAY Ummph Thy Hit'ith Like Girl
+SAY Harg Taken Bartha
+SAY Arrrgh!
+SAY Ugha Youhama wimp Hit'arth
+SAY Thow Hitith likith lil Girl Pfffftt..
+SAY Uhhg thy blow scornths
+SAY BumHug
+SAY Icta Barkt haa hah ahahaha
+SAY Errrr...
+SAY Iftak Hermal Barkinta
+SAY Hugma BumHug
+ENDDO
+
+//Spawns
+
+[ITEMDEF i_spawn_color_orc_1]
+ID=01ea7
+NAME=Worldgem bit
+TYPE=t_spawn_char
+WEIGHT=3
+
+ON=@CREATE
+TAG.LOOTPROPRIO 1
+COLOR=020
+ATTR=0b0
+TIMER={300 400}
+MORE1=c_m_color_orc_1
+MOREP=5,20,2
+ICON=i_pet_orc
+
+ON=@Timer
+TIMER=1
+MOREP=5,20,2
+DORAND 12
+MORE1=c_m_color_orc_1
+MORE1=c_m_color_orc_2
+MORE1=c_m_color_orc_3
+MORE1=c_m_color_orc_4
+MORE1=c_m_color_orc_5
+MORE1=c_m_color_orc_6
+MORE1=c_m_color_orc_7
+MORE1=c_m_color_orc_8
+MORE1=c_m_color_orc_9
+MORE1=c_m_color_orc_10
+MORE1=c_m_color_orc_11
+MORE1=c_m_color_orc_12
+ENDDO
+RETURN 0
+
+
+[EOF]
+

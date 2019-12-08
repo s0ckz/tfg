@@ -1,0 +1,801 @@
+﻿	//****************************************************************************
+//SPHERE by : Menasoft �1997-2004
+//www.sphereserver.com
+// All SPHERE script files and formats are copyright Menasoft & Partners.
+// This file may be freely edited for personal use, but may not be distributed
+// in whole or in part, in any format without express written permission from
+// Menasoft & Partners.  All donations and contributions
+// become the property of Menasoft & Partners.
+//****************************************************************************
+// FILE LAST UPDATED: Saturday, November 22, 2003
+//
+VERSION=0.55i
+
+[DEFNAME COLOR_ORE]
+color_o_iron		0    //option: 0763
+color_o_bronze 06d6
+color_o_gold 045e //option: 084d
+color_o_copper		0641 //option: 060c
+color_o_oldcopper 0590
+color_o_dullcopper  060a
+color_o_silver     0231 //option: 0
+color_o_shadow     0770
+color_o_bloodrock  04c2
+color_o_blackrock  0455
+color_o_mytheril   052d //or 0528
+color_o_rose       0665
+color_o_verite     07d1
+color_o_agapite    0400
+color_o_rusty      0750
+color_o_valorite   0515
+color_o_chaos	   03df
+color_o_order	   024f
+color_o_adamantium    07a1
+//************** Ores ***************
+
+
+[ITEMDEF 019b7]
+// DEFNAME2=METAL_ORE_1
+DEFNAME=i_ore_iron
+NAME=Iron Ore
+TYPE=t_ore
+SKILLMAKE=MINING 15.0
+TDATA1=i_ingot_iron
+WEIGHT=0.1
+VALUE=4
+DUPELIST=019b8,019b9,019ba
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Ore (Small Pile)
+
+
+ON=@DCLICK
+IF !(<SRC.FINDID.i_smelt_delay.UID>==0)
+SRC.SYSMESSAGE Voce nao pode smeltar ores tao rapido.
+RETURN 1
+ELSE
+SRC.NEWITEM i_smelt_delay
+NEW.EQUIP
+NEW.TIMER 1
+ENDIF
+
+
+[ITEMDEF i_ore_ceramic]
+//Raw Ceramic
+NAME=Ceramic
+ID=i_ore_iron
+TDATA1=i_ingot_ceramic
+//BUYVALUE=20
+//SELLVALUE=1
+WEIGHT=0.1
+SKILLMAKE=MINING 10.0
+
+ON=@CREATE
+COLOR=0f2
+
+ON=@DCLICK
+
+
+IF !(<SRC.FINDID.i_smelt_delay.UID>==0)
+SRC.SYSMESSAGE Voce nao pode smeltar ores tao rapido.
+RETURN 1
+ELSE
+SRC.NEWITEM i_smelt_delay
+NEW.EQUIP
+NEW.TIMER 1
+ENDIF
+
+[ITEMDEF i_smelt_delay]
+NAME=Ore delay smelt
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@TIMER
+REMOVE
+RETURN 0
+
+[ITEMDEF i_ore_rusty]
+ID=i_ore_iron
+NAME=Rusty Ore
+SKILLMAKE=MINING 17.0
+TDATA1=i_ingot_rusty
+VALUE=15
+
+ON=@Create
+	COLOR=color_o_rusty
+
+ON=@DCLICK
+
+
+IF !(<SRC.FINDID.i_smelt_delay.UID>==0)
+SRC.SYSMESSAGE Voce nao pode smeltar ores tao rapido.
+RETURN 1
+ELSE
+SRC.NEWITEM i_smelt_delay
+NEW.EQUIP
+NEW.TIMER 2
+ENDIF
+
+
+[ITEMDEF i_ore_old_copper]
+ID=i_ore_iron
+NAME=Old Copper Ore
+SKILLMAKE=MINING 19.0
+TDATA1=i_ingot_old_copper
+VALUE=15
+
+ON=@Create
+	COLOR=color_o_oldcopper
+
+
+ON=@DCLICK
+
+
+IF !(<SRC.FINDID.i_smelt_delay.UID>==0)
+SRC.SYSMESSAGE Voce nao pode smeltar ores tao rapido.
+RETURN 1
+ELSE
+SRC.NEWITEM i_smelt_delay
+NEW.EQUIP
+NEW.TIMER 2
+ENDIF
+
+
+[ITEMDEF i_ore_dull_copper]
+ID=i_ore_iron
+NAME=Dull Copper Ore
+SKILLMAKE=MINING 20.0
+TDATA1=i_ingot_dull_copper
+VALUE=15
+
+ON=@Create
+	COLOR=color_o_dullcopper
+
+
+ON=@DCLICK
+IF !(<SRC.FINDID.i_smelt_delay.UID>==0)
+SRC.SYSMESSAGE Voce nao pode smeltar ores tao rapido.
+RETURN 1
+ELSE
+SRC.NEWITEM i_smelt_delay
+NEW.EQUIP
+NEW.TIMER 2
+ENDIF
+
+
+[ITEMDEF i_ore_copper]
+ID=i_ore_iron
+NAME=Copper Ore
+SKILLMAKE=MINING 25.0
+TDATA1=01be3
+VALUE=15
+
+ON=@Create
+	COLOR=color_o_copper
+
+
+ON=@DCLICK
+IF !(<SRC.FINDID.i_smelt_delay.UID>==0)
+SRC.SYSMESSAGE Voce nao pode smeltar ores tao rapido.
+RETURN 1
+ELSE
+SRC.NEWITEM i_smelt_delay
+NEW.EQUIP
+NEW.TIMER 2
+ENDIF
+
+
+
+[ITEMDEF i_ore_bronze]
+ID=i_ore_iron
+NAME=Bronze Ore
+SKILLMAKE=MINING 30.0
+TDATA1=i_ingot_bronze
+VALUE=23
+
+ON=@Create
+	COLOR=color_o_bronze
+
+
+ON=@DCLICK
+IF !(<SRC.FINDID.i_smelt_delay.UID>==0)
+SRC.SYSMESSAGE Voce nao pode smeltar ores tao rapido.
+RETURN 1
+ELSE
+SRC.NEWITEM i_smelt_delay
+NEW.EQUIP
+NEW.TIMER 2
+ENDIF
+
+
+
+[ITEMDEF i_ore_shadow]
+ID=i_ore_iron
+NAME=Shadow Ore
+SKILLMAKE=MINING 42.0
+TDATA1=i_ingot_shadow
+VALUE=37
+
+ON=@Create
+	COLOR=color_o_shadow
+
+ON=@DCLICK
+IF !(<SRC.FINDID.i_smelt_delay.UID>==0)
+SRC.SYSMESSAGE Voce nao pode smeltar ores tao rapido.
+RETURN 1
+ELSE
+SRC.NEWITEM i_smelt_delay
+NEW.EQUIP
+NEW.TIMER 2
+ENDIF
+
+
+[ITEMDEF i_ore_agapite]
+ID=i_ore_iron
+NAME=Agapite Ore
+SKILLMAKE=MINING 41.0
+TDATA1=i_ingot_agapite
+VALUE=37
+
+ON=@Create
+	COLOR=color_o_agapite
+
+ON=@DCLICK
+IF !(<SRC.FINDID.i_smelt_delay.UID>==0)
+SRC.SYSMESSAGE Voce nao pode smeltar ores tao rapido.
+RETURN 1
+ELSE
+SRC.NEWITEM i_smelt_delay
+NEW.EQUIP
+NEW.TIMER 2
+ENDIF
+
+
+[ITEMDEF i_ore_rose]
+ID=i_ore_iron
+NAME=Rose Ore
+SKILLMAKE=MINING 45.0
+TDATA1=i_ingot_rose
+VALUE=37
+
+ON=@Create
+	COLOR=color_o_rose
+
+ON=@DCLICK
+IF !(<SRC.FINDID.i_smelt_delay.UID>==0)
+SRC.SYSMESSAGE Voce nao pode smeltar ores tao rapido.
+RETURN 1
+ELSE
+SRC.NEWITEM i_smelt_delay
+NEW.EQUIP
+NEW.TIMER 2
+ENDIF
+
+
+[ITEMDEF i_ore_silver]
+ID=i_ore_iron
+NAME=Silver Ore
+SKILLMAKE=MINING 52.0
+TDATA1=i_ingot_silver
+VALUE=30
+
+ON=@Create
+	COLOR=color_o_silver
+
+ON=@DCLICK
+IF !(<SRC.FINDID.i_smelt_delay.UID>==0)
+SRC.SYSMESSAGE Voce nao pode smeltar ores tao rapido.
+RETURN 1
+ELSE
+SRC.NEWITEM i_smelt_delay
+NEW.EQUIP
+NEW.TIMER 2
+ENDIF
+
+
+
+[ITEMDEF i_ore_valorite]
+ID=i_ore_iron
+NAME=Valorite Ore
+SKILLMAKE=MINING 55.0
+TDATA1=i_ingot_valorite
+VALUE=32
+
+ON=@Create
+	COLOR=color_o_valorite
+
+ON=@DCLICK
+IF !(<SRC.FINDID.i_smelt_delay.UID>==0)
+	SRC.SYSMESSAGE Voce nao pode smeltar ores tao rapido.
+	RETURN 1
+ELSE
+	SRC.NEWITEM i_smelt_delay
+	NEW.EQUIP
+	NEW.TIMER 2
+ENDIF
+
+[ITEMDEF i_ore_verite]
+ID=i_ore_iron
+NAME=Verite Ore
+SKILLMAKE=MINING 57.0
+TDATA1=i_ingot_verite
+VALUE=40
+
+ON=@Create
+	COLOR=color_o_verite
+
+ON=@DCLICK
+IF !(<SRC.FINDID.i_smelt_delay.UID>==0)
+SRC.SYSMESSAGE Voce nao pode smeltar ores tao rapido.
+RETURN 1
+ELSE
+SRC.NEWITEM i_smelt_delay
+NEW.EQUIP
+NEW.TIMER 2
+ENDIF
+
+[ITEMDEF i_ore_gold]
+ID=i_ore_iron
+NAME=Gold Ore
+SKILLMAKE=MINING 60.0
+TDATA1=i_ingot_gold
+VALUE=10
+WEIGHT=0.1
+
+ON=@Create
+	COLOR=color_o_gold
+
+
+ON=@DCLICK
+IF !(<SRC.FINDID.i_smelt_delay.UID>==0)
+SRC.SYSMESSAGE Voce nao pode smeltar ores tao rapido.
+RETURN 1
+ELSE
+SRC.NEWITEM i_smelt_delay
+NEW.EQUIP
+NEW.TIMER 2
+ENDIF
+
+[ITEMDEF i_ore_bloodrock]
+ID=i_ore_iron
+NAME=Bloodrock Ore
+SKILLMAKE=MINING 62.0
+TDATA1=i_ingot_bloodrock
+VALUE=50
+TEVENTS=t_drop_loggable
+
+ON=@Create
+	COLOR=color_o_bloodrock
+
+ON=@DCLICK
+IF !(<SRC.FINDID.i_smelt_delay.UID>==0)
+SRC.SYSMESSAGE Voce nao pode smeltar ores tao rapido.
+RETURN 1
+ELSE
+SRC.NEWITEM i_smelt_delay
+NEW.EQUIP
+NEW.TIMER 2
+ENDIF
+
+
+
+
+
+[ITEMDEF i_ore_blackrock]
+ID=i_ore_iron
+NAME=Blackrock Ore
+SKILLMAKE=MINING 64.0
+TDATA1=i_ingot_blackrock
+VALUE=55
+TEVENTS=t_drop_loggable
+
+ON=@Create
+	COLOR=color_o_blackrock
+
+ON=@DCLICK
+IF !(<SRC.FINDID.i_smelt_delay.UID>==0)
+SRC.SYSMESSAGE Voce nao pode smeltar ores tao rapido.
+RETURN 1
+ELSE
+SRC.NEWITEM i_smelt_delay
+NEW.EQUIP
+NEW.TIMER 2
+ENDIF
+
+
+
+
+
+[ITEMDEF i_ore_mytheril]
+ID=i_ore_iron
+NAME=Mytheril Ore
+SKILLMAKE=MINING 68.0
+TDATA1=i_ingot_mytheril
+VALUE=60
+TEVENTS=t_drop_loggable
+
+ON=@Create
+	COLOR=color_o_mytheril
+
+
+ON=@DCLICK
+IF !(<SRC.FINDID.i_smelt_delay.UID>==0)
+SRC.SYSMESSAGE Voce nao pode smeltar ores tao rapido.
+RETURN 1
+ELSE
+SRC.NEWITEM i_smelt_delay
+NEW.EQUIP
+NEW.TIMER 2
+ENDIF
+
+
+[ITEMDEF i_ore_order]
+//Order Ore
+NAME=Order Ore
+ID=i_ore_iron
+TDATA1=i_ingot_order
+//BUYVALUE=100
+//SELLVALUE=1
+WEIGHT=3
+SKILLMAKE=MINING 70.0
+TEVENTS=t_drop_loggable
+
+ON=@CREATE
+COLOR=024f
+
+ON=@DCLICK
+IF !(<SRC.FINDID.i_smelt_delay.UID>==0)
+SRC.SYSMESSAGE Voce nao pode smeltar ores tao rapido.
+RETURN 1
+ELSE
+SRC.NEWITEM i_smelt_delay
+NEW.EQUIP
+NEW.TIMER 2
+ENDIF
+
+[ITEMDEF i_ore_chaos]
+//Chaos Ore
+NAME=Chaos Ore
+ID=i_ore_iron
+TDATA1=i_ingot_chaos
+WEIGHT=3
+SKILLMAKE=MINING 70.0
+TEVENTS=t_drop_loggable
+
+ON=@CREATE
+COLOR=03df
+
+ON=@DCLICK
+IF !(<SRC.FINDID.i_smelt_delay.UID>==0)
+SRC.SYSMESSAGE Voce nao pode smeltar ores tao rapido.
+RETURN 1
+ELSE
+SRC.NEWITEM i_smelt_delay
+NEW.EQUIP
+NEW.TIMER 2
+ENDIF
+
+	//************** Ingots ***************
+
+
+[ITEMDEF 01bef]
+//DEFNAME2=INGOTS
+//DEFNAME2=IRON_INGOT
+DEFNAME=i_ingot_iron
+TYPE=T_INGOT
+RESOURCES=i_ore_iron
+SKILLMAKE=1.0 MINING
+TDATA1=10.0
+TDATA2=20.0
+WEIGHT=0.1
+DUPELIST=01bf0,01bf1,01bf2,01bf3,01bf4
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Iron Ingot
+VALUE=11
+
+[ITEMDEF i_ingot_ceramic]
+NAME=Ceramic Ingot
+ID=i_ingot_iron
+TYPE=T_INGOT
+//BUYVALUE=10-14
+//SELLVALUE=5-7
+WEIGHT=0.1
+RESOURCES=i_ore_ceramic
+SKILLMAKE=MINING 10.0
+TDATA1=10.0
+TDATA2=20.0
+VALUE=15
+
+
+ON=@CREATE
+COLOR=0f2
+
+
+ON=@DCLICK
+RETURN 1
+
+[ITEMDEF i_ingot_rusty]
+NAME=Rusty Ingot
+TYPE=T_INGOT
+ID=i_ingot_iron
+RESOURCES=i_ore_rusty
+SKILLMAKE=MINING 15.0
+TDATA1=15.0
+TDATA2=25.0
+WEIGHT=0.1
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Rusty Ingot
+
+ON=@Create
+	COLOR=color_o_rusty
+
+[ITEMDEF i_ingot_old_copper]
+NAME=Old Copper Ingot
+TYPE=T_INGOT
+ID=i_ingot_iron
+RESOURCES=i_ore_old_copper
+SKILLMAKE=MINING 20.0
+TDATA1=20.0
+TDATA2=30.0
+WEIGHT=0.1
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Old Copper Ingot
+ON=@Create
+	COLOR=color_o_oldcopper
+
+[ITEMDEF i_ingot_dull_copper]
+NAME=Dull Copper Ingot
+TYPE=T_INGOT
+ID=i_ingot_iron
+RESOURCES=i_ore_dull_copper
+SKILLMAKE=MINING 25.0
+TDATA1=25.0
+TDATA2=37.0
+WEIGHT=0.2
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Dull Copper Ingot
+
+ON=@Create
+	COLOR=color_o_dullcopper
+
+[ITEMDEF 01be3]
+DEFNAME=i_ingot_copper
+TYPE=T_INGOT
+RESOURCES=i_ore_copper
+SKILLMAKE=MINING 30.0
+TDATA1=45.0
+TDATA2=50.0
+WEIGHT=0.2
+DUPELIST=01be4,01be5,01be6,01be7,01be8
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Copper Ingot
+
+[ITEMDEF i_ingot_bronze]
+NAME=Bronze Ingot
+ID=i_ingot_iron
+RESOURCES=i_ore_bronze
+SKILLMAKE=MINING 30.0
+TDATA1=30.0
+TDATA2=45.0
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Bronze Ingot
+
+ON=@Create
+	COLOR=color_o_bronze
+
+
+[ITEMDEF i_ingot_shadow]
+NAME=Shadow Ingot
+ID=i_ingot_iron
+SKILLMAKE=MINING 42.0
+TDATA1=42.0
+TDATA2=50.0
+RESOURCES=i_ore_shadow
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Shadow Ingot
+
+ON=@Create
+	COLOR=color_o_shadow
+
+[ITEMDEF i_ingot_agapite]
+NAME=Agapite Ingot
+ID=i_ingot_iron
+SKILLMAKE=MINING 45.0
+TDATA1=45.0
+TDATA2=50.0
+RESOURCES=i_ore_agapite
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Agapite Ingot
+
+ON=@Create
+	COLOR=color_o_agapite
+
+[ITEMDEF i_ingot_rose]
+NAME=Rose Ingot
+ID=i_ingot_iron
+SKILLMAKE=MINING 50.0
+TDATA1=50.0
+TDATA2=55.0
+RESOURCES=i_ore_rose
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Rose Ingot
+
+ON=@Create
+	COLOR=color_o_rose
+
+
+[ITEMDEF 01bf5]
+DEFNAME=i_ingot_silver
+TYPE=T_INGOT
+SKILLMAKE=MINING 52.0
+TDATA1=52.0
+TDATA2=55.0
+RESOURCES=i_ore_silver
+DUPELIST=01bf6,01bf7,01bf8,01bf9,01bfa
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Silver Ingot
+
+
+[ITEMDEF i_ingot_valorite]
+NAME=Valorite Ingot
+ID=i_ingot_iron
+RESOURCES=i_ore_valorite
+SKILLMAKE=MINING 55.0
+TDATA1=55.0
+TDATA2=58.0
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Valorite Ingot
+
+ON=@Create
+	COLOR=color_o_valorite
+
+[ITEMDEF i_ingot_verite]
+NAME=Verite Ingot
+ID=i_ingot_iron
+RESOURCES=i_ore_verite
+SKILLMAKE=MINING 57.0
+TDATA1=57.0
+TDATA2=60.0
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Verite Ingot
+
+ON=@Create
+	COLOR=color_o_verite
+
+[ITEMDEF 01be9]
+DEFNAME=i_ingot_gold
+TYPE=T_INGOT
+SKILLMAKE=MINING 60.0
+TDATA1=60.0
+TDATA2=64.0
+RESOURCES=i_ore_gold
+DUPELIST=01bea,01beb,01bec,01bed,01bee
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Gold Ingot
+
+[ITEMDEF i_ingot_bloodrock]
+ID=i_ingot_iron
+NAME=Blood Rock Ingot
+RESOURCES=i_ore_bloodrock
+SKILLMAKE=MINING 61.0
+TDATA1=61.0
+TDATA2=65.0
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Blood Rock Ingot
+TEVENTS=t_drop_loggable
+
+ON=@Create
+	COLOR=color_o_bloodrock
+
+[ITEMDEF i_ingot_blackrock]
+ID=i_ingot_iron
+NAME=Black Rock Ingot
+RESOURCES=i_ore_blackrock
+SKILLMAKE=MINING 62.0
+TDATA1=62.0
+TDATA2=69.0
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Black Rock Ingot
+TEVENTS=t_drop_loggable
+
+ON=@Create
+	COLOR=color_o_blackrock
+
+[ITEMDEF i_ingot_mytheril]
+ID=i_ingot_iron
+NAME=Mytheril Ingot
+RESOURCES=i_ore_mytheril
+SKILLMAKE=MINING 67.0
+TDATA1=67.1
+TDATA2=73.0
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Mytheril Ingot
+TEVENTS=t_drop_loggable
+
+ON=@Create
+	COLOR=color_o_mytheril
+
+[ITEMDEF i_ingot_chaos]
+//Chaos Ingot
+NAME=Chaos Ingot
+ID=01bef
+TYPE=T_INGOT
+WEIGHT=0.2
+RESOURCES=i_ore_chaos
+TDATA1=70.0
+TDATA2=89.0
+VALUE=6
+TEVENTS=t_drop_loggable
+
+ON=@CREATE
+	COLOR=color_o_chaos
+
+
+[ITEMDEF i_ingot_order]
+//Order Ingot
+NAME=Order Ingot
+ID=01bef
+TYPE=T_INGOT
+WEIGHT=0.2
+RESOURCES=i_ore_order
+TDATA1=70.0
+TDATA2=89.0
+VALUE=6
+TEVENTS=t_drop_loggable
+
+ON=@CREATE
+	COLOR=color_o_order
+
+[ITEMDEF i_ore_adamantium]
+ID=i_ore_iron
+NAME=Adamantium Ore
+SKILLMAKE=MINING 72.0
+TDATA1=i_ingot_adamantium
+VALUE=60
+TEVENTS=t_drop_loggable
+
+ON=@Create
+	COLOR=color_o_adamantium
+
+ON=@DCLICK
+IF !(<SRC.FINDID.i_smelt_delay.UID>==0)
+	SRC.SYSMESSAGE Voce nao pode smeltar ores tao rapido.
+	RETURN 1
+ELSE
+	SRC.NEWITEM i_smelt_delay
+	NEW.EQUIP
+	NEW.TIMER 2
+ENDIF
+
+[ITEMDEF i_ingot_adamantium]
+ID=i_ingot_iron
+NAME=Adamantium Ingot
+RESOURCES=i_ore_adamantium
+SKILLMAKE=MINING 75.0
+TDATA1=75.0
+TDATA2=100.0
+CATEGORY=Items by Professions
+SUBSECTION=Blacksmiths
+DESCRIPTION=Adamantium Ingot
+TEVENTS=t_drop_loggable
+
+ON=@Create
+	COLOR=color_o_adamantium
+
+[EOF]

@@ -1,0 +1,25 @@
+[EVENTS e_testtt]
+ON=@ItemDropOn_Item
+if (<findlayer.29.uid> == <argo>)
+	s <name> tentou dropar <act.name> no banco durante o evento.
+	sysmessage @,,1 É proibido dropar itens do evento no banco. Aguarde o fim do evento para solicitar sua saida da jail.
+	jail
+	return 1
+endif
+
+[function testtt]
+IF (<SERV.ACCOUNT.("<args>">))
+s sucesso
+else
+s falha
+endif
+return 1
+
+[FUNCTION f_account_verify_index]
+for x 0 <eval <serv.accounts> - 1>
+	local.log = <serv.account.<dlocal.x>.name>
+	if STRMATCH( "<args>", "<local.log>" ) 
+		return <dlocal.x>
+	endif
+endfor
+return 0

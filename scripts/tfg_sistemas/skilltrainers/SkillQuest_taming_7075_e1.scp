@@ -1,0 +1,95 @@
+[speech spk_norton_white]
+on=*quest*
+on=*ola*
+on=*oi*
+on=*ajuda*
+Say=Hello fellow traveler, I guess you want to hear more about some animals whereabouts? Say your name first.
+
+on=*<src.name>*
+IF !(<TAG0.TALKING>)
+    TAG.TALKING 1
+    ref1 <src>
+    say <ref1.name>, I urge you to find Hal Treddo, he has more information about our animals...
+    TIMERF 3, Say He has been seen somewhere around the desert, have you ever been there?
+    TIMERF 7, Say Here is a map to help you find him
+    TIMERF 8, TAG.Talking
+    ref1.timerf 8, f_quest_taming_7075_1
+   //TIMERF 8,f_msg1
+ENDIF
+
+on=*penes*
+on=*benga*
+on=*pirocas*
+on=*penis*
+say=Get the hell out of here with that!
+
+[CHARDEF c_norton_white]
+NAME=Norton White
+ID=C_MAN
+DESIRES=i_gold,e_notoriety
+AVERSIONS=t_TRAP,t_eerie_stuff
+TSPEECH=spk_norton_white
+TEVENTS=e_Human_Needs
+TEVENTS=e_Human_Refuse
+TEVENTS=e_Human_Environ
+
+ON=@Create
+NPC=brain_human
+FLAGS=04
+COLOR=083ea
+STR={61 75}
+DEX=0
+INT=0
+HITS=100
+
+ON=@NPCRestock
+ITEM=i_robe
+COLOR=0a22
+ITEM=i_shepherds_crook
+ITEM=i_shoes_plain
+COLOR=15
+
+ON=@CLICK
+MESSAGE @0a22,,1 <name>, GrandMaster Animal Trainer
+return 1
+
+[FUNCTION f_quest_taming_7075_1]
+src.tag0.tam75e1 = 1
+src.tag0.quest_taming_7075_timer = <eval <serv.time> + (86400 * <def.quest_tame1_time_to_finish>)>
+src.sysmessage @,,1 You have 4 days to complete the whole quest. Click on the Quest Button or type .tamequest to check your time remaining.
+src.sysmessage @,,1 Go find Hal Treddo, follow your map.
+serv.newitem i_hal_treddo_map
+new.attr attr_newbie
+new.timer <src.dtag0.quest_taming_7075_timer>
+src.bounce <new>
+
+[ITEMDEF i_hal_treddo_map]
+ID=i_map
+NAME=Map to Hal Treddo
+TYPE=t_map
+TDATA1=300
+TDATA2=300
+
+on=@dclick
+    if (<tag0.aberto>)
+        src.sysmessage @,,1 Seems like Hal is around <morep>...
+        return 0
+    endif
+
+	if (<src.cartography> < 350)
+		src.sysmessage @,,1 You can't read this map, you lack the skill. //'
+		return 1
+	endif
+	serv.log Decifrou Hal treddo mapa '<src.account>' char '<src.name>' <src.uid> Mapa:<uid> 
+	if <argn1> == 0
+		src.sysmessage @,,1 Você falhou em decifrar o mapa.
+		return 1
+	endif
+	morep = 1932,911
+	more1 = <eval ((<morex> - 280) * 010000) + (<morey> - 280)>
+	more2 = <eval ((<morex> + 280) * 010000) + (<morey> + 280)>
+	pin 105,105
+    tag0.aberto 1
+	src.sysmessage @,,1 Seems like Hal is around <morep>...
+	return 0
+[eof]

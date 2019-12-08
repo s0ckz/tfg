@@ -1,0 +1,451 @@
+/////////////////////////////////////////////////////////////////////////////////////////
+// Online List /Pvt Msg Sys v1.8 Created By Mordaunt
+//
+// "Online List" section Heavily based upon sphere_admin.scp written by Radiant & Modified by Cloud_BR
+//
+// Allows players to remove themselves from the list with "Private" mode
+// Staff & players in "Private" are not listed but will count towards the client total
+//
+// Features: Staff prefixes to prevent players posing as staff
+// 1 way staff PM's (switchable) to prevent player harrassing your staff
+// "private" mode for players who don't want to be seen or PM'd (but count to total)
+// Higher PLEVEL account do not list (but count to total)
+//
+// Updates: Altered text entry to allow for longer messages to be sent.
+// Messages now display as a small scroll when dclicked message opens to gump
+// Optomised Dialog Code
+// Changed dialod designs for more uniformed look
+// Added Message queues, each player has 3 slots, once they are full no more can be sent till the others are read.
+// Messages Originating from Staff do not use the queue, (appear in scroll to right of player msgs) can only receive 1 staff message at a time
+// Player notification when messages join their queue added
+// Message replies from players to GM's use regular queuing system.
+// Added defname toggle to allow/disallow players messaging themselves
+// Altered self name color
+//
+// Bugs Fixed: Bug when replying to GM's fixed
+// Removed names on notification scrolls due to (currently) unfixable bug
+// Fixed GM Messages wiping message queues
+//
+/////////////////////////////////////////////////////////////////////////////////////////
+
+[DEFNAME admin_strings]
+admin_plevel_3 "Seer"
+admin_plevel_4 "Game Master"
+admin_plevel_5 "iGm"
+admin_plevel_6 "Administrator"
+admin_plevel_7 "Owner"
+
+[DEFNAME msg_toggles]
+gm_one_way 0 //Can players use reply to GM messages? 1 = no 0 = yes
+msg_self 1 //players can message themselves? handy for reminders 1= yes 0 = no
+list_staff 0 //Do staff show to players on the list? 1=yes 0=no
+
+[plevel 1]
+lista
+reply
+private
+pm
+
+[function pm]
+	IF (<ARGV>==0)
+		SRC.SYSMESSAGE @,,1 Voce precisa digirar o nick do jogador.
+	RETURN 1
+	ENDIF 
+		FORCLIENTS 6144
+			IF !(STRCMPI("<ARGS>","<NAME>")
+				LOCAL.CT ++
+				REF<dLOCAL.CT>=<UID>
+			ENDIF
+		ENDFOR
+		IF <dLOCAL.CT> < 1
+			SRC.SYSMESSAGE @,,1 Nao ha nenhum player com este nick online.
+			RETURN 1
+		ELIF <dLOCAL.CT> > 1
+			SRC.SYSMESSAGE @,,1 Existe mais de um player com este nick online, por gentileza informe um GM.
+			RETURN 1
+		ELIF (<REF1.UID>==<SRC.UID>)
+			SRC.SYSMESSAGE @,,1 Voce nao pode contactar a si mesmo.
+			RETURN 1
+		ELSE
+			ref1.dialog d_playermsg, 2
+		ENDIF
+return 1
+
+[FUNCTION lista]
+ctag.list_numplayers=0
+ctag.list_page=1
+serv.allclients list_getplayers
+ctag.list_numpages=<eval (((<ctag0.list_numplayers>-1) / 10) + 1)> // 10 players per page
+dialog d_spherelist
+
+[FUNCTION list_getplayers]
+// List players in CTAGs on the caller
+IF !(<def.list_staff>)
+if (<account.plevel> > <src.account.plevel>) || ((<tag0.private>) && !(<sRC.isgm>))
+return
+else
+src.ctag0.list_numplayers += 1
+try src.ctag.list_p<eval (<src.ctag0.list_numplayers>)>=<uid>
+endif
+ELSE
+if (<tag0.private>) && !(<sRC.isgm>)
+return
+else
+src.ctag0.list_numplayers += 1
+try src.ctag.list_p<eval (<src.ctag0.list_numplayers>)>=<uid>
+endif
+ENDIF
+
+[FUNCTION list_getplayers_list]
+// Function I used to list page system
+for x 1 50
+try ctag.list_p<eval <local.x>>=01
+end
+ctag.list_numplayers=50
+
+[DIALOG d_spherelist]
+100,100
+src.dialogclose d_spherelist
+
+page 0 // Basic layout
+GUMPPIC 10 10 027 // Background
+dtext 30 15 1152 <serv.servname> 
+dtext 30 35 1152 Listed Clients: <eval <ctag0.list_numplayers>> / <serv.clients>
+page 1 // Player data
+dtext 30 55 1152 Msg
+dtext 75 55 1152 Character Name
+list_renderdialog
+if (<ctag0.list_page> > 1)
+// Back button
+button 28 274 4014 4015 1 0 1
+endif
+if (<ctag0.list_page> < <ctag0.list_numpages>)
+// Forward button
+button 210 274 4005 4006 1 0 2
+endif
+dtext 105 275 1152 Page <eval <ctag0.list_page>> / <eval <ctag0.list_numpages>>
+
+[FUNCTION list_renderdialog]
+local.y=75
+for x <eval ((<ctag0.list_page> - 1) * 10) + 1> <eval (<ctag0.list_page> * 10)>
+if (<local.x> > <ctag0.list_numplayers>)
+return
+endif
+REF69=<ctag0.list_p<eval <local.x>>>
+local.hue=0480
+IF (<REF69.UID>==<SRC.UID>) 
+IF (<def.msg_self>)
+button 30 <local.y> 4011 4013 1 0 <eval (1000 + <local.x>)>
+dtext 75 <local.y> 0779 <QVAL <REF69.FINDID.i_rune_incognito.UID> ? <REF69.FINDID.i_rune_incognito.NAME> : <REF69.name>>
+ELSE
+dtext 75 <local.y> 0779 <QVAL <REF69.FINDID.i_rune_incognito.UID> ? <REF69.FINDID.i_rune_incognito.NAME> : <REF69.name>>
+ENDIF
+ELSE
+IF (<REF69.ACCOUNT.PLEVEL> > <SRC.ACCOUNT.PLEVEL>) 
+dtext 75 <local.y> <local.hue> <QVAL <REF69.FINDID.i_rune_incognito.UID> ? <REF69.FINDID.i_rune_incognito.NAME> : <REF69.name>>
+ELSE
+button 30 <local.y> 4011 4013 1 0 <eval (1000 + <local.x>)>
+dtext 75 <local.y> <local.hue> <QVAL <REF69.FINDID.i_rune_incognito.UID> ? <REF69.FINDID.i_rune_incognito.NAME> : <REF69.name>>
+ENDIF
+ENDIF
+local.y += 20
+end
+
+[DIALOG d_spherelist BUTTON]
+on=1 // Back button
+ctag.list_page -= 1
+if (<ctag0.list_page> < 1)
+// Bad! And shouldnt happen
+sysmessage Error: list_page value went too low, please report (<ctag0.list_page> / <ctag0.list_numpages>)
+ctag.list_page=1
+endif
+dialog d_spherelist
+on=2 // Forward button
+ctag.list_page += 1
+if (<ctag0.list_page> > <ctag0.list_numpages>)
+// Bad! Should also not happen
+sysmessage Error: list_page value went too high, please report (<ctag0.list_page> / <ctag0.list_numpages>)
+ctag.list_page=<ctag0.list_numpages>
+endif
+dialog d_spherelist
+on=1001,65535 // Player buttons
+try uid.<ctag0.list_p<eval <argn> - 1000>>.dialog d_playermsg, 2
+
+
+
+
+[DIALOG d_playermsg]
+100,100
+SRC.CTAG0.RECEIVER=<UID>
+//NOCLOSE
+PAGE 0
+GUMPPIC 10 10 027
+DTEXT 50 30 07a1 Msg for <name>
+dtextentry 38 55 180 180 0 0
+BUTTON 35 240 4005 4006 1 0 1
+DTEXT 70 240 07a1 Send
+
+[DIALOG d_playermsg button] 
+ON=0
+src.ctag0.receiver=
+RETURN 1
+
+
+on=1 
+REF69=<src.ctag0.receiver>
+IF (<SRC.TAG0.PRIVATE>)
+SRC.TAG.PRIVATE=
+SRC.SYSMESSAGE "Private" mode disabled
+ENDIF
+IF (<isempty <ARGTXT[0]>>)
+SYSMESSAGE @07a1 You didn't enter any text use cancel or right click to cancel sending a message.
+dialog d_playermsg
+return 1
+ENDIF
+FOR <SERV.CLIENTS>
+IF !(STRCMPI("<REF69.name>","<name>"))
+IF !(<SRC.ISGM>)
+IF !(<ISEMPTY <REF69.CTAG.MESSAGE3>>)
+SRC.SYSMESSAGE @07a1 This person's message queue is currently full
+SRC.SYSMESSAGE @07a1 Please try again later
+RETURN 1
+ENDIF
+IF !(<ISEMPTY <REF69.CTAG.MESSAGE>>)
+IF (<ISEMPTY <REF69.CTAG.MESSAGE2>>)
+REF69.ctag0.message2 <argtxt[0]>
+REF69.ctag0.reply2 = <src.uid>
+SRC.SYSMESSAGE @07a1 Message queued (2nd)
+REF69.SYSMESSAGE @07a1 You have 2 messages in your queue
+SRC.SOUND 74
+ELSE
+REF69.ctag0.message3 <argtxt[0]>
+REF69.ctag0.reply3 = <src.uid>
+SRC.SYSMESSAGE @07a1 Message queued (3rd)
+REF69.SYSMESSAGE @07a1 You have 3 messages in your queue
+REF69.SYSMESSAGE @07a1 You will not receive anymore messages until you clear you queue
+SRC.SOUND 74
+ENDIF
+ELSE
+REF69.ctag0.message <argtxt[0]>
+REF69.ctag0.reply = <src.uid>
+TRYSRC <REF69> dialog d_pm_notify
+SRC.SYSMESSAGE @07a1 Message sent!
+SRC.SOUND 74
+ENDIF
+ELSE
+REF69.ctag0.prefix <def.admin_plevel_<src.account.plevel>>
+REF69.ctag0.gmreply <src.uid> 
+REF69.CTAG0.gmmessage <argtxt[0]> 
+TRYSRC <REF69> src.dialog d_gmpm_notify
+SRC.SYSMESSAGE @07a1 Message sent!
+SRC.SOUND 74 
+ENDIF
+RETURN 1 
+ENDIF
+ENDFOR
+src.ctag.receiver=
+
+[FUNCTION private]
+IF (<tag0.Private>)
+tag.private=
+Sysmessage @07a1 Privacy Disabled
+else
+tag.private=1
+sysmessage @07a1 Privacy Enabled
+sysmessage @07a1 You will not be able to send or receive PM's while in Private
+endif
+
+[DIALOG d_pm_notify]
+50,50
+SRC.SOUND 0234
+NOCLOSE
+PAGE 0
+DTEXT 21 0 034 Nova msg:
+button 20 20 01e 01e 1 0 1
+DTEXT 21 41 0835 Click to Open
+
+[DIALOG d_pm_notify BUTTON]
+ON=1
+SRC.DIALOG d_pm
+
+[DIALOG d_pm]
+100,100
+NOCLOSE
+PAGE 0
+GUMPPIC 10 10 027
+DTEXT 30 30 07a1 From: <uid.<ctag.reply>.name>
+dhtmlgump 32 50 180 180 0 0 <src.ctag0.message>
+button 210 15 4017 4018 1 0 0
+BUTTON 35 240 4005 4006 1 0 1
+DTEXT 70 240 07a1 Reply
+
+
+[DIALOG d_pm BUTTON]
+ON=0
+f_msg_queue
+
+ON=1
+SRC.CTAG.TO=<src.ctag.reply>
+SRC.DIALOG d_reply
+
+
+
+
+[DIALOG d_gmpm_notify]
+150,50
+SRC.SOUND 0234
+NOCLOSE
+PAGE 0
+DTEXT 12 0 034 Nova msg:
+button 20 20 01e 01e 1 0 1
+DTEXT 1 21 0835 From Staff Member
+DTEXT 18 41 0835 Click to Open
+
+[DIALOG d_gmpm_notify BUTTON]
+ON=1
+SRC.DIALOG d_gmpm
+
+[DIALOG d_gmpm]
+100,100
+NOCLOSE
+PAGE 0
+GUMPPIC 10 10 027
+DTEXT 30 30 01 From: <uid.<ctag.gmreply>.name>
+if !<def.gm_one_way>
+BUTTON 35 240 4005 4006 1 0 1
+DTEXT 70 240 07a1 Reply
+ENDIF
+dhtmlgump 32 50 180 180 0 0 <src.ctag.gmmessage>
+button 210 15 4017 4018 1 0 0
+
+
+[DIALOG d_gmpm BUTTON]
+ON=0
+SRC.CTAG.GMMESSAGE=
+
+ON=1
+SRC.CTAG.TO=<SRC.CTAG.GMREPLY>
+SRC.DIALOG d_reply
+
+
+
+[DIALOG d_reply]
+100,100
+//NOCLOSE
+PAGE 0
+GUMPPIC 10 10 027
+DTEXT 40 30 07a1 Msg for <uid.<ctag.to>.name>
+dtextentry 38 55 120 180 0 0
+BUTTON 35 240 4005 4006 1 0 1
+DTEXT 70 240 07a1 Send
+
+[DIALOG d_reply BUTTON]
+ON=0
+SRC.CTAG.TO=
+SRC.CTAG0.MESSAGE=
+src.ctag.gmmessage= 
+src.ctag.gmreply=
+SRC.f_msg_queue
+
+on=1
+IF (<isempty <ARGTXT[0]>>)
+SYSMESSAGE @07a1 You didn't enter any text use cancel or right click to cancel sending a message.
+dialog d_reply
+return 1
+ENDIF
+REF69=<src.ctag0.to> 
+IF !(<REF69.isonline>) || (<REF69.tag0.private>)
+SYSMESSAGE This person is no longer online or is in "private" mode
+SRC.CTAG.REPLY= 
+ELSE
+IF (<ISGM>) 
+REF69.ctag0.gmmessage <argtxt[0]>
+REF69.ctag0.gmreply = <src.uid>
+SRC.SYSMESSAGE @07a1 Message sent!
+TRYSRC <REF69> dialog d_gmpm_notify
+SRC.SOUND 74
+SRC.CTAG.TO= 
+src.ctag.receiver=
+src.f_msg_queue
+RETURN 1
+ELSE 
+IF !(<ISEMPTY <REF69.CTAG.MESSAGE3>>)
+SRC.SYSMESSAGE @07a1 This person's message queue is currently full
+SRC.SYSMESSAGE @07a1 Please try again later
+SRC.CTAG.TO=
+IF !(<REF69.ISGM>)
+src.f_msg_queue
+ENDIF
+RETURN 1
+ENDIF
+IF !(<ISEMPTY <REF69.CTAG.MESSAGE>>)
+IF (<ISEMPTY <REF69.CTAG.MESSAGE2>>)
+REF69.ctag0.message2 <argtxt[0]>
+REF69.ctag0.reply2 = <src.uid>
+SRC.SYSMESSAGE @07a1 Message queued (2nd)
+REF69.SYSMESSAGE @07a1 You have 2 messages in your queue
+SRC.SOUND 74
+SRC.CTAG.TO=
+IF !(<REF69.ISGM>)
+src.f_msg_queue
+ENDIF
+RETURN 1
+ELSE
+REF69.ctag0.message3 <argtxt[0]>
+REF69.ctag0.reply3 = <src.uid>
+SRC.SYSMESSAGE @07a1 Message queued (3rd)
+REF69.SYSMESSAGE @07a1 You have 3 messages in your queue
+REF69.SYSMESSAGE @07a1 You will not receive anymore messages until you clear you queue
+SRC.SOUND 74
+SRC.CTAG.TO=
+IF !(<REF69.ISGM>)
+src.f_msg_queue
+ENDIF
+RETURN 1
+ENDIF
+ELSE
+REF69.ctag0.reply = <src.uid>
+REF69.ctag0.message <argtxt[0]>
+SRC.SYSMESSAGE @07a1 Message sent!
+TRYSRC <REF69> dialog d_pm_notify
+SRC.SOUND 74
+SRC.CTAG.TO=
+IF !(<REF69.ISGM>)
+src.f_msg_queue
+ENDIF
+RETURN 1
+ENDIF
+ENDIF
+ENDIF
+src.ctag.receiver=
+src.ctag.gmmessage= 
+src.ctag.gmreply=
+
+[FUNCTION f_msg_queue]
+IF (<ISEMPTY <SRC.CTAG.MESSAGE2>>)
+SRC.CTAG.SENDER=
+SRC.CTAG.REPLY=
+SRC.CTAG.MESSAGE=
+ELSE
+SRC.CTAG.SENDER=<SRC.CTAG.SENDER2>
+SRC.CTAG.REPLY=<SRC.CTAG.REPLY2>
+SRC.CTAG.MESSAGE=<SRC.CTAG.MESSAGE2>
+SRC.CTAG.SENDER2=
+SRC.CTAG.REPLY2=
+SRC.CTAG.MESSAGE2=
+SRC.DIALOG d_pm_notify
+ENDIF
+IF !(<ISEMPTY <SRC.CTAG.MESSAGE3>>)
+SRC.CTAG.SENDER2=<SRC.CTAG.SENDER3>
+SRC.CTAG.REPLY2=<SRC.CTAG.REPLY3>
+SRC.CTAG.MESSAGE2=<SRC.CTAG.MESSAGE3>
+SRC.CTAG.SENDER3=
+SRC.CTAG.REPLY3=
+SRC.CTAG.MESSAGE3= 
+ELSE
+SRC.CTAG.SENDER2=
+SRC.CTAG.REPLY2=
+SRC.CTAG.MESSAGE2=
+ENDIF
+
+[EOF]

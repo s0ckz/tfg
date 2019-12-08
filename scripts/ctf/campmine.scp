@@ -1,0 +1,1275 @@
+// protecao logout
+// tirar os S
+// 3o lugar
+// teste 1 vai pra rodada 3 sem ultima luta da 2 ter rolado
+// limpar arenas
+// verificar se tem event points de participacao
+// funcao plateia
+// todos invis
+// tester arena 3
+// implanter arena 4
+// plateia
+
+[function prize_campmine]
+targetf prize_campmine2 <args>
+
+[function prize_campmine2]
+var0.prize_campmine_<dargs> = <argo.uid>
+src.smsg @,,1 <argo.name> setado como premio do Camp Mine para <dargs>o colocado.
+return 1
+
+[function trofeu_campmine]
+targetf trofeu_campmine2 <args>
+
+[function trofeu_campmine2]
+var0.trofeu_campmine_<dargs> = <argo.uid>
+src.smsg @,,1 <argo.name> setado como trofeu do Camp Mine para <dargs>o colocado.
+return 1
+
+[FUNCTION premia_camp_mine]
+LOCAL.TEAM_SIZE <UID.<VAR.campmine_control>.TAG.TEAM_SIZE>
+
+if (<args> == 1)
+	REF1=<var0.prize_campmine_1>
+	REF2=<var0.trofeu_campmine_1>
+	local.nome = "@,,1 <name> - Campeão de Camp <DLOCAL.TEAM_SIZE>x<DLOCAL.TEAM_SIZE> - <SERV.RTIME.FORMAT %d/%m/%Y>"
+	SERV.b @41 <name> ganhou o Camp Mine <DLOCAL.TEAM_SIZE>x<DLOCAL.TEAM_SIZE>!
+	tag0.eventpoints += 100
+	smsg @,,1 Você ganhou 100 event points !
+elif (<args> == 2)
+	REF1=<var0.prize_campmine_2>
+	REF2=<var0.trofeu_campmine_2>
+	local.nome = "@,,1 <name> - Vice-Campeão de Camp <DLOCAL.TEAM_SIZE>x<DLOCAL.TEAM_SIZE> - <SERV.RTIME.FORMAT %d/%m/%Y>"
+	SERV.b @41 <name> obteve o 2o lugar no Camp Mine <DLOCAL.TEAM_SIZE>x<DLOCAL.TEAM_SIZE>!
+	tag0.eventpoints += 50
+	smsg @,,1 Você ganhou 50 event points !
+elif (<args> == 3)
+	REF1=<var0.prize_campmine_3>
+	REF2=<var0.trofeu_campmine_3>
+	local.nome = "@,,1 <name> - 3o lugar de Camp <DLOCAL.TEAM_SIZE>x<DLOCAL.TEAM_SIZE> - <SERV.RTIME.FORMAT %d/%m/%Y>"
+	SERV.b @41 <name> obteve o 3o lugar no Camp Mine <DLOCAL.TEAM_SIZE>x<DLOCAL.TEAM_SIZE>!
+	tag0.eventpoints += 30
+	smsg @,,1 Você ganhou 30 event points !
+endif
+// premiar
+REF1.DUPE
+IF (<NEW>==<REF1>)
+  SERV.LOG Erro! <NAME> Nao foi premiado em <SERV.RTIME>.
+  RETURN 1
+ELSE
+  NEW.NAME = <local.nome>
+  NEW.CONT <FINDLAYER.layer_bankbox.UID>
+  REF3 = <NEW>
+  SERV.LOG <NAME> foi premiado em <SERV.RTIME> (Camp <DLOCAL.TEAM_SIZE>x<DLOCAL.TEAM_SIZE>)
+ENDIF
+// condecorar
+REF2.DUPE
+IF (<NEW>==<REF2>)
+  SERV.LOG Erro! <NAME> Nao foi condecorado em <SERV.RTIME>.
+  RETURN 1
+ELSE
+  NEW.NAME = <local.nome>
+  NEW.CONT = <REF3>
+  SERV.LOG <NAME> foi condecorado em <SERV.RTIME> (Camp <DLOCAL.TEAM_SIZE>x<DLOCAL.TEAM_SIZE>)
+ENDIF
+RETURN 1
+
+[DEFNAME dbcamp]
+DB_Camp_File = scripts/adddialog.db
+
+[function f_start_camp_setup]
+if !(<db.connected>)
+	db.connect
+endif
+
+if (<var0.linux>)
+	local.rodadas = <eval <eval LOGARITHM(<argv[0]>,2)> + 1>
+else
+	local.rodadas = <eval LOGARITHM(<argv[0]>,2)>
+endif
+
+if (<db.connected>)
+	for x 1 <local.rodadas>
+		db.EXECUTE DROP TABLE IF EXISTS `Rodada_<dlocal.x>`
+		db.execute CREATE TABLE `Rodada_<dlocal.x>` (`id` VARCHAR(30) PRIMARY KEY NOT NULL, `uid` VARCHAR(30))
+	endfor
+	db.EXECUTE DROP TABLE IF EXISTS `Arena_1`
+	db.EXECUTE DROP TABLE IF EXISTS `Arena_2`
+	db.EXECUTE DROP TABLE IF EXISTS `Arena_3`
+	db.EXECUTE DROP TABLE IF EXISTS `Arena_4`
+	db.EXECUTE DROP TABLE IF EXISTS `Arena_5`
+	db.execute CREATE TABLE `Arena_1` (`id` VARCHAR(30) PRIMARY KEY NOT NULL, `uid` VARCHAR(30))
+	db.execute CREATE TABLE `Arena_2` (`id` VARCHAR(30) PRIMARY KEY NOT NULL, `uid` VARCHAR(30))
+	db.execute CREATE TABLE `Arena_3` (`id` VARCHAR(30) PRIMARY KEY NOT NULL, `uid` VARCHAR(30))
+	db.execute CREATE TABLE `Arena_4` (`id` VARCHAR(30) PRIMARY KEY NOT NULL, `uid` VARCHAR(30))
+	db.execute CREATE TABLE `Arena_5` (`id` VARCHAR(30) PRIMARY KEY NOT NULL, `uid` VARCHAR(30))
+else
+return 0
+endif
+return 1
+
+[function zeraarena]
+db.execute DELETE FROM `Arena_<dargs>`
+return 1
+
+[function insert_camp_db]
+db.EXECUTE INSERT INTO `Rodada_1` (`id`,`uid`) VALUES ("<args>","<uid>")
+
+[ITEMDEF i_control_campmine]
+ID=i_crystal_ball
+NAME=Camp Mine [DO NOT REMOVE]
+WEIGHT=200
+TYPE=t_eq_script
+
+ON=@Create
+    ATTR=attr_decay|attr_invis
+	tag0.rodada = 1
+    TIMER=-1
+
+ON=@TIMER
+if !<tag0.inicio>
+	if (<var0.linux>)
+		tag0.totalrodadas = <eval <eval LOGARITHM(<tag0.players>,2)> + 1>
+	else
+		tag0.totalrodadas = <eval LOGARITHM(<tag0.players>,2)>
+	endif
+	gera_luta
+	tag.inicio = 1
+endif
+RETURN 1
+
+[function gera_luta]
+//s geraluta iniciado em <name>
+ref1 = <var0.campmine_control>
+if (<var0.linux>)
+	local.rodadas = <eval <eval LOGARITHM(<ref1.tag0.players>,2)> + 1>
+else
+	local.rodadas = <eval LOGARITHM(<ref1.tag0.players>,2)>
+endif
+//s a (<ref1.tag0.rodada> > <local.rodadas>)
+if (<ref1.tag0.rodada> > <local.rodadas>)
+	s Todas as rodadas finalizadas.
+	return 1
+endif
+//s (<verificaplayrodada <ref1.tag0.rodada>> > 1)
+if (<verificaplayrodada <ref1.tag0.rodada>> > 1)
+	if !<verificaarena 1>
+		ref1.tag.lutas ++
+		start_combat 1,<ref1.tag0.rodada>
+		if !(<verificaarena 2>) || !(<verificaarena 3>) || !(<verificaarena 4>) || !(<verificaarena 5>)
+			timerf 1,gera_luta
+		endif
+	elif !<verificaarena 2>
+		ref1.tag.lutas ++
+		start_combat 2,<ref1.tag0.rodada>
+		if !(<verificaarena 1>) || !(<verificaarena 3>) || !(<verificaarena 4>) || !(<verificaarena 5>)
+			timerf 1,gera_luta
+		endif
+	elif !<verificaarena 3>
+		ref1.tag.lutas ++
+		start_combat 3,<ref1.tag0.rodada>
+		if !(<verificaarena 1>) || !(<verificaarena 2>) || !(<verificaarena 4>) || !(<verificaarena 5>)
+			timerf 1,gera_luta
+		endif
+	elif !<verificaarena 4>
+		ref1.tag.lutas ++
+		start_combat 4,<ref1.tag0.rodada>
+		if !(<verificaarena 1>) || !(<verificaarena 2>) || !(<verificaarena 3>) || !(<verificaarena 5>)
+			timerf 1,gera_luta
+		endif
+	elif !<verificaarena 5>
+		ref1.tag.lutas ++
+		start_combat 5,<ref1.tag0.rodada>
+		if !(<verificaarena 1>) || !(<verificaarena 2>) || !(<verificaarena 3>) || !(<verificaarena 4>)
+			timerf 1,gera_luta
+		endif
+	else
+		s Luta em espera: as arenas estão cheias.
+	endif
+elif (<verificaplayrodada <ref1.tag0.rodada>>)
+	s Luta em Espera: jogadores insuficientes.
+elif !(<verificaplayrodada <ref1.tag0.rodada>>)
+	if (<ref1.tag0.lutas> >= <ref1.tag0.totallutas>)
+		ref1.tag0.rodada ++
+		ref1.tag.totallutas = <eval <ref1.tag0.players> / <eval 2@<ref1.tag0.rodada>>>
+		ref1.tag.lutas = 0
+		if <verificaplayrodada <ref1.tag0.rodada>>
+			gera_luta
+		endif
+	endif
+endif
+return 1
+
+
+[function verificaplayrodada]
+db.query SELECT * FROM `Rodada_<eval <args>>`
+return <DB.Row.Numrows>
+
+[function verificaarena]
+db.query SELECT * FROM `Arena_<eval <args>>`
+return <DB.Row.Numrows>
+
+[function start_combat]
+//s startcombat iniciado em <name> arena <argv[0]>
+db.query SELECT * FROM `Arena_<eval <argv[0]>>`
+IF (<DB.Row.Numrows>)
+	s Erro : arena ocupada.
+endif
+db.query SELECT * FROM `Rodada_<eval <argv[1]>>` ORDER BY RAND() LIMIT 2
+IF (<DB.Row.Numrows>)
+	local.uid = <db.row.0.uid>
+	local.uid2 = <db.row.1.uid>
+	ref1 = <local.uid>
+	ref2 = <local.uid2>
+	if (<ref1>) && (<ref2>)
+		db.execute DELETE FROM `Rodada_<eval <argv[1]>>` WHERE uid='<ref1.uid>'
+		db.execute DELETE FROM `Rodada_<eval <argv[1]>>` WHERE uid='<ref2.uid>'
+		db.execute INSERT INTO `Arena_<eval <argv[0]>>` ( Id, Uid ) values ( '1', '<ref1.uid>')
+		db.execute INSERT INTO `Arena_<eval <argv[0]>>` ( Id, Uid ) values ( '2', '<ref2.uid>')
+
+		LOCAL.COUNT <SERV.LIST.CAMPMINE_PLAYERS_<DREF1.TAG.team_count>.COUNT>
+
+		IF (<LOCAL.COUNT> == 1)
+			ref1.region.allclients smsg "@,,1 Rodada <eval <argv[1]>>, Luta <dtag0.lutas>, Arena <eval <argv[0]>> : <ref1.name> contra <ref2.name>! A luta será iniciada em 10 segundos."
+		ENDIF
+
+		FOR 0 <EVAL <LOCAL.COUNT> - 1>
+			REF3 <SERV.LIST.CAMPMINE_PLAYERS_<DREF1.TAG.team_count>.<LOCAL._FOR>>
+			REF4 <SERV.LIST.CAMPMINE_PLAYERS_<DREF2.TAG.team_count>.<LOCAL._FOR>>
+
+			IF (<REF3>) && (<REF4>)
+				if (<argv[0]> == 1)
+					ref3.GO 5443,1136,0,1
+					ref4.GO 5456,1128,0,1
+					ref3.tag0.campmine_arena = 1
+					ref4.tag0.campmine_arena = 1
+				elif (<argv[0]> == 2)
+					ref3.GO 5443,1157,0,1
+					ref4.GO 5456,1149,0,1
+					ref3.tag0.campmine_arena = 2
+					ref4.tag0.campmine_arena = 2
+				elif (<argv[0]> == 3)
+					ref3.GO 5468,1136,0,1
+					ref4.GO 5481,1128,0,1
+					ref3.tag0.campmine_arena = 3
+					ref4.tag0.campmine_arena = 3
+				elif (<argv[0]> == 4)
+					ref3.GO 5468,1157,0,1
+					ref4.GO 5481,1149,0,1
+					ref3.tag0.campmine_arena = 4
+					ref4.tag0.campmine_arena = 4
+				elif (<argv[0]> == 5)
+					ref3.GO 5493,1136,0,1
+					ref4.GO 5506,1128,0,1
+					ref3.tag0.campmine_arena = 5
+					ref4.tag0.campmine_arena = 5
+				endif
+				ref3.TAG.NOMOVETILL <eval <serv.time> + 1000>
+				ref3.tag.enemy <ref4.uid>
+				ref4.tag.enemy <ref3.uid>
+				ref3.INVIS 0
+				ref4.invis 0
+				ref3.tag.nomovetill <eval <serv.time> + 100>
+				ref4.tag.nomovetill <eval <serv.time> + 100>
+
+				if (<tag0.totalrodadas> <= <eval <argv[1]>>)
+					ref3.tag.campmine_rodada = 0
+					ref4.tag.campmine_rodada = 0
+				else
+					ref3.tag.campmine_rodada = <eval <argv[1]>>
+					ref4.tag.campmine_rodada = <eval <argv[1]>>
+				endif
+				ref3.timerf 10,mine_duel_start
+				ref4.timerf 10,mine_duel_start
+			ENDIF
+		ENDFOR
+	else
+		s Erro na recuperacao do UID do BD.
+	endif
+ENDIF
+
+// Funcoes extras pros cons
+[FUNCTION iniciar_campmine]
+if <tag0.can_i_use_event_cmd>
+	novomine1x1 <args>
+else
+	sysmessage @,,1 Voce nao pode usar este comando.
+endif
+return 1
+
+[FUNCTION iniciar_luta_1x1]
+if <tag0.can_i_use_event_cmd>
+	mine_arena
+else
+	sysmessage @,,1 Voce nao pode usar este comando.
+endif
+return 1
+
+[FUNCTION iniciar_luta_1x1_2]
+if <tag0.can_i_use_event_cmd>
+	mine_arena2
+else
+	sysmessage @,,1 Voce nao pode usar este comando.
+endif
+return 1
+
+[FUNCTION todos_invis]
+if <tag0.can_i_use_event_cmd>
+	if (<p.map> == 1)
+		region.allclients invis <args>
+	else
+		sysmessage @,,1 Voce so pode usar isto no mapa de eventos.
+	endif
+else
+	sysmessage @,,1 Voce nao pode usar este comando.
+endif
+return 1
+
+[FUNCTION tirar_arena]
+if <tag0.can_i_use_event_cmd>
+	if (<p.map> == 1)
+		targetf tirar_arena2
+	elif (<region.defname> == a_dungeon_17)
+		targetf tirar_arena_boxe
+	else
+		sysmessage @,,1 Voce so pode usar isto no mapa de eventos.
+	endif
+else
+	sysmessage @,,1 Voce nao pode usar este comando.
+endif
+return 1
+
+[FUNCTION tirar_arena2]
+if <argo.hits> > 0
+	if <argo.isevent.e_evento_campmine>
+		argo.events +e_evento_cm_espera
+		trysrc <argo.uid> campmine_renew_resources
+		action -1
+		argo.go 5463,1143,0,1
+	else
+		src.sysmessage @,,1 Este jogador nao esta no evento.
+	endif
+else
+	src.sysmessage @,,1 Este jogador esta morto.
+endif
+return 1
+
+[FUNCTION iniciar_modofinais]
+if <tag0.can_i_use_event_cmd>
+	modofinais
+else
+	sysmessage @,,1 Voce nao pode usar este comando.
+endif
+return 1
+
+[FUNCTION fecha_gate_campmine]
+FOR 1 32
+	SERV.LIST.CAMPMINE_PLAYERS_<DLOCAL._FOR>.CLEAR
+ENDFOR
+
+set_event_gate_walls 0
+FORINSTANCES i_control_campmine
+	REMOVE
+ENDFOR
+FORINSTANCES i_anuncia_campmine
+	REMOVE
+ENDFOR
+FORINSTANCES i_gate_campmine
+	REMOVE
+ENDFOR
+FOR X 0 <EVAL <SERV.ACCOUNTS> - 1>
+    IF (<SERV.ACCOUNT.<DLOCAL.X>.CHARS> > 0)
+        FOR Y 0 <EVAL <SERV.ACCOUNT.<DLOCAL.X>.CHARS> -1>
+            REF1 = <SERV.ACCOUNT.<DLOCAL.X>.CHAR.<DLOCAL.Y>>
+
+            IF (<REF1.ISEVENT.e_evento_cm_espera>) || (<REF1.ISEVENT.e_evento_campmine>)
+                REF1.GO COMMERCE ROOM
+            ENDIF
+        ENDFOR
+    ENDIF
+ENDFOR
+
+[FUNCTION ganhar_luta_wo]
+if <tag0.can_i_use_event_cmd>
+	targetf ganhar_luta_wo2
+else
+	sysmessage @,,1 Voce nao pode usar este comando.
+endif
+return 1
+
+[FUNCTION ganhar_luta_wo2]
+if <tag0.can_i_use_event_cmd>
+	if <argo.hits> > 0
+		if <argo.isevent.e_evento_campmine>
+			argo.CTF_DEATH_FIX
+ 			argo.TAG0.campmine_KILLS += 1
+  			argo.events +e_evento_cm_espera
+ 			argo.say @33,,1 <argo.name> ganhou a disputa por WO!
+ 			argo.hits <argo.maxhits>
+  			argo.go 5463,1143,0,1
+  			trysrc <argo.uid> campmine_renew_resources
+		elif <argo.isevent.e_evento_boxe>
+  			ARGO.TAG0.boxe_KILLS += 1
+ 			ARGO.say @33,,1 <argo.name> ganhou a luta por WO!
+ 			ARGO.f_evento_travar
+  			ARGO.hits <argo.maxhits>
+  			argo.F_GO <argo.tag.evento_go>
+  			argo.f_argo_restock_bandages
+			argo.action -1
+		endif
+	endif
+endif
+return 1
+
+[FUNCTION f_argo_restock_bandages]
+  forcontid i_bandage
+	remove
+  endfor
+  forcontid i_bandage_bloody
+	remove
+  endfor
+  serv.newitem i_bandage
+  new.amount 15
+  trysrc <uid> new.bounce
+return 1
+
+[ITEMDEF i_exit_gate_campmine]
+ID=0f6c
+WEIGHT=1
+TYPE=t_normal
+NAME=Commerce Room
+
+ON=@Create
+  attr 08000
+  color 01f
+
+ON=@Step
+	IF (<SRC.ISEVENT.e_evento_campmine>)
+		SRC.SYSMESSAGE @,,1 You can't leave the event at the moment !
+		RETURN 1
+	ENDIF
+
+	SRC.GO Commerce Room
+
+	RETURN 1
+
+//
+[ITEMDEF i_gate_campmine]
+ID=0f6c
+WEIGHT=1
+TYPE=t_normal
+NAME=Camp Mine 1x1
+
+ON=@Create
+  attr 08000
+  color 079d
+  tag.contagem 0
+  tag.maximo 16
+  return 0
+
+ON=@Click
+  message @0790 <name>
+  return 1
+
+ON=@Step
+IF !(<SRC.ISPLAYER>)
+	RETURN 1
+ENDIF
+
+if <src.tag0.event_block>
+	src.sysmessage @,,1 Voce esta banido de eventos!
+	return 1
+endif
+if (<tag.contagem> >= <tag.maximo>) && (<tag.maximo> > 0)
+    src.message @0790,,1 Evento Lotado!
+    return 1
+endif
+
+  LOCAL.TEAM_SIZE <UID.<VAR.campmine_control>.TAG.TEAM_SIZE>
+
+  IF (<LOCAL.TEAM_SIZE> > 1)
+  	IF !(<SRC.ISINPARTY>)
+  	  SRC.SYSMESSAGE You must be in a party containing <dLOCAL.TEAM_SIZE> players to enter this gate.
+  	  RETURN 1
+  	ELSEIF (<SRC.PARTY.MEMBERS> != <LOCAL.TEAM_SIZE>)
+  	  SRC.SYSMESSAGE You must be in a party containing <dLOCAL.TEAM_SIZE> players to enter this gate.
+  	  RETURN 1
+  	ENDIF
+  ENDIF
+
+  tag.contagem += 1
+
+SERV.LIST.CAMPMINE_PLAYERS_<DTAG.CONTAGEM>.CLEAR
+
+IF (<LOCAL.TEAM_SIZE> == 1)
+	SRC.TAG.team_count <tag.contagem>
+	SRC.TAG.team_count <tag.contagem>
+
+	trysrc <SRC.UID> add_campmine_player <UID>
+	SERV.LIST.CAMPMINE_PLAYERS_<DTAG.CONTAGEM>.ADD <SRC.UID>
+
+	SERV.LOG <SRC.NAME> entering the Camp Mine.
+ELSE
+	FOR 0 <EVAL <LOCAL.TEAM_SIZE> - 1>
+		REF1 <SRC.PARTY.MEMBER.<LOCAL._FOR>>
+		REF1.TAG.team_count <tag.contagem>
+
+		trysrc <REF1.UID> add_campmine_player <UID>
+		SERV.LIST.CAMPMINE_PLAYERS_<DTAG.CONTAGEM>.ADD <REF1.UID>
+
+		SERV.LOG <REF1.DTAG.team_count> <REF1.NAME> entering the Camp Mine.
+	ENDFOR
+ENDIF
+
+src.insert_camp_db <dtag.contagem>
+
+IF (<tag.contagem> == <tag.maximo>)
+  FORINSTANCES i_anuncia_campmine
+	REMOVE
+  ENDFOR
+  set_event_gate_walls 0
+  SERV.B @55 Evento Completo! A primeira luta comeca em 20 segundos!
+  ref1 = <var0.campmine_control>
+  ref1.timer 20
+    REMOVE
+ENDIF
+return 1
+
+[FUNCTION add_campmine_player]
+REF1=<ARGV[0]>
+
+  SRC.shrinklayer25_save
+SRC.CANCELLHELPROOM
+SRC.tag.askills=<SRC.kills>
+SRC.tag.askarma=<SRC.karma>
+SRC.tag.asfame=<SRC.fame>
+SRC.tag.asdeaths=<SRC.deaths>
+SRC.tag.campmine_kills=
+  SRC.findlayer.31.bounce //layer dragging
+  SRC.tag.lastbackpack <SRC.findlayer.21.uid>
+  SRC.stripsave
+  REF1.tag.cortemp=<eval <REF1.tag.contagem> * 10>
+  SRC.tag.name.hue=<REF1.tag.cortemp>
+  SRC.tag.onevent 1
+  SRC.findlayer.21.attr 0
+  REF2=<SRC.findlayer.21.uid>
+  SRC.findlayer.21.cont <SRC.findlayer.29.uid>
+  REF2.updatex
+  SRC.newitem i_backpack
+  SRC.act.color <REF1.tag.cortemp>
+  SRC.act.equip
+
+	// itens
+  SRC.newitem i_bow_bloodrock
+  SRC.act.name TFG Shard Evento
+  SRC.act.color <REF1.tag.cortemp>
+  SRC.act.equip
+
+  SRC.newitem i_except_War_fork
+  SRC.act.name TFG Shard Evento (Poisoned)
+  SRC.act.tag.poisonlevel 4
+  SRC.act.tag.poisontimer 3
+  SRC.act.color <REF1.tag.cortemp>
+  SRC.act.equip
+
+    SRC.newitem i_except_kryss
+  SRC.act.name TFG Shard Evento (Poisoned)
+  SRC.act.tag.poisonlevel 4
+  SRC.act.tag.poisontimer 3
+  SRC.act.color <REF1.tag.cortemp>
+  SRC.act.equip
+
+    SRC.newitem i_except_axe_exec
+  SRC.act.name TFG Shard Evento (Poisoned)
+  SRC.act.tag.poisonlevel 4
+  SRC.act.tag.poisontimer 3
+  SRC.act.color <REF1.tag.cortemp>
+  SRC.act.equip
+
+  SRC.newitem i_bloodrock_closed_helm
+  //SRC.act.attr 010
+  SRC.act.name TFG Shard Evento
+  SRC.act.color <REF1.tag.cortemp>
+  SRC.act.equip
+
+  SRC.newitem i_bloodrock_female_platemail
+  //SRC.act.attr 010
+  SRC.act.name TFG Shard Evento
+  SRC.act.color <REF1.tag.cortemp>
+  SRC.act.equip
+
+  SRC.newitem i_bloodrock_platemail_arms
+  //SRC.act.attr 010
+  SRC.act.name TFG Shard Evento
+  SRC.act.color <REF1.tag.cortemp>
+  SRC.act.equip
+
+  SRC.newitem i_bloodrock_platemail_gauntlets
+  //SRC.act.attr 010
+  SRC.act.name TFG Shard Evento
+  SRC.act.color <REF1.tag.cortemp>
+  SRC.act.equip
+
+  SRC.newitem i_bloodrock_platemail_gorget
+  //SRC.act.attr 010
+  SRC.act.name TFG Shard Evento
+  SRC.act.color <REF1.tag.cortemp>
+  SRC.act.equip
+
+  SRC.newitem i_bloodrock_platemail_leggings
+  //SRC.act.attr 010
+  SRC.act.name TFG Shard Evento
+  SRC.act.color <REF1.tag.cortemp>
+  SRC.act.equip
+
+  SRC.newitem i_llama_evento // animal
+  SRC.act.name TFG Shard Evento
+  SRC.act.color <REF1.tag.cortemp>
+  SRC.act.attr 010
+  SRC.act.equip
+
+  SRC.newitem i_spellbook_full
+  SRC.act.color 07B5
+  SRC.act.bounce
+
+  if (<SRC.memoryfindtype.memory_guild.link.align>==2)
+	  SRC.newitem i_chaos_shield
+	  //SRC.act.attr 010
+	  SRC.act.name TFG Shard Evento
+	  SRC.act.color <REF1.tag.cortemp>
+	  SRC.act.equip
+  elif (<SRC.memoryfindtype.memory_guild.link.align>==1)
+	  SRC.newitem i_order_shield
+	  //SRC.act.attr 010
+	  SRC.act.name TFG Shard Evento
+	  SRC.act.color <REF1.tag.cortemp>
+	  SRC.act.equip
+  else
+      SRC.newitem i_bloodrock_heater_shield
+	  //SRC.act.attr 010
+	  SRC.act.name TFG Shard Evento
+	  SRC.act.color <REF1.tag.cortemp>
+	  SRC.act.equip
+  endif
+
+  	  SRC.newitem i_bless_robe
+	  //SRC.act.attr 010
+	  SRC.act.name TFG Shard Evento
+	  SRC.act.color <REF1.tag.cortemp>
+	  SRC.act.equip
+
+	  SRC.newitem i_leather_leggings_wyrm
+	  //SRC.act.attr 010
+	  SRC.act.name TFG Shard Evento
+	  SRC.act.color <REF1.tag.cortemp>
+	  SRC.act.equip
+
+	  SRC.newitem i_leather_tunic_wyrm
+	  //SRC.act.attr 010
+	  SRC.act.name TFG Shard Evento
+	  SRC.act.color <REF1.tag.cortemp>
+	  SRC.act.equip
+
+	  SRC.newitem i_leather_sleeves_wyrm
+	  //SRC.act.attr 010
+	  SRC.act.name TFG Shard Evento
+	  SRC.act.color <REF1.tag.cortemp>
+	  SRC.act.equip
+
+	  SRC.newitem i_leather_gorget_wyrm
+	  //SRC.act.attr 010
+	  SRC.act.name TFG Shard Evento
+	  SRC.act.color <REF1.tag.cortemp>
+	  SRC.act.equip
+
+	  SRC.newitem i_leather_gloves_wyrm
+	  //SRC.act.attr 010
+	  SRC.act.name TFG Shard Evento
+	  SRC.act.color <REF1.tag.cortemp>
+	  SRC.act.equip
+
+	  SRC.newitem i_color_orc_helm_12
+	  //SRC.act.attr 010
+	  SRC.act.name TFG Shard Evento
+	  SRC.act.color <REF1.tag.cortemp>
+	  SRC.act.equip
+
+  SRC.campmine_renew_resources
+
+SRC.HITS=<SRC.MAXHITS>
+SRC.MANA=<SRC.MAXMANA>
+SRC.STAM=<SRC.MAXSTAM>
+
+SRC.go 5463,1143,0,1
+
+  SRC.RESENDALL
+  SRC.events +e_evento_cm_espera
+  SRC.events +e_evento_campmine
+
+[ITEMDEF i_anuncia_campmine]
+ID=i_crystal_ball
+NAME=Camp Mine [DO NOT REMOVE]
+WEIGHT=200
+TYPE=t_eq_script
+
+ON=@Create
+    ATTR=attr_decay|attr_invis
+    TIMER=15
+
+ON=@TIMER
+REF1 <VAR.campmine_control>
+LOCAL.TEAM_SIZE <REF1.TAG.TEAM_SIZE>
+
+IF (<TAG0.COUNT> >= 40)
+	SERV.B @55 Camp Mine <DLOCAL.TEAM_SIZE>x<DLOCAL.TEAM_SIZE> cancelado por falta de participantes!
+
+	IF (<EVAL <REF1.tag.players> * <LOCAL.TEAM_SIZE>> > 8)
+		novomine1x1 <EVAL <REF1.TAG.PLAYERS> / 2>,<LOCAL.TEAM_SIZE>
+	ELSE
+		fecha_gate_campmine
+	ENDIF
+
+	RETURN
+ENDIF
+
+REF1=<TAG.GATE>
+  SERV.B @55 Restam <eval <ref1.tag.maximo> - <ref1.tag.contagem>> vagas para o Camp Mine <DLOCAL.TEAM_SIZE>x<DLOCAL.TEAM_SIZE>! Gate na Commerce Room!
+TIMER 15
+TAG0.COUNT += 1
+RETURN 1
+
+[EVENTS e_evento_cm_espera]
+On=@GetHit
+return 1
+
+On=@HIT
+return 1
+
+On=@HitTry
+return 1
+
+On=@SpellCast
+return 1
+
+ON=@SkillStart
+	RETURN 1
+
+[EVENTS e_evento_campmine]
+ON=@CLICK
+	MESSAGE @<TAG.NAME.HUE>,,1 K: <dTAG.campmine_KILLS>
+
+ON=@KILLMINE
+	//if <argo.tag0.onevent>
+
+	LOCAL.COUNT <SERV.LIST.CAMPMINE_PLAYERS_<DTAG.team_count>.COUNT>
+
+	FOR 0 <EVAL <LOCAL.COUNT> - 1>
+		REF1 <SERV.LIST.CAMPMINE_PLAYERS_<DTAG.team_count>.<DLOCAL._FOR>>
+
+		REF1.RESURRECT
+
+		TRYSRC <REF1.UID> CTF_DEATH_FIX
+
+		REF1.TAG0.campmine_KILLS += 1
+		REF1.EVENTS +e_evento_cm_espera
+
+		REF1.SAY @33,,1 <REF1.NAME> ganhou a disputa!
+
+		SERV.LOG Camp Mine: <REF1.NAME> won the dispute!
+
+		REF1.HITS = <REF1.STR>
+		REF1.MANA = <REF1.INT>
+		REF1.STAM = <REF1.DEX>
+		REF1.go 5463,1143,0,1
+
+		TRYSRC <REF1.UID> stop_cscheck
+		TRYSRC <REF1.UID> campmine_renew_resources
+
+		REF1.ACTION -1
+	ENDFOR
+
+	if <tag0.campmine_rodada>
+		db.execute INSERT INTO `Rodada_<eval <tag0.campmine_rodada> + 1>` ( Id, Uid ) values ( '<uid>', '<uid>')
+	else
+		FOR 0 <EVAL <LOCAL.COUNT> - 1>
+			REF1 <SERV.LIST.CAMPMINE_PLAYERS_<DTAG.team_count>.<DLOCAL._FOR>>
+
+			REF1.tag0.campmine_prize = 1
+			REF1.timerf 3,go commerce room
+		ENDFOR
+
+		FORINSTANCES i_control_campmine
+				timerf 10,REMOVE
+		ENDFOR
+	endif
+
+	zeraarena <dtag0.campmine_arena>
+
+	//endif
+
+ON=@Death
+if (<var0.finais_mine>==1)
+	CTF_DEATH_FIX
+	INVIS
+	HITS = <STR>
+	MANA = <INT>
+	STAM = <DEX>
+	events +e_evento_cm_espera
+	trysrc <uid> campmine_renew_resources
+	action -1
+	go 5463,1143,0,1
+	stop_cscheck
+	message @0790 Voce morreu e agora aguarda a disputa do 3o lugar!
+	REF1 <TAG.ENEMY>
+	REF1.TRIGGER @KILLMINE
+	return 1
+else
+	REF1 <TAG.ENEMY>
+	LOCAL.COUNT <SERV.LIST.CAMPMINE_PLAYERS_<DTAG.team_count>.COUNT>
+	LOCAL.DEAD_COUNT 1
+
+	FOR 0 <EVAL <LOCAL.COUNT> - 1>
+		REF2 <SERV.LIST.CAMPMINE_PLAYERS_<DTAG.team_count>.<DLOCAL._FOR>>
+
+		IF (<REF2.FLAGS> & statf_dead)
+			LOCAL.DEAD_COUNT += 1
+		ENDIF
+	ENDFOR
+
+	IF (<LOCAL.DEAD_COUNT> >= <LOCAL.COUNT>)
+		FOR 0 <EVAL <LOCAL.COUNT> - 1>
+			REF2 <SERV.LIST.CAMPMINE_PLAYERS_<DTAG.team_count>.<DLOCAL._FOR>>
+
+			REF2.message @0790 Voce morreu!
+			REF2.timerf 3,f_death_mine1x1
+		ENDFOR
+
+		REF1.TRIGGER @KILLMINE
+	ENDIF
+endif
+
+ON=@Logout
+  message @32,,1 [Logout!]
+
+ON=@Login
+  message @478,,1 [Login!]
+
+ON=@DeathCorpse
+	LOCAL.COUNT <SERV.LIST.CAMPMINE_PLAYERS_<DTAG.team_count>.COUNT>
+
+	IF (<LOCAL.COUNT> == 1)
+		ARGO.REMOVE
+	ELSE
+		TAG.CORPSE <ARGO.UID>
+	ENDIF
+
+ON=@EnvironChange
+if (<map> != 1)
+	if (<hits> < 1)
+		resurrect
+	endif
+    stripremove
+  src.kills=<tag.askills>
+  src.karma=<tag.askarma>
+  src.fame=<tag.asfame>
+  src.deaths=<tag.asdeaths>
+  src.memoryfindtype.memory_harmedby.remove
+  src.memoryfindtype.memory_iaggressor.remove
+  src.memoryfindtype.memory_fight.remove
+  src.memoryfindtype.memory_sawcrime.remove
+  src.memoryfindtype.memory_aggreived.remove
+  src.memoryfindtype.memory_war_targ.remove
+  src.memoryfindtype.memory_harmedby.remove
+  src.memoryfindtype.memory_iaggressor.remove
+  src.memoryfindtype.memory_fight.remove
+  src.memoryfindtype.memory_sawcrime.remove
+  src.memoryfindtype.memory_aggreived.remove
+  src.memoryfindtype.memory_war_targ.remove
+  tag.askills=
+  tag.askarma=
+  tag.asfame=
+  tag.asdeaths=
+  src.criminal 0
+  invis 0
+    findlayer.21.remove
+    findlayer.25.remove
+    findlayer.31.remove
+    newitem i_gold
+    act.link 0<tag.lastbackpack>
+    act.link.cont <uid>
+    act.remove
+	events -e_evento_cm_espera
+    events -e_evento_campmine
+    tag.team
+    if (<findlayer.21> = 0)
+      SERV.ALLCLIENTS MSTAFF2 @0790 [SYSTEM]: Err... <name> saiu do evento e nao foi possivel recuperar sua backpack!
+      SERV.ALLCLIENTS MSTAFF2 @0790 [SYSTEM]: Root: <uid> - Act: <act.uid> - Src: <src.uid> - Action: <action> - Backpack: <tag.lastbackpack>
+    endif
+BODY=<OBODY>
+RESENDALL
+REEQUIPALL
+	if <tag0.campmine_prize>
+		premia_camp_mine <tag0.campmine_prize>
+	endif
+   tag.lastbackpack=
+   tag.onevent=
+   TAG.NOPREMIO=   // pra que eu sirvo?
+   TAG.NAME.HUE=
+   TAG.campmine_KILLS=
+   tag.campmine_rodada=
+   tag.campmine_arena=
+   tag.campmine_prize=
+   tag.team_count=
+   tag.corpse=
+   endif
+  return 0
+
+[FUNCTION f_death_mine1x1]
+IF (<TAG0.CORPSE>)
+	UID.<TAG.CORPSE>.REMOVE
+ENDIF
+
+CTF_DEATH_FIX
+events +e_evento_cm_espera
+action -1
+stop_cscheck
+resurrect
+hits <str>
+if !<tag0.campmine_rodada>
+	tag0.campmine_prize = 2
+	timerf 3,go commerce room
+else
+	go commerce room
+endif
+ref1 = <var0.campmine_control>
+ref1.timerf 1,gera_luta
+return 1
+
+[FUNCTION novomine1x1]
+IF (<ARGV> == 0) || (<ARGV> > 2)
+	RETURN 1
+ENDIF
+
+fecha_gate_campmine
+if <f_start_camp_setup <args>>
+		var.finais_mine =
+		  serv.newitem i_gate_campmine
+		  new.tag.maximo <argv[0]>
+		  new.p 2341,541,1
+		  new.updatex
+		  ref455=<new.uid>
+		  serv.newitem i_anuncia_campmine
+		  new.p <ref455.p>
+		  new.tag.gate <ref455>
+		  new.update
+		  serv.newitem i_control_campmine
+		  new.tag.players = <argv[0]>
+
+		  IF (<ARGV> == 2)
+		  	LOCAL.TEAM_SIZE <ARGV[1]>
+		  ELSE
+		  	LOCAL.TEAM_SIZE 1
+		  ENDIF
+
+		  NEW.TAG.TEAM_SIZE <LOCAL.TEAM_SIZE>
+		  REF455.NAME Camp Mine <dLOCAL.TEAM_SIZE>x<dLOCAL.TEAM_SIZE>
+
+		  new.tag.totallutas = <eval <argv[0]> / 2>
+		  new.tag.lutas = 0
+		  new.p 5463,1143,0,1
+		  new.attr 090
+		  new.updatex
+		  var0.campmine_control = <new>
+
+		  new.timerf 10, set_event_gate_walls 1
+
+		SERV.B @55 Foram liberadas <dargs> vagas para o Camp Mine <dLOCAL.TEAM_SIZE>x<dLOCAL.TEAM_SIZE>. Gate na Commerce Room!
+else
+	s Erro de conexao ao MySQL!
+endif
+return 1
+
+[FUNCTION mine_arena]
+TARGETF mine_arena_op <src.uid>
+
+[FUNCTION mine_arena_op]
+if !<argo.isplayer>
+	src.sysmessage @,,1 Você nao selecionou um player.
+	return 1
+endif
+ref2 = <args>
+if !<ref2.tag0.mine_duel_create>
+	ARGO.GO 4021,434,3,1
+	//ARGO.START_CSCHECK
+	ARGO.TAG.NOMOVETILL <eval <serv.time> + 1000>
+	ref2.tag.mine_duel_adv_1 = <argo.uid>
+	ref2.tag.mine_duel_create 1
+else
+	ARGO.GO 4039,436,3,1
+	//ARGO.START_CSCHECK
+	ARGO.INVIS 0
+	ref1 = <src.tag.mine_duel_adv_1>
+	ref2.say @33 O duelo vai iniciar em 10 segundos!
+	argo.tag.nomovetill <eval <serv.time> + 100>
+	ref1.tag.nomovetill <eval <serv.time> + 100>
+	argo.timerf 10,mine_duel_start
+	ref1.timerf 10,mine_duel_start
+	ref1.invis 0
+	ref2.tag.mine_duel_create=
+endif
+
+[FUNCTION mine_arena2]
+TARGETF mine_arena2_op <src.uid>
+
+[FUNCTION mine_arena2_op]
+if !<argo.isplayer>
+	src.sysmessage @,,1 Você nao selecionou um player.
+	return 1
+endif
+ref2 = <args>
+if !<ref2.tag0.mine_duel_create>
+	ARGO.GO 4051,454,3,1
+	//ARGO.START_CSCHECK
+	ARGO.TAG.NOMOVETILL <eval <serv.time> + 1000>
+	ref2.tag.mine_duel_adv_1 = <argo.uid>
+	ref2.tag.mine_duel_create 1
+else
+	ARGO.GO 4031,459,3,1
+	//ARGO.START_CSCHECK
+	ARGO.INVIS 0
+	ref1 = <src.tag.mine_duel_adv_1>
+	ref2.say @33 O duelo vai iniciar em 10 segundos!
+	argo.tag.nomovetill <eval <serv.time> + 100>
+	ref1.tag.nomovetill <eval <serv.time> + 100>
+	argo.timerf 10,mine_duel_start
+	ref1.timerf 10,mine_duel_start
+	ref1.invis 0
+	ref2.tag.mine_duel_create=
+endif
+
+[FUNCTION modofinais]
+var.finais_mine = 1
+src.sysmessage @,,1 Modo finais ativado.
+
+[FUNCTION mine_duel_start]
+ctf_death_fix
+events -e_evento_cm_espera
+HITS = <STR>
+MANA = <INT>
+STAM = <DEX>
+INVIS 0
+SAY @33 Fight!
+SERV.LOG Camp Mine: <NAME> started!
+
+
+[FUNCTION campmine_renew_resources]
+SRC.consume 65535 i_potion_refresh
+  SRC.consume 65535 i_potion_manatotal
+  SRC.consume 65535 i_potion_healgreat
+  SRC.consume 65535 i_scroll_flamestrike
+  SRC.consume 65535 i_potion_explosionless
+  SRC.consume 65535 i_bandage
+  SRC.consume 65535 i_bag
+  SRC.consume 65535 i_arrow
+  SRC.consume 65535 i_potion_mana_boost_great
+  SRC.consume 65535 i_potion_life_boost_great
+  SRC.consume 65636 i_reag_black_pearl
+  SRC.consume 65636 i_reag_nightshade
+  SRC.consume 65636 i_reag_spider_silk
+  SRC.consume 65636 i_reag_sulfur_ash
+  SRC.consume 65636 i_reag_mandrake_root
+  SRC.consume 65636 i_reag_garlic
+  SRC.consume 65636 i_reag_ginseng
+  SRC.consume 65636 i_reag_blood_moss
+  SRC.consume 65636 i_potion_refilling_great
+
+  SRC.newitem tm_bag_o_regs
+  SRC.act.bounce
+
+  SRC.newitem i_potion_refreshtotal
+  SRC.act.amount 10
+  SRC.act.bounce
+
+  // no futuro arma ja vir poisonada
+  //SRC.newitem i_potion_poisonless
+  //SRC.act.amount 10
+  //SRC.act.bounce
+
+  //SRC.newitem i_potion_poisongreat
+  //SRC.act.amount 10
+  //SRC.act.bounce
+
+  SRC.newitem i_potion_mana_boost_great
+  SRC.act.amount 50
+  SRC.act.bounce
+
+  SRC.newitem i_potion_life_boost_great
+  SRC.act.amount 50
+  SRC.act.bounce
+
+  SRC.newitem i_potion_refilling_great
+  SRC.act.amount 10
+  SRC.act.bounce
+
+  SRC.newitem i_potion_curegreat
+  SRC.act.amount 20
+  SRC.act.bounce
+
+  SRC.newitem i_scroll_flamestrike
+  SRC.act.amount 50
+  SRC.act.bounce
+
+  SRC.newitem i_potion_explosionless
+  SRC.act.bounce
+
+  SRC.newitem i_potion_explosionless
+  SRC.act.bounce
+
+  SRC.newitem i_potion_explosionless
+  SRC.act.bounce
+
+  SRC.newitem i_potion_explosionless
+  SRC.act.bounce
+
+  SRC.newitem i_potion_explosionless
+  SRC.act.bounce
+
+  SRC.newitem i_potion_explosionless
+  SRC.act.bounce
+
+  SRC.newitem i_potion_explosionless
+  SRC.act.bounce
+
+  SRC.newitem i_bandage
+  SRC.act.amount 320
+  SRC.act.bounce
+
+  SRC.newitem i_arrow
+  SRC.act.amount 100
+  SRC.act.bounce
+  return 0
+
+[ITEMDEF i_campmine_arena]
+ID=0194
+TYPE=t_multi
+MULTIREGION=0,0,0,0
+COMPONENT=016B -11 -9 0 1
+COMPONENT=0169 -11 -8 0 1
+COMPONENT=0169 -11 -7 0 1
+COMPONENT=0169 -11 -6 0 1
+COMPONENT=0169 -11 -5 0 1
+COMPONENT=0169 -11 -4 0 1
+COMPONENT=0169 -11 -3 0 1
+COMPONENT=0169 -11 -2 0 1
+COMPONENT=0169 -11 -1 0 1
+COMPONENT=0169 -11 0 0 1
+COMPONENT=0169 -11 1 0 1
+COMPONENT=0169 -11 2 0 1
+COMPONENT=0169 -11 3 0 1
+COMPONENT=0169 -11 4 0 1
+COMPONENT=0169 -11 5 0 1
+COMPONENT=0169 -11 6 0 1
+COMPONENT=0169 -11 7 0 1
+COMPONENT=0169 -11 8 0 1
+COMPONENT=0169 -11 9 0 1
+COMPONENT=016A -10 -9 0 1
+COMPONENT=016A -10 9 0 1
+COMPONENT=016A -9 -9 0 1
+COMPONENT=016A -9 9 0 1
+COMPONENT=016A -8 -9 0 1
+COMPONENT=0167 -8 -5 0 1
+COMPONENT=0166 -8 -4 0 1
+COMPONENT=0166 -8 -3 0 1
+COMPONENT=0166 -8 3 0 1
+COMPONENT=0166 -8 4 0 1
+COMPONENT=0166 -8 5 0 1
+COMPONENT=016A -8 9 0 1
+COMPONENT=016A -7 -9 0 1
+COMPONENT=0165 -7 -5 0 1
+COMPONENT=0165 -7 5 0 1
+COMPONENT=016A -7 9 0 1
+COMPONENT=016A -6 -9 0 1
+COMPONENT=0165 -6 -5 0 1
+COMPONENT=0165 -6 5 0 1
+COMPONENT=016A -6 9 0 1
+COMPONENT=016A -5 -9 0 1
+COMPONENT=0165 -5 -5 0 1
+COMPONENT=0165 -5 5 0 1
+COMPONENT=016A -5 9 0 1
+COMPONENT=016A -4 -9 0 1
+COMPONENT=016A -4 9 0 1
+COMPONENT=016A -3 -9 0 1
+COMPONENT=016A -3 9 0 1
+COMPONENT=016A -2 -9 0 1
+COMPONENT=0194 -2 0 0 1
+COMPONENT=016A -2 9 0 1
+COMPONENT=016A -1 -9 0 1
+COMPONENT=0194 -1 -1 0 1
+COMPONENT=0194 -1 0 0 1
+COMPONENT=0194 -1 1 0 1
+COMPONENT=016A -1 9 0 1
+COMPONENT=016A 0 -9 0 1
+COMPONENT=016A 0 9 0 1
+COMPONENT=016A 1 -9 0 1
+COMPONENT=016A 1 9 0 1
+COMPONENT=016A 2 -9 0 1
+COMPONENT=016A 2 9 0 1
+COMPONENT=016A 3 -9 0 1
+COMPONENT=016A 3 9 0 1
+COMPONENT=016A 4 -9 0 1
+COMPONENT=016A 4 9 0 1
+COMPONENT=016A 5 -9 0 1
+COMPONENT=0165 5 -5 0 1
+COMPONENT=0165 5 5 0 1
+COMPONENT=016A 5 9 0 1
+COMPONENT=016A 6 -9 0 1
+COMPONENT=0165 6 -5 0 1
+COMPONENT=0165 6 5 0 1
+COMPONENT=016A 6 9 0 1
+COMPONENT=016A 7 -9 0 1
+COMPONENT=0165 7 -5 0 1
+COMPONENT=0166 7 -4 0 1
+COMPONENT=0166 7 -3 0 1
+COMPONENT=0166 7 3 0 1
+COMPONENT=0166 7 4 0 1
+COMPONENT=0164 7 5 0 1
+COMPONENT=016A 7 9 0 1
+COMPONENT=016A 8 -9 0 1
+COMPONENT=016A 8 9 0 1
+COMPONENT=016A 9 -9 0 1
+COMPONENT=016A 9 9 0 1
+COMPONENT=016A 10 -9 0 1
+COMPONENT=016A 10 9 0 1
+COMPONENT=016A 11 -9 0 1
+COMPONENT=0169 11 -8 0 1
+COMPONENT=0169 11 -7 0 1
+COMPONENT=0169 11 -6 0 1
+COMPONENT=0169 11 -5 0 1
+COMPONENT=0169 11 -4 0 1
+COMPONENT=0169 11 -3 0 1
+COMPONENT=0169 11 -2 0 1
+COMPONENT=0169 11 -1 0 1
+COMPONENT=0169 11 0 0 1
+COMPONENT=0169 11 1 0 1
+COMPONENT=0169 11 2 0 1
+COMPONENT=0169 11 3 0 1
+COMPONENT=0169 11 4 0 1
+COMPONENT=0169 11 5 0 1
+COMPONENT=0169 11 6 0 1
+COMPONENT=0169 11 7 0 1
+COMPONENT=0169 11 8 0 1
+COMPONENT=0168 11 9 0 1
+
+[FUNCTION gan_jogo]
+targetf ganhar_jogo2
+
+[FUNCTION ganhar_jogo2]
+argo.CTF_DEATH_FIX
+   argo.TAG0.campmine_KILLS += 1
+  	argo.events +e_evento_cm_espera
+  argo.say @33,,1 <argo.name> ganhou a disputa!
+  argo.hits <str>
+  argo.go 5463,1143,0,1
+  trysrc <argo.uid> campmine_renew_resources
+
+  [FUNCTION plateia_camp]

@@ -1,0 +1,398 @@
+[TYPEDEF T_WEAPON_MACE_SHARP]
+ON=@CREATE
+if !(<src>)
+   timerf 1, f_return_ihits <UID>,05b58c
+else
+    timerf 1, f_return_ihits <UID>,<src.uid>
+endif
+
+ON=@TARGON_ITEM
+    IF ((<ARGO.TAG0.DISABLE_CUT>) || (<ARGO.REGION.TAG0.PVM_ONLY>))
+        RETURN 1
+    ENDIF
+
+    IF <ARGO.TYPE>==t_corpse
+        IF ((<ARGO.AMOUNT>==400) || (<ARGO.AMOUNT>==401))
+            RETURN 1
+        ENDIF
+    ENDIF
+    IF <ARGO.ID>==0f0d
+        RETURN 1
+    ENDIF
+
+ON=@equiptest
+    IF <SRC.FINDID.i_disarm_timer>
+        SRC.SYSMESSAGE Voce ainda nao pode equipar uma arma.
+        RETURN 1
+    ENDIF
+    IF (<SRC.FINDLAYER.22.BASEID>==i_mage_robe) || (<src.findlayer(9).baseid>==i_vip_hat_wizards) || (<src.findlayer(22).baseid>==i_vip_mana_robe)
+        SRC.SYSMESSAGE Voce nao pode equipar esta arma usando Mage Robe.
+        RETURN 1
+    ENDIF
+
+[TYPEDEF T_WEAPON_MACE_SMITH]
+ON=@CREATE
+if !(<src>)
+   timerf 1, f_return_ihits <UID>,05b58c
+else
+    timerf 1, f_return_ihits <UID>,<src.uid>
+endif
+
+ON=@equiptest
+    IF <SRC.FINDID.i_disarm_timer>
+        SRC.SYSMESSAGE Voce ainda nao pode equipar uma arma.
+        RETURN 1
+    ENDIF
+    IF (<SRC.FINDLAYER.22.BASEID>==i_mage_robe) || (<src.findlayer(9).baseid>==i_vip_hat_wizards) || (<src.findlayer(22).baseid>==i_vip_mana_robe)
+        SRC.SYSMESSAGE Voce nao pode equipar esta arma usando Mage Robe.
+        RETURN 1
+    ENDIF
+
+ON=@TARGON_ITEM
+RETURN 1
+
+[TYPEDEF T_WEAPON_SWORD]
+ON=@CREATE
+if !(<src>)
+   timerf 1, f_return_ihits <UID>,05b58c
+else
+    timerf 1, f_return_ihits <UID>,<src.uid>
+endif
+
+ON=@equiptest
+    IF <SRC.FINDID.i_disarm_timer>
+        SRC.SYSMESSAGE Voce ainda nao pode equipar uma arma.
+        RETURN 1
+    ENDIF
+    IF (<SRC.FINDLAYER.22.BASEID>==i_mage_robe) || (<src.findlayer(9).baseid>==i_vip_hat_wizards) || (<src.findlayer(22).baseid>==i_vip_mana_robe)
+        SRC.SYSMESSAGE Voce nao pode equipar esta arma usando Mage Robe.
+        RETURN 1
+    ENDIF
+
+ON=@TARGON_ITEM
+IF ((<ARGO.TAG0.DISABLE_CUT>) || (<ARGO.REGION.TAG0.PVM_ONLY>))
+    RETURN 1
+ENDIF
+
+IF <ARGO.TYPE>==t_corpse
+	IF ((<ARGO.AMOUNT>==400) || (<ARGO.AMOUNT>==401))
+		IF <MOREY> < 10
+			RETURN 1
+		ELIF (<SRC.CTAG0.TENTOUCORTARCORPO> == 1)
+			SRC.SYSMESSAGE Voce precisa esperar para cortar outro corpo.
+			RETURN 1
+		ELIF !(<SRC.CANSEELOS <ARGO>>)
+			SRC.SYSMESSAGE Voce nao consegue ver seu alvo.
+			RETURN 1
+        ELIF (<SRC.DISTANCE <ARGO.UID>> > 1)
+            SRC.SYSMESSAGE Voce deve estar proximo do corpo para corta-lo.
+            RETURN 1
+		ELSE
+			LOCAL.CHANCE <EVAL (100-(<MOREY>/10))>
+
+			SRC.CTAG.TENTOUCORTARCORPO = 1
+			TIMERF 3, SRC.CTAG.TENTOUCORTARCORPO
+
+            IF <R1,100> >= <dLOCAL.CHANCE>
+                REF69 <ARGO.UID>
+                REF1 <REF69.LINK>
+                IF <REF1.ISPLAYER>
+                    SERV.NEWITEM i_flesh_head
+                    NEW.NAME <UID.<REF69.LINK>.NAME>'s Head //'
+                    NEW.P <REF69.P>
+                    NEW.TIMER 20
+                ENDIF
+                REF69.DISPID 0ecf
+                REF69.LINK 04fffffff
+                REF69.COLOR 00
+                REF69.UPDATEX
+                REF69.TIMER 360
+                RETURN 1
+            ELSE
+                SRC.SYSMESSAGE Voce falhou em cortar o corpo.
+                RETURN 1
+            ENDIF
+		ENDIF
+	ENDIF
+ENDIF
+
+IF <ARGO.ID>==0f0d
+	RETURN 1
+ENDIF
+
+//ON=@DAMAGE
+//f_poisoncheck
+
+
+[TYPEDEF T_WEAPON_FENCE]
+ON=@CREATE
+if !(<src>)
+   timerf 1, f_return_ihits <UID>,05b58c
+else
+    timerf 1, f_return_ihits <UID>,<src.uid>
+endif
+
+ON=@equiptest
+    IF <SRC.FINDID.i_disarm_timer>
+        SRC.SYSMESSAGE Voce ainda nao pode equipar uma arma.
+        RETURN 1
+    ENDIF
+    IF (<SRC.FINDLAYER.22.BASEID>==i_mage_robe) || (<src.findlayer(9).baseid>==i_vip_hat_wizards) || (<src.findlayer(22).baseid>==i_vip_mana_robe)
+        SRC.SYSMESSAGE Voce nao pode equipar esta arma usando Mage Robe.
+        RETURN 1
+    ENDIF
+
+ON=@TARGON_ITEM
+IF ((<ARGO.TAG0.DISABLE_CUT>) || (<ARGO.REGION.TAG0.PVM_ONLY>))
+    RETURN 1
+ENDIF
+
+IF <ARGO.TYPE>==t_corpse
+	IF ((<ARGO.AMOUNT>==400) || (<ARGO.AMOUNT>==401))
+		IF <MOREY> < 10
+			RETURN 1
+		ELIF (<SRC.CTAG0.TENTOUCORTARCORPO> == 1)
+			SRC.SYSMESSAGE Voce precisa esperar para cortar outro corpo.
+			RETURN 1
+		ELIF !(<SRC.CANSEELOS <ARGO>>)
+			SRC.SYSMESSAGE Voce nao consegue ver seu alvo.
+			RETURN 1
+        ELIF (<SRC.DISTANCE <ARGO.UID>> > 1)
+            SRC.SYSMESSAGE Voce deve estar proximo do corpo para corta-lo.
+            RETURN 1
+		ELSE
+			LOCAL.CHANCE <EVAL (100-(<MOREY>/10))>
+
+			SRC.CTAG.TENTOUCORTARCORPO = 1
+			TIMERF 3, SRC.CTAG.TENTOUCORTARCORPO
+
+		IF <R1,100> >= <dLOCAL.CHANCE>
+			REF69 <ARGO.UID>
+			REF1 <REF69.LINK>
+			IF <REF1.ISPLAYER>
+				SERV.NEWITEM i_flesh_head
+				NEW.NAME <UID.<REF69.LINK>.NAME>'s Head //'
+				NEW.P <REF69.P>
+				NEW.TIMER 20
+			ENDIF
+			REF69.DISPID 0ecf
+			REF69.LINK 04fffffff
+			REF69.COLOR 00
+			REF69.TIMER 360
+            REF69.UPDATEX
+			RETURN 1
+		ELSE
+			SRC.SYSMESSAGE Voce falhou em cortar o corpo.
+			RETURN 1
+		ENDIF
+		ENDIF
+	ENDIF
+ENDIF
+
+IF <ARGO.ID>==0f0d
+	RETURN 1
+ENDIF
+
+//ON=@DAMAGE
+//f_poisoncheck
+
+[TYPEDEF T_WEAPON_AXE]
+ON=@CREATE
+if !(<src>)
+   timerf 1, f_return_ihits <UID>,05b58c
+else
+    timerf 1, f_return_ihits <UID>,<src.uid>
+endif
+
+ON=@equiptest
+    IF <SRC.FINDID.i_disarm_timer>
+        SRC.SYSMESSAGE Voce ainda nao pode equipar uma arma.
+        RETURN 1
+    ENDIF
+    IF (<SRC.FINDLAYER.22.BASEID>==i_mage_robe) || (<src.findlayer(9).baseid>==i_vip_hat_wizards) || (<src.findlayer(22).baseid>==i_vip_mana_robe)
+        SRC.SYSMESSAGE Voce nao pode equipar esta arma usando Mage Robe.
+        RETURN 1
+    ENDIF
+
+ON=@TARGON_ITEM
+IF ((<ARGO.TAG0.DISABLE_CUT>) || (<ARGO.REGION.TAG0.PVM_ONLY>))
+    RETURN 1
+ENDIF
+
+IF <ARGO.TYPE>==t_corpse
+	IF ((<ARGO.AMOUNT>==400) || (<ARGO.AMOUNT>==401))
+		IF <MOREY> < 10
+			RETURN 1
+		ELIF (<SRC.CTAG0.TENTOUCORTARCORPO> == 1)
+			SRC.SYSMESSAGE Voce precisa esperar para cortar outro corpo.
+			RETURN 1
+		ELIF !(<SRC.CANSEELOS <ARGO>>)
+			SRC.SYSMESSAGE Voce nao consegue ver seu alvo.
+			RETURN 1
+        ELIF (<SRC.DISTANCE <ARGO.UID>> > 1)
+            SRC.SYSMESSAGE Voce deve estar proximo do corpo para corta-lo.
+            RETURN 1
+		ELSE
+			LOCAL.CHANCE <EVAL (100-(<MOREY>/10))>
+
+			SRC.CTAG.TENTOUCORTARCORPO = 1
+			TIMERF 3, SRC.CTAG.TENTOUCORTARCORPO
+
+		IF <R1,100> >= <dLOCAL.CHANCE>
+			REF69 <ARGO.UID>
+			REF1 <REF69.LINK>
+			IF <REF1.ISPLAYER>
+				SERV.NEWITEM i_flesh_head
+				NEW.NAME <UID.<REF69.LINK>.NAME>'s Head //'
+				NEW.P <REF69.P>
+				NEW.TIMER 20
+			ENDIF
+			REF69.DISPID 0ecf
+			REF69.LINK 04fffffff
+			REF69.COLOR 00
+            REF69.UPDATEX
+			REF69.TIMER 360
+			RETURN 1
+		ELSE
+			SRC.SYSMESSAGE Voce falhou em cortar o corpo.
+			RETURN 1
+		ENDIF
+		ENDIF
+	ENDIF
+ENDIF
+
+IF <ARGO.ID>==0f0d
+	RETURN 1
+ENDIF
+
+
+//ON=@DAMAGE
+//f_poisoncheck
+
+[TYPEDEF T_WEAPON_MACE_STAFF]
+ON=@CREATE
+if !(<src>)
+   timerf 1, f_return_ihits <UID>,05b58c
+else
+    timerf 1, f_return_ihits <UID>,<src.uid>
+endif
+
+ON=@equiptest
+    IF <SRC.FINDID.i_disarm_timer>
+        SRC.SYSMESSAGE Voce ainda nao pode equipar uma arma.
+        RETURN 1
+    ENDIF
+
+ON=@TARGON_ITEM
+    IF ((<ARGO.TAG0.DISABLE_CUT>) || (<ARGO.REGION.TAG0.PVM_ONLY>))
+        RETURN 1
+    ENDIF
+
+    IF <ARGO.TYPE>==t_corpse
+        IF ((<ARGO.AMOUNT>==400) || (<ARGO.AMOUNT>==401))
+            RETURN 1
+        ENDIF
+    ENDIF
+    IF <ARGO.ID>==0f0d
+        RETURN 1
+    ENDIF
+
+[TYPEDEF T_WEAPON_XBOW]
+ON=@CREATE
+if !(<src>)
+   timerf 1, f_return_ihits <UID>,05b58c
+else
+    timerf 1, f_return_ihits <UID>,<src.uid>
+endif
+
+ON=@equiptest
+    IF <SRC.FINDID.i_disarm_timer>
+        SRC.SYSMESSAGE Voce ainda nao pode equipar uma arma.
+        RETURN 1
+    ENDIF
+    IF (<SRC.FINDLAYER.22.BASEID>==i_mage_robe) || (<src.findlayer(9).baseid>==i_vip_hat_wizards) || (<src.findlayer(22).baseid>==i_vip_mana_robe)
+        SRC.SYSMESSAGE Voce nao pode equipar esta arma usando Mage Robe.
+        RETURN 1
+    ENDIF
+
+ON=@TARGON_ITEM
+IF <ARGO.TYPE>==t_corpse
+    IF ((<ARGO.AMOUNT>==400) || (<ARGO.AMOUNT>==401))
+        RETURN 1
+    ENDIF
+ENDIF
+
+[TYPEDEF T_WEAPON_BOW]
+ON=@CREATE
+ if !(<src>)
+   timerf 1, f_return_ihits <UID>,05b58c
+else
+    timerf 1, f_return_ihits <UID>,<src.uid>
+endif
+
+ON=@equiptest
+    IF <SRC.FINDID.i_disarm_timer>
+        SRC.SYSMESSAGE Voce ainda nao pode equipar uma arma.
+        RETURN 1
+    ENDIF
+    IF (<SRC.FINDLAYER.22.BASEID>==i_mage_robe) || (<src.findlayer(9).baseid>==i_vip_hat_wizards) || (<src.findlayer(22).baseid>==i_vip_mana_robe)
+        SRC.SYSMESSAGE Voce nao pode equipar esta arma usando Mage Robe.
+        RETURN 1
+    ENDIF
+
+ON=@TARGON_ITEM
+IF <ARGO.TYPE>==t_corpse
+    IF ((<ARGO.AMOUNT>==400) || (<ARGO.AMOUNT>==401))
+        RETURN 1
+    ENDIF
+ENDIF
+
+[TYPEDEF T_WEAPON_MACE_CROOK]
+ON=@CREATE
+if !(<src>)
+   timerf 1, f_return_ihits <UID>,05b58c
+else
+    timerf 1, f_return_ihits <UID>,<src.uid>
+endif
+
+ON=@equiptest
+    IF <SRC.FINDID.i_disarm_timer>
+        SRC.SYSMESSAGE Voce ainda nao pode equipar uma arma.
+        RETURN 1
+    ENDIF
+    IF (<SRC.FINDLAYER.22.BASEID>==i_mage_robe) || (<src.findlayer(9).baseid>==i_vip_hat_wizards) || (<src.findlayer(22).baseid>==i_vip_mana_robe)
+        SRC.SYSMESSAGE Voce nao pode equipar esta arma usando Mage Robe.
+        RETURN 1
+    ENDIF
+
+ON=@TARGON_ITEM
+    IF <ARGO.TYPE>==t_corpse
+        IF ((<ARGO.AMOUNT>==400) || (<ARGO.AMOUNT>==401))
+        RETURN 1
+        ENDIF
+    ENDIF
+    IF <ARGO.ID>==0f0d
+        RETURN 1
+    ENDIF
+
+[TYPEDEF t_ARMOR]
+
+ON=@EQUIPTEST
+    IF (<SRC.FINDLAYER.22.BASEID>==i_mage_robe) || (<src.findlayer(9).baseid>==i_vip_hat_wizards) || (<src.findlayer(22).baseid>==i_vip_mana_robe)
+        SRC.SYSMESSAGE Voce nao pode equipar armaduras usando Mage Robe.
+        RETURN 1
+    ENDIF
+
+[TYPEDEF t_armor_leather]
+
+ON=@EQUIPTEST
+IF (<SRC.FINDLAYER.22.BASEID>==i_mage_robe) || (<src.findlayer(9).baseid>==i_vip_hat_wizards) || (<src.findlayer(22).baseid>==i_vip_mana_robe)
+    IF (<ID>==01451) || (<ID>==01452) || (<ID>==01450) || (<ID>==0144e) || (<ID>==0144f)
+        return 0
+    ELSE
+        SRC.SYSMESSAGE Voce nao pode equipar armaduras usando Mage Robe.
+        RETURN 1
+    ENDIF
+ENDIF
+
+

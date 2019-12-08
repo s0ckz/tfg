@@ -1,0 +1,519 @@
+//****************************************************************************
+// All SPHERE script files and formats are copyright Menasoft & Partners.
+// This file may be freely edited for personal use, but may not be distributed
+// in whole or in part, in any format without express written permission from
+// Menasoft & Partners.  All donations and contributions
+// become the property of Menasoft & Partners.
+//****************************************************************************
+// FILE LAST UPDATED: Monday, April 9, 2001
+// House Command System v2.0b created by Vaticus
+
+//VERSION=0.99c
+
+
+[FUNCTION versecure]
+FORITEMS 6500
+if <TYPE>==t_secure
+TYPE t_container
+ATTR <SRC.TARG.ATTR>&~attr_move_never
+more1=00
+morey=0
+LOCAL.COUNT +=1
+ENDIF
+endfor
+sysmessage <dLOCAL.COUNT>
+
+[FUNCTION ff_lockdown]
+IF !(<ARGO.ISITEM>)
+	src.sysmessage You may not lock it.
+	return=1
+ENDIF
+
+IF <ARGO.CONT>
+	SRC.MESSAGE You can not lock this down, place it on the ground first.
+	RETURN 1
+ENDIF
+
+if (<uid.<argo.region.uid>.more1> != <src.uid>)
+		src.sysmessage You may not lock this here.
+		return 1
+endif
+
+if !(<ARGO.region.isevent.r_house_private>)
+	SRC.sysmessage You may not lock this
+	return=1
+endif
+
+if <ARGO.distance> > 3
+	SRC.sysmessage You are too far away to lock this down
+	return=1
+endif
+
+IF (<ARGO.TYPE>== t_secure)
+	SRC.SYSMESSAGE It's already locked down and secure.
+	RETURN 1
+ENDIF
+
+
+IF (<ARGO.TYPE> == t_door) || (<ARGO.TYPE> == t_door_locked) || (<ARGO.TYPE> == t_sign_gump) || (<ARGO.TYPE> == t_stone_guild) || (<ARGO.TYPE> == 17)
+	SRC.SYSMESSAGE This kind of item cant be locked down.
+	RETURN 1
+ENDIF
+
+IF (<ARGO.ATTR>&attr_move_never)
+	SRC.SYSMESSAGE This item is already locked down.
+	RETURN 1
+ENDIF
+
+REF69 <ARGO.UID>
+REF69.ATTR=<REF69.ATTR>|attr_move_never
+REF69.ATTR <REF69.ATTR>&~attr_move_always
+REF69.MESSAGE Locked down!
+REF69 <REGION.UID>
+IF !(<REF69.TAG0.LOCKS>)
+REF69.TAG.LOCKS 1
+ELSE
+REF69.TAG.LOCKS +=1
+ENDIF
+
+SRC.RESEND
+RETURN 1
+
+
+
+[FUNCTION ff_release]
+IF !(<ARGO.ISITEM>)
+	src.sysmessage You may not release it.
+	return=1
+ENDIF
+
+IF <ARGO.CONT>
+	SRC.MESSAGE You can not release this, place it on the ground first.
+	RETURN 1
+
+ENDIF
+
+IF (<ARGO.ATTR>&010)
+	if !(<ARGO.region.isevent.r_house_private>)
+		SRC.sysmessage You may not release it.
+		return=1
+	endif
+
+	if (<uid.<argo.region.uid>.more1> != <src.uid>) && !(<src.isgm>)
+		src.sysmessage @,,1 You can't release this.
+		serv.writefile Bug_casas.txt <serv.rtime> - <src.name> (<src.account>) tentando soltar <argo.name> (<argo.uid>) flags <argo.flags> na casa de <uid.<uid.<argo.region.uid>.more1>.name> em <p>  - RELEASE
+		return 1
+	endif
+
+	if <ARGO.distance> > 3
+		SRC.sysmessage You are too far away to release it.
+		return=1
+	endif
+
+	IF (<ARGO.TYPE> == t_door) || (<ARGO.TYPE> == t_door_locked) || (<ARGO.TYPE> == t_sign_gump) || (<ARGO.TYPE> == t_stone_guild) || (<ARGO.TYPE> == 17) || (<ARGO.TYPE>==t_spell)
+		SRC.SYSMESSAGE You can not release this kind of item.
+		RETURN 1
+	ENDIF
+
+	IF (<ARGO.TYPE>== t_secure)
+		SRC.SYSMESSAGE You need to unsecure this.
+		RETURN 1
+	ENDIF
+	REF69 <ARGO.UID>
+	REF69.ATTR <REF69.ATTR>&~010
+	REF69.MESSAGE [no longer locked down]
+	REF69 <REGION.UID>
+	REF69.TAG.LOCKS -=1
+	SRC.UPDATE
+
+ELSE
+	SRC.SYSMESSAGE This item is not locked down!
+ENDIF
+
+
+RETURN 1
+
+
+[FUNCTION ff_secure]
+IF !(<ARGO.ISITEM>)
+	src.sysmessage You may not lock it.
+	return=1
+ENDIF
+
+IF !(<ARGO.TYPE>==t_container)
+SRC.SYSMESSAGE You can only secure containers.
+RETURN 1
+ENDIF
+
+IF (<ARGO.CONT>)
+SRC.SYSMESSAGE Containers must be on the ground.
+RETURN 1
+ENDIF
+
+
+if !(<ARGO.region.isevent.r_house_private>)
+	SRC.sysmessage You may not secure this
+	return=1
+endif
+
+if (<uid.<argo.region.uid>.more1> != <src.uid>)
+		src.sysmessage You may not secure this here.
+		return 1
+endif
+
+if <ARGO.distance> > 3
+	SRC.sysmessage You are too far away to secure it
+	return=1
+endif
+
+IF (<ARGO.TYPE>== t_secure)
+	SRC.SYSMESSAGE It's already locked down and secure.
+	RETURN 1
+ENDIF
+
+
+REF69 <ARGO.UID>
+REF69.TYPE t_secure
+REF69.ATTR=<ARGO.ATTR>|010
+REF69.MESSAGE [Container Secure]
+REF69.more2=<SRC.UID>
+REF69.morey=<ARGS>
+REF69 <REGION.UID>
+IF !(<REF69.TAG0.SECURES>)
+REF69.TAG.SECURES 1
+ELSE
+REF69.TAG.SECURES +=1
+ENDIF
+SRC.UPDATE
+RETURN 1
+
+
+[FUNCTION ff_unsecure]
+
+IF !(<ARGO.ISITEM>)
+	src.sysmessage You may not unsecure it.
+	return=1
+ENDIF
+
+IF !(<ARGO.TYPE>== t_secure)
+	SRC.SYSMESSAGE It's not secured.
+	RETURN 1
+ENDIF
+
+IF <ARGO.CONT>
+	SRC.MESSAGE You can not unsecure it, place it on the ground first.
+	RETURN 1
+
+ENDIF
+if <ARGO.distance> > 3
+	SRC.sysmessage You are too far away to unsecure it.
+	return=1
+endif
+
+if (<uid.<argo.region.uid>.more1> != <src.uid>) && !(<src.isgm>)
+	src.sysmessage @,,1 You can't release this.
+	serv.writefile Bug_casas.txt <serv.rtime> - <src.name> (<src.account>) tentando soltar <argo.name> (<argo.uid>) flags <argo.flags> na casa de <uid.<uid.<argo.region.uid>.more1>.name> em <p> UNSECURE
+	return 1
+endif
+
+if ! (<ARGO.region.isevent.r_house_private>)
+	SRC.sysmessage You may not unsecure it.
+	return=1
+endif
+
+REF69 <ARGO.UID>
+REF69.TYPE t_container
+REF69.ATTR <ARGO.ATTR>&~010
+REF69.MESSAGE [Container Unsecured]
+REF69.more2=00
+REF69.morey=0
+REF69 <REGION.UID>
+REF69.TAG.SECURES -=1
+SRC.UPDATE
+
+[FUNCTION ff_turn]
+IF !(<ARGO.ISITEM>)
+	src.sysmessage You may not turn it.
+	RETURN 1
+ENDIF
+
+IF (<ARGO.CONT>)
+	SRC.MESSAGE You can not turn this, place it on the ground first.
+	RETURN 1
+ENDIF
+
+IF !(<ARGO.ATTR> & 010)
+	IF !(<ARGO.REGION.ISEVENT.r_house_private>)
+		SRC.SYSMESSAGE You may not turn it.
+		RETURN 1
+	ENDIF
+
+	IF (<UID.<ARGO.REGION.UID>.MORE1> != <SRC.UID>) && !(<SRC.ISGM>)
+		SRC.SYSMESSAGE @,,1 You can't turn this.
+		RETURN 1
+	ENDIF
+
+	if (<ARGO.DISTANCE> > 3)
+		SRC.sysmessage You are too far away to turn it.
+		RETURN 1
+	ENDIF
+
+	IF (<ARGO.TYPE> == t_door) || (<ARGO.TYPE> == t_door_locked) || (<ARGO.TYPE> == t_sign_gump) || (<ARGO.TYPE> == t_stone_guild) || (<ARGO.TYPE> == 17) || (<ARGO.TYPE> == t_spell)
+		SRC.SYSMESSAGE You can not turn this kind of item.
+		RETURN 1
+	ENDIF
+
+	IF (<ARGO.TYPE>== t_secure)
+		SRC.SYSMESSAGE You need to unsecure this.
+		RETURN 1
+	ENDIF
+
+	ARGO.FLIP
+	SRC.UPDATE
+ELSE
+	SRC.SYSMESSAGE This item is locked down!
+ENDIF
+
+RETURN 1
+
+[PLEVEL 1]
+secure
+unsecure
+lock
+unlock
+turn
+
+[FUNCTION secure]
+REF1 <REGION.UID>
+
+IF !(<REGION.ISEVENT.r_house_private>) && !(<REF1.ISEVENT.r_house_private>)
+	RETURN 1
+ENDIF
+
+IF (<SRC.UID> == <REF1.MORE1>) // onwer secure
+	IF (<REF1.TAG0.SECURES>) >= (<REF1.VALUE>/4000)
+		SRC.SYSMESSAGE You already have too many secure containers.
+	ELSE
+		SRC.SYSMESSAGE Secure what ?
+		TARGETF ff_secure 1
+
+	ENDIF
+	RETURN 1
+endif
+
+FOR 1 8
+	IF (<REF1.TAG0.CO<dLOCAL._FOR>UID> == <SRC.UID>)
+		IF (<REF1.TAG0.LOCKS>) >= (<REF1.VALUE>/10000)
+			SRC.SYSMESSAGE You already have too many secure containers.
+		ELSE
+			SRC.SYSMESSAGE Secure what ?
+			TARGETF ff_secure 2
+		ENDIF
+		RETURN 1
+	endif
+ENDFOR
+SRC.SYSMESSAGE You must own the house to do this.
+
+[FUNCTION unsecure]
+REF1 <REGION.UID>
+
+IF !(<REGION.ISEVENT.r_house_private>) && !(<REF1.ISEVENT.r_house_private>)
+	RETURN 1
+ENDIF
+
+IF (<SRC.UID> == <REF1.MORE1>) || (<SRC.ISGM>)
+	SRC.SYSMESSAGE Unsecure what ?
+	targetf ff_unsecure
+	return=1
+endif
+FOR 1 8
+	IF (<REF1.TAG0.CO<dLOCAL._FOR>UID> == <SRC.UID>)
+		SRC.SYSMESSAGE Unsecure what ?
+		targetf ff_unsecure
+		return=1
+	endif
+ENDFOR
+SRC.SYSMESSAGE You must own the house to do this.
+
+[FUNCTION lock]
+REF1 <REGION.UID>
+
+IF !(<REGION.ISEVENT.r_house_private>) && !(<REF1.ISEVENT.r_house_private>)
+	RETURN 1
+ENDIF
+
+IF (<SRC.UID> == <REF1.MORE1>) || (<SRC.ISGM>)
+
+	IF (<REF1.TAG0.LOCKS>) >= (<REF1.VALUE>/2000)
+		SRC.SYSMESSAGE You already have too many locked itens.
+		RETURN 1
+	ELSE
+		SRC.SYSMESSAGE Lock what down ?
+		TARGETF ff_lockdown
+	ENDIF
+else
+	SRC.SYSMESSAGE You must own the house to do this.
+	RETURN 1
+ENDIF
+
+[FUNCTION unlock]
+REF1 <REGION.UID>
+
+IF !(<REGION.ISEVENT.r_house_private>) && !(<REF1.ISEVENT.r_house_private>)
+	RETURN 1
+ENDIF
+
+IF (<SRC.UID> == <REF1.MORE1>) || (<SRC.ISGM>)
+	SRC.SYSMESSAGE Unlock what ?
+	TARGETF ff_release
+else
+	SRC.SYSMESSAGE You must own the house to do this.
+	RETURN 1
+ENDIF
+
+[FUNCTION turn]
+REF1 <REGION.UID>
+
+IF !(<REGION.ISEVENT.r_house_private>) && !(<REF1.ISEVENT.r_house_private>)
+	RETURN 1
+ENDIF
+
+IF (<SRC.UID> == <REF1.MORE1>) || (<SRC.ISGM>)
+	SRC.SYSMESSAGE Turn what ?
+	TARGETF ff_turn
+else
+	SRC.SYSMESSAGE You must own the house to do this.
+	RETURN 1
+ENDIF
+
+[SPEECH spk_house_cmds]
+DEFNAME=spk_house_cmds
+
+ON=*House help*
+SRC.SYSMESSAGE Para trancar itens em sua casa, digite '.lock'
+SRC.SYSMESSAGE
+SRC.SYSMESSAGE Para soltar os itens em sua casa, digite '.unlock'
+SRC.SYSMESSAGE
+SRC.SYSMESSAGE Para deixar seus containers seguros, digite '.secure'
+SRC.SYSMESSAGE
+SRC.SYSMESSAGE Para tirar o secure de seus containers, digite '.unsecure'
+SRC.SYSMESSAGE
+SRC.SYSMESSAGE Para acessar seu banco, digite 'bank'
+
+
+ON=*bank*
+IF (<SRC.UID> == <MORE1>) || (<SRC.ISGM>)
+	SRC.BANKSELF
+	IF !(<REGION.ISEVENT.r_house_private>)
+		REGION.EVENTS +R_HOUSE_PRIVATE
+	ENDIF
+	RETURN 1
+ENDIF
+FOR 1 8
+	IF (<TAG0.CO<dLOCAL._FOR>UID> == <SRC.UID>)
+		SRC.BANKSELF
+		RETURN 1
+	endif
+ENDFOR
+FOR 1 20
+	IF (<TAG0.F<dLOCAL._FOR>UID>==<SRC.UID>)
+		SRC.BANKSELF
+		RETURN 1
+	ENDIF
+ENDFOR
+SRC.SYSMESSAGE You must own the house to do this.
+
+ON=*I wish to lock this down*
+lock
+
+ON=*I wish to secure this*
+secure
+
+ON=*I wish to unsecure this*
+unsecure
+
+ON=*I wish to release this*
+unlock
+
+[TYPEDEF t_secure]
+ON=@Click
+MESSAGE [locked down & secure]
+MESSAGE
+RETURN 0
+
+
+ON=@Pickup_self
+IF <SRC.ACCOUNT.PLEVEL> < 2
+	IF !(<MORE2> == <SRC.UID>)
+		FOR 1 8
+			IF (<SRC.UID>==<SRC.REGION.TAG0.CO<dLOCAL._FOR>UID>)
+				RETURN 0
+			ENDIF
+		ENDFOR
+		REF69 <SRC.REGION.TAG.SIGNP>
+		REF69 <REF69.LINK>
+		IF !(<SRC.UID>==<UID.<REF69.MORE1>.UID>)
+			SRC.SYSMESSAGE Nice Try :)
+			RETURN 1
+		ENDIF
+	ENDIF
+ENDIF
+
+ON=@DClick
+
+IF <src.gm> == 1
+TYPE t_container
+USE
+TYPE t_secure
+MESSAGE This container is secure.
+RETURN 1
+endif
+
+if <cont> == <src.findlayer(21).UID>
+src.sysmessage Atencao, usar container secure na bag eh passivel de banimento, seja esperto e nao use, depois de banido nao tem volta!!
+return=1
+endif
+
+if <cont>  > 0
+src.sysmessage You cant use this inside a container
+return=1
+endif
+
+
+
+IF (<more2> == <src.uid>)
+TYPE t_container
+USE
+TYPE t_secure
+MESSAGE This container is secure.
+RETURN 1
+endif
+FOR 1 8
+
+	IF <SRC.UID>==<SRC.REGION.TAG.CO<dLOCAL._FOR>UID>
+
+		TYPE t_container
+		USE
+		TYPE t_secure
+		MESSAGE This container is secure.
+		RETURN 1
+	ENDIF
+ENDFOR
+REF69 <SRC.REGION.TAG.SIGNP>
+REF69 <REF69.LINK>
+IF <SRC.UID>==<UID.<REF69.MORE1>.UID>
+	TYPE t_container
+	USE
+	TYPE t_secure
+	MESSAGE This container is secure.
+	RETURN 1
+ENDIF
+
+src.sysmessage only the onwer and co-owners can unsecure this
+return=1
+
+
+
+
+
+[EOF]

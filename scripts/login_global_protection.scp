@@ -1,0 +1,97 @@
+[function f_setup_antiip]
+ldb.execute CREATE TABLE 'Global_IP' ('id' TEXT PRIMARY KEY NOT NULL, 'ip' TEXT)
+
+[function f_onlogin_global_protect]
+// tem que ser chamada com CALL pra dar return 1 no login.
+if !<f_login_verify_ipglobal>
+	serv.log ATENCAO <name> conta <account.name> esta logando em um IP que ja logou outras contas globais. Um log da irregularidade foi gerado para analise.
+	//return 1
+endif 
+
+[function f_login_verify_ipglobal]
+if (<f_usedip> == 2)
+// 2 = este ip foi usado por outra conta
+	if !<f_ipacc>
+		ldb.execute INSERT INTO 'Global_IP' ('id', 'ip') VALUES ('<account.tag0.global>', '<account.lastip>')
+	endif
+	s ATENCAO <name> conta <account.name> esta logando em um IP que ja logou outras contas globais. Um log da irregularidade foi gerado para analise.
+	f_geralog_globalprotect
+	return 0
+elif (<f_usedip> == 1) 
+	// 1 = este ip só tem minha conta , login correto 
+	return 1
+elif !<f_usedip>
+	//0 = Ip Virgem, login correto
+	ldb.execute INSERT INTO 'Global_IP' ('id', 'ip') VALUES ('<account.tag0.global>', '<account.lastip>')
+	return 1
+else
+	// bizarro, caso anomalia
+	s Anomalia no login de <name> (<account.name>). Login bloqueado.
+	return 0
+endif
+return 0
+	
+[function f_usedip]
+// RETURNs:
+// 1 = este ip só tem minha conta
+// 2 = este ip outra conta
+// 0 = ip nunca usado
+ref1 = <uid>
+ldb.query SELECT * FROM 'Global_IP' WHERE ip='<account.lastip>'
+if <ldb.row.numrows>
+	for 0 <eval <ldb.row.numrows> - 1>
+		local.global = <ldb.row.<dlocal._for>.id>
+		if (<ref1.account.tag0.global> != <local.global>)
+			return 2
+		elif (<ref1.account.tag0.global> == <local.global>)
+			local.ip = 1
+		endif
+	endfor 
+else
+	if <local.ip>
+		return 1
+	else
+		return 0
+	endif
+endif
+return 0 
+
+[function f_ipacc]
+ref1 = <uid>
+ldb.query SELECT * FROM 'Global_IP' WHERE ip='<ref1.account.lastip>' AND id='<ref1.account.tag0.global>'
+if <ldb.row.numrows>
+	return 1
+endif
+return 0 
+
+[function f_geralog_globalprotect]
+SERV.WRITEFILE Irregularidade_Global.txt -----------------------<serv.rtime>----------------------------
+SERV.WRITEFILE Irregularidade_Global.txt <name> (<account.name>, global <account.dtag0.global>) esta tentando logar com IP <account.lastip>
+SERV.WRITEFILE Irregularidade_Global.txt Historico do IP:
+ref1 = <uid>
+ldb.query SELECT * FROM 'Global_IP' WHERE ip='<account.lastip>'
+if <ldb.row.numrows>
+	for 0 <eval <ldb.row.numrows> - 1>
+		local.global = <ldb.row.<dlocal._for>.id>
+		local.ip = <ldb.row.<dlocal._for>.ip>
+		SERV.WRITEFILE Irregularidade_Global.txt ACC GLOBAL <dlocal.global> IP <local.ip>
+		SERV.WRITEFILE Irregularidade_Global.txt ACC GLOBAL <dlocal.global> POSSUI OS LOGINS:
+		f_write_accglobal_logins <dlocal.global>
+	endfor 
+endif
+SERV.WRITEFILE Irregularidade_Global.txt ----------------------------------------------------
+
+[FUNCTION f_write_accglobal_logins]
+local.global = <args>
+        for h <serv.accounts>
+                local.i=0
+                if (<serv.account.<eval <local.h> +-1>.chars>)
+                        for i <serv.account.<eval <local.h> +-1>.chars>
+                                ref1 <serv.account.<eval <local.h> +-1>.char.<eval <local.i> +-1>.uid>
+                                if (<ref1.account.tag0.global>==<local.global>)
+									SERV.WRITEFILE Irregularidade_Global.txt ACC GLOBAL <dlocal.global> LOGIN: <ref1.account.name> NICK: <ref1.name>
+								endif
+                        endfor
+                endif
+        endfor
+return 1

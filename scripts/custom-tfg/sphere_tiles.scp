@@ -1,0 +1,118 @@
+[ITEMDEF i_moongate_item]
+NAME=Moongate Item
+ID=i_moongate_blue
+
+ON=@STEP
+IF !(<TAG0.ITEM_ID>)
+	IF (<SRC.ISGM>)
+		SRC.SYSMESSAGE You must set the required item id for this gate using .xtag.item_id and clicking on the gate.
+	ENDIF
+	RETURN 1
+ENDIF
+
+IF !(<SRC.FINDID.<TAG.ITEM_ID>>)
+	SRC.SYSMESSAGE You must have a <SERV.ITEMDEF.<TAG.ITEM_ID>.NAME> to enter the gate !
+	RETURN 1
+ENDIF
+
+IF (<SRC.FINDID.<TAG.ITEM_ID>.TIMER> == 0)
+	SRC.FINDID.<TAG.ITEM_ID>.REMOVE
+	SRC.SYSMESSAGE You must have a <SERV.ITEMDEF.<TAG.ITEM_ID>.NAME> to enter the gate !
+
+	RETURN 1
+ENDIF
+
+SRC.FINDID.<TAG.ITEM_ID>.REMOVE
+
+[ITEMDEF i_moongate_commerce]
+NAME=Commerce Room
+ID=i_moongate_blue
+
+
+ON=@STEP
+IF ((<SRC.HITS> < <SRC.MAXHITS>) || (<SRC.MANA> < <SRC.INT>) || !(<SRC.ISPLAYER>)) && !(<SRC.ISGM>)
+	SRC.SYSMESSAGE Voce so pode entrar neste gate com Hits e Mana Full !!
+	RETURN 1
+ELSE
+	SRC.GO COMMERCE ROOM
+	return 1
+ENDIF
+
+[itemdef i_tile_kill]
+name=tile kill
+Id=0495
+type=t_normal
+DISPID=0495
+
+on=@create
+	attr=090
+	color=0455
+on=@step
+src.kill
+SRC.EVENTS -e_scale_ctf
+[itemdef i_tile_pbrit]
+name=tile move ponte brit
+Id=0495
+type=t_normal
+DISPID=0495
+
+on=@create
+	attr=090
+	color=0455
+on=@step
+	if !(<src.isplayer>)
+	//src.move W 5
+	src.F_GO 1366,1752,13
+	return 1
+	endif
+
+
+[itemdef i_tile_pcove]
+name=tile move portao cove
+Id=0496
+type=t_normal
+DISPID=0495
+
+on=@create
+	attr=090
+	color=0255
+on=@step
+	if !(<src.isplayer>)
+	//src.move W 5
+	src.F_GO 2313,1207
+	return 1
+	endif
+
+[itemdef i_tile_bminoc]
+name=tile move barracas minoc
+Id=0497
+type=t_normal
+DISPID=0495
+
+on=@create
+	attr=090
+	color=058
+on=@step
+	if !(<src.isplayer>)
+	//src.move W 5
+	src.F_GO 2531,666
+	return 1
+	endif
+
+
+
+[itemdef i_tile_telepad]
+name=Teleporter
+Id=0497
+type=t_normal
+DISPID=0495
+
+on=@create
+	attr=090
+	color=058
+on=@step
+	if (<src.isplayer>)
+	//src.move W 5
+	src.F_GO <MOREP>
+//	return 1
+	endif

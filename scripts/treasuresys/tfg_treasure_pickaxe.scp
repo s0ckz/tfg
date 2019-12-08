@@ -1,0 +1,196 @@
+////////////////////////////////////////////////////
+//                                                //
+//   Substituiçao da Picareta, Sys de Tesouros    //
+//                                                //
+//                                                //
+////////////////////////////////////////////////////
+
+
+[EVENTS e_unknown_llama]
+ON=@DEATH
+	serv.log unknow llama morta impedida
+	hits 1000
+	say I cannot die in this Spiritual Mountain.
+return 1
+
+ON=@GETHIT
+if <src.region.uid> != <region.uid>
+	return 1
+endif
+
+[TYPEDEF t_quest_unknown_llama]
+
+[TYPEDEF t_weapon_mace_pick]
+ON=@TargOn_Ground
+if (<src.region.defname>==a_wastelands_1)
+//s <src.targp> <src.targp.type>
+	if (<src.targp.type>==t_rock)
+		args = <src.targp>
+		if (<argv[0]> == 6071) && (<argv[1]> == 2392)
+			if (<src.mining> >= 1000)
+				src.message @31,,1 *Wow! A terra esta tremend... ah, parece que voce encontrou uma passagem escondida nas pedras!*
+				src.move 2
+				serv.newitem 02166
+				new.p 6070,2390,24
+				new.attr 010
+				new.timerf 7,remove
+				serv.newitem 02167
+				new.p 6070,2389,25
+				new.attr 010
+				new.timerf 7,remove
+				serv.newitem i_tile_telepad
+				new.p 6071,2390,24
+				new.morep 6068,2390,10
+				new.attr 090
+				new.timerf 7,remove
+				serv.newitem i_tile_telepad
+				new.p 6071,2389,24
+				new.morep 6068,2389,10
+				new.attr 090
+				new.timerf 7,remove
+			endif
+		elif <src.isneartype t_quest_unknown_llama 15>
+			if (<src.mining> >= 1000)
+				src.message @31,,1 *Hmmm... Voce nota que ha algo estranho nessas paredes.*
+			endif
+		endif
+	endif
+endif
+if <var0.quest_joias>
+	if !<src.ctag0.cavando>
+		if (<src.region.defname>==a_britain_territory_1)
+			ref1 = 040006e39
+			if (<src.distance <ref1>> < 30)
+				if (<src.targp.type>==t_sand)
+					if (<src.mining> > 650)
+						args = <src.targp>
+						if (<argv[0]> == 1488) && (<argv[1]> == 1880)
+							foritems 10
+								if (<baseid>==i_quest_tresshorn_letter)
+									return 1
+								endif
+							endfor
+							src.message "@31,,1 *Parece que existe algo que afundou aqui sob a areia.*"
+							src.ctag0.cavando = 1
+							serv.b @31 <src.name> resolveu a quarta etapa da quest!
+							serv.newitem i_quest_tresshorn_letter
+							new.p 1488,1880,0
+							new.attr 010
+							ref2 = <new>
+							src.anim 13
+							ref2.timerf 1,f_subir_carta <src.uid>
+							ref2.timerf 2,f_subir_carta <src.uid>
+							ref2.timerf 3,f_subir_carta <src.uid>
+							ref2.timerf 4,f_subir_carta <src.uid>
+							ref2.timerf 5,f_subir_carta <src.uid>
+							ref2.timerf 21,f_descer_carta
+							ref2.timerf 22,f_descer_carta
+							ref2.timerf 23,f_descer_carta
+							ref2.timerf 24,f_descer_carta
+							ref2.timerf 25,f_descer_carta
+							return 1
+						else
+							src.message "@31,,1 *Esta areia parece ja ter sido remexida mas voce nao encontrou nada neste ponto.*"
+							return 1
+						endif
+					else
+						src.message "@31,,1 *Voce nao sente ter habilidade suficiente para este solo, toda areia escapa e cai denovo sobre a terra antes que voce a retire!*"
+						return 1
+					endif
+				endif
+			endif
+		endif
+	else
+		src.sysmessage "@,,1 Voce ja esta cavando."
+		return 1
+	endif
+endif
+
+[function f_subir_carta]
+ref1 = <args>
+ref1.anim 13
+z += 1
+updatex
+if (<z> > 4)
+	tag.lisible = 1
+	ref1.ctag0.cavando =
+endif
+return 1
+
+[function f_descer_carta]
+tag.lisible =
+message *pluf*
+z -= 1
+updatex
+if (<z> < 1)
+	remove
+endif
+return 1
+
+[TYPEDEF t_treasure_shovel]
+ON=@Dclick
+if !<isempty <src.ctag.treasure_shovel_use>>
+	src.sysmessage @,,1 Voce ja esta ocupado escavando outro tesouro.
+	return 1
+endif
+TARGETG
+return 1
+
+ON=@TargOn_Ground
+if !<isempty <src.ctag.treasure_shovel_use>>
+	src.sysmessage @,,1 Voce ja esta ocupado escavando outro tesouro.
+	return 1
+endif
+if <var0.quest_joias>
+	if !<src.ctag0.cavando>
+		if (<src.region.defname>==a_britain_territory_1)
+			ref1 = 040006e39
+			if (<src.distance <ref1>> < 30)
+				src.sysmessage "@,,1 A areia desta area e muito fofa para uma pa tao robusta."
+			endif
+		endif
+	endif
+endif
+if ((<baseid> == i_treasure_shovel) && (<src.restest i_treasure_map_lvl_1> || <src.restest i_treasure_map_lvl_2> || <src.restest i_treasure_map_lvl_3> || <src.restest i_treasure_map_lvl_4> || <src.restest i_treasure_map_lvl_5>) || <src.restest i_treasure_map_lvl_6>))
+    serv.newitem i_worldgem_bit
+    new.p = <src.targp>
+    new.attr = attr_move_never | attr_invis
+	if <src.distance <new.uid>> > 2
+		new.remove
+		src.sysmessage That is too far away.
+		return 1
+	endif
+    new.remove
+    ref1=<src.findlayer.21.uid>
+    local.map = <ref1.f_isitmytreasure <src.targp>>
+    ref2 = <local.map>
+	if <src.mining> < <def.treasure_mining_lvl_<ref2.dtag.map.level>>
+		src.sysmessage @,,1 Você não possui habilidade com mineração suficiente para escavar aqui.
+		return 1
+	endif
+	if <local.map>
+		src.f_gettreasure <ref2.tag.map.level>,<uid>,<local.map>,<src.targp>
+		return 1
+	endif
+	src.sysmessage @,,1 Você nao encontrou nada aqui.
+	return 1
+else
+ src.sysmessage @,,1 Voce não possui nenhum mapa em sua bag.
+ return 1
+endif
+
+[FUNCTION f_isitmytreasure]
+local.x = <dargv0>
+local.y = <dargv1>
+local.z = <dargv2>
+FORCONTTYPE t_map
+	if <tag0.decyphered> != 0
+		args = <morep>
+		if ((<local.x> == <dargv0>) || (<eval <local.x> + 1> == <dargv0>) || (<eval <local.x> - 1> == <dargv0>)) && ((<local.y> == <dargv1>) || (<eval <local.y> + 1> == <dargv1>) || (<eval <local.y> - 1> == <dargv1>))
+			return <UID>
+		endif
+	endif
+ENDFOR
+return 0
+
+[EOF]

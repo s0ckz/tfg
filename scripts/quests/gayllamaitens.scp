@@ -1,0 +1,321 @@
+﻿////
+	
+[CHARDEF C_MAGO_ELEMENTAL]
+DEFNAME=C_MAGO_ELEMENTAL
+NAME=Misterious Wizard
+ID=C_MAN
+//DESIRES=i_gold,e_notoriety,jobpirate,T_GEM
+//AVERSIONS=t_TRAP,t_eerie_stuff
+TSPEECH=spk_mago_elemental
+//TEVENTS=e_Human_Needs
+
+
+ON=@Create
+	events=+e_poison_immune
+	COLOR=colors_skin
+	STR={ 280 290 }
+	DEX={ 0 }
+	INT={ 100 100 }
+	stam=0
+	MAXHITS={300 400}
+	KARMA={ 5000 6000 }
+	FENCING={ 99.0 99.0 }
+	PARRYING={65.0 88.0}
+	SWORDSMANSHIP={95.0 99.0}
+	WRESTLING={45.0 68.0}
+	MACEFIGHTING={25.0 48.0}
+	TACTICS={95.0 98.0}
+	STEALING={98.0 100.0}
+	FLAGS=05
+	NPC=brain_human
+	ITEMNEWBIE=i_hair_long
+	color 024
+	ITEMNEWBIE=i_beard_long
+	COLOR=match_hair
+	ITEMNEWBIE=i_hat_wizards
+	COLOR=023
+	ITEMNEWBIE=I_ROBE
+	ITEMNEWBIE=I_SANDALS
+
+ON=@NPCRestock
+	ITEM=RANDOM_LIGHT
+	ITEM=i_shirt_plain
+	COLOR=colors_all
+	
+	
+	
+[ITEMDEF I_POT_AGUA]
+DEFNAME=I_POT_AGUA
+NAME=Water Element Bowl
+ID=i_bowl_wood
+WEIGHT=1
+TYPE=T_NORMAL
+
+ON=@CREATE
+	COLOR 0ab4
+	ATTR 04
+	
+ON=@DCLICK
+if <tag0.quest_cheio>
+	src.sysmessage @,,1 Esta tigela ja esta cheia!
+	return 1
+endif
+  
+	TARGETG
+	RETURN 1
+	
+ON=@TARGON_GROUND
+	if (<src.targp.type> == t_normal)
+		F_COLETARTIGELA 1,<serv.itemdef.<argn1>.type>,<REGION.DEFNAME>
+		RETURN 1
+	else
+		F_COLETARTIGELA 1,<src.targp.type>,<REGION.DEFNAME>
+		RETURN 1
+	endif
+
+ON=@DropOn_Char
+if !<tag0.quest_cheio>
+ src.sysmessage @,,1 Esta criatura nao parece interessada em uma tigela vazia.
+ return 1
+else
+ if (<argo.baseid> == c_mago_elemental)
+  if <tag0.quest_correto>
+   argo.message @,,1 Parabens nobre Guerreiro! Voce coletou o material correto! Para continuar, pergunte-me sobre o segundo elemento.
+   tag.quest_correto_2 = 1
+	serv.b @24 <src.name> completou o primeiro elemento!
+    return 1
+  else
+   argo.message @,,1 Nobre Guerreiro! Voce coletou a materia errada ou no lugar errado! Nao desista, aqui esta uma nova tigela! Tente novamente! 
+   f_novatigela 1,<src.uid>
+    remove
+  endif
+ else
+  src.sysmessage @,,1 Esta criatura nao parece interessada nisto.
+  return 1
+ endif
+endif
+
+	
+ON=@DropOn_Ground
+cont = <src.findlayer.21>
+updatex
+SRC.SYSMESSAGE @,,1 Esse item deve ficar com você
+RETURN 1
+
+ON=@DropOn_Item
+SRC.SYSMESSAGE @,,1 Esse item deve ficar com você	
+RETURN 1
+	
+ON=@DropOn_Self
+SRC.SYSMESSAGE @,,1 Esse item deve ficar com você
+RETURN 1
+
+ON=@DropOn_Trade
+SRC.SYSMESSAGE @,,1 Esse item deve ficar com você
+RETURN 1
+
+
+
+[ITEMDEF I_POT_FOGO]
+DEFNAME=I_POT_FOGO
+NAME=Fire Element Bowl
+ID=i_bowl_wood
+WEIGHT=1
+TYPE=T_NORMAL
+
+ON=@CREATE
+	COLOR 079a
+	ATTR 04
+	
+ON=@DCLICK
+if <tag0.quest_cheio>
+	src.sysmessage @,,1 Esta tigela ja esta cheia!
+	return 1
+endif
+
+	TARGETG
+	RETURN 1
+	
+ON=@TARGON_GROUND
+	F_COLETARTIGELA 2,<src.targp.type>,<REGION.DEFNAME>
+	RETURN 1
+	
+ON=@DropOn_Char
+if !<tag0.quest_cheio>
+ src.sysmessage @,,1 Esta criatura nao parece interessada em uma tigela vazia.
+ return 1
+else
+ if (<argo.baseid> == c_mago_elemental)
+  if <tag0.quest_correto>
+   argo.message @,,1 Parabens nobre Guerreiro! Voce coletou o material correto! Para continuar, pergunte-me sobre o terceiro elemento.
+   tag.quest_correto_2 = 1
+	serv.b @24 <src.name> completou o segundo elemento!
+    return 1
+  else
+   argo.message @,,1 Nobre Guerreiro! Voce coletou a materia errada ou no lugar errado! Nao desista, aqui esta uma nova tigela! Tente novamente! 
+   f_novatigela 2,<src.uid>
+    remove
+  endif
+ else
+  src.sysmessage @,,1 Esta criatura nao parece interessada nisto.
+  return 1
+ endif
+endif
+
+	
+ON=@DropOn_Ground
+cont = <src.findlayer.21>
+updatex
+SRC.SYSMESSAGE @,,1 Esse item deve ficar com você
+RETURN 1
+
+ON=@DropOn_Item
+SRC.SYSMESSAGE @,,1 Esse item deve ficar com você	
+RETURN 1
+	
+ON=@DropOn_Self
+SRC.SYSMESSAGE @,,1 Esse item deve ficar com você
+RETURN 1
+
+ON=@DropOn_Trade
+SRC.SYSMESSAGE @,,1 Esse item deve ficar com você
+RETURN 1
+
+
+[ITEMDEF I_POT_TERRA]
+DEFNAME=I_POT_TERRA
+NAME=Earth Element Bowl
+ID=i_bowl_wood
+WEIGHT=1
+TYPE=T_NORMAL
+
+ON=@CREATE
+	COLOR 00158
+	ATTR 04
+	
+ON=@DCLICK
+if <tag0.quest_cheio>
+	src.sysmessage @,,1 Esta tigela ja esta cheia!
+	return 1
+endif
+	TARGETG
+	RETURN 1
+	
+ON=@TARGON_GROUND
+	F_COLETARTIGELA 3,<src.targp.type>,<REGION.DEFNAME>
+	RETURN 1
+	
+ON=@DropOn_Char
+if !<tag0.quest_cheio>
+ src.sysmessage @,,1 Esta criatura nao parece interessada em uma tigela vazia.
+ return 1
+else
+ if (<argo.baseid> == c_mago_elemental)
+  if <tag0.quest_correto>
+   argo.message @,,1 Parabens nobre Guerreiro! Voce coletou o material correto! Para continuar, pergunte-me sobre o quarto elemento.
+   tag.quest_correto_2 = 1
+	serv.b @24 <src.name> completou o terceiro elemento!
+    return 1
+  else
+   argo.message @,,1 Nobre Guerreiro! Voce coletou a materia errada ou no lugar errado! Nao desista, aqui esta uma nova tigela! Tente novamente! 
+   f_novatigela 3,<src.uid>
+   remove 
+  endif
+ else
+  src.sysmessage @,,1 Esta criatura nao parece interessada nisto.
+  return 1
+ endif
+endif
+
+	
+ON=@DropOn_Ground
+cont = <src.findlayer.21>
+updatex
+SRC.SYSMESSAGE @,,1 Esse item deve ficar com você
+RETURN 1
+
+ON=@DropOn_Item
+SRC.SYSMESSAGE @,,1 Esse item deve ficar com você	
+RETURN 1
+	
+ON=@DropOn_Self
+SRC.SYSMESSAGE @,,1 Esse item deve ficar com você
+RETURN 1
+
+ON=@DropOn_Trade
+SRC.SYSMESSAGE @,,1 Esse item deve ficar com você
+RETURN 1
+
+[ITEMDEF I_POT_AR]
+DEFNAME=I_POT_Ar
+NAME=Air Element Bottle
+ID=i_BOTTLE_LIQUOR
+WEIGHT=1
+TYPE=T_NORMAL
+
+ON=@CREATE
+	ATTR 04
+	
+ON=@DCLICK
+if <tag0.quest_cheio>
+	src.sysmessage @,,1 Esta garrafa ja esta cheia!
+	return 1
+endif
+	F_COLETARTIGELA 4,0,<REGION.DEFNAME>
+	RETURN 1
+	
+	
+ON=@DropOn_Char
+if !<tag0.quest_cheio>
+ src.sysmessage @,,1 Esta criatura nao parece interessada em uma tigela vazia.
+ return 1
+else
+ if (<argo.baseid> == c_mago_elemental)
+  if <tag0.quest_correto>
+   argo.message @,,1 Parabens nobre Guerreiro! Voce coletou o material correto! Para continuar, pergunte-me novamente sobre a llama.
+   tag.quest_correto_2 = 1
+	serv.b @24 <src.name> completou o quarto elemento!
+   return 1
+  else
+   argo.message @,,1 Nobre Guerreiro! Voce coletou a materia errada ou no lugar errado! Nao desista, aqui esta uma nova garrafa! Tente novamente! 
+   f_novatigela 4,<src.uid>
+    remove
+  endif
+ else
+  src.sysmessage @,,1 Esta criatura nao parece interessada nisto.
+  return 1
+ endif
+endif
+	
+ON=@DropOn_Ground
+cont = <src.findlayer.21>
+updatex
+SRC.SYSMESSAGE @,,1 Esse item deve ficar com você
+RETURN 1
+
+ON=@DropOn_Item
+SRC.SYSMESSAGE @,,1 Esse item deve ficar com você	
+RETURN 1
+	
+ON=@DropOn_Self
+SRC.SYSMESSAGE @,,1 Esse item deve ficar com você
+RETURN 1
+
+ON=@DropOn_Trade
+SRC.SYSMESSAGE @,,1 Esse item deve ficar com você
+RETURN 1
+
+
+[FUNCTION deletatigelas]
+forinstances i_pot_agua
+	remove
+endfor
+forinstances i_pot_ar
+	remove
+endfor
+forinstances i_pot_terra
+	remove
+endfor
+forinstances i_pot_fogo
+	remove
+endfor

@@ -1,0 +1,182 @@
+//****************************************************************************
+//SPHERE by : Menasoft ©1997-2000
+//www.sphereserver.com
+// All SPHERE script files and formats are copyright Menasoft & Partners.
+// This file may be freely edited for personal use, but may not be distributed
+// in whole or in part, in any format without express written permission from
+// Menasoft & Partners.  All donations and contributions
+// become the property of Menasoft & Partners.
+//****************************************************************************
+// FILE LAST UPDATED: Friday, April 28, 2000
+
+VERSION=0.54
+
+[WEBPAGE w_login]
+WEBPAGESRC=WEB\spherelogin.htm
+
+ON=1
+	src.login <ARGTXT1> <ARGTXT2>
+	if ! <src.account.>
+		webpage spherelogfail.htm
+	elif <src.account.plevel> >= 5
+		webpage sphereconfig.htm
+	else
+		webpage sphereaccount.htm
+	endif
+	return 1
+
+[WEBPAGE w_account]
+WEBPAGESRC=WEB\sphereaccount.htm
+PLEVEL=1
+
+[WEBPAGE w_config]
+WEBPAGESRC=WEB\sphereconfig.htm
+PLEVEL=5
+
+[WEBPAGE w_configgame]
+WEBPAGESRC=WEB\sphereconfiggame.htm
+PLEVEL=5
+
+ON=1
+	if ! <src.account.>
+		webpage spherelogfail.htm
+		return 1
+	endif
+	if <src.account.plevel> < 5
+		webpage sphereaccount.htm
+		return 1
+	endif
+	serv.MAXCHARSPERACCOUNT=<ARGTXT1> //T1MAXCHARSPERACCOUNT
+	serv.CLIENTLINGER=<ARGTXT2> //T2CLIENTLINGER
+	serv.MINCHARDELETETIME=<ARGTXT3> //T3MINCHARDELETETIME
+	serv.DECAYTIMER=<ARGTXT4> //T4DECAYTIMER
+	serv.CORPSEPLAYERDECAY=<ARGTXT5> //T5CORPSEPLAYERDECAY
+	serv.CORPSENPCDECAY=<ARGTXT6> //T6CORPSENPCDECAY
+	serv.ARRIVEDEPARTMSG=<ARGCHK1> //C1ARRIVEDEPARTMSG
+	serv.GAMEMINUTELENGTH=<ARGTXT7> //T7GAMEMINUTELENGTH
+	serv.NOWEATHER=<ARGCHK2> //C2NOWEATHER
+	serv.FLIPDROPPEDITEMS=<ARGCHK3> //C3FLIPDROPPEDITEMS
+	serv.PLAYERNEUTRAL=<ARGTXT9> //T9PLAYERNEUTRAL
+	serv.HITPOINTPERCENTONREZ=<ARGTXT10> //T10HITPOINTPERCENTONREZ
+	serv.BANKMAXITEMS=<ARGTXT11> //T11BANKMAXITEMS
+	serv.BANKMAXWEIGHT=<ARGTXT12> //T12BANKMAXWEIGHT
+	serv.REAGENTSREQUIRED=<ARGCHK4> //C4REAGENTSREQUIRED
+	serv.REAGENTLOSSFAIL=<ARGCHK5> //C5REAGENTLOSSFAIL
+	serv.EQUIPPEDCAST=<ARGCHK6> //C6EQUIPPEDCAST
+	serv.WOPPLAYER=<ARGCHK7> //C7WOPPLAYER
+	serv.WOPSTAFF=<ARGCHK8> //C8WOPSTAFF
+	serv.LIGHTNIGHT=<ARGTXT13> //T13LIGHTNIGHT
+	serv.DUNGEONLIGHT=<ARGTXT14> //T14DUNGEONLIGHT
+	serv.MONSTERFIGHT=<ARGCHK9> //C9MONSTERFIGHT
+	serv.MONSTERFEAR=<ARGCHK10> //C10MONSTERFEAR
+	serv.MURDERMINCOUNT=<ARGTXT15> //T15MURDERMINCOUNT
+	serv.MURDERDECAYTIME=<ARGTXT16> //T16MURDERDECAYTIME
+	serv.CRIMINALTIMER=<ARGTXT17> //T17CRIMINALTIMER
+	serv.SNOOPCRIMINAL=<ARGTXT18> //T18SNOOPCRIMINAL
+	serv.GUARDSINSTANTKILL=<ARGCHK11> //C11GUARDSINSTANTKILL
+	serv.GUARDLINGER=<ARGTXT19> //T19GUARDLINGER
+	serv.LOOTINGISACRIME=<ARGCHK12> //C12LOOTINGISACRIME
+	serv.CHARTAGS=<ARGCHK13> //C13CHARTAGS
+	serv.NPCTRAINMAX=<ARGTXT20> //T20NPCTRAINMAX
+	serv.NPCTRAINPERCENT=<ARGTXT21> //T21NPCTRAINPERCENT
+	serv.VENDORMAXSELL=<ARGTXT22> //T22VENDORMAXSELL
+	serv.MAXCOMPLEXITY=<ARGTXT23> //T23MAXCOMPLEXITY
+	serv.MAGICUNLOCKDOOR=<ARGTXT24> //T24MAGICUNLOCKDOOR
+	webpage sphereconfig.htm
+	serv.saveini
+	return 1
+
+[WEBPAGE w_configserv]
+WEBPAGESRC=WEB\sphereconfigserv.htm
+PLEVEL=5
+
+ON=1
+	if ! <src.account.>
+		webpage spherelogfail.htm
+		return 1
+	endif
+	if <src.account.plevel> < 5
+		webpage sphereaccount.htm
+		return 1
+	endif
+	serv.SERVNAME=<ARGTXT1>		// T1SERVNAME
+	serv.ADMINEMAIL=<ARGTXT2>	// T2ADMINEMAIL
+	serv.URL=<ARGTXT3>			// T3URL
+	serv.REGISTERSERVER=<ARGCHK1> // C1REGISTERSERVER
+	serv.REGPASS=<ARGTXT4>	// T4REGPASS
+	serv.SERVIP=<ARGTXT5>	// T5SERVIP
+	serv.SERVPORT=<ARGTXT6> // T6SERVPORT
+	serv.NTSERVICE=<ARGCHK2> // C2NTSERVICE
+	serv.MULFILES=<ARGTXT7> // T7MULFILES
+	serv.SCPFILES=<ARGTXT8> // T8SCPFILES
+	serv.WORLDSAVE=<ARGTXT9> // T9WORLDSAVE
+	serv.ACCTFILES=<ARGTXT10> // T10ACCTFILES
+	serv.LOG=<ARGTXT11> // T11LOG
+	serv.VERBOSE=<ARGCHK3> // C3VERBOSE
+	serv.TIMEZONE=<ARGTXT12> // T12TIMEZONE
+	serv.ACCAPP=<ARGTXT13> // T13ACCAPP
+	serv.SECURE=<ARGCHK4> // C4SECURE
+	serv.HEARALL=<ARGCHK5> // C5HEARALL
+	serv.SAVEPERIOD=<ARGTXT14> // T14SAVEPERIOD
+	serv.GUESTSMAX=<ARGTXT15> // T15GUESTSMAX
+	serv.CLIENTMAX=<ARGTXT16> // T16CLIENTMAX
+	serv.LANG=<ARGTXT17> // T17LANG
+	webpage sphereconfig.htm
+	serv.saveini
+	return 1
+
+[WEBPAGE w_join]  
+///////*WEBSITE TO SERVER* Auto-Account Creator v1 by Tattooed Corpse
+
+WEBPAGESRC=WEB\spherejoin.htm
+
+
+
+ON=1
+src.login 
+if >= 5                ///If the account is PLEVEL 5 or more
+ webpage sphereconfig.htm    ///CONTROL PANEL
+             RETURN 1
+            ENDIF
+
+if = 1                  ///If account is active player account
+webpage sphereaccount.htm                    //Goto account status page
+RETURN 1
+ENDIF
+
+if ! && STRMATCH("","EOF") ///Check for EOF account
+webpage spherelogfail.htm                         ///STOP the process and give error page
+RETURN 1
+ENDIF
+
+if ! && STRMATCH("","n")  ///Check for password Hack..THIS line needs testing
+webpage spherelogfail.htm
+RETURN 1
+ENDIF
+
+if !                   ///If they pass the tests and account doesnt exist
+src.login accbot accbot         //Login the PLEVEL 6 Account BOT (MAKE UP NEW ACCOUNT/PASS! THIS PUBLIC SCRIPT!)
+SERV.ACCOUNT ADD // Create a new account.
+SERV.ACCOUNT UPDATE                  //Force Accounts Update
+src.logout accbot accbot           //LogOUT the PLEVEL 6 Account BOT (MAKE UP NEW ACCOUNT/PASS! THIS PUBLIC SCRIPT!)
+webpage spheremailpass.htm           //Go to success screen 
+ return 1            //Change Message about email to account created in the HTML source of spheremailpass.htm
+Else
+webpage spherelogfail.htm
+RETURN 1
+ENDIF
+
+
+[WEBPAGE w_401]
+// auth required
+WEBPAGESRC=WEB\spherelogin.htm
+
+[WEBPAGE w_403]
+// forbidden
+WEBPAGESRC=WEB\spherelogin.htm
+
+[WEBPAGE w_404]
+// not found
+WEBPAGESRC=WEB\sphere404.htm
+
+[EOF] 

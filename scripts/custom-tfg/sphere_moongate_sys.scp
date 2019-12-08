@@ -1,0 +1,203 @@
+/////////////////////////////////////////////////
+//////////////// KILL STONE /////////////////////
+/////////////////////////////////////////////////
+
+
+[ITEMDEF i_pedra_kill]
+NAME=Pedra do Perdao
+ID=i_gravestone_7
+TYPE=t_shrine_guilt
+
+ON=@CREATE
+COLOR 0bb4
+ATTR 010
+TYPE t_shrine_guilt
+
+
+
+
+[itemdef i_gate_custom]
+id=i_moongate_blue
+name=Gate Customizado
+
+on=@create
+name=@0481 Gate Customizado
+attr=attr_static
+morep=6117,1225
+
+on=@step
+if (<src.isgm>)
+src.F_GO <morep>
+return 1
+endif
+src.strip
+src.F_GO <morep>
+return 1
+endif
+
+
+
+
+
+
+
+
+
+
+
+[ITEMDEF i_moongate_brit]
+ID=i_moongate_blue
+NAME=Britain Moongate
+TYPE=t_moongate_custom
+
+ON=@CREATE
+ATTR 010
+
+
+TAG.PLACE1 1499,3771,5,0
+TAG.PLACE2 771,752,5,0
+TAG.PLACE3 2701,692,5,0
+TAG.PLACE4 1828,2947,-20,0
+TAG.PLACE5 643,2066,5,0
+TAG.PLACE6 3563,2139,34
+TAG.PLACE7 4467,1282,5,0
+
+
+
+
+
+[ITEMDEF i_moongate_jhelom]
+ID=i_moongate_blue
+NAME=Jhelom Moongate
+TYPE=t_moongate_custom
+
+ON=@CREATE
+ATTR 010
+
+
+TAG.PLACE6 1336,1997,5,0
+TAG.PLACE5 771,752,5,0
+TAG.PLACE1 2701,692,5,0
+TAG.PLACE3 1828,2947,-20,0
+TAG.PLACE2 643,2066,5,0
+TAG.PLACE7 3563,2139,34
+TAG.PLACE4 4467,1282,5,0
+
+[ITEMDEF i_moongate_yew]
+ID=i_moongate_blue
+NAME=Yew Moongate
+TYPE=t_moongate_custom
+
+ON=@CREATE
+ATTR 010
+
+TAG.PLACE4 1499,3771,5,0
+TAG.PLACE7 1336,1997,5,0
+TAG.PLACE6 2701,692,5,0
+TAG.PLACE3 1828,2947,-20,0
+TAG.PLACE5 643,2066,5,0
+TAG.PLACE1 3563,2139,34
+TAG.PLACE2 4467,1282,5,0
+
+[ITEMDEF i_moongate_vesper]
+ID=i_moongate_blue
+NAME=Vesper Moongate
+TYPE=t_moongate_custom
+
+ON=@CREATE
+ATTR 010
+
+TAG.PLACE2 1499,3771,5,0
+TAG.PLACE3 771,752,5,0
+TAG.PLACE5 1336,1997,5,0
+TAG.PLACE6 1828,2947,-20,0
+TAG.PLACE7 643,2066,5,0
+TAG.PLACE4 3563,2139,34
+TAG.PLACE1 4467,1282,5,0
+
+
+[ITEMDEF i_moongate_trinsic]
+ID=i_moongate_blue
+NAME=Trinsic Moongate
+TYPE=t_moongate_custom
+
+ON=@CREATE
+ATTR 010
+
+TAG.PLACE7 1499,3771,5,0
+TAG.PLACE1 771,752,5,0
+TAG.PLACE2 2701,692,5,0
+TAG.PLACE4 1336,1997,5,0
+TAG.PLACE3 643,2066,5,0
+TAG.PLACE5 3563,2139,34
+TAG.PLACE6 4467,1282,5,0
+
+
+[ITEMDEF i_moongate_skara]
+ID=i_moongate_blue
+NAME=Skara Brae Moongate
+TYPE=t_moongate_custom
+
+ON=@CREATE
+ATTR 010
+
+TAG.PLACE4 1499,3771,5,0
+TAG.PLACE6 771,752,5,0
+TAG.PLACE7 2701,692,5,0
+TAG.PLACE1 1828,2947,-20,0
+TAG.PLACE3 1336,1997,5,0
+TAG.PLACE2 3563,2139,34
+TAG.PLACE5 4467,1282,5,0
+
+
+[ITEMDEF i_moongate_magincia]
+ID=i_moongate_blue
+NAME=Magincia Moongate
+TYPE=t_moongate_custom
+
+ON=@CREATE
+ATTR 010
+
+TAG.PLACE3 1499,3771,5,0
+TAG.PLACE4 771,752,5,0
+TAG.PLACE2 2701,692,5,0
+TAG.PLACE6 1828,2947,-20,0
+TAG.PLACE1 643,2066,5,0
+TAG.PLACE7 1336,1997,5,0
+TAG.PLACE5 4467,1282,5,0
+
+
+
+[ITEMDEF i_moongate_moonglow]
+ID=i_moongate_blue
+NAME=Moonglow Moongate
+TYPE=t_moongate_custom
+
+ON=@CREATE
+ATTR 010
+
+TAG.PLACE5 1499,3771,5,0
+TAG.PLACE2 771,752,5,0
+TAG.PLACE1 2701,692,5,0
+TAG.PLACE4 1828,2947,-20,0
+TAG.PLACE3 643,2066,5,0
+TAG.PLACE6 3563,2139,34
+TAG.PLACE7 1336,1997,5,0
+
+
+[TYPEDEF t_moongate_custom]
+
+ON=@STEP
+
+DORAND 7
+SRC.F_GO <TAG0.PLACE1>
+SRC.F_GO <TAG0.PLACE2>
+SRC.F_GO <TAG0.PLACE3>
+SRC.F_GO <TAG0.PLACE4>
+SRC.F_GO <TAG0.PLACE5>
+SRC.F_GO <TAG0.PLACE6>
+SRC.F_GO <TAG0.PLACE7>
+ENDDO
+
+
+

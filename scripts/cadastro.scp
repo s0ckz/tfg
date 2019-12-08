@@ -1,0 +1,65 @@
+// Modificado, simplificado e limitado para protecao do sistema de SQL
+
+// [plevel 1]
+// cadastro
+// cadastrar
+
+[FUNCTION cadastrar]
+src.sysmessage @,,1 Funcao desativada.
+return 1
+
+[FUNCTION cadastro]
+src.sysmessage @,,1 Funcao desativada.
+return 1
+
+
+[EVENTS e_cadastro]
+ON=@LOGIN
+IF (<ISEMPTY <SRC.TAG.CONTRASENHA>>)
+IF !(<SRC.RESTEST i_cadastro>) && !(<src.account.tag0.global>)
+	src.sysmessage @,,1 Esta conta nao possui cadastro e deve criar uma contra-senha para prosseguir.
+	SRC.F_CONTRASENHA
+	SRC.STONE 1
+ENDIF
+ENDIF
+
+[FUNCTION F_CONTRASENHA]
+SRC.PROMPTCONSOLE F_CONTRASENHA_2 @,,1  Digite agora uma contra-senha para sua conta...ela nunca podera ser alterada. ANOTE-A.
+
+[FUNCTION F_CONTRASENHA_2]
+	IF (STRMATCH(*.*,<ARGS>))
+ 		SERV.LOG Illegal contra-senha (contains .)!
+ 		SRC.F_CONTRASENHA
+ 		SRC.SYSMESSAGE @,,1 Caracteres invalidos.
+ 		RETURN 1
+	ENDIF
+	IF (STRMATCH(*EOF*,<ARGS>))
+ 		SERV.LOG Illegal contra-senha (contains EOF)!
+ 		SRC.F_CONTRASENHA
+ 		SRC.SYSMESSAGE @,,1 Caracteres invalidos.
+		RETURN 1
+	ENDIF
+	IF (<eval (STRLEN(<ARGS>))> < 6
+		SRC.F_CONTRASENHA
+ 		SRC.SYSMESSAGE @,,1 Sua contra-senha deve conter pelo menos 6 Caracteres.
+		RETURN 1
+	ENDIF
+	IF (<eval (STRLEN(<ARGS>))> > 12
+		SRC.F_CONTRASENHA
+ 		SRC.SYSMESSAGE @,,1 Sua contra-senha deve conter no maximo 12 Caracteres.
+		RETURN 1
+	ENDIF
+	SRC.TAG.CONTRASENHA <ARGS>
+	SRC.SYSMESSAGE @,,1 Sua contra-senha foi setada. Lembre-se dela: <SRC.TAG.CONTRASENHA>
+	SRC.STONE 0
+
+
+[ITEMDEF i_cadastro]
+ID=i_rune_alchem_1
+NAME=CADASTRO [NAO REMOVER]
+WEIGHT=0
+TYPE=T_EQ_SCRIPT
+LAYER=72
+
+[EOF]
+

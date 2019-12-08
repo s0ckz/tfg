@@ -1,0 +1,35 @@
+[FUNCTION IsOnRoad]
+local.terrain=<serv.map(<P.X>,<P.Y>,<P.M>).terrain>
+if (<local.terrain> >= 113) && (<local.terrain> <= 140)
+ return 1
+elseif (<local.terrain> >= 232) && (<local.terrain> <= 235)
+ return 1
+elseif (<local.terrain> >= 332) && (<local.terrain> <= 335)
+ return 1
+elseif (<local.terrain> >= 353) && (<local.terrain> <= 372)
+ return 1
+elseif (<local.terrain> >= 496) && (<local.terrain> <= 499)
+ return 1
+elseif (<local.terrain> >= 622) && (<local.terrain> <= 633)
+ return 1
+elseif (<local.terrain> >= 638) && (<local.terrain> <= 641)
+ return 1
+elseif (<local.terrain> >= 804) && (<local.terrain> <= 940)
+ return 1
+elseif (<local.terrain> >= 1351) && (<local.terrain> <= 1366)
+ return 1
+elseif (<local.terrain> >= 1431) && (<local.terrain> <= 1446)
+ return 1
+elseif (<local.terrain> >= 1966) && (<local.terrain> <= 1969)
+ return 1
+elseif (<local.terrain> >= 1090) && (<local.terrain> <= 1145) // Sand stones
+ return 1
+elseif (<local.terrain> >= 1281) && (<local.terrain> <= 1296) // Sand stones
+ return 1
+elseif (<local.terrain> >= 9) && (<local.terrain> <= 21) // Furrows
+ return 1
+elseif (<local.terrain> >= 336) && (<local.terrain> <= 348)	// Furrows
+ return 1
+else
+ return 0
+endif

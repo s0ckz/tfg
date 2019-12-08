@@ -1,0 +1,274 @@
+﻿// Fill Cadastros Items to SQL
+
+[FUNCTION f_fill_sem_cadastro]
+local.ct 0
+for x 0 <eval <serv.accounts> - 1>
+	local.global = <serv.account.<dlocal.x>.tag0.global>
+	if !<local.global>
+		ref1 = <serv.account.<dlocal.x>.char.0>
+		ref2 = <ref1.findid.i_cadastro.uid>
+		if !<ref2>
+			if <ref1.tag0.contrasenha>
+				local.sig = <ref1.tag0.contrasenha>
+			else
+				local.sig = "sem contrasenha"
+			endif
+			local.acc = <serv.account.<dlocal.x>.name>
+			local.pass = <serv.account.<dlocal.x>.password>
+			local.ct ++
+			DB.EXECUTE "INSERT INTO contas_sem_cadastro ( account, senha, infos ) values ( '<local.acc>', '<local.pass>', '<qval <isnum <local.sig>>?<dlocal.sig>:<local.sig>>' )"
+		endif
+	endif
+endfor
+//
+serv.log <dlocal.ct> contas sem cadastro anexadas ao BD! 
+s <dlocal.ct> contas sem cadastro anexadas ao BD.
+return 1
+
+[FUNCTION f_fill_nao_vinculadas]
+local.ct 0
+local.semcad 0
+local.semcadsemcontra 0
+for x 0 <eval <serv.accounts> - 1>
+	local.global = <serv.account.<dlocal.x>.tag0.global>
+	if !<local.global>
+		ref1 = <serv.account.<dlocal.x>.char.0>
+		ref2 = <ref1.findid.i_cadastro.uid>
+		local.acc = <serv.account.<dlocal.x>.name>
+		local.pass = <serv.account.<dlocal.x>.password>
+		if <ref2>
+			local.email = <ref2.tag0.email>
+			local.sig = <ref2.tag0.sig>
+		else
+			local.email = "sem cadastro"
+			local.semcad ++
+			if <ref1.tag0.contrasenha>
+				local.sig = <ref1.tag0.contrasenha>
+			else
+				local.sig = "sem cadastro e sem contrasenha"
+				local.semcadsemcontra ++
+			endif
+		endif
+		local.ct ++
+		DB.EXECUTE "INSERT INTO tfg_nao_vinculadas ( account, senha, email, sig ) values ( '<local.acc>', '<local.pass>', '<local.email>', '<qval <isnum <local.sig>>?<dlocal.sig>:<local.sig>>' )"
+	endif
+endfor
+serv.log <dlocal.ct> contas nao vinculadas anexadas ao BD! <dlocal.semcad> contas sem cadastro, das quais <dlocal.semcadsemcontra> sem cadastro nem contrasenha.
+s <dlocal.ct> contas nao vinculadas anexadas ao BD! <dlocal.semcad> contas sem cadastro, das quais <dlocal.semcadsemcontra> sem cadastro nem contrasenha.
+return 1
+
+[FUNCTION f_fill_cadastros_sql_mar_2017]
+local.Ct 0
+FORINSTANCES i_cadastro
+	if <isnum <tag.ddd>> && <isnum <tag.tel>>
+		local.telefone = "a (<dtag.ddd>) <dtag.tel>"
+	elif !<isnum <tag.ddd>> && <isnum <tag.tel>>
+		local.telefone = "a (<tag.ddd>) <dtag.tel>"
+	elif <isnum <tag.ddd>> && !<isnum <tag.tel>>
+		local.telefone = "a (<dtag.ddd>) <tag.tel>"
+	else
+		local.telefone = "a (<tag.ddd>) <tag.tel>"
+	endif
+
+	if <isnum <tag0.numero>>
+		local.endereco = "a <tag0.endereco> <dtag0.numero>"
+	else
+		local.endereco = "a <tag0.endereco> <tag0.numero>"
+	endif
+
+	if <isnum <tag.cp1>> && <isnum <tag.cp2>>
+		local.cep = "a <dtag0.cp1> - <dtag0.cp2>"
+	else
+		local.cep = "a <tag0.cp1>-<tag0.cp2>"
+	endif
+
+
+	DB.EXECUTE "INSERT INTO antigos_cadastros_mar_2017 ( account, senha, char_uid, nome, endereco, bairro, cidade, estado, cep, email, telefone, palavra_seguranca ) values ( '<topobj.account.name>', '<topobj.account.password>', '<eval <topobj.uid>>', '<tag0.nome>', '<streat <local.endereco>>', '<tag0.bairro>', '<tag0.cidade>', '<tag0.estado>', '<streat <local.cep>>', '<tag0.email>', '<streat <local.telefone>>', '<qval <isnum <tag.sig>>?<dtag0.sig>:<tag.sig>>' )"
+	//tag.tentativa_sql = 4
+	local.ct ++
+ENDFOR
+serv.log <dlocal.ct> cadastros passados.
+s <dlocal.ct> cadastros passados.
+return 1
+
+[FUNCTION f_fill_cadastros_sql]
+local.Ct 0
+FORINSTANCES i_cadastro
+	if <isnum <tag.ddd>> && <isnum <tag.tel>>
+		local.telefone = "a (<dtag.ddd>) <dtag.tel>"
+	elif !<isnum <tag.ddd>> && <isnum <tag.tel>>
+		local.telefone = "a (<tag.ddd>) <dtag.tel>"
+	elif <isnum <tag.ddd>> && !<isnum <tag.tel>>
+		local.telefone = "a (<dtag.ddd>) <tag.tel>"
+	else
+		local.telefone = "a (<tag.ddd>) <tag.tel>"
+	endif
+
+	if <isnum <tag0.numero>>
+		local.endereco = "a <tag0.endereco> <dtag0.numero>"
+	else
+		local.endereco = "a <tag0.endereco> <tag0.numero>"
+	endif
+
+	if <isnum <tag.cp1>> && <isnum <tag.cp2>>
+		local.cep = "a <dtag0.cp1> - <dtag0.cp2>"
+	else
+		local.cep = "a <tag0.cp1>-<tag0.cp2>"
+	endif
+
+
+	DB.EXECUTE "INSERT INTO antigos_cadastros_at ( account, senha, char_uid, nome, endereco, bairro, cidade, estado, cep, email, telefone, palavra_seguranca ) values ( '<topobj.account.name>', '<topobj.account.password>', '<eval <topobj.uid>>', '<tag0.nome>', '<streat <local.endereco>>', '<tag0.bairro>', '<tag0.cidade>', '<tag0.estado>', '<streat <local.cep>>', '<tag0.email>', '<streat <local.telefone>>', '<qval <isnum <tag.sig>>?<dtag0.sig>:<tag.sig>>' )"
+	//tag.tentativa_sql = 4
+	local.ct ++
+ENDFOR
+serv.log <dlocal.ct> cadastros passados.
+return 1
+
+
+// Quais contas nao estao ?
+
+[FUNCTION f_asksql_accountnothere]
+for x 0 <eval <serv.accounts> - 1>
+	local.exist = 0
+	local.log = <serv.account.<dlocal.x>.name>
+	DB.QUERY "SELECT * FROM accounts WHERE login = '<local.log>'"
+		if <db.row.numrows> > 0
+			local.exist = 1
+		else
+	  		DB.QUERY "SELECT * FROM containgame WHERE LoginConta = '<local.log>'"
+				if <db.row.numrows> > 0
+					local.exist = 1
+				endif
+		endif
+		if (<local.exist> == 0)
+			s <local.log> <dlocal.x> nao esta cadastrada no BD.
+		endif
+endfor
+return 1
+
+
+// Fill Accounts to SQL
+
+
+[FUNCTION f_fill_accounts_sql]
+local.acc 0
+local.ct 0
+if <args>
+	local.it <args>
+else
+	local.it 0
+endif
+local.maxit <eval <local.it> + 30>
+local.maxitit <eval <serv.accounts> -1>
+if <local.maxit> > <local.maxitit>
+	local.maxit = <local.maxitit>
+	local.last = 1
+endif
+			for x <local.it> <local.maxit>
+							  DB.EXECUTE "INSERT INTO accounts ( login ) values ( '<serv.account.<dlocal.x>.name>' )"
+			endfor
+serv.log <dlocal.maxit> accounts atualizadas de <eval <serv.accounts> -1>
+if !<local.last>
+	serv.log reiniciando em 3 s
+	timerf 3,f_fill_accounts_sql <eval <local.maxit> + 1>
+endif
+return 1
+
+[FUNCTION f_callback_fill_accounts]
+IF (<ARGN2> == 0)
+    SERV.LOG Este comando falhou. (<ARGS>)
+ELSE
+    SERV.LOG Este comando foi bem sucedido. (<ARGS>)
+ENDIF
+RETURN 1
+
+// Aqui é a criacao de novas contas
+
+[function f_criar_contas]
+IF (<DB.connected>)
+  IF (<DB.AQUERY f_callback_criar_contas1, SELECT * FROM requests WHERE type='1'> == 0)
+    SERV.WRITEFILE ErrosSQL.txt <serv.rtime> Falha no pedido de requests de novas contas.
+    SERV.LOG Falha no pedido de requests de novas contas.
+  ELSE
+    SERV.WRITEFILE OperacoesSQL.txt <serv.rtime> Pedido de requests de novas contas feito com sucesso.
+    SERV.LOG Pedido de requests de novas contas feito com sucesso.
+  ENDIF
+ENDIF
+RETURN 1
+
+
+[function f_callback_criar_contas1]
+//serv.log callback
+IF (<LOCAL.NUMROWS> > 0)
+FOR R 0 <EVAL <LOCAL.NUMROWS> - 1>
+local.id "<LOCAL.<eval <LOCAL.R>>.IdRequest>"
+local.log "<LOCAL.<eval <LOCAL.R>>.Account>"
+local.sen "<LOCAL.<eval <LOCAL.R>>.new_value>"
+local.cosen "<LOCAL.<eval <LOCAL.R>>.new_value2>"
+local.coglob "<LOCAL.<eval <LOCAL.R>>.new_value3>"
+serv.account addmd5 <local.log> <local.sen>
+serv.account.<local.log>.tag.csenha <local.cosen>
+serv.account.<local.log>.tag.global <local.coglob>
+ IF (<SERV.ACCOUNT.<local.log>>)
+    SERV.WRITEFILE OperacoesSQL.txt Parte sphere: acc <local.log> criada.
+ SERV.LOG Conta <local.log> criada com sucesso. Fazendo alteracoes necessarias no banco de dados.
+  IF (<DB.AEXECUTE f_callback_criar_contas_2, DELETE FROM requests WHERE IdRequest='<dlocal.id>'> == 0)
+    SERV.WRITEFILE ErrosSQL.txt <serv.rtime> Falha para colocar atualizacao de banco de dados na fila. [1] DELETE FROM requests WHERE IdRequest='<dlocal.id>'
+     SERV.LOG Falha para colocar atualizacao de banco de dados na fila.
+  ELSE
+    SERV.WRITEFILE OperacoesSQL.txt <serv.rtime> Atualizacao de banco de dados na fila. DELETE FROM requests WHERE IdRequest='<dlocal.id>'
+     SERV.LOG Atualizacao de banco de dados na fila.
+  ENDIF
+  IF (<DB.AEXECUTE f_callback_criar_contas_2, UPDATE containgame SET Valida='1' WHERE LoginConta='<local.log>'> == 0)
+    SERV.WRITEFILE ErrosSQL.txt <serv.rtime> Falha para colocar atualizacao de validacao na fila. [2] UPDATE containgame SET Valida='1' WHERE LoginConta='<local.log>'
+     SERV.LOG Falha para colocar atualizacao de validacao na fila.
+  ELSE
+    SERV.WRITEFILE OperacoesSQL.txt <serv.rtime> Atualizacao de validacao na fila. UPDATE containgame SET Valida='1' WHERE LoginConta='<local.log>'
+     SERV.LOG Atualizacao de validacao na fila.
+  ENDIF
+ ELSE
+ SERV.LOG MYSQL DEBUG: CRIACAO DA CONTA <local.log> FALHOU!
+ ENDIF
+endfor
+ENDIF
+ELSE
+	SERV.LOG Criacao de contas: Nenhum request encontrado.
+RETURN 1
+
+[FUNCTION f_callback_criar_contas_2]
+IF (<ARGN2> == 0)
+    SERV.LOG Este comando falhou. (<ARGS>)
+    SERV.WRITEFILE ErrosSQL.txt <serv.rtime> Este comando falhou. (<ARGS>)
+ELSE
+    SERV.LOG Este comando foi bem sucedido. (<ARGS>)
+    SERV.WRITEFILE OperacoesSQL.txt <serv.rtime> Este comando foi bem sucedido. (<ARGS>)
+ENDIF
+RETURN 1
+
+
+// Aqui criar contas sem AQUERY e AEXECUTE
+
+[function f_criar_contas_direto]
+IF (<DB.connected>)
+	DB.QUERY "SELECT * FROM requests WHERE type='1'"
+		if <db.row.numrows> > 0
+				for 0 <eval <db.row.numrows> - 1>
+					local.id "<db.row.<dlocal._for>.IdRequest>"
+					local.log "<db.row.<dlocal._for>.Account>"
+					local.sen "<db.row.<dlocal._for>.new_value>"
+					local.cosen "<db.row.<dlocal._for>.new_value2>"
+					local.coglob "<db.row.<dlocal._for>.new_value3>"
+					serv.account addmd5 <local.log> <local.sen>
+					serv.account.<local.log>.tag.csenha <local.cosen>
+					serv.account.<local.log>.tag.global <local.coglob>
+					DB.EXECUTE "DELETE FROM requests WHERE IdRequest='<dlocal.id>'"
+					DB.EXECUTE "UPDATE containgame SET Valida='1' WHERE LoginConta='<local.log>'"
+					serv.log Account <local.log> criada.
+					serv.writefile Account <local.log> criada.
+				endfor
+		else
+			serv.log Nenhum request de novas contas ativo.
+			serv.writefile <serv.rtime> Nenhum request de novas contas ativo.
+		endif
+ENDIF
+RETURN 1

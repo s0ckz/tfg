@@ -1,0 +1,22 @@
+[DIALOG d_house_confirm_placement]
+300,200
+page 0
+resizepic 0 0 3500 350 130
+dhtmlgump 0 30 350 17 0 0 <def.center>Tem certeza que deseja colocar sua casa aqui?<def.centere>
+dhtmlgump 0 50 350 17 0 0 <def.center>Não poderá ser removida ou transferida por 3 dias.<def.centere>
+button 120 90 0FB7 0FB8 0FB9 0 1
+button 180 90 0FB1 0FB2 0FB3 0 0
+
+[DIALOG d_house_confirm_placement BUTTON]
+ON=0
+	timer = 0
+
+ON=1
+	timer = -1
+	tag0.waiting_confirm =
+	tag0.house_owner = 0
+	link.tag0.house.birth = <serv.time>
+	DB.EXECUTE "INSERT INTO casa ( UidCasa, UidOwner, Localizacao, IdContaPainel, IdCasaImagem ) values ( '<eval <link.uid>>', '<eval <src.uid>>', '<p>', '<eval <src.account.tag0.global>>', '<eval <link.baseid>>' )"
+	local.giveback = i_deed<strsub strlen(i_multi) 0 <link.baseid>>
+	src.f_housing_getkeys <link.uid>,<serv.itemdef.<local.giveback>.value>
+	src.sysmessage "@,,1 Você colocou sua casa. As chaves newbies foram depositadas em seu bankbox, guarde-as bem pois não há nenhuma maneira de criar outras chaves com esta propriedade."

@@ -1,0 +1,353 @@
+﻿[FUNCTION achargoldbug]
+ref1 = <src.uid>
+forinstances i_gold
+ if <tag0.buggoldalfaiate>
+  ref1.sysmessage @,,1 <p>
+ endif
+endfor
+return 1
+
+[ITEMDEF i_mana_guardian]
+ID=i_statue_stone_lg_4
+NAME=Britain Mana Guardian
+
+ON=@Create
+ATTR 010
+TIMER 1
+
+ON=@TIMER
+
+FORCLIENTS 25
+IF <KILLS> < 1
+IF <MANA> < <MAXMANA>
+MANA +=1
+ENDIF
+ENDIF
+ENDFOR
+TIMER 1
+RETURN 1
+
+[ITEMDEF i_health_guardian]
+ID=i_statue_stone_lg_4
+NAME=Britain Health Guardian
+
+ON=@Create
+ATTR 010
+TIMER 1
+
+ON=@TIMER
+
+FORCLIENTS 25
+IF <KILLS> < 1
+IF <HITS> < <MAXHITS>
+HITS +=1
+ENDIF
+ENDIF
+ENDFOR
+TIMER 1
+RETURN 1
+
+[FUNCTION personallight]
+SENDPACKET 04e D<UID> <ARGS>
+
+
+[FUNCTION seprobe]
+FORPLAYERS 50
+if <FINDLAYER.22.BASEID>==i_worker_robe
+F_GO 5518,1244
+ENDIF
+ENDFOR
+
+
+[FUNCTION sep2]
+LOCAL.MONTH <ARGV[2]>
+LOCAL.YEAR <ARGV[1]>
+
+[FUNCTION inativos]
+FORPLAYERS 8000
+
+	CALL sep2 <EXPLODE /: ,<ACCOUNT.LASTCONNECTDATE>>
+	IF !(<dlOCAL.YEAR>==2008)
+		IF <SKILLTOTAL> < 20000
+			F_GO <R5376,5409> <R1263,1279>
+		ELIF <SKILLTOTAL> < 35000
+			F_GO <R5451,5483> <R1260,1279>
+		ELSE
+			F_GO <R5511,5537> <R1257,1279>
+		ENDIF
+	ELSE
+		IF (<dLOCAL.MONTH> < 5)
+			IF <SKILLTOTAL> < 20000
+				F_GO <R5376,5409> <R1263,1279>
+			ELIF <SKILLTOTAL> < 35000
+				F_GO <R5451,5483> <R1260,1279>
+			ELSE
+				F_GO <R5511,5537> <R1257,1279>
+			ENDIF
+		ENDIF
+	ENDIF
+ENDFOR
+
+
+//[ITEMDEF i_day_stone]
+//ID=i_gravestone_17
+//TYPE=t_normal
+//NAME=Day Stone (NUNCA APAGUE)
+
+//ON=@CREATE
+//ATTR 010
+//TIMER 86400
+
+//ON=@TIMER
+//FORPLAYERS 10000
+//SYSMESSAGE Um novo dia nasce. Voce se sente capaz de aprender novas coisas.
+//IF <LUCK> < 1200
+//LUCK 1200
+//ENDIF
+//ENDFOR
+//TIMER 86400
+//RETURN 1
+
+
+
+
+[DEFNAME broad_msgs]
+broadmsg1	"O shard precisa de sua ajuda parar arcar com os custos mensais, cliquem diariamente nos anuncios google que encontram-se no site."
+broadmsg2	"Frequentem o nosso Forum. É essencial a presenca de todos, contamos com todos voces."
+
+
+[DIALOG d_stone_trade]
+40, 40        // this is always the size.
+page 0
+
+resizepic 100 40 2620 600 380 // Background
+checkertrans 105 45 590 370
+dtext 250 47 031 Troca de FFA Points por Itens Unicos 
+
+[ITEMDEF i_trade_stone]
+ID=i_gravestone_17
+TYPE=t_normal
+NAME=Trocar FFA Poins por Itens
+
+ON=@CREATE
+ATTR 010
+COLOR=0771
+TIMER 1
+
+ON=@CLICK
+SRC.MESSAGE @0481 Em instantes...
+
+ON=@DCLICK
+SRC.MESSAGE @0481 Em instantes...
+Return 1
+
+ON=@TIMER
+SAY @0481 Troque seus FFA points por Itens Unicos aqui !!
+TIMER 120
+RETURN 1
+
+[ITEMDEF i_bcast_stone]
+ID=i_gravestone_17
+TYPE=t_normal
+NAME=Broadcast Stone
+
+ON=@CREATE
+ATTR 010
+TIMER 500
+
+ON=@TIMER
+DORAND 3
+SERV.ALLCLIENTS SYSMESSAGE @<R10,70> <def0.broadmsg1>
+SERV.ALLCLIENTS SYSMESSAGE @<R5,35> <def0.broadmsg2>
+//SERV.ALLCLIENTS SYSMESSAGE @<R10,70> <def0.broadmsg3>
+ENDDO
+TIMER 350
+RETURN 1
+
+
+[ITEMDEF i_jail_stone]
+ID=i_gravestone_17
+TYPE=t_normal
+NAME=Exit from Jail
+
+ON=@CREATE
+ATTR 010
+
+ON=@DCLICK
+IF !(<SRC.FINDID.i_jail_TIMER.UID>)
+	SRC.F_GO HELP ROOM
+	SRC.CLOSEALLDIALOGS
+	RETURN 1
+ENDIF
+
+SRC.SYSMESSAGE Faltam <eval <SRC.FINDID.I_JAIL_TIMER.TIMER>> segundos para sair.
+
+SRC.MENU m_jail_exit
+RETURN 1
+
+
+
+[MENU m_jail_exit]
+Voce foi preso. Gostaria de pagar fianca?
+
+ON=0 Pagar 10.000gps
+
+	IF <SRc.RESTEST 10000 i_gold>
+		SRC.FINDID.I_JAIL_TIMER.TIMER 1
+		SRC.SYSMESSAGE Pagando...
+		SRC.CONSUME 10000 i_gold
+	ELSE
+		SRC.SYSMESSAGE Voce precisa ter 10.000gps na bag
+	ENDIF
+
+
+ON=0 Acessar o banco
+SRC.BANKSELF
+
+
+
+[ITEMDEF i_jail_timer]
+ID=i_memory
+TYPE=t_eq_script
+NAME=Jail Timer
+
+ON=@CREATE
+attr 096
+
+ON=@TIMER
+LINK.SYSMESSAGE Voce esta livre para sair da jail!
+LINK.F_GO HELP ROOM
+LINK.CLOSEALLDIALOGS
+REMOVE
+RETURN 0
+
+
+[ITEMDEF i_help_stone]
+ID=i_gravestone_17
+TYPE=t_normal
+NAME=Help Room Exit
+
+ON=@CREATE
+ATTR 010
+
+ON=@DCLICK
+SRC.MENU m_menu_help_room
+RETURN 1
+
+[MENU m_menu_help_room]
+Choose your destination town.
+ON=0 Britain
+SRC.F_GO Britain
+ON=0 Serpent's Hold
+SRC.F_GO Serpent's Hold
+
+
+
+
+
+[itemdef i_stats]
+defname i_pedrastats
+name=Pedra do Status
+id=i_grave_stone_5
+dispid=i_grave_stone
+
+on=@create
+color=0431
+attr=02010
+dispid=i_grave_stone
+on=@dclick
+src.unequipall
+src.str 100
+src.dex 100
+src.int 100
+src.hits 100
+src.stam 100
+src.mana 100
+return 1
+
+[function RECTFG]SERV.WRITEFILE RECTFGUSAGE.txt ACC: <SRC.ACCOUNT>, NICK: <SRC.NAME> (RECUPEROU ACC <ACCOUNT> NOME <NAME>) <SERV.RTIME>
+tag0.recuperada "LS 20-05"
+S <account> recuperada
+
+IF (<ARGS> == 1) || (<ISEMPTY <ARGS>>)
+
+UNEQUIPALL
+HITS=100
+STAM=100
+MANA=100
+OSTR=100
+OINT=100
+ODEX=100
+Alchemy=1000
+Anatomy=1000
+AnimalLore=328
+ItemID=329
+ArmsLore=1000
+Parrying=1000
+Begging=143
+Blacksmithing=1000
+Bowcraft=325
+Peacemaking=298
+Camping=298
+Carpentry=314
+Cartography=328
+Cooking=325
+DetectingHidden=604
+Enticement=49
+EvaluatingIntel=442
+Healing=1000
+Fishing=326
+Forensics=188
+Herding=193
+Hiding=1000
+Provocation=298
+Inscription=452
+LockPicking=179
+Magery=1000
+MagicResistance=461
+Tactics=1000
+Snooping=1000
+Musicianship=298
+Poisoning=294
+Archery=1000
+SpiritSpeak=323
+Stealing=1000
+Tailoring=323
+Taming=447
+TasteID=300
+Tinkering=660
+Tracking=1000
+Veterinary=320
+Swordsmanship=1000
+Macefighting=447
+Fencing=1000
+Wrestling=497
+Lumberjacking=1000
+Mining=1000
+Meditation=1000
+Stealth=1000
+RemoveTrap=57
+Necromancy=210
+
+ELIF <ARGS> == 2
+
+
+ELIF <ARGS> ==3
+
+UNEQUIPALL
+
+
+ELIF <ARGS> == 4
+
+UNEQUIPALL
+
+
+ELIF <ARGS> == 5
+
+UNEQUIPALL
+
+
+ENDIF
+
+
+[EOF]

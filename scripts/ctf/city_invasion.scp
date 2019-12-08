@@ -1,0 +1,247 @@
+[DEFNAME city_invasion_settings]
+CITY_INVASION_MONSTERS_COUNT 120
+CITY_INVASION_NAME INVASAO HALLOWEEN
+CITY_INVASION_ANNOUNCEMENT_LOCATION 2320,1209
+CITY_INVASION_REMOVAL_RANGE 120
+CITY_INVASION_RANDOM_LOCATION 1 // 0 uses spawn locations
+CITY_INVASION_RADIUS 70 // for random locations
+CITY_INVASION_COLORS {080e 1 0bb2 1}
+CITY_INVASION_SPECIAL_LOOT {i_halloween_2019_ticket 1 0 99}
+CITY_INVASION_SPECIAL_LOOT_STRONG {i_halloween_2019_ticket 1 0 10}
+
+// Start Functions
+[FUNCTION start_city_invasion]
+IF <TAG0.CAN_I_USE_EVENT_CMD>
+	f_start_city_invasion <ARGS>
+ELSE
+	SRC.SYSMESSAGE @,,1 You can't use this command.
+ENDIF
+
+[FUNCTION f_start_city_invasion]
+IF (<VAR0.CITY_INVASION_CONTROL>)
+	f_stop_city_invasion
+ENDIF
+
+LOCAL.CITY_INVASION_ANNOUNCEMENT_LOCATION <DEF.CITY_INVASION_ANNOUNCEMENT_LOCATION>
+
+IF (<ARGV> >= 2)
+	LOCAL.CITY_INVASION_ANNOUNCEMENT_LOCATION <ARGS>
+ENDIF
+
+FORINSTANCES i_control_city_invasion
+	REMOVE
+ENDFOR
+
+serv.newitem i_city_invasion_announcement
+NEW.P <LOCAL.CITY_INVASION_ANNOUNCEMENT_LOCATION>
+NEW.UPDATE
+
+serv.newitem i_control_city_invasion
+NEW.P <LOCAL.CITY_INVASION_ANNOUNCEMENT_LOCATION>
+NEW.MOVE N
+NEW.ATTR 090
+NEW.TAG.NO_PVP 1
+NEW.UPDATEX
+
+VAR.CITY_INVASION_CONTROL = <NEW>
+
+SERV.B @70 [<DEF.CITY_INVASION_NAME>] Comecou !!! A invasao esta acontecendo em <NEW.REGION.NAME> (<NEW.P>) ! Corra !
+RETURN 1
+
+[FUNCTION stop_city_invasion]
+IF <TAG0.CAN_I_USE_EVENT_CMD>
+	f_stop_city_invasion
+ELSE
+	SRC.SYSMESSAGE @,,1 Voce nao pode usar este comando.
+ENDIF
+
+[FUNCTION f_stop_city_invasion]
+FORINSTANCES i_city_invasion_announcement
+	REMOVE
+ENDFOR
+
+FORINSTANCES i_control_city_invasion
+	REMOVE
+ENDFOR
+
+VAR.CITY_INVASION_CONTROL
+
+SERV.B @70 [<DEF.CITY_INVASION_NAME>] Evento encerrado ! Obrigado aos que participaram !
+
+// Announcement
+[ITEMDEF i_city_invasion_announcement]
+ID=i_crystal_ball
+NAME=City Invasion [DO NOT REMOVE]
+WEIGHT=200
+TYPE=t_eq_script
+
+ON=@Create
+    ATTR=attr_decay|attr_invis
+    TIMER=300
+
+ON=@TIMER
+  	SERV.B @55 [<DEF.CITY_INVASION_NAME>] Estah Ocorrendo !!! A invasao esta acontecendo em <REGION.NAME> (<P>) ! Corra !
+	TIMER 300
+	RETURN 1
+
+[FUNCTION f_check_indoor_location]
+IF (<FLAGS> & statf_indoors)
+	REMOVE
+ELSE
+	FLAGS = <FLAGS> & ~statf_invisible
+ENDIF
+
+[ITEMDEF i_control_city_invasion]
+ID=i_crystal_ball
+NAME=City Invasion [DO NOT REMOVE]
+WEIGHT=200
+TYPE=t_eq_script
+
+ON=@Create
+    ATTR=attr_decay|attr_invis
+    TIMER=5
+
+ON=@Timer
+	SECTOR.FLAGS secf_nosleep
+
+	IF (<EVAL <DTAG0.CURRENT_MONSTERS_COUNT> + 1> > <DEF.CITY_INVASION_MONSTERS_COUNT>)
+		RETURN 1
+	ENDIF
+
+	FOR <EVAL <DTAG0.CURRENT_MONSTERS_COUNT> + 1> <DEF.CITY_INVASION_MONSTERS_COUNT>
+//		SERV.NEWNPC <EVAL {c_m_prisma_w 1 c_m_prisma_g 1 c_m_prisma_b 1 c_m_dragon_wyrm_Dark 1 c_awyrm 1 c_m_dragon_Silver 1 c_m_dragon_Blood 1}>
+		SERV.NEWNPC <EVAL {c_m_prisma_w 1 c_m_prisma_g 1 c_m_prisma_b 1 c_m_dragon_wyrm_Dark 1 c_awyrm 1 c_m_dragon_Silver 1 c_m_dragon_Blood 1 c_Wailing_Banshee 1 c_vampire_bat 1 c_treefellow 1 c_skittering_hopper 1 c_ravager 1 c_mound_maggots 1 c_Gore_Fiend 1 c_wanderer_void 1 c_flesh_golem 1 c_quagmire 1 c_bog_thing 1 c_plague_beast 1 c_devourer_souls 1 c_bone_daemon 1 c_abyssmal_horror 1 c_crystal_elemental 1 c_gibberling 1 c_Succubus 1 c_mummy 1 c_bogling 1 c_arcane_daemon 1}>
+
+		IF (<DEF.CITY_INVASION_RANDOM_LOCATION>)
+			NEW.P=<P>
+			NEW.MOVE <EVAL {-<DEF.CITY_INVASION_RADIUS> <DEF.CITY_INVASION_RADIUS>}> <EVAL {-<DEF.CITY_INVASION_RADIUS> <DEF.CITY_INVASION_RADIUS>}>
+
+			WHILE (<NEW.ISSTUCK>) || (<NEW.REGION.SAFE>) || (<NEW.REGION.GUARDED>) || (<NEW.REGION.ISEVENT.r_house_private>) || ((<NEW.P.X> >= 5290) && (<NEW.P.X> <= 5315) && (<NEW.P.Y> >= 3928) && (<NEW.P.Y> <= 3960)) || ((<NEW.P.X> >= 1397) && (<NEW.P.X> <= 1425) && (<NEW.P.Y> >= 1422) && (<NEW.P.Y> <= 1459)) || ((<NEW.P.X> >= 1339) && (<NEW.P.X> <= 1356) && (<NEW.P.Y> >= 1722) && (<NEW.P.Y> <= 1749))
+				NEW.P=<P>
+				NEW.MOVE <EVAL {-<DEF.CITY_INVASION_RADIUS> <DEF.CITY_INVASION_RADIUS>}> <EVAL {-<DEF.CITY_INVASION_RADIUS> <DEF.CITY_INVASION_RADIUS>}>
+			ENDWHILE
+//		ELSE
+//			NEW.P <f_get_random_location <DEF.CITY_INVASION_REGION>>
+		ENDIF
+		NEW.HOME=<NEW.P>
+		NEW.HOMEDIST=6
+		NEW.FLAGS = <NEW.FLAGS> | statf_invisible
+		NEW.TIMERF 3, f_check_indoor_location <NEW.UID>
+
+		IF (<DEF.CITY_INVASION_COLORS>)
+			NEW.COLOR <EVAL <DEF.CITY_INVASION_COLORS>>
+		ENDIF
+
+		SERV.LOG Creating <NEW.NAME> for City Invasion in <NEW.P>.
+
+		NEW.EVENTS +e_city_invasion_monsters
+
+		IF (<R100> <= 90)
+			f_weaken_monster_char_uid <NEW.UID>
+		ENDIF
+
+		TAG0.CURRENT_MONSTERS_COUNT += 1
+	ENDFOR
+
+	RETURN 1
+
+ON=@Destroy
+	SECTOR.FLAGS 0
+
+	FORCHARS <DEF.CITY_INVASION_REMOVAL_RANGE>
+		IF (<ISEVENT.e_city_invasion_monsters>)
+			REMOVE
+		ENDIF
+	ENDFOR
+
+
+[EVENTS e_city_invasion_monsters]
+
+ON=@Click
+	MESSAGE @70,,1 [Invasor]
+
+ON=@Destroy
+	UID.<VAR.CITY_INVASION_CONTROL>.TAG0.CURRENT_MONSTERS_COUNT -= 1
+
+	IF (<UID.<VAR.CITY_INVASION_CONTROL>.TAG0.CURRENT_MONSTERS_COUNT> <= 0)
+		UID.<VAR.CITY_INVASION_CONTROL>.TAG0.CURRENT_MONSTERS_COUNT
+	ENDIF
+
+	UID.<VAR.CITY_INVASION_CONTROL>.TIMER
+
+ON=@DeathCorpse
+	ARGO.TAG.DISABLE_CUT 1
+
+ON=@Death
+	SERV.LOG <UID> <NAME> dying...
+
+	FORCONT <UID>
+		REMOVE
+	ENDFOR
+
+	SERV.LOG <UID> <NAME> removed items...
+
+	LOCAL.CHANCE 25
+
+	IF !(<TAG0.WEAKENED>)
+		LOCAL.CHANCE 6
+	ENDIF
+
+	SERV.LOG <UID> <NAME> Chance: <DLOCAL.CHANCE>
+
+	IF (!<R<LOCAL.CHANCE>>)
+		NEWITEM <EVAL {i_ethereal_special_mount_deed 3 i_panotrue_g 4 i_panotrue_b 4 i_panotrue_w 4 i_deed_shop_marble_small 1 i_deed_shop_stone_small 1 i_deed_villa_2story 1 i_deed_house_patio_sand 1 i_deed_cabin_log_2story 1 i_deed_house_3room_fence 1 i_Wizardry_ring 2 i_20life_necklace 2 i_20Stamina_necklace 2 i_20Mana_necklace 2 i_paragon_ethereal_mount_talisman 5 i_15Stamina_necklace 4 i_Knowledge_ring 4 i_Speedy_ring 4 i_ethereal_mount_deed 7 i_treasure_map_lvl_5 20 I_X_RUNEBOOK 20 i_keg_glb1 20 i_keg_gmb1 20 i_keg_grf1 20 i_chaos_shield 40 i_order_shield 40 i_magic_mask_tribal 50 i_magic_mask_orc 50 i_magic_helm_orc 50 i_magic_mask_deer 50 i_magic_mask_bear 50 i_magic_mask_bear_polar 50 i_magic_mask_bear_black 50 i_power_scroll 60}>
+		NEW.ATTR &= ~attr_newbie
+		new.events +t_drop_challenge
+		SERV.LOG Creating <NEW.NAME> for city invasion event !
+		NEW.CONT <UID>
+	ENDIF
+
+	SERV.LOG <UID> <NAME> Checking gems...
+
+	IF (!<R2000>)
+		NEWITEM i_magic_gem
+		new.events +t_drop_challenge
+		NEW.CONT <UID>
+	ENDIF
+
+	SERV.LOG <UID> <NAME> Checking pots...
+
+	IF !(<R8>)
+		SERV.NEWITEM <EVAL {i_potion_refreshtotal 1 i_potion_life_boost_great 1 i_potion_mana_boost_great 1 i_scroll_flamestrike 1 i_bandage 1 i_arrow 1 i_potion_refilling_great 1 i_potion_invisibility 1}>
+		NEW.AMOUNT <R10,20>
+		NEW.CONT <UID>
+	ENDIF
+
+	SERV.LOG <UID> <NAME> Checking special loot...
+	LOCAL.ITEM <EVAL <DEF.CITY_INVASION_SPECIAL_LOOT>>
+
+	IF (<LOCAL.ITEM>)
+		SERV.NEWITEM <LOCAL.ITEM>
+		new.events +t_drop_challenge
+		NEW.CONT <UID>
+		SERV.LOG Creating <NEW.NAME> for city invasion event !
+	ENDIF
+
+	SERV.LOG <UID> <NAME> Checking special loot - strong...
+
+	IF !(<TAG0.WEAKENED>)
+		LOCAL.ITEM <EVAL <DEF.CITY_INVASION_SPECIAL_LOOT_STRONG>>
+
+		IF (<LOCAL.ITEM>)
+			SERV.NEWITEM <LOCAL.ITEM>
+			new.events +t_drop_challenge
+			NEW.CONT <UID>
+			SERV.LOG Creating <NEW.NAME> for city invasion event !
+		ENDIF
+	ENDIF
+
+	SERV.LOG <UID> <NAME> Checking gold...
+
+	SERV.NEWITEM i_gold
+	NEW.AMOUNT <R700,1000>
+	NEW.CONT <UID>
+
+	SERV.LOG <UID> <NAME> Done...
+
+[EOF]

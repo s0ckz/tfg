@@ -1,0 +1,1494 @@
+// criar um start_ctf se o start bugar
+// criar um mais gagas pro ctf
+
+
+// mudancas testar
+//TIMER total comecava contar na criacao do evento
+//Comando de CTF padrao
+//Def Premio padrao
+//script ativa sozin
+
+[defname lugarectf]
+lugarctf1 5915,479,-22
+lugarctf2 5916,479,-22
+lugarctf3 5987,415,-22
+lugarctf4 5988,415,-22
+lugarctf5 5919,412,-22
+lugarctf6 5919,411,-22
+lugarctf7 5983,484,-22
+lugarctf8 5983,483,-22
+
+[function f_automatic_events]
+f_automatic_ctf
+
+[FUNCTION f_automatic_ctf]
+forinstances i_scheduler_ctf
+	local.hour = <tag0.hour>
+	local.day = <tag0.day>
+	local.name = <tag0.name>
+	if (<serv.rtime.format %H> == <local.hour>) && (<serv.rtime.format %d> == <local.day>)
+		SERV.B @0790 Um evento automatico (<local.name>) sera iniciado em 1 minuto.
+		timerf 60,inicia_ctf_simples
+		timerf 65,remove
+	endif
+endfor
+return 1
+
+[ITEMDEF i_scheduler_ctf]
+ID=i_crystal_ball
+NAME=CTF [DO NOT REMOVE]
+WEIGHT=200
+TYPE=t_eq_script
+
+ON=@Create
+    ATTR=attr_decay|attr_invis
+
+ON=@timer
+	timer = 1000
+
+on=@click
+message @,,1 Dia <dtag0.day> Hora <dtag0.hour> Nome <tag0.name>
+return 1
+
+[function prize_ctf]
+targetf prize_ctf2 <args>
+
+[function prize_ctf2]
+var0.premio_ctf = <argo.uid>
+src.smsg @,,1 <argo.name> setado como premio do CTF.
+return 1
+
+[function inicia_ctf_simples]
+//novoctf jogadores,eq1,eq2,eq3,eq4,uidpremio,ptmax,mount,tempo,perdeponto,killa,hallu
+novoctf 9,1,1,1,0,<var0.premio_ctf>,10,1,15,0,0,0
+
+// Funcoes extras pros cons
+[FUNCTION stop_ctf]
+if <tag0.can_i_use_event_cmd>
+	finaliza_ctf_force
+else
+	sysmessage @,,1 Voce nao pode usar este comando.
+endif
+return 1
+
+
+[ITEMDEF i_testre]
+NAME=Delay Block Chat
+ID=i_handr_1
+TYPE=T_EQ_SCRIPT
+
+ON=@CREATE
+TIMER 1
+
+ON=@TIMER
+s TRIGGER TIMER
+TIMERF 10,lindoteste
+TIMER = 10
+return 1
+
+[FUNCTION lindoteste]
+s trigger timerf
+
+[PLEVEL 1]
+tc
+
+[FUNCTION TC]
+IF <RESTEST i_chat_block_tc>
+SRC.SYSMESSAGE @,,1 Aguarde <FINDID.i_chat_block_tc.TIMER> segundos para usar o TeamChat novamente.
+RETURN 1
+ENDIF
+IF (<TAG0.ONEVENT>) && !(<ISEMPTY <TAG.TEAM>>)
+REGION.ALLCLIENTS TC2 <ARGS>
+SERV.NEWITEM i_chat_block_tc
+NEW.EQUIP
+ELSE
+SRC.SYSMESSAGE @,,1 Voce nao esta em um evento de times.
+ENDIF
+RETURN 1
+
+[FUNCTION TC2]
+IF (<TAG0.TEAM>==<SRC.TAG.TEAM>) || (<ACCOUNT.PLEVEL> > 1)
+SYSMESSAGE @<SRC.TAG.NAME.HUE>,,1 [TeamChat][Player] <ARGS>
+ENDIF
+RETURN 1
+
+[ITEMDEF i_chat_block_tc]
+NAME=Delay Block Chat
+ID=i_handr_1
+TYPE=T_EQ_SCRIPT
+
+ON=@EQUIP
+TIMER 3
+
+ON=@TIMER
+REMOVE
+RETURN 1
+
+[FUNCTION iniciar_ctf]
+FORINSTANCES i_iniciactf
+	REMOVE
+ENDFOR
+SERV.NEWITEM i_iniciactf
+NEW.P 5951,447,22
+NEW.START_CTF
+FORINSTANCES i_anunciactf
+  REMOVE
+ENDFOR
+FORINSTANCES i_timer_entry_ctf
+  REMOVE
+ENDFOR
+return 1
+
+[ITEMDEF i_iniciactf]
+ID=i_crystal_ball
+NAME=CTF [DO NOT REMOVE]
+WEIGHT=200
+TYPE=t_eq_script
+
+ON=@Create
+    ATTR=attr_decay|attr_invis
+    TIMER=20
+
+ON=@TIMER
+if <tag0.iniciado>
+	REMOVE
+	RETURN 1
+else
+	s Ocoreu um Bug, os muros do CTF nao foram abertos. Reiniciando Contagem!
+	TIMER CLEAR
+	START_CTF
+	TIMER = 20
+endif
+return 1
+
+[ITEMDEF i_timerctf]
+ID=i_crystal_ball
+NAME=CTF [DO NOT REMOVE]
+WEIGHT=200
+TYPE=t_eq_script
+
+ON=@Create
+    ATTR=attr_decay|attr_invis
+    TIMER=20
+
+ON=@TIMER
+REMOVE
+RETURN 1
+
+[ITEMDEF i_anunciactf]
+ID=i_crystal_ball
+NAME=CTF [DO NOT REMOVE]
+WEIGHT=200
+TYPE=t_eq_script
+
+ON=@Create
+    ATTR=attr_decay|attr_invis
+    TIMER=15
+
+ON=@TIMER
+REF1=<TAG.GATE>
+  SERV.B @0790 Restam <eval <ref1.tag.maximo> - <ref1.tag.contagem>> vagas para o CTF! Gate na Commerce Room!
+TIMER 15
+RETURN 1
+
+[ITEMDEF i_timer_entry_ctf]
+ID=i_crystal_ball
+NAME=CTF [DO NOT REMOVE]
+WEIGHT=200
+TYPE=t_eq_script
+
+ON=@Create
+    ATTR=attr_decay|attr_invis
+    TIMER=450
+
+ON=@TIMER
+REF1=<TAG.GATE>
+	if (<eval <ref1.tag.maximo> - <ref1.tag.contagem>> > 0)
+		finaliza_ctf_quorum
+	endif
+
+[FUNCTION finaliza_ctf_quorum]
+set_event_gate_walls 0
+SERV.NEWITEM i_anunciactf
+NEW.P 5951,447,22
+NEW.UPDATE
+REF650=<NEW.UID>
+ref650.region.allclients F_GO HELP ROOM
+ref650.region.allchars CTFLOGOUT_EXIT
+ref650.region.allcharsidle CTFLOGOUT_EXIT
+fecha_portas_evento
+SERV.B @0790 O CTF foi cancelado por falta de quorum.
+REF650.REMOVE
+FORINSTANCES i_anunciactf
+	REMOVE
+ENDFOR
+FORINSTANCES i_gate_ctf
+	REMOVE
+ENDFOR
+FORINSTANCES i_timer_entry_ctf
+	REMOVE
+ENDFOR
+RETURN 1
+
+[function ctf_b]
+if (<var0.muro>)
+	forinstances i_muro_evento
+		REMOVE
+	endfor
+	forinstances i_muro_evento2
+		REMOVE
+	endfor
+	s CTF Iniciado! Muros removidos!
+	tag.iniciado = 1
+	var.muro=0
+else
+	var.muro 1
+	for 1 4
+		serv.newitem i_muro_evento
+		new.attr 010
+		new.p <def.lugarctf<dlocal._for>>
+	endfor
+	for 4 8
+		serv.newitem i_muro_evento2
+		new.attr 010
+		new.p <def.lugarctf<dlocal._for>>
+	endfor
+	s Os muros do CTF foram criados!
+endif
+return 1
+
+[FUNCTION start_ctf]
+//REGION.ALLCLIENTS HITS 0
+region.allclients sysmessage @0790,0 O Capture The Flag sera iniciado em 15 segundos.
+region.allclients sysmessage @0790,0 Use o comando .tc para falar com o seu time.
+var.muro 1
+TIMERF 15,ctf_b
+return 1
+
+[FUNCTION fim_ctf]
+//REGION.ALLCLIENTS HITS 0
+var.muro 0
+//region.allclients sysmessage @0790,0 O Capture The Flag foi paralizado.
+TIMERF 1,ctf_b
+return 1
+
+[itemdef i_muro_evento]
+id=02fa
+type=t_normal
+
+ON=@CREATE
+	ATTR=010
+
+[itemdef i_muro_evento2]
+id=02fb
+type=t_normal
+
+ON=@CREATE
+	ATTR=010
+
+[itemdef i_muro_eventoclose]
+id=02fa
+type=t_normal
+
+ON=@CREATE
+	ATTR=010
+
+[itemdef i_muro_eventoclose2]
+id=02fb
+type=t_normal
+
+ON=@CREATE
+	ATTR=010
+
+[EVENTS e_ctf]
+ON=@ItemDropOn_Item
+if (<findlayer.29.uid> == <argo>)
+	s <name> tentou dropar <act.name> no banco durante o evento.
+	sysmessage @,,1 É proibido dropar itens do evento no banco. Aguarde o fim do evento para solicitar sua saida da jail.
+	jail
+	return 1
+endif
+
+ON=@CLICK
+IF (<SRC.ISGM>)
+MESSAGE @<TAG.NAME.HUE> (<NAME>)
+ENDIF
+MESSAGE @<TAG.NAME.HUE>,,1 K: <dTAG.CTF_KILLS> D: <dTAG.CTF_DEATHS>
+
+ON=@GETHIT
+IF (<TAG0.TEAM>==<SRC.TAG0.TEAM>) && (<uid> != <src.uid>)
+SRC.SYSMESSAGE @,,1 Voce nao pode ferir alguem da sua equipe.
+RETURN 1
+ENDIF
+
+ON=@SPELLCAST
+IF (<ARGN1>==40)
+RETURN 1
+ENDIF
+
+ON=@KILL
+  TAG.CTF_KILLS += 1
+  IF (<TAG.CTF_KILLS> > <arrayshow 0,<var.ctf_top_kills>>)
+  var.ctf_top_kills=<TAG.CTF_KILLS>,<UID>
+  elif (<TAG.CTF_KILLS> == <arrayshow 0,<var.ctf_top_kills>>)
+  var.ctf_top_kills=<var.ctf_top_kills>,<uid>
+  ENDIF
+
+ON=@Death
+  TAG.CTF_DEATHS += 1
+  IF (<TAG.CTF_DEATHS> > <arrayshow 0,<var.ctf_top_deaths>>)
+  var.ctf_top_deaths=<TAG.CTF_DEATHS>,<UID>
+  elif (<TAG.CTF_DEATHS> == <arrayshow 0,<var.ctf_top_DEATHS>>)
+  var.ctf_top_DEATHS=<var.ctf_top_DEATHS>,<uid>
+  ENDIF
+  IF <ATTACKER>
+  REF1=<ATTACKER.MAX>
+  REF1.GANHA_KILLS_CTF
+  ENDIF
+  CTF_DEATH_FIX
+  invis 1
+  stone 1
+  hits <str>
+  action -1
+  if (<findlayer.20>)
+    findlayer.20.drop
+  endif
+  SRC.CTAG.LAST_TELEPORT <SERV.TIME>
+  IF (<src.tag.name.hue>==01de)
+    src.F_GO 5995,482,-22
+  ELIF (<src.tag.name.hue>==90)
+     src.F_GO 5906,404,-22
+  ELif (<src.tag.name.hue>==0799)
+    src.F_GO 5916,491,-22
+  else
+    src.F_GO 5986,402,-22
+  endif
+  message @0790 Voce morreu!
+  message @0790 Aguarde 10 segundos.
+  newitem i_timer_ctf
+  act.equip
+  evento_renew_resources
+  return 1
+
+ON=@Logout
+  if (<findlayer.20>)
+ && (<findlayer.20.baseid> == i_flag_ctf)
+    findlayer.20.ctf_return_flag
+  endif
+  message @32,,1 [Logout!]
+  //tag.name.alt=
+
+ON=@Login
+  tag.name.alt=Player
+  message @478,,1 [Login!]
+
+
+
+ON=@EnvironChange
+if ((<p.x> < 5901) || (<p.x> > 6001) || (<p.y> < 397) || (<p.y> > 497)) && (STRCMPI("<REGION.NAME>","CtfLogOut"))
+    if (<findlayer.20>)
+ && (<findlayer.20.baseid> == i_flag_ctf)
+      findlayer.20.ctf_return_flag
+    endif
+    action -1
+    stripremove
+  src.kills=<tag.askills> 	//SRC.KILLS=<SRC.TAG.KKILLS>
+  src.karma=<tag.askarma> 	//KARMA=<SRC.TAG.KKARMA>
+  src.fame=<tag.asfame>   	//SRC.FAME=<SRC.TAG.FFAME>
+  src.deaths=<tag.asdeaths> 	//SRC.DEATHS=<SRC.TAG.KDEATHS>
+  src.memoryfindtype.memory_harmedby.remove
+  src.memoryfindtype.memory_iaggressor.remove
+  src.memoryfindtype.memory_fight.remove
+  src.memoryfindtype.memory_sawcrime.remove
+  src.memoryfindtype.memory_aggreived.remove
+  src.memoryfindtype.memory_war_targ.remove
+  src.memoryfindtype.memory_harmedby.remove
+  src.memoryfindtype.memory_iaggressor.remove
+  src.memoryfindtype.memory_fight.remove
+  src.memoryfindtype.memory_sawcrime.remove
+  src.memoryfindtype.memory_aggreived.remove
+  src.memoryfindtype.memory_war_targ.remove
+  tag.askills=
+  tag.askarma=
+  tag.asfame=
+  tag.asdeaths=
+  src.criminal 0
+    findlayer.21.remove
+    findlayer.25.remove
+    findlayer.31.remove
+    newitem i_gold
+    act.link 0<tag.lastbackpack>
+    act.link.cont <uid>
+    act.remove
+    events -e_ctf
+    tag.team
+    if (<findlayer.21> = 0)
+      SERV.ALLCLIENTS MSTAFF2 @0790 [SYSTEM]: Err... <name> saiu do evento e nao foi possivel recuperar sua backpack!
+      SERV.ALLCLIENTS MSTAFF2 @0790 [SYSTEM]: Root: <uid> - Act: <act.uid> - Src: <src.uid> - Action: <action> - Backpack: <tag.lastbackpack>
+
+    endif
+      //rem_combat_mems
+   TAG.NAME.ALT=
+POR_gs
+BODY=<OBODY>
+RESENDALL
+REEQUIPALL
+   tag.lastbackpack=
+   tag.onevent=
+   TAG.NOPREMIO=
+   TAG.NAME.HUE=
+   TAG.CTF_DEATHS=
+   TAG.CTF_KILLS=
+   endif
+  return 0
+
+[FUNCTION POR_gs]
+REF1=<GUILD>
+IF (<dTAG.PREABBREV>)
+TAG.PREABBREV=
+REF1.MEMBERFROMUID.<UID>.SHOWABBREV 1
+ENDIF
+
+[FUNCTION resendall]
+RESEND
+UPDATE
+FINDLAYER.21.UPDATEX
+FINDLAYER.21.DCLICK
+
+[ITEMDEF i_timer_ctf]
+ID=i_memory
+WEIGHT=0
+TYPE=t_eq_script
+LAYER=layer_special
+NAME=CTF Stone Timer
+
+ON=@Create
+  attr attr_decay
+  return 0
+
+ON=@Equip
+  timer 10
+  return 0
+
+ON=@Timer
+  cont.stone 0
+  cont.invis 0
+  cont.say @0790 Voltei!
+  return 0
+
+[ITEMDEF i_gate_ctf]
+ID=0f6c
+WEIGHT=1
+TYPE=t_normal
+NAME=Capture The Flag
+
+ON=@Create
+  attr 08000
+  color 079d
+  tag.contagem 0
+  tag.maximo 10
+  return 0
+
+ON=@Click
+  message @0790 <name>
+  return 1
+
+ON=@Step
+if <src.tag0.event_block>
+	src.sysmessage @,,1 Voce esta banido de eventos!
+	return 1
+endif
+if (<tag.contagem> >= <tag.maximo>) && (<tag.maximo> > 0)
+    src.message @0790,,1 Evento Lotado!
+    return 1
+  endif
+  src.shrinklayer25_save
+  tag.contagem += 1
+SRC.CANCELLHELPROOM
+SRC.TAG.NAME.ALT=Player
+SRC.OFFABREV
+src.tag.askills=<src.kills> 	//SRC.KILLS=<SRC.TAG.KKILLS>
+src.tag.askarma=<src.karma> 	//KARMA=<SRC.TAG.KKARMA>
+src.tag.asfame=<src.fame>   	//SRC.FAME=<SRC.TAG.FFAME>
+src.tag.asdeaths=<src.deaths> //SRC.DEATHS=<SRC.TAG.KDEATHS>
+  src.findlayer.31.bounce
+  src.tag.lastbackpack <src.findlayer.21.uid>
+  src.stripsave
+  src.tag.team <eval (<tag.contagem> + <dtag.ttimes>) % <dtag.ttimes>>
+  ref199=<more2>
+  tag.cortemp=<ref199.tag.team<dSRC.TAG.TEAM>_color>
+  SRC.tag.name.hue=<tag.cortemp>
+  SRC.TAG.CTF_DEATHS 0
+  SRC.TAG.CTF_KILLS 0
+  src.tag.onevent 1
+  src.findlayer.21.attr 0
+  ref1=<src.findlayer.21.uid>
+  src.findlayer.21.cont <src.findlayer.29.uid>
+  REF1.updatex
+  src.newitem i_backpack
+  src.act.color <tag.cortemp>
+  src.act.equip
+
+  if <tag0.mount>
+  src.newitem i_llama_evento // animal
+  src.act.name TFG Shard Evento
+  src.act.color <tag.cortemp>
+  src.act.attr 010
+  src.act.equip
+  endif
+
+  src.newitem i_mw_boots // item que garante todos os status
+  src.act.name TFG Shard Evento
+  src.act.color <tag.cortemp>
+  src.act.attr 010
+  src.act.equip
+
+  src.newitem i_mw_helm // helm
+  src.act.name TFG Shard Evento
+  src.act.color <tag.cortemp>
+  src.act.attr 010
+  src.act.equip
+
+  src.newitem i_mw_chest // chest
+  src.act.name TFG Shard Evento
+  src.act.color <tag.cortemp>
+  src.act.attr 010
+  src.act.equip
+
+  src.newitem i_mw_leggings // leggings
+  src.act.name TFG Shard Evento
+  src.act.color <tag.cortemp>
+  src.act.attr 010
+  src.act.equip
+
+  src.newitem i_mw_arms // arms
+  src.act.name TFG Shard Evento
+  src.act.color <tag.cortemp>
+  src.act.attr 010
+  src.act.equip
+
+  src.newitem i_mw_gloves // gloves
+  src.act.name TFG Shard Evento
+  src.act.color <tag.cortemp>
+  src.act.attr 010
+  src.act.equip
+
+  src.newitem i_spellbook_full
+  src.act.color 07B5
+  src.act.bounce
+
+  src.newitem i_Bow_Elven // archery
+  src.act.name TFG Shard Evento
+  src.act.color 07B5
+  src.act.bounce
+
+  src.newitem i_mw_shield // escudo
+  src.act.name TFG Shard Evento
+  src.act.color 07B5
+  src.act.bounce
+
+  src.evento_renew_resources
+
+  SRC.BODY c_woman
+
+  IF (<src.tag.name.hue>==01de)
+    src.F_GO 5995,491,-17
+  ELIF (<src.tag.name.hue>==90)
+     src.F_GO 5906,412,-17
+  ELif (<src.tag.name.hue>==0799)
+    src.F_GO 5906,491,-17
+  else
+    src.F_GO 5995,402,-17
+  endif
+
+  SRC.RESENDALL
+  src.events +e_ctf
+IF (<tag.contagem> == <tag.maximo>)
+  set_event_gate_walls 0
+  SERV.B @0790 Evento Completo!
+  SERV.NEWITEM i_iniciactf
+  NEW.P 5960,450,22
+  NEW.START_CTF
+  NEW.UPDATE
+  ref199.timer = <ref199.tag0.tempo>
+  FORINSTANCES i_anunciactf
+	REMOVE
+  ENDFOR
+  FORINSTANCES i_timer_entry_ctf
+	REMOVE
+  ENDFOR
+	fecha_portas_evento
+  REMOVE
+ENDIF
+  return 1
+
+[DIALOG dialog_gate_ctf]
+180,150
+PAGE 1
+resizepic 10 12 3500 250 140
+dtext 45 30 1152 CTF - Capture The Flag
+
+gumppic 115 70 2443
+dtext 70 50 0000 Evento
+dtext 120 50 <QVAL (!<TAG0.LIBERADO>)? 025 Desativado:044 Ativado>
+dtext  45 70 2625 Jogadores:
+dtext  198 70 2625 Zerar
+dtext 136 70 850 <eval <tag.contagem>>
+
+gumppic 115 95 2443
+dtext 45 95 2625 Maximo:
+dtextentry 135 95 40 25 025 1 <eval <tag.maximo>>
+
+button 175 73 2223 2118 1 1 3
+
+button 45 50 <eval <tag.liberado> + 210> <eval 211 - <tag.liberado>> 1 1 1
+
+button 185 95 2130 2129 1 1 2
+
+button 185 115 2119 2120 1 1 0
+
+
+[DIALOG dialog_gate_ctf BUTTON]
+ON=3
+  tag.contagem 0
+  src.sysmessage @0790 Contador de participantes resetado!
+  dialog dialog_gate_ctf
+  return 0
+
+ON=1
+  tag.liberado = <eval <tag.liberado> +1> % 2
+  dialog dialog_gate_ctf
+  return 0
+
+ON=2
+  if (!<isnum <argtxt[1]>>)
+    src.sysmessage @0790 '<argtxt[1]>' nao parece ser um numero.
+  elseif (<eval <argtxt[1]> % 2>)
+    src.sysmessage @0790 Precisa ser um numero par.
+  else    tag.maximo <argtxt[1]>
+    src.sysmessage @0790 Limite de participantes alterado.
+  endif
+  dialog dialog_gate_ctf
+  return 0
+
+[FUNCTION novoctf]
+	local.total_joueurs = <dARGV[0]>
+	local.total_equipes = <eval <ARGV[1]> + <dARGV[2]> + <dARGV[3]> + <dARGV[4]>>
+	if (<local.total_joueurs> < <local.total_equipes>)
+		sysmessage @,,1 Voce nao pode ter mais equipes que jogadores.
+		return 1
+	endif
+LIMPACTF
+VAR.CTF_TOP_kills=0,0
+VAR.CTF_TOP_deaths=0,0
+//
+  serv.newitem i_stone_ctf
+  //new.tag.premiacao <ARGV[5]>
+  new.tag.premiacao <var0.premio_ctf>
+  new.tag.ptmax <ARGV[6]>
+  new.tag0.tempo <argv[8]>
+  new.tag.perdeponto <argv[9]>
+  new.tag.killa <argv[10]>
+  new.tag.hallu <argv[11]>
+  new.p 5960,448,20
+  new.timer -1
+  new.updatex
+  ref10=<NEW.UID>
+  LOCAL.TIMES 0
+  LOCAL.2TIMES 0
+//
+If (<ARGV[1]>==1)
+  serv.newitem i_flag_ctf
+  new.tag.team <LOCAL.TIMES>
+  new.color 0798
+  new.p 5995,402,-17
+  new.more2 <REF10>
+  //ref1=<REF10>
+  ref10.tag.flag<dLOCAL.TIMES> = <new.uid>
+  LOCAL.TIMES ++
+ELSE
+  CLOSEBASE1
+ENDIF
+//
+If (<ARGV[2]>==1)
+  serv.newitem i_flag_ctf
+  new.tag.team <dLOCAL.TIMES>
+  new.color 0799
+  new.p 5906,491,-17
+  new.more2 <REF10>
+  //obj <REF10>
+  ref10.tag.flag<dLOCAL.TIMES> <new.uid>
+  LOCAL.TIMES ++
+ELSE
+  CLOSEBASE2
+ENDIF
+//
+If (<ARGV[3]>==1)
+  serv.newitem i_flag_ctf
+  new.tag.team <dLOCAL.TIMES>
+  new.color 90
+  new.p 5906,412,-17
+  new.more2 <REF10>
+  //obj <REF10>
+  ref10.tag.flag<dLOCAL.TIMES> <new.uid>
+  LOCAL.TIMES ++
+ELSE
+  CLOSEBASE3
+ENDIF
+//
+If (<ARGV[4]>==1)
+  serv.newitem i_flag_ctf
+  new.tag.team <dLOCAL.TIMES>
+  new.color 01de
+  new.p 5995,491,-17
+  new.more2 <REF10>
+  //obj <REF10>
+  ref10.tag.flag<dLOCAL.TIMES> <new.uid>
+  LOCAL.TIMES ++
+ELSE
+  CLOSEBASE4
+ENDIF
+//
+If (<ARGV[1]>==1)
+  serv.newitem i_rescue_ctf
+  new.tag.team <dLOCAL.2TIMES>
+  new.color 0798
+  new.p 5995,402,-17
+  new.more2 <REF10>
+  //Obj <REF10>
+  ref10.tag.team<dLOCAL.2TIMES>_name Amarelo
+  ref10.tag.team<dLOCAL.2TIMES>_color 0798
+  new.criabases
+  LOCAL.2TIMES ++
+ENDIF
+//
+If (<ARGV[2]>==1)
+  newitem i_rescue_ctf
+  new.tag.team <dLOCAL.2TIMES>
+  new.color 0799
+  new.p 5906,491,-17
+  new.more2 <REF10>
+  //Obj <REf10>
+  ref10.tag.team<dLOCAL.2TIMES>_name Vermelho
+  ref10.tag.team<dLOCAL.2TIMES>_color 0799
+  new.criabases
+  LOCAL.2TIMES ++
+ENDIF
+//
+If (<ARGV[3]>==1)
+  newitem i_rescue_ctf
+  new.tag.team <dLOCAL.2TIMES>
+  new.color 90
+  new.p 5906,412,-17
+  new.more2 <REF10>
+  //Obj <REF10>
+  ref10.tag.team<dLOCAL.2TIMES>_name Azul
+  ref10.tag.team<dLOCAL.2TIMES>_color 90
+  new.criabases
+  LOCAL.2TIMES ++
+ENDIF
+//
+If (<ARGV[4]>==1)
+  newitem i_rescue_ctf
+  new.tag.team <dLOCAL.2TIMES>
+  new.color 01de
+  new.p 5995,491,-17
+  new.more2 <REF10>
+  //Obj <REF10>
+  ref10.tag.team<dLOCAL.2TIMES>_name Verde
+  ref10.tag.team<dLOCAL.2TIMES>_color 01de
+  new.criabases
+  LOCAL.2TIMES ++
+ENDIF
+//
+
+  set_event_gate_walls 1
+  serv.newitem i_gate_ctf
+  new.more2 <REF10>
+   if <argv[7]>
+    new.tag.mount 1
+   endif
+  new.tag.ttimes <dLOCAL.2TIMES>
+  new.tag.maximo <ARGV[0]>
+  new.p 2341,541,1
+  new.updatex
+  ref455=<new.uid>
+  ref10.tag.ttimes <dLOCAL.2TIMES>
+  serv.newitem i_anunciactf
+  new.p <ref455.p>
+  new.tag.gate <ref455>
+  new.update
+  serv.newitem i_timer_entry_ctf
+  new.p <ref455.p>
+  new.tag.gate <ref455>
+  new.update
+forinstances i_muro_evento
+REMOVE
+endfor
+forinstances i_muro_evento2
+REMOVE
+endfor
+new.TIMERF 2,FIM_CTF
+SERV.B @0790 Foram liberadas <dARGV[0]> vagas para o CTF (<dLOCAL.2TIMES> equipes, <dARGV[6]> pontos maximos). Gate na Commerce Room!
+abre_portas_evento
+
+[FUNCTION limpactf]
+FORINSTANCES i_muro_eventoclose
+REMOVE
+ENDFOR
+FORINSTANCES i_muro_eventoclose2
+REMOVE
+ENDFOR
+FORINSTANCES i_gate_ctf
+REMOVE
+ENDFOR
+//FORINSTANCES kit_ctf
+//REMOVE
+//ENDFOR
+FORINSTANCES i_stone_ctf
+REMOVE
+ENDFOR
+FORINSTANCES i_flag_ctf
+REMOVE
+ENDFOR
+FORINSTANCES i_rescue_ctf
+REMOVE
+ENDFOR
+newitem i_gold
+NEW.MORE2 0511fc
+new.p 5995,402,-17
+new.removebase
+new.p 5906,491,-17
+new.removebase
+new.p 5906,412,-17
+new.removebase
+new.p 5995,491,-17
+new.removebase
+new.remove
+
+[FUNCTION removebase]
+FORITEMS 10
+IF (<TYPE>==t_basectf)
+REMOVE
+ENDIF
+ENDFOR
+
+[FUNCTION criabases]
+newitem 1963
+new.p <P>
+new.attr 010
+new.type t_basectf
+new.move -1 1 -5 0
+newitem 1960
+new.p <P>
+new.attr 010
+new.type t_basectf
+new.move -1 -1 -5 0
+newitem 1961
+new.p <P>
+new.attr 010
+new.type t_basectf
+new.move 1 1 -5 0
+newitem 1962
+new.p <P>
+new.attr 010
+new.type t_basectf
+new.move 1 -1 -5 0
+newitem 1956
+new.p <P>
+new.attr 010
+new.type t_basectf
+new.move 0 1 -5 0
+newitem 1959
+new.p <P>
+new.attr 010
+new.type t_basectf
+new.move -1 0 -5 0
+newitem 1958
+new.p <P>
+new.attr 010
+new.type t_basectf
+new.move 0 -1 -5 0
+newitem 1957
+new.p <P>
+new.attr 010
+new.type t_basectf
+new.move 1 0 -5 0
+newitem 1955
+new.p <P>
+new.move 0 0 -5 0
+new.attr 010
+new.type t_basectf
+
+[TYPEDEF t_basectf]
+On=@CLICK
+MESSAGE Base de CTF
+RETURN 1
+
+[FUNCTION ctf_return_flag]
+  if (<baseid> != i_flag_ctf)
+    return 0
+  endif
+  newitem <baseid>
+  new.color <color>
+  new.more2 <more2>
+  new.tag.team <tag.team>
+  ref1 = <new.more2>
+  If (<color> == 01de)
+    new.p 5995,491,-17
+    ref1.tag.flag<dtag.team> <new.uid>
+  elif (<color> == 90)
+    new.p 5906,412,-17
+    ref1.tag.flag<dtag.team> <new.uid>
+  elif (<color> == 0799)
+    new.p 5906,491,-17
+    ref1.tag.flag<dtag.team> <new.uid>
+  else
+    new.p 5995,402,-17
+    ref1.tag.flag<dtag.team> <new.uid>
+  endif
+  new.timer -1
+  remove
+  return 0
+
+[ITEMDEF i_flag_ctf]
+ID=i_cape
+WEIGHT=0
+TYPE=t_normal
+NAME=CTF Flag
+
+ON=@Create
+  attr 08010
+  color 079a
+  tag.team 0
+  return 0
+
+ON=@Click
+  message @0790 CTF Flag
+  return 1
+
+ON=@DClick
+  if (<src.account.plevel> >= 4)
+    ctf_return_flag
+  endif
+  return 1
+
+ON=@UNEQUIP
+TIMERF 1,EQUIP
+
+ON=@Step
+if (<src.tag0.onevent>)
+	if (<src.findlayer.20.baseid> == i_flag_ctf) && (<tag0.team> != <src.tag0.team>)
+      src.message @0790 Voce ja esta com uma bandeira!
+    elif (<tag0.team> != <src.tag0.team>)
+      src.message @0790 Boa! Voce tem 2 minutos!
+      more1 0
+      timer 120
+      equip
+	endif
+endif
+
+ON=@DropOn_Ground
+  more1 15
+  timer 1
+
+ON=@Timer
+  if (<more1> > 0)
+    say <eval <more1>>
+    timer 1
+  else
+    ctf_return_flag
+  endif
+  more1 -= 1
+  return 1
+
+[ITEMDEF i_rescue_ctf]
+ID=i_floor_marble
+NAME=CTF Rescue Point
+TYPE=t_normal
+
+ON=@Create
+  attr 08080
+  tag.team 0
+  color 079a
+
+ON=@Step
+  ref1 = <more2>
+  ref2 = <ref1.tag.flag0>
+	if (<ref2.timer> == 0)
+		ref2.ctf_return_flag
+	endif
+  ref3 = <ref1.tag.flag1>
+	if (<ref3.timer> == 0)
+		ref3.ctf_return_flag
+	endif
+	//verificar pra k serve esse codigo aqui acima , esqueci
+ if (<tag0.team> == <src.tag0.team>)
+    if (<src.findlayer.20>)
+      if (<src.findlayer.20.baseid> != i_flag_ctf)
+        return 0
+      endif
+      ref390=<src.findlayer.20>
+      src.findlayer.20.ctf_return_flag
+      //obj <more2>
+      if (<tag0.team>==3)
+          ref1.tag.team3 ++
+          if (<ref1.tag.team3> >= <ref1.tag.ptmax>)
+			  region.allclients sysmessage @<ref1.tag.team3_color>,0 Time <ref1.tag.team3_name> marcou <dref1.tag.ptmax> pontos e ganhou o evento!
+			  region.allclients finaliza_ctf_premia 3,<ref1.tag.premiacao>
+			  region.allclients sound 61
+			  region.allchars CTFLOGOUT_EXIT
+			  region.allcharsidle CTFLOGOUT_EXIT
+			  CLOSE_CTF_VARS
+          endif
+		region.allclients sound 61
+        region.allclients sysmessage @<ref1.tag.team3_color>,0 Time <ref1.tag.team3_name> marcou ponto.
+          if <ref1.tag0.killa>
+              region.allclients ctf_time_lost <ref390>,<ref1>
+          endif
+          ref1.tag.team<dref390.tag.team>_lost += 1
+          if <ref1.tag0.perdeponto>
+              lost_point <dref390.tag.team>,<ref1>
+          endif
+          region.allclients sysmessage @0790,3 Placar: <ref1.tag.team0_name> <eval <ref1.tag.team0>>, <ref1.tag.team1_name> <eval <ref1.tag.team1>><qval <eval QVAL(<ref1.tag.ttimes>,2,0,0,1)>?, <ref1.tag.team2_name> <eval <ref1.tag.team2>>:><qval <eval QVAL(<ref1.tag.ttimes>,3,0,0,1)>?, <ref1.tag.team3_name> <eval <ref1.tag.team3>>:>!
+      elif (<tag0.team>==2)
+          ref1.tag.team2 ++
+          if (<ref1.tag.team2> >= <ref1.tag.ptmax>)
+			  region.allclients sysmessage @<ref1.tag.team2_color>,0 Time <ref1.tag.team2_name> marcou <dref1.tag.ptmax> pontos e ganhou o evento!
+			  region.allclients finaliza_ctf_premia 2,<ref1.tag.premiacao>
+			  region.allclients sound 61
+			  region.allchars CTFLOGOUT_EXIT
+			  region.allcharsidle CTFLOGOUT_EXIT
+			  CLOSE_CTF_VARS
+          endif
+	  region.allclients sound 61
+          region.allclients sysmessage @<ref1.tag.team2_color>,0 Time <ref1.tag.team2_name> marcou ponto.
+          if <ref1.tag0.killa>
+              region.allclients ctf_time_lost <ref390>,<ref1>
+          endif
+          ref1.tag.team<dref390.tag.team>_lost += 1
+          if <ref1.tag0.perdeponto>
+              lost_point <dref390.tag.team>,<ref1>
+          endif
+          region.allclients sysmessage @0790,3 Placar: <ref1.tag.team0_name> <eval <ref1.tag.team0>>, <ref1.tag.team1_name> <eval <ref1.tag.team1>><qval <eval QVAL(<ref1.tag.ttimes>,2,0,0,1)>?, <ref1.tag.team2_name> <eval <ref1.tag.team2>>:><qval <eval QVAL(<ref1.tag.ttimes>,3,0,0,1)>?, <ref1.tag.team3_name> <eval <ref1.tag.team3>>:>!
+      elif (<tag0.team>==1)
+        ref1.tag.team1 ++
+          if (<ref1.tag.team1> >= <ref1.tag.ptmax>)
+			  region.allclients sysmessage @<ref1.tag.team1_color>,0 Time <ref1.tag.team1_name> marcou <dref1.tag.ptmax> pontos e ganhou o evento!
+			  region.allclients finaliza_ctf_premia 1,<ref1.tag.premiacao>
+			  region.allclients sound 61
+			  region.allchars CTFLOGOUT_EXIT
+			  region.allcharsidle CTFLOGOUT_EXIT
+			  CLOSE_CTF_VARS
+          endif
+	  region.allclients sound 61
+          region.allclients sysmessage @<ref1.tag.team1_color>,0 Time <ref1.tag.team1_name> marcou ponto.
+          if <ref1.tag0.killa>
+              region.allclients ctf_time_lost <ref390>,<ref1>
+          endif
+          ref1.tag.team<dref390.tag.team>_lost += 1
+          if <ref1.tag0.perdeponto>
+              lost_point <dref390.tag.team>,<ref1>
+          endif
+          region.allclients sysmessage @0790,3 Placar: <ref1.tag.team0_name> <eval <ref1.tag.team0>>, <ref1.tag.team1_name> <eval <ref1.tag.team1>><qval <eval QVAL(<ref1.tag.ttimes>,2,0,0,1)>?, <ref1.tag.team2_name> <eval <ref1.tag.team2>>:><qval <eval QVAL(<ref1.tag.ttimes>,3,0,0,1)>?, <ref1.tag.team3_name> <eval <ref1.tag.team3>>:>!
+      else
+        ref1.tag.team0 ++
+          if (<ref1.tag.team0> >= <ref1.tag.ptmax>)
+			  region.allclients sysmessage @<ref1.tag.team0_color>,0 Time <ref1.tag.team0_name> marcou <dref1.tag.ptmax> pontos e ganhou o evento!
+			  region.allclients sound 61
+			  region.allclients finaliza_ctf_premia 0,<ref1.tag.premiacao>
+			  region.allchars CTFLOGOUT_EXIT
+			  region.allcharsidle CTFLOGOUT_EXIT
+			  CLOSE_CTF_VARS
+          endif
+	  region.allclients sound 61
+          region.allclients sysmessage @<ref1.tag.team0_color>,0 Time <ref1.tag.team0_name> marcou ponto.
+          if <ref1.tag0.killa>
+              region.allclients ctf_time_lost <ref390>,<ref1>
+          endif
+          ref1.tag.team<dref390.tag.team>_lost += 1
+          if <ref1.tag0.perdeponto>
+              lost_point <dref390.tag.team>,<ref1>
+          endif
+          region.allclients sysmessage @0790,3 Placar: <ref1.tag.team0_name> <eval <ref1.tag.team0>>, <ref1.tag.team1_name> <eval <ref1.tag.team1>><qval <eval QVAL(<ref1.tag.ttimes>,2,0,0,1)>?, <ref1.tag.team2_name> <eval <ref1.tag.team2>>:><qval <eval QVAL(<ref1.tag.ttimes>,3,0,0,1)>?, <ref1.tag.team3_name> <eval <ref1.tag.team3>>:>!
+      endif
+    endif
+endif
+
+[FUNCTION lost_point]
+REF1=<ARGV[1]>
+region.allclients sysmessage @<ref1.tag.team<dARGV[0]>_color>,0 Time <ref1.tag.team<dARGV[0]>_name> perdeu um ponto!
+REF1.TAG.TEAM<dARGV[0]> -= 1
+IF (<REF1.TAG.TEAM<dARGV[0]>> < 0)
+REF1.TAG.TEAM<dARGV[0]> = 0
+ENDIF
+RETURN 1
+
+[FUNCTION ctf_time_lost]
+ref1=<ARGV[0]>
+ref2=<ARGV[1]>
+sysmessage @<ref2.tag.team<dref1.tag.team>_color>,0 Time <ref2.tag.team<dref1.tag.team>_name> foi penalizado!
+if (<tag.team>==<ref1.tag.team>)
+hits 0
+endif
+return 1
+
+[ITEMDEF i_stone_ctf]
+ID=i_beeswax
+NAME=CTF Control Stone
+TYPE=t_eq_script
+
+ON=@Create
+  ATTR=090
+  tag.bcast 1
+  tag.flag0 0
+  tag.flag1 0
+  tag.flag2 0
+  tag.flag3 0
+  tag.team0 0
+  tag.team1 0
+  tag.team2 0
+  tag.team3 0
+  tag.team0_lost 0
+  tag.team1_lost 0
+  tag.team2_lost 0
+  tag.team3_lost 0
+  color 079a
+  return 0
+
+ON=@Click
+  message @0790 <name>
+  return 1
+
+ON=@DClick
+//FINALIZA_CTF_TEMPO <ARG_MAX <TAG.TEAM0>,<TAG.TEAM1>,<TAG.TEAM2>,<TAG.TEAM3>>
+  return 0
+  if (<src.account.plevel> >= 4)
+    dialog dialog_ctf_control
+    return 1
+  endif
+  return 0
+
+On=@TIMER
+FINALIZA_CTF_TEMPO <ARG_MAX <TAG.TEAM0>,<TAG.TEAM1>,<TAG.TEAM2>,<TAG.TEAM3>>
+RETURN 1
+
+[FUNCTION FINALIZA_CTF_TEMPO]
+          region.allclients sysmessage @0790,0 Tempo Esgotado!
+IF <ARGV> > 1
+          region.allclients sysmessage @0790,0 O CTF terminou empatado.
+          region.allclients F_GO HELP ROOM
+ELSE
+          region.allclients sysmessage @<tag.team<dARGS>_color>,0 Time <tag.team<dARGS>_name> marcou mais pontos e ganhou o CTF!
+          region.allclients sound 61
+          region.allclients finaliza_ctf_premia <dARGS>,<tag.premiacao>
+ENDIF
+          region.allchars CTFLOGOUT_EXIT
+          region.allcharsidle CTFLOGOUT_EXIT
+RETURN 1
+
+[FUNCTION ARG_MAX]
+IF (<ARGV[0]> > <ARGV[1]>)
+LOCAL.BESTS=1
+LOCAL.BEST1=0
+ELIF (<ARGV[0]> == <ARGV[1]>)
+LOCAL.BESTS=2
+LOCAL.BEST1=0
+LOCAL.BEST2=1
+ELSE
+LOCAL.BESTS=1
+LOCAL.BEST1=1
+ENDIF
+//
+IF (<ARGV> > 2)
+FOR 2 <eval <ARGV> - 1>
+IF (<ARGV[<dLOCAL._FOR>]> > <ARGV[<dLOCAL.BEST1>]>)
+LOCAL.BESTS=1
+LOCAL.BEST1=<dLOCAL._FOR>
+ELIF (<ARGV[<dLOCAL._FOR>]> == <ARGV[<dLOCAL.BEST1>]>)
+LOCAL.BESTS ++
+LOCAL.BEST<dLOCAL.BESTS>=<dLOCAL._FOR>
+ENDIF
+ENDFOR
+ENDIF
+//
+LOCAL.RETURN=<LOCAL.BEST1>
+IF <LOCAL.BESTS> > 1
+FOR 2 <dLOCAL.BESTS>
+LOCAL.RETURN=<LOCAL.RETURN>,<LOCAL.BEST<dLOCAL._FOR>>
+ENDFOR
+ENDIF
+RETURN <LOCAL.RETURN>
+
+[DIALOG dialog_ctf_control]
+0,0
+PAGE 0
+resizepic 10 12 3500 310 270
+dtext 105 30 1152 Capture The Flag
+
+dtext 55 70 2625 Colocar as flags em jogo
+button 35 73 2117 2118 1 0 1
+
+dtext 55 90 2625 Retirar as flags de jogo
+button 35 93 2117 2118 1 0 2
+
+dtext 55 110 2625 Zerar placar
+button 35 113 2117 2118 1 0 3
+
+button 34 131 <eval <tag.bcast> + 210> <eval 211 - <tag.bcast>> 1 0 4
+dtext 55 130 2625 Anunciar placar globalmente
+
+dtext 55 170 025 Ir na base do time Vermelho
+button 35 173 2117 2118 1 0 5
+
+dtext 55 190 030 Ir na base do time Amarelo
+button 35 193 2117 2118 1 0 6
+
+dtext 80 230 90 Placar:
+dtext 170 230 850 <eval <tag.team0>> x <eval <tag.team1>>
+
+[DIALOG dialog_ctf_control BUTTON]
+ON=0
+  return 0
+
+ON=1
+  ref1 = <tag.flag0>
+  ref1.ctf_return_flag
+  ref2 = <tag.flag1>
+  ref2.ctf_return_flag
+  ref3 = <tag.flag2>
+  ref3.ctf_return_flag
+  ref4 = <tag.flag3>
+  ref4.ctf_return_flag
+  dialog dialog_ctf_control
+  return 0
+
+ON=2
+  ref1 = <tag.flag0>
+  ref1.timer -1
+  ref1.cont <more2>
+  ref2 = <tag.flag1>
+  ref2.timer -1
+  ref2.cont <more2>
+  ref3 = <tag.flag2>
+  ref3.timer -1
+  ref3.cont <more2>
+  ref4 = <tag.flag3>
+  ref4.timer -1
+  ref4.cont <more2>
+  dialog dialog_ctf_control
+  return 0
+
+ON=3
+  tag.team0 0
+  tag.team1 0
+  dialog dialog_ctf_control
+  return 0
+
+ON=4
+  tag.bcast = <eval <tag.bcast> +1> % 2
+  dialog dialog_ctf_control
+  return 0
+
+ON=5
+  src.F_GO 5906,491,-17
+  dialog dialog_ctf_control
+  return 0
+
+ON=6
+  src.F_GO 5995,402,-17
+  dialog dialog_ctf_control
+  return 0
+
+[AREADEF a_ctfareaz]
+NAME=CTFz
+P=5951,447,22
+RECT=5901,397,6001,497
+FLAGS=region_antimagic_recall_in | region_antimagic_recall_out | region_antimagic_gate | region_flag_nobuilding | region_flag_announce
+GROUP=ALLMAP
+
+[AREADEF a_ctflogout]
+NAME=CTFLogOut
+P=5816,700,2
+RECT=5813,702,5821,692
+FLAGS=region_antimagic_recall_in | region_antimagic_recall_out | region_antimagic_gate | region_flag_nobuilding | region_flag_announce
+GROUP=ALLMAP
+
+[FUNCTION finaliza_ctf_premia]
+IF (<TAG0.TEAM>==<ARGV[0]>) && !<TAG0.NOPREMIO>
+	F_GO HELP ROOM
+	TIMERF 1,PREMIA_CTF <ARGV[1]>
+ELSE
+	TAG0.EVENTPOINTS += 5
+	F_GO HELP ROOM
+	smsg @,,1 Você ganhou 5 event points pela participação neste evento.
+ENDIF
+
+[FUNCTION premia_ctf]
+REF250=<ARGS>
+REF250.DUPE
+IF (<NEW>==<REF250>)
+  L_CTF Erro! <NAME> NAO foi premiado em <SERV.RTIME>.
+  RETURN 1
+ELSE
+  NEW.BOUNCE
+  L_CTF <NAME> foi premiado em <SERV.RTIME>
+  TAG0.EVENTPOINTS += 20
+  smsg @,,1 Você ganhou 20 event points neste evento !
+ENDIF
+IF !(<REF250>==<VAR.premio_ctf>)
+  REF250.TIMERF 1,REMOVE
+  ENDIF
+RETURN 1
+
+[FUNCTION finaliza_ctf_force]
+SERV.NEWITEM i_anunciactf
+NEW.P 5951,447,22
+NEW.UPDATE
+REF650=<NEW.UID>
+ref650.region.allclients F_GO HELP ROOM
+ref650.region.allchars CTFLOGOUT_EXIT
+ref650.region.allcharsidle CTFLOGOUT_EXIT
+SERV.B @0790 O CTF foi interrompido.
+REF650.REMOVE
+set_event_gate_walls 0
+fecha_portas_evento
+FORINSTANCES i_anunciactf
+	REMOVE
+ENDFOR
+FORINSTANCES i_gate_ctf
+	REMOVE
+ENDFOR
+FORINSTANCES i_timer_entry_ctf
+	REMOVE
+ENDFOR
+RETURN 1
+
+[FUNCTION CTFLOGOUT_EXIT]
+IF <ISPLAYER>
+F_GO 5816,700,2
+ENDIF
+
+[FUNCTION L_CTF]
+local.ws_id_file=stafflogs/ctf.txt
+IF (<FILE.INUSE>)
+FILE.CLOSE
+ENDIF
+FILE.MODE.SETDEFAULT
+FILE.MODE.CREATE=1
+FILE.MODE.WRITE=1
+FILE.MODE.READLFLAG=1
+FILE.MODE.APPEND=1
+if (<FILE.OPEN <local.ws_id_file>>)
+FILE.WRITELINE <ARGS>
+FILE.CLOSE
+
+[FUNCTION CLOSEBASE1]
+SERV.NEWITEM i_muro_eventoclose2
+NEW.P 5959,444,22
+NEW.UPDATEX
+SERV.NEWITEM i_muro_eventoclose2
+NEW.P 5959,443,22
+NEW.UPDATEX
+RETURN 1
+
+[FUNCTION CLOSEBASE2]
+SERV.NEWITEM i_muro_eventoclose2
+NEW.P 5943,451,22
+NEW.UPDATEX
+SERV.NEWITEM i_muro_eventoclose2
+NEW.P 5943,452,22
+NEW.UPDATEX
+RETURN 1
+
+[FUNCTION CLOSEBASE3]
+SERV.NEWITEM i_muro_eventoclose
+NEW.P 5948,439,21
+NEW.UPDATEX
+SERV.NEWITEM i_muro_eventoclose
+NEW.P 5947,439,21
+NEW.UPDATEX
+RETURN 1
+
+[FUNCTION CLOSEBASE4]
+SERV.NEWITEM i_muro_eventoclose
+NEW.P 5956,455,23
+NEW.UPDATEX
+SERV.NEWITEM i_muro_eventoclose
+NEW.P 5955,455,23
+NEW.UPDATEX
+RETURN 1
+
+[FUNCTION CLOSE_CTF_VARS]
+MSG_RANK_CTF
+VAR.MURO=
+VAR.CTF_top_kills=
+VAR.CTF_top_deaths=
+RETURN 1
+
+[FUNCTION RANK_ARGS]
+RETURN <EVAL <ARGV> - 1>
+
+[FUNCTION msg_rank_ctf]
+SERV.B @0796 Ranking do CTF:
+SERV.B @0799 Top Kills com <eval <arrayshow 0,<var.ctf_top_kills>>> kills:
+FOR 1 <RANK_ARGS <var.ctf_top_kills>>
+REF1=<arrayshow <dLOCAL._FOR>,<var.ctf_top_kills>>
+SERV.B @0799 <REF1.NAME>
+ENDFOR
+SERV.B @0796 Top Deaths com <eval <arrayshow 0,<var.ctf_top_deaths>>> deaths:
+FOR 1 <RANK_ARGS <var.ctf_top_deaths>>
+REF1=<arrayshow <dLOCAL._FOR>,<var.ctf_top_deaths>>
+SERV.B @0796 <REF1.NAME>
+ENDFOR
+RETURN 1
+
+[FUNCTION GANHA_KILLS_CTF]
+  TAG.CTF_KILLS ++
+  IF (<TAG.CTF_KILLS> > <arrayshow 0,<var.ctf_top_kills>>)
+  var.ctf_top_kills=<TAG.CTF_KILLS>,<UID>
+  elif (<TAG.CTF_KILLS> == <arrayshow 0,<var.ctf_top_kills>>)
+  var.ctf_top_kills=<var.ctf_top_kills>,<uid>
+  ENDIF
+
+[FUNCTION CTF_DEATH_FIX]
+FLAGS = <FLAGS> &~ statf_war
+//
+//
+if <findid.i_rune_poison>
+findid.i_rune_poison.REMOVE
+ENDIF
+FLAGS = <FLAGS> &~ statf_poisoned
+//
+FORCHARMEMORYTYPE memory_harmedby
+REMOVE
+ENDFOR
+//
+FORCHARMEMORYTYPE memory_iaggressor
+REMOVE
+ENDFOR
+//
+FORCHARMEMORYTYPE memory_fight
+REMOVE
+ENDFOR
+//
+FORCHARMEMORYTYPE memory_sawcrime
+REMOVE
+ENDFOR
+//
+FORCHARMEMORYTYPE memory_aggreived
+REMOVE
+ENDFOR
+//
+FORCHARMEMORYTYPE memory_war_targ
+REMOVE
+ENDFOR
+//
+//LOCAL.ATTACKER=<ATTACKER.CLEAR> ;;descomentar quandoa atualizar o sphere
+RETURN 1
+
+[FUNCTION hallu_ctf]
+SPELLEFFECT s_Hallucination,1000,,
+RETURN 1
+
+[EOF]

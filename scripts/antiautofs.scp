@@ -1,0 +1,415 @@
+//subir o life fake qd clica na bandagem dnovo
+
+
+[FUNCTION playersregiao]
+FORPLAYERS 50
+	local.ct ++
+ENDFOR
+SERV.B @91 <dlocal.ct> players online na regiao de <region.name>.
+return 1
+
+// [PLEVEL 1]
+// aa
+
+[PLEVEL 2]
+aatotal
+aafs
+aabandage
+avigilance
+apoison
+
+[FUNCTION testautoband]
+ctag.autobandtest = <serv.time>
+barrahits 10
+return 1
+
+[FUNCTION cantuseauto]
+ref1 = <uid>
+serv.newitem i_memory_anti_atudo
+trysrc <ref1> new.equip
+return 1
+
+[FUNCTION aatotal]
+apoison
+aafs
+aabandage
+avigilance 600
+aa
+
+[FUNCTION aa]
+forplayers 30
+	antiautomsg
+endfor
+return 1
+
+[FUNCTION apoison]
+forplayers 30
+	barraverde
+endfor
+return 1
+
+[FUNCTION aafs]
+forplayers 30
+	barramana 40
+endfor
+return 1
+
+[FUNCTION aabandage]
+forplayers 30
+	barrahits 10
+endfor
+return 1
+
+[FUNCTION avigilance]
+forplayers 30
+	ctag0.antiautovigilance = <eval <serv.time> + <args>>
+endfor
+return 1
+
+[function ligavigi]
+ctag0.antiautovigilance = <eval <serv.time> + <args>>
+
+[FUNCTION antiautomsg]
+REF1=<UID>
+TRYSRC <REF1> SYSMESSAGE @100,10 <REF1.NAME>: Kal Vas Flam
+TRYSRC <REF1> SYSMESSAGE @100,10 <REF1.NAME> [frozen]
+TRYSRC <REF1> SYSMESSAGE @100,10 <REF1.NAME>: The spell fizzles
+TRYSRC <REF1> SYSMESSAGE @100,10 You are frozen
+TRYSRC <REF1> SYSMESSAGE @100,10 Target is not in line of sight
+TRYSRC <REF1> SYSMESSAGE @100,10 You lack sufficient mana for this spell
+TRYSRC <REF1> SYSMESSAGE @100,10 You can't see the target
+TRYSRC <REF1> SYSMESSAGE @100,10 You put the bloody bandages in your pack.
+TRYSRC <REF1> SYSMESSAGE @100,10 Voce curou <r1,100> hitpoints de <ref1.name>.
+TRYSRC <REF1> SYSMESSAGE @100,10 <ref1.name> nao precisa ser curado.
+TRYSRC <REF1> SYSMESSAGE @100,10 The spell fizzles
+TRYSRC <REF1> SYSMESSAGE @100,10 you have been poisoned with lesser poison
+TRYSRC <REF1> SYSMESSAGE @100,10 you feel nauseous
+TRYSRC <REF1> SYSMESSAGE @100,10 you have been poisoned with poison
+TRYSRC <REF1> SYSMESSAGE @100,10 you feel sick
+TRYSRC <REF1> SYSMESSAGE @100,10 you have been poisoned with greater poison
+TRYSRC <REF1> SYSMESSAGE @100,10 you feel extremly sick
+TRYSRC <REF1> SYSMESSAGE @100,10 you have been poisoned with Deadly poison
+TRYSRC <REF1> SYSMESSAGE @100,10 you feel deathly sick
+TRYSRC <REF1> SYSMESSAGE @100,10 you feel deadly sick
+// Voce nao curou nada de <REF69.NAME>.
+// Voce aplicou as bandagens porem elas nao adiantaram.
+REF1.EVENTS +e_anti_autofs
+
+[FUNCTION antiautomsgbands]
+//s aab em <name>
+REF1=<UID>
+REF1.bloband_bug
+TRYSRC <REF1> SYSMESSAGE @100,10 You put the bloody bandages in your pack.
+TRYSRC <REF1> SYSMESSAGE @100,10 Voce nao curou nada de <REF1.NAME>.
+TRYSRC <REF1> SYSMESSAGE @100,10 Voce aplicou as bandagens porem elas nao adiantaram.
+TRYSRC <REF1> SYSMESSAGE @100,10 Voce curou <r1,100> hitpoints de <ref1.name>.
+TRYSRC <REF1> SYSMESSAGE @100,10 voce curou
+//say voce curou
+ctag.antiautobands = <eval <serv.time> + 3>
+return 1
+
+[FUNCTION barraverde]
+REF1=<UID>
+DORAND 3
+	SAY @100,8 You Have been poisoned with lesser poison
+	SAY @100,8 You Have been poisoned with greater poison
+	SAY @100,8 You Have been poisoned with deadly poison
+ENDDO
+//LOCAL.FLAGS = <FLAGS>
+//FLAGS = <FLAGS> | statf_poisoned
+SENDPACKET 077 D<REF1.UID> W<HVAL (<EVAL <REF1.BODY>> & 00000ffff)> W<REF1.P.X> W<REF1.P.Y> <HVAL <REF1.P.Z>> <REF1.DIR> W<REF1.COLOR> <REF1.F_GERA_FLAGS_FAKE> <REF1.NOTOGETFLAG <REF1.UID>>
+//CTAG.LAST_POISON <SERV.TIME>
+//TIMERF 1,barrablue
+serv.newitem i_memory_anti_acure
+trysrc <ref1> new.equip
+RETURN 1
+
+[FUNCTION barrablue]
+REF1=<UID>
+//FLAGS = <ARGS>
+SENDPACKET 077 D<REF1.UID> W<HVAL (<EVAL <REF1.BODY>> & 00000ffff)> W<REF1.P.X> W<REF1.P.Y> <HVAL <REF1.P.Z>> <REF1.DIR> W<REF1.COLOR> <REF1.F_GERA_FLAGS> <REF1.NOTOGETFLAG <REF1.UID>>
+RETURN 1
+
+[EVENTS e_anti_autofs]
+ON=@SpellCast
+if (<argn1> == 51)
+	if (<serv.time> < <src.ctag0.fsbug>)
+		// s <src.name> - possivel auto fs. (testes)
+	endif
+	if !<findid.i_memory_anti_autofs>
+		serv.newitem i_memory_anti_autofs
+		new.attr 02
+		new.equip
+	endif
+endif
+
+[ITEMDEF i_memory_anti_atudo]
+ID=i_memory
+TYPE=t_eq_script
+NAME=ANTIAUTOTUDO
+
+on=@equip
+TIMER 60
+
+ON=@TIMER
+CONT.SAY @0481 Olhe meu auto cure/auto bands em acao.
+CONT.barraverde
+cont.barramana 40
+cont.ctag0.antiautovigilance = <eval <serv.time> + 600>
+cont.antiautomsg
+TIMER=10
+RETURN 1
+
+[ITEMDEF i_memory_anti_afs]
+ID=i_memory
+TYPE=t_eq_script
+NAME=ANTIAUTOCURE
+
+on=@equip
+TIMERD 1
+
+ON=@TIMER
+CONT.barramanacorrect
+REMOVE
+RETURN 1
+
+[ITEMDEF i_memory_anti_acure]
+ID=i_memory
+TYPE=t_eq_script
+NAME=ANTIAUTOCURE
+
+on=@equip
+TIMERD 10
+
+ON=@TIMER
+CONT.barrablue
+REMOVE
+RETURN 1
+
+[ITEMDEF i_memory_anti_autofs]
+ID=i_memory
+TYPE=t_eq_script
+NAME=ANTIAUTOFS
+
+on=@equip
+TIMERD <r2,12>
+
+ON=@TIMER
+CONT.FS_BUG
+CONT.CTAG.FSBUG = <eval <serv.time> + 3>
+CONT.SSILK_BUG
+CONT.SASH_BUG
+CONT.BARRAMANA 40
+RETURN 0
+
+[FUNCTION fs_fake_amount]
+REF1=<ARGS>
+LOCAL.AMOUNT = <EVAL <REF1.AMOUNT> - 1>
+If (<LOCAL.AMOUNT> <= 0)
+LOCAL.AMOUNT = 1
+ENDIF
+SENDPACKET 025 D<REF1.UID> W<REF1.ID> 0 W<LOCAL.AMOUNT> W<REF1.P.X> W<REF1.P.Y> D<REF1.CONT.UID> W<REF1.COLOR>
+RETURN 1
+
+[FUNCTION fs_fake_cont]
+REF1=<ARGS>
+FORCONTID i_scroll_flamestrike
+UPDATE
+REF1.fs_fake_amount <UID>
+ENDFOR
+RETURN 1
+
+[FUNCTION fs_bug]
+REF1=<FINDLAYER.21.UID>
+REF1.fs_fake_cont <UID>
+RETURN 1
+
+[FUNCTION fs_unbug]
+REF1=<FINDLAYER.21.UID>
+REF1.fs_fake_cont2 <UID>
+RETURN 1
+
+[FUNCTION fs_fake_cont2]
+REF1=<ARGS>
+FORCONTID i_scroll_flamestrike
+UPDATE
+ENDFOR
+RETURN 1
+
+//
+
+[FUNCTION ssilk_bug]
+REF1=<FINDLAYER.21.UID>
+REF1.ssilk_fake_cont <UID>
+RETURN 1
+
+[FUNCTION ssilk_fake_cont]
+REF1=<ARGS>
+FORCONTID i_reag_spider_silk
+UPDATE
+REF1.ssilk_fake_amount <UID>
+ENDFOR
+RETURN 1
+
+[FUNCTION ssilk_fake_amount]
+REF1=<ARGS>
+LOCAL.AMOUNT = <EVAL <REF1.AMOUNT> - 1>
+If (<LOCAL.AMOUNT> <= 0)
+LOCAL.AMOUNT = 1
+ENDIF
+SENDPACKET 025 D<REF1.UID> W<REF1.ID> 0 W<LOCAL.AMOUNT> W<REF1.P.X> W<REF1.P.Y> D<REF1.CONT.UID> W<REF1.COLOR>
+RETURN 1
+
+//
+
+[FUNCTION sash_bug]
+REF1=<FINDLAYER.21.UID>
+REF1.sash_fake_cont <UID>
+RETURN 1
+
+[FUNCTION sash_fake_cont]
+REF1=<ARGS>
+FORCONTID i_reag_sulfur_ash
+UPDATE
+REF1.sash_fake_amount <UID>
+ENDFOR
+RETURN 1
+
+[FUNCTION sash_fake_amount]
+REF1=<ARGS>
+LOCAL.AMOUNT = <EVAL <REF1.AMOUNT> - 1>
+If (<LOCAL.AMOUNT> <= 0)
+LOCAL.AMOUNT = 1
+ENDIF
+SENDPACKET 025 D<REF1.UID> W<REF1.ID> 0 W<LOCAL.AMOUNT> W<REF1.P.X> W<REF1.P.Y> D<REF1.CONT.UID> W<REF1.COLOR>
+RETURN 1
+
+//
+
+[FUNCTION f_updateplayer]
+REF1=<UID>
+//S UPDATE <REF1.NAME>
+FORCLIENTS 18
+SENDPACKET 077 D<REF1.UID> W<HVAL (<EVAL <REF1.BODY>> & 00000ffff)> W<REF1.P.X> W<REF1.P.Y> <HVAL <REF1.P.Z>> <REF1.DIR> W<REF1.COLOR> <REF1.F_GERA_FLAGS> <REF1.NOTOGETFLAG <UID>>
+ENDFOR
+//SENDPACKET 077 D<REF1.UID> W<HVAL (<EVAL <REF1.BODY>> & 00000ffff)> W<REF1.P.X> W<REF1.P.Y> <REF1.P.Z> <REF1.DIR> W<REF1.COLOR> <REF1.F_GERA_FLAGS> <REF1.NOTOGETFLAG <REF1.UID>>
+RETURN 1
+
+[FUNCTION f_gera_flags]
+local.flags=0
+if (<body>==c_woman)
+local.flags = <local.flags>|02
+endif
+if (<flags> & statf_poisoned)
+local.flags = <local.flags>|04
+endif
+if (<flags> & statf_invul) || (<flags> & statf_freeze)
+local.flags = <local.flags>|08
+endif
+if (<flags> & statf_war)
+local.flags = <local.flags>|040
+endif
+if (<flags> & statf_hidden) || (<flags> & statf_invisible) || (<flags> & statf_insubstantial)
+local.flags = <local.flags>|080
+endif
+return <local.flags>
+
+
+[FUNCTION f_gera_flags_fake]
+local.flags=0
+if (<body>==c_woman)
+local.flags = <local.flags>|02
+endif
+local.flags = <local.flags>|04
+if (<flags> & statf_invul) || (<flags> & statf_freeze)
+local.flags = <local.flags>|08
+endif
+if (<flags> & statf_war)
+local.flags = <local.flags>|040
+endif
+if (<flags> & statf_hidden) || (<flags> & statf_invisible) || (<flags> & statf_insubstantial)
+local.flags = <local.flags>|080
+endif
+return <local.flags>
+
+[FUNCTION barramana]
+ref1 = <uid>
+local.manafake = <mana> - <args>
+SENDPACKET 0A2 D<uid> W<maxmana> W<local.manafake>
+serv.newitem i_memory_anti_afs
+trysrc <ref1> new.equip
+
+[FUNCTION barramanacorrect]
+SENDPACKET 0A2 D<uid> W<maxmana> W<mana>
+SENDPACKET 0A1 D<uid> W<maxhits> W<hits>
+
+[FUNCTION barrahits]
+ref1 = <uid>
+local.hitsfake = <hits> - <args>
+SENDPACKET 0A1 D<uid> W<maxhits> W<local.hitsfake>
+serv.newitem i_memory_anti_afs
+trysrc <ref1> new.equip
+
+[FUNCTION barrahitsplus]
+ref1 = <uid>
+local.hitsfake = <hits> + <args>
+SENDPACKET 0A1 D<uid> W<maxhits> W<local.hitsfake>
+serv.newitem i_memory_anti_afs
+trysrc <ref1> new.equip
+
+
+//
+
+[FUNCTION bloband_bug]
+REF1=<FINDLAYER.21.UID>
+REF1.bloband_fake_cont <UID>
+RETURN 1
+
+[FUNCTION bloband_fake_cont]
+REF1=<ARGS>
+FORCONTID i_bandage_bloody
+UPDATE
+REF1.bloband_fake_amount <UID>
+ENDFOR
+RETURN 1
+
+
+[FUNCTION bloband_fake_amount]
+REF1=<ARGS>
+LOCAL.AMOUNT = <EVAL <REF1.AMOUNT> + 1>
+If (<LOCAL.AMOUNT> <= 0)
+LOCAL.AMOUNT = 1
+ENDIF
+SENDPACKET 025 D<REF1.UID> W<REF1.ID> 0 W<LOCAL.AMOUNT> W<REF1.P.X> W<REF1.P.Y> D<REF1.CONT.UID> W<REF1.COLOR>
+RETURN 1
+
+[FUNCTION deathstatus]
+SENDPACKET 02C 00
+
+[FUNCTION fakedeath]
+REF1 = <uid>
+SENDPACKET 0A1 D<uid> W<maxhits> W00
+//local.body = <body>
+//BODY = c_ghost_man
+SENDPACKET 077 D<REF1.UID> W<HVAL (<EVAL <SERV.CHARDEF.c_ghost_man.BASEID>> & 00000ffff)> W<REF1.P.X> W<REF1.P.Y> <HVAL <REF1.P.Z>> <REF1.DIR> W<REF1.COLOR> <REF1.F_GERA_FLAGS> <REF1.NOTOGETFLAG <UID>>
+//BODY = <local.body>
+serv.newitem i_memory_fdtimer
+trysrc <ref1> new.equip
+
+
+[ITEMDEF i_memory_fdtimer]
+ID=i_memory
+TYPE=t_eq_script
+NAME=FDTIMER
+
+on=@equip
+TIMERD 1
+
+ON=@TIMER
+CONT.fdtimer
+REMOVE
+RETURN 0
+
+[FUNCTION fdtimer]
+REF1 = <uid>
+SENDPACKET 077 D<REF1.UID> W<HVAL (<EVAL <REF1.BODY>> & 00000ffff)> W<REF1.P.X> W<REF1.P.Y> <HVAL <REF1.P.Z>> <REF1.DIR> W<REF1.COLOR> <REF1.F_GERA_FLAGS> <REF1.NOTOGETFLAG <UID>>

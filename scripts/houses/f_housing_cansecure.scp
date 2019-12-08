@@ -1,0 +1,9 @@
+[FUNCTION f_housing_cansecure]
+if (<type> == t_door) || (<type> == t_door_locked) || (<type> == t_sign_gump)
+	return 0
+elseif (<type> == t_blood) || (<type> == t_corpse) || (<type> == t_spell) || (<baseid> == i_horse_dung)
+	return 0
+elseif (<type> == t_explosion) || (<type> == t_dirt)
+	return 0
+endif
+return 1

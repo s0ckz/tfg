@@ -1,0 +1,393 @@
+////skillmenu Inscription
+
+[SKILLMENU sm_inscription]
+// dclick on blank scroll
+Spell Circles
+// Still internal at the moment.
+
+ON=i_spellbook Full Spellbook (1000 blank scrolls, 1000 of every reagent)
+IF (<f_get_real_skill <UID>,23> < 1000)
+	SYSMESSAGE You must be a GM to craft a Full Spellbook.
+	RETURN 1
+ELSEIF !(<RESTEST 1000 i_scroll_blank>) || !(<RESTEST 1000 i_reag_garlic>) || !(<RESTEST 1000 i_reag_spider_silk>) || !(<RESTEST 1000 i_reag_sulfur_ash>) || !(<RESTEST 1000 i_reag_blood_moss>) || !(<RESTEST 1000 i_reag_nightshade>) || !(<RESTEST 1000 i_reag_mandrake_root>) || !(<RESTEST 1000 i_reag_black_pearl>) || !(<RESTEST 1000 i_reag_ginseng>)
+	SYSMESSAGE You don't have the resources to craft a full spellbook: 1000 blank scrolls, 1000 of every reagent.
+	RETURN 1
+ELSE
+	NEWITEM i_spellbook
+	NEW.MORE1 0ffffffff
+	NEW.MORE2 0ffffffff
+	NEW.BOUNCE
+
+	CONSUME 1000 i_scroll_blank
+	CONSUME 1000 i_reag_garlic
+	CONSUME 1000 i_reag_spider_silk
+	CONSUME 1000 i_reag_sulfur_ash
+	CONSUME 1000 i_reag_blood_moss
+	CONSUME 1000 i_reag_nightshade
+	CONSUME 1000 i_reag_mandrake_root
+	CONSUME 1000 i_reag_black_pearl
+	CONSUME 1000 i_reag_ginseng
+ENDIF
+
+ON=i_runebook
+MAKEITEM=i_runebook
+ON=i_spell_circle_1
+SKILLMENU=sm_inscrip_1
+ON=i_spell_circle_2
+SKILLMENU=sm_inscrip_2
+ON=i_spell_circle_3
+SKILLMENU=sm_inscrip_3
+ON=i_spell_circle_4
+SKILLMENU=sm_inscrip_4
+ON=i_spell_circle_5
+SKILLMENU=sm_inscrip_5
+ON=i_spell_circle_6
+SKILLMENU=sm_inscrip_6
+ON=i_spell_circle_7
+SKILLMENU=sm_inscrip_7
+ON=i_spell_circle_8
+SKILLMENU=sm_inscrip_8
+
+[SKILLMENU sm_inscrip_1]
+Spell Circle 1
+
+ON=i_rune_clumsy
+TESTIF=<cancast s_clumsy>
+MAKEITEM=i_scroll_clumsy
+TAG.SPELLNUM 1
+
+ON=i_rune_create_food
+TESTIF=<cancast s_create_food 00>
+MAKEITEM=i_scroll_create_food
+TAG.SPELLNUM 2
+
+ON=i_rune_feeblemind
+TESTIF=<cancast s_feeblemind 00>
+MAKEITEM=i_scroll_feeblemind
+TAG.SPELLNUM 3
+
+ON=i_rune_heal
+TESTIF=<cancast s_heal 00>
+MAKEITEM=i_scroll_heal
+TAG.SPELLNUM 4
+
+ON=i_rune_magic_arrow
+TESTIF=<cancast s_magic_arrow 00>
+MAKEITEM=i_scroll_magic_arrow
+TAG.SPELLNUM 5
+
+ON=i_rune_night_sight
+TESTIF=<cancast s_night_sight 00>
+MAKEITEM=i_scroll_night_sight
+TAG.SPELLNUM 6
+
+ON=i_rune_reactive_armor
+TESTIF=<cancast s_reactive_armor 00>
+MAKEITEM=i_scroll_reactive_armor
+TAG.SPELLNUM 7
+
+ON=i_rune_weaken
+TESTIF=<cancast s_weaken 00>
+MAKEITEM=i_scroll_weaken
+TAG.SPELLNUM 8
+
+[SKILLMENU sm_inscrip_2]
+Spell Circle 2
+ON=i_rune_agility
+TESTIF=<cancast s_agility 00>
+MAKEITEM=i_scroll_agility
+TAG.SPELLNUM 9
+
+
+ON=i_rune_cunning
+TESTIF=<cancast s_cunning 00>
+MAKEITEM=i_scroll_cunning
+TAG.SPELLNUM 10
+
+ON=i_rune_cure
+TESTIF=<cancast s_cure 00>
+MAKEITEM=i_scroll_cure
+TAG.SPELLNUM 11
+
+ON=i_rune_harm
+TESTIF=<cancast s_harm 00>
+MAKEITEM=i_scroll_harm
+TAG.SPELLNUM 12
+
+ON=i_rune_magic_trap
+TESTIF=<cancast s_magic_trap 00>
+MAKEITEM=i_scroll_magic_trap
+TAG.SPELLNUM 13
+
+ON=i_rune_magic_untrap
+TESTIF=<cancast s_magic_untrap 00>
+MAKEITEM=i_scroll_magic_untrap
+TAG.SPELLNUM 14
+
+ON=i_rune_protection
+TESTIF=<cancast s_protection 00>
+MAKEITEM=i_scroll_protection
+TAG.SPELLNUM 15
+
+ON=i_rune_strength
+TESTIF=<cancast s_strength 00>
+MAKEITEM=i_scroll_strength
+TAG.SPELLNUM 16
+
+[SKILLMENU sm_inscrip_3]
+Spell Circle 3
+ON=i_rune_bless
+TESTIF=<cancast s_bless 00>
+MAKEITEM=i_scroll_bless
+TAG.SPELLNUM 17
+
+ON=i_rune_fireball
+TESTIF=<cancast s_fireball 00>
+MAKEITEM=i_scroll_fireball
+TAG.SPELLNUM 18
+
+ON=i_rune_magic_lock
+TESTIF=<cancast s_magic_lock 00>
+MAKEITEM=i_scroll_magic_lock
+TAG.SPELLNUM 19
+
+ON=i_rune_poison
+TESTIF=<cancast s_poison 00>
+MAKEITEM=i_scroll_poison
+TAG.SPELLNUM 20
+
+ON=i_rune_telekinesis
+TESTIF=<cancast s_telekinesis 00>
+MAKEITEM=i_scroll_telekinesis
+TAG.SPELLNUM 21
+
+ON=i_rune_teleport
+TESTIF=<cancast s_teleport 00>
+MAKEITEM=i_scroll_teleport
+TAG.SPELLNUM 22
+
+ON=i_rune_unlock
+TESTIF=<cancast s_unlock 00>
+MAKEITEM=i_scroll_unlock
+TAG.SPELLNUM 23
+
+ON=i_rune_wall_of_stone
+TESTIF=<cancast s_wall_of_stone 00>
+MAKEITEM=i_scroll_wall_of_stone
+TAG.SPELLNUM 24
+
+[SKILLMENU sm_inscrip_4]
+Spell Circle 4
+ON=i_rune_archcure
+TESTIF=<cancast s_archcure 00>
+MAKEITEM=i_scroll_archcure
+TAG.SPELLNUM 25
+
+ON=i_rune_archprotection
+TESTIF=<cancast s_archprotection 00>
+MAKEITEM=i_scroll_archprotection
+TAG.SPELLNUM 26
+
+ON=i_rune_curse
+TESTIF=<cancast s_curse 00>
+MAKEITEM=i_scroll_curse
+TAG.SPELLNUM 27
+
+ON=i_rune_fire_field
+TESTIF=<cancast s_fire_field 00>
+MAKEITEM=i_scroll_fire_field
+TAG.SPELLNUM 28
+
+ON=i_rune_greater_heal
+TESTIF=<cancast s_greater_heal 00>
+MAKEITEM=i_scroll_greater_heal
+TAG.SPELLNUM 29
+
+ON=i_rune_lightning
+TESTIF=<cancast s_lightning 00>
+MAKEITEM=i_scroll_lightning
+TAG.SPELLNUM 30
+
+ON=i_rune_mana_drain
+TESTIF=<cancast s_mana_drain 00>
+MAKEITEM=i_scroll_mana_drain
+TAG.SPELLNUM 31
+
+ON=i_rune_recall
+TESTIF=<cancast s_recall 00>
+MAKEITEM=i_scroll_recall
+TAG.SPELLNUM 32
+
+
+[SKILLMENU sm_inscrip_5]
+Spell Circle 5
+ON=i_rune_blade_spirits
+TESTIF=<cancast s_blade_spirits 00>
+MAKEITEM=i_scroll_blade_spirits
+TAG.SPELLNUM 33
+
+ON=i_rune_dispel_field
+TESTIF=<cancast s_dispel_field 00>
+MAKEITEM=i_scroll_dispel_field
+TAG.SPELLNUM 34
+
+ON=i_rune_incognito
+TESTIF=<cancast s_incognito 00>
+MAKEITEM=i_scroll_incognito
+TAG.SPELLNUM 35
+
+ON=i_rune_magic_reflection
+TESTIF=<cancast s_magic_reflection 00>
+MAKEITEM=i_scroll_magic_reflection
+TAG.SPELLNUM 36
+
+ON=i_rune_mind_blast
+TESTIF=<cancast s_mind_blast 00>
+MAKEITEM=i_scroll_mind_blast
+TAG.SPELLNUM 37
+
+ON=i_rune_paralyze
+TESTIF=<cancast s_paralyze 00>
+MAKEITEM=i_scroll_paralyze
+TAG.SPELLNUM 38
+
+ON=i_rune_poison_field
+TESTIF=<cancast s_poison_field 00>
+MAKEITEM=i_scroll_poison_field
+TAG.SPELLNUM 39
+
+ON=i_rune_summon_creature
+TESTIF=<cancast s_summon_creature 00>
+MAKEITEM=i_scroll_summon_creature
+TAG.SPELLNUM 40
+
+[SKILLMENU sm_inscrip_6]
+Spell Circle 6
+
+ON=i_rune_dispel
+TESTIF=<cancast s_dispel 00>
+MAKEITEM=i_scroll_dispel
+TAG.SPELLNUM 41
+
+ON=i_rune_energy_bolt
+TESTIF=<cancast s_energy_bolt 00>
+MAKEITEM=i_scroll_energy_bolt
+TAG.SPELLNUM 42
+
+ON=i_rune_explosion
+TESTIF=<cancast s_explosion 00>
+MAKEITEM=i_scroll_explosion
+TAG.SPELLNUM 43
+
+ON=i_rune_invisibility
+TESTIF=<cancast s_invisibility 00>
+MAKEITEM=i_scroll_invisibility
+TAG.SPELLNUM 44
+
+ON=i_rune_mark
+TESTIF=<cancast s_mark 00>
+MAKEITEM=i_scroll_mark
+TAG.SPELLNUM 45
+
+ON=i_rune_mass_curse
+TESTIF=<cancast s_mass_curse 00>
+MAKEITEM=i_scroll_mass_curse
+TAG.SPELLNUM 46
+
+
+ON=i_rune_paralyze_field
+TESTIF=<cancast s_paralyzation_field 00>
+MAKEITEM=i_scroll_paralyze_field
+TAG.SPELLNUM 47
+
+ON=i_rune_reveal
+TESTIF=<cancast s_reveal 00>
+MAKEITEM=i_scroll_reveal
+TAG.SPELLNUM 48
+
+[SKILLMENU sm_inscrip_7]
+Spell Circle 7
+
+ON=i_rune_chain_lightning
+TESTIF=<cancast s_chain_lightning 00>
+MAKEITEM=i_scroll_chain_lightning
+TAG.SPELLNUM 49
+
+ON=i_rune_energy_field
+TESTIF=<cancast s_energy_field 00>
+MAKEITEM=i_scroll_energy_field
+TAG.SPELLNUM 50
+
+ON=i_rune_flamestrike
+TESTIF=<cancast s_flamestrike 00>
+MAKEITEM=i_scroll_flamestrike
+TAG.SPELLNUM 51
+
+ON=i_rune_gate_travel
+TESTIF=<cancast s_gate_travel 00>
+MAKEITEM=i_scroll_gate_travel
+TAG.SPELLNUM 52
+
+ON=i_rune_mana_vampire
+TESTIF=<cancast s_mana_vampire 00>
+MAKEITEM=i_scroll_mana_vampire
+TAG.SPELLNUM 53
+
+ON=i_rune_mass_dispel
+TESTIF=<cancast s_mass_dispel 00>
+MAKEITEM=i_scroll_mass_dispel
+TAG.SPELLNUM 54
+
+ON=i_rune_meteor_swarm
+TESTIF=<cancast s_meteor_swarm 00>
+MAKEITEM=i_scroll_meteor_swarm
+TAG.SPELLNUM 55
+
+ON=i_rune_polymorph
+TESTIF=<cancast s_polymorph 00>
+MAKEITEM=i_scroll_polymorph
+TAG.SPELLNUM 56
+
+
+[SKILLMENU sm_inscrip_8]
+Spell Circle 8
+
+ON=i_rune_earthquake
+TESTIF=<cancast s_earthquake 00>
+MAKEITEM=i_scroll_earthquake
+TAG.SPELLNUM 57
+
+ON=i_rune_energy_vortex
+TESTIF=<cancast s_energy_vortex 00>
+MAKEITEM=i_scroll_energy_vortex
+TAG.SPELLNUM 58
+
+ON=i_rune_resurrection
+TESTIF=<cancast s_resurrection 00>
+MAKEITEM=i_scroll_resurrection
+TAG.SPELLNUM 59
+
+ON=i_rune_summon_elem_air
+TESTIF=<cancast s_summon_elem_air 00>
+MAKEITEM=i_scroll_summon_elem_air
+TAG.SPELLNUM 60
+
+ON=i_rune_summon_daemon
+TESTIF=<cancast s_summon_daemon 00>
+MAKEITEM=i_scroll_summon_daemon
+TAG.SPELLNUM 61
+
+ON=i_rune_summon_elem_earth
+TESTIF=<cancast s_summon_elem_earth 00>
+MAKEITEM=i_scroll_summon_elem_earth
+TAG.SPELLNUM 62
+
+ON=i_rune_summon_elem_fire
+TESTIF=<cancast s_summon_elem_fire 00>
+MAKEITEM=i_scroll_summon_elem_fire
+TAG.SPELLNUM 63
+
+ON=i_rune_summon_elem_water
+TESTIF=<cancast s_summon_elem_water 00>
+MAKEITEM=i_scroll_summon_elem_water
+TAG.SPELLNUM 64

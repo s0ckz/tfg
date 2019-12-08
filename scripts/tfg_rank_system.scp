@@ -1,0 +1,326 @@
+[FUNCTION rankshow]
+        for h <serv.accounts>
+                local.i=0
+                if (<serv.account.<eval <local.h> +-1>.chars>)
+                        for i <serv.account.<eval <local.h> +-1>.chars>
+                                ref1 <serv.account.<eval <local.h> +-1>.char.<eval <local.i> +-1>.uid>
+                                if <ref1.tag0.PvPGain>
+										FLOAT.PvPRank=<ref1.f_RankCalcPvP>
+										if (<FLOAT.PvPRank> > 0.1)
+											float.prepct = <floatval (<FLOAT.PvPRank> * 100)>
+											local.pct = <eval <feval <float.prepct>> - (<eval <feval <FLOAT.PvPRank>> * 100>)>
+											//s <ref1.name> | Level <feval <FLOAT.PvPRank>> (<dlocal.pct>%)
+											if (<FLOAT.PvPRank> > <float.rank1st.qt>) && (<local.rank1st> != <ref1.uid>)
+												local.rank3th = <local.rank2nd>
+												float.rank3th.qt = <float.rank2nd.qt>
+												local.rank2nd = <local.rank1st>
+												float.rank2nd.qt = <float.rank1st.qt>
+												local.rank1st = <ref1.uid>
+												float.rank1st.qt = <FLOAT.PvPRank>
+											elif (<FLOAT.PvPRank> > <float.rank2nd.qt>) && (<local.rank1st> != <ref1.uid>) && (<local.rank2nd> != <ref1.uid>)
+												local.rank3th = <local.rank2nd>
+												float.rank3th.qt = <float.rank2nd.qt>
+												local.rank2nd = <ref1.uid>
+												float.rank2nd.qt = <FLOAT.PvPRank>
+											elif (<FLOAT.PvPRank> > <float.rank3th.qt>) && (<local.rank1st> != <ref1.uid>) && (<local.rank2nd> != <ref1.uid>) && (<local.rank3th> != <ref1.uid>)
+												local.rank3th = <ref1.uid>
+												float.rank3th.qt = <FLOAT.PvPRank>
+											endif
+										endif
+								endif
+                        endfor
+                endif
+        endfor
+	var.rank3th = <local.rank3th>
+	var.rank3th.qt = <float.rank3th.qt>
+	var.rank2nd = <local.rank2nd>
+	var.rank2nd.qt = <float.rank2d.qt>
+	var.rank1st = <local.rank1st>
+	var.rank1st.qt = <float.rank1st.qt>
+ref2 = <var0.rank1st>
+ref3 = <var0.rank2nd>
+ref4 = <var0.rank3th>
+FLOAT.PvPRank=<ref2.f_RankCalcPvP>
+float.prepct = <floatval (<FLOAT.PvPRank> * 100)>
+local.pct = <eval <feval <float.prepct>> - (<eval <feval <FLOAT.PvPRank>> * 100>)>
+SERV.B @61,,1 (TFG PvP RANK) 1st : <ref2.name> | Level <feval <FLOAT.PvPRank>> (<dlocal.pct>%)
+FLOAT.PvPRank=<ref3.f_RankCalcPvP>
+float.prepct = <floatval (<FLOAT.PvPRank> * 100)>
+local.pct = <eval <feval <float.prepct>> - (<eval <feval <FLOAT.PvPRank>> * 100>)>
+SERV.B @61,,1 (TFG PvP RANK) 2nd : <ref3.name> | Level <feval <FLOAT.PvPRank>> (<dlocal.pct>%)
+FLOAT.PvPRank=<ref4.f_RankCalcPvP>
+float.prepct = <floatval (<FLOAT.PvPRank> * 100)>
+local.pct = <eval <feval <float.prepct>> - (<eval <feval <FLOAT.PvPRank>> * 100>)>
+SERV.B @61,,1 (TFG PvP RANK) 3th : <ref4.name> | Level <feval <FLOAT.PvPRank>> (<dlocal.pct>%)
+return 1
+
+[FUNCTION rankshowpvm]
+        for h <serv.accounts>
+                local.i=0
+                if (<serv.account.<eval <local.h> +-1>.chars>)
+                        for i <serv.account.<eval <local.h> +-1>.chars>
+                                ref1 <serv.account.<eval <local.h> +-1>.char.<eval <local.i> +-1>.uid>
+                                if <ref1.tag0.PvMGain>
+										FLOAT.PvMRank=<ref1.f_RankCalcPvM>
+										if (<FLOAT.PvMRank> > 0.1)
+											float.prepct = <floatval (<FLOAT.PvMRank> * 100)>
+											local.pct = <eval <feval <float.prepct>> - (<eval <feval <FLOAT.PvMRank>> * 100>)>
+											//s <ref1.name> | Level <feval <FLOAT.PvMRank>> (<dlocal.pct>%)
+											if (<FLOAT.PvMRank> > <float.rank1st.qt>) && (<local.rank1st> != <ref1.uid>)
+												local.rank3th = <local.rank2nd>
+												float.rank3th.qt = <float.rank2nd.qt>
+												local.rank2nd = <local.rank1st>
+												float.rank2nd.qt = <float.rank1st.qt>
+												local.rank1st = <ref1.uid>
+												float.rank1st.qt = <FLOAT.PvMRank>
+											elif (<FLOAT.PvMRank> > <float.rank2nd.qt>) && (<local.rank1st> != <ref1.uid>) && (<local.rank2nd> != <ref1.uid>)
+												local.rank3th = <local.rank2nd>
+												float.rank3th.qt = <float.rank2nd.qt>
+												local.rank2nd = <ref1.uid>
+												float.rank2nd.qt = <FLOAT.PvMRank>
+											elif (<FLOAT.PvMRank> > <float.rank3th.qt>) && (<local.rank1st> != <ref1.uid>) && (<local.rank2nd> != <ref1.uid>) && (<local.rank3th> != <ref1.uid>)
+												local.rank3th = <ref1.uid>
+												float.rank3th.qt = <FLOAT.PvMRank>
+											endif
+										endif
+								endif
+                        endfor
+                endif
+        endfor
+	var.rank3th = <local.rank3th>
+	var.rank3th.qt = <float.rank3th.qt>
+	var.rank2nd = <local.rank2nd>
+	var.rank2nd.qt = <float.rank2d.qt>
+	var.rank1st = <local.rank1st>
+	var.rank1st.qt = <float.rank1st.qt>
+ref2 = <var0.rank1st>
+ref3 = <var0.rank2nd>
+ref4 = <var0.rank3th>
+FLOAT.PvMRank=<ref2.f_RankCalcPvM>
+float.prepct = <floatval (<FLOAT.PvMRank> * 100)>
+local.pct = <eval <feval <float.prepct>> - (<eval <feval <FLOAT.PvMRank>> * 100>)>
+SERV.B @61,,1 (TFG PvM RANK) 1st : <ref2.name> | Level <feval <FLOAT.PvMRank>> (<dlocal.pct>%)
+FLOAT.PvMRank=<ref3.f_RankCalcPvM>
+float.prepct = <floatval (<FLOAT.PvMRank> * 100)>
+local.pct = <eval <feval <float.prepct>> - (<eval <feval <FLOAT.PvMRank>> * 100>)>
+SERV.B @61,,1 (TFG PvM RANK) 2nd : <ref3.name> | Level <feval <FLOAT.PvMRank>> (<dlocal.pct>%)
+FLOAT.PvMRank=<ref4.f_RankCalcPvM>
+float.prepct = <floatval (<FLOAT.PvMRank> * 100)>
+local.pct = <eval <feval <float.prepct>> - (<eval <feval <FLOAT.PvMRank>> * 100>)>
+SERV.B @61,,1 (TFG PvM RANK) 3th : <ref4.name> | Level <feval <FLOAT.PvMRank>> (<dlocal.pct>%)
+return 1
+
+[FUNCTION rankshow2]
+        for h <serv.accounts>
+                local.i=0
+                if (<serv.account.<eval <local.h> +-1>.chars>)
+                        for i <serv.account.<eval <local.h> +-1>.chars>
+                                ref1 <serv.account.<eval <local.h> +-1>.char.<eval <local.i> +-1>.uid>
+                                if <ref1.tag0.PvPGain>
+										FLOAT.PvPRank=<ref1.f_RankCalcPvP>
+										if (<FLOAT.PvPRank> > 0.1)
+											float.prepct = <floatval (<FLOAT.PvPRank> * 100)>
+											local.pct = <eval <feval <float.prepct>> - (<eval <feval <FLOAT.PvPRank>> * 100>)>
+											s <ref1.name> | Level <feval <FLOAT.PvPRank>> (<dlocal.pct>%)
+										endif
+								endif
+                        endfor
+                endif
+        endfor
+return 1
+
+[plevel 1]
+myrank
+mypvmdamage
+
+[FUNCTION mypvmdamage]
+  SRC.SYSMESSAGE PvM Damage made: <SRC.DTAG0.PVM_DAMAGE>
+
+[function myrank]
+FLOAT.PvPRank=<f_RankCalcPvP>
+float.prepct = <floatval (<FLOAT.PvPRank> * 100)>
+local.pct = <eval <feval <float.prepct>> - (<eval <feval <FLOAT.PvPRank>> * 100>)>
+	//if (<feval <FLOAT.PvPRank>> >= 1)
+		smsg @,,1 PvP Level <feval <FLOAT.PvPRank>> (<dlocal.pct>%)
+	//endif
+
+FLOAT.PvMRank=<f_RankCalcPvM>
+float.prepct = <floatval (<FLOAT.PvMRank> * 100)>
+local.pct = <eval <feval <float.prepct>> - (<eval <feval <FLOAT.PvMRank>> * 100>)>
+  //if (<feval <FLOAT.PvMRank>> >= 1)
+    smsg @,,1 PvM Level <feval <FLOAT.PvMRank>> (<dlocal.pct>%)
+  //endif
+return 1
+
+
+
+[EVENTS e_RankChange]
+On=@KILL
+SAY Matei <ARGO.NAME>
+IF (<ARGO.ISPLAYER>)
+  f_GeneratePoint 1,<ARGO>
+ENDIF
+TAG.LASTKILL=<ARGO>
+
+On=@DEATH
+TAG.LASTKILLER=<ARGO>
+
+
+[FUNCTION f_GeneratePoint]
+//////////////////////
+// ARGV 0 = 1
+// - Kill a player
+// ARGV 0 = 2
+// - Kill a monster
+/////////////////////
+FLOAT.OldPvPRank=<f_RankCalcPvP>
+FLOAT.OldPvMRank=<f_RankCalcPvM>
+REF1=<ARGV[1]>
+///////////////////////////
+// - Kill a player case  //
+///////////////////////////
+local.PvPGain = 1
+IF (<ARGV[0]> == 1)
+  IF (<REF1> == <TAG0.LASTKILL>) && (<REF1.TAG.PvPGain> > <TAG.PvPGain>)
+      LOCAL.PvPGain = <EVAL <LOCAL.PvPGain> + ((<REF1.TAG.PvPGain> * 5) / 100)>
+      //MESSAGE <dLOCAL.PVPGAIN> sera add.
+  ELIF !(<REF1> == <TAG0.LASTKILL>)
+    //
+    IF (<REF1.SKILLTOTAL> < 10000)
+       LOCAL.PvPGain += 1
+    ELIF (<REF1.SKILLTOTAL> < 25000)
+       LOCAL.PvPGain += 2
+    ELIF (<REF1.SKILLTOTAL> < 50000)
+       LOCAL.PvPGain += 3
+    ELSE
+       LOCAL.PvPGain += 4
+    ENDIF
+    //
+    IF (<REF1.SKILLTOTAL> < <EVAL <SKILLTOTAL> - 500>)
+       LOCAL.PvPGain -= 1
+    ELIF (<REF1.SKILLTOTAL> > <EVAL <SKILLTOTAL> + 500>)
+       LOCAL.PvPGain += 1
+    ENDIF
+    //
+    IF (<REF1.CREATE> >= <EVAL <CREATE> * 2>)
+       LOCAL.PvPGain += 2
+    ELIF (<REF1.CREATE> > <CREATE>)
+     LOCAL.PvPGain += 1
+    ENDIF
+    //
+    IF (<REF1.FAME> > <EVAL <FAME> * 2>)
+     LOCAL.PvPGain += 2
+    ELIF (<REF1.FAME> > <FAME>)
+     LOCAL.PvPGain += 1
+    ENDIF
+    //
+    IF (<ISMURDERER <REF1>>) && !(<ISMURDERER <UID>>)
+     LOCAL.PvPGain += 2
+    ELIF !(<ISMURDERER <REF1>>) && (<ISMURDERER <UID>>)
+     LOCAL.PvPGain += 2
+    ENDIF
+    //
+    IF (<REF1.TAG.PvPGain> > <TAG.PvPGain>)
+       LOCAL.PvPGain = <EVAL <LOCAL.PvPGain> + (<REF1.TAG.PvPGain> * 10 / 100)>
+    ELIF (<REF1.TAG.PvPGain> >= <eval <TAG.PvPGain> / 2>)
+       LOCAL.PvPGain = <EVAL <LOCAL.PvPGain> + (<REF1.TAG.PvPGain> * 5 / 100)>
+    ELSE
+       LOCAL.PvPGain = <EVAL <LOCAL.PvPGain> + (<REF1.TAG.PvPGain> * 3 / 100)>
+    ENDIF
+    //
+    IF (<REF1.ATTACKER> == 1)
+       LOCAL.PvPGain = <EVAL <LOCAL.PvPGain> + <EVAL <LOCAL.PVPGAIN> * 10 / 100>>
+    ELIF (<REF1.ATTACKER> > 2)
+       LOCAL.DEFCIT = <EVAL <EVAL <REF1.ATTACKER> - 2> * 10>
+         IF (<LOCAL.DEFCIT> > 50)
+           LOCAL.DEFCIT = 50
+         ENDIF
+       LOCAL.PvPGain = <EVAL <LOCAL.PVPGAIN> * <LOCAL.DEFCIT> / 100>
+    ENDIF
+    //
+    IF (<REF1.CREATE> < 86400)
+       LOCAL.PvPGain = <LOCAL.PvPGain> / 3
+    ELIF (<REF1.CREATE> < 172800)
+       LOCAL.PvPGain = <LOCAL.PvPGain> / 2
+    ENDIF
+    //
+  ENDIF
+  TAG.PvPGain += <LOCAL.PvPGain>
+  if (<feval <ref1.f_RankCalcPvP>> > <feval <f_RankCalcPvP>>)
+	float.diff = <floatval <ref1.f_RankCalcPvP> - <f_RankCalcPvP>>
+	TAG.PvPGain += <feval <float.diff>>
+  endif
+FLOAT.PvPRank=<f_RankCalcPvP>
+  IF (<FEVAL <FLOAT.OldPvPRank>> < <FEVAL <FLOAT.PvPRank>>)
+	 SAYUA 478,6,0,,**Level <FEVAL <FLOAT.PvPRank>>!**
+	 SAYUA 478,6,0,,***Level Up!***
+     EFFECT=3,i_fx_BLESS_EFFECT,3,20,1,480
+	 s <name> <FLOAT.OldPvPRank> pts -> <FLOAT.PvPRank> pts. (teste rank pvp)
+  ENDIF
+//SAY @478,,1 You had <FLOAT.OldPvPRank> pts in the rank and now you have <FLOAT.PvPRank> pts.
+ENDIF
+//
+//
+///////////////////////////
+// - Kill a MONSTER case  //
+///////////////////////////
+IF (<ARGV[0]> == 2)
+local.PvMGain = 0
+	if (<ref1.karma> < -799)
+		local.PvMGain += 1
+		local.PvMGain += <eval <eval <ref1.karma> * -1> * 1 / 10000>
+		local.PvMGain += <eval <ref1.ostr> * 2 / 1000>
+		if (<ref1.attacker> > 1)
+			local.PvMGain += <eval <local.pvmgain> / <ref1.attacker>>
+		endif
+	tag0.PvMGain += <local.PvMGain>
+	FLOAT.PvMRank=<f_RankCalcPvM>
+		IF (<FEVAL <FLOAT.OldPvMRank>> < <FEVAL <FLOAT.PvMRank>>)
+			SAYUA 358,6,0,,**Level <FEVAL <FLOAT.PvMRank>>!**
+			SAYUA 358,6,0,,***PvM Level Up!***
+			EFFECT=3,i_fx_BLESS_EFFECT,3,20,1,480
+			s <name> <FLOAT.OldPvPRank> pts -> <FLOAT.PvPRank> pts. (teste rank pvMMM)
+		ENDIF
+	endif
+
+[FUNCTION f_RankCalcPvP]
+IF (<TAG0.PvPLoss> < 200)
+    FLOAT.PNT = <FLOATVAL <EVAL <TAG0.PvPLoss>> * 3 / 4>
+    FLOAT.PNT = <FLOATVAL <FLOAT.PNT> + 50>
+ELSE
+    FLOAT.PNT = <EVAL <TAG0.PvPLoss>>
+ENDIF
+//SYSMESSAGE @,,1 PNT: <FLOATVAL <FLOAT.PNT>>
+IF (<TAG0.PvPGain> <= 0)
+    FLOAT.SCORE=0
+ELSE
+    FLOAT.LOG = <FLOATVAL LOGARITHM(<EVAL <TAG0.PvPGain>>,2)>
+    FLOAT.LOG = <FLOATVAL <FLOATVAL <FLOAT.LOG>> + 10>
+    //SYSMESSAGE @,,1 LOG+10: <FLOATVAL <FLOAT.LOG>>
+    FLOAT.SC = <FLOATVAL <EVAL <TAG0.PvPGain>> + <FLOAT.PNT>>
+    //SYSMESSAGE @,,1 V1 + PNT: <FLOATVAL <FLOAT.SC>>
+    FLOAT.SC2 = <FLOATVAL <EVAL <TAG0.PvPGain>> / <FLOAT.SC>>
+    //SYSMESSAGE @,,1 V1 / V1 + PNT: <FLOATVAL <FLOAT.SC2>>
+    FLOAT.SCORE = <FLOATVAL <FLOAT.SC2> * <FLOAT.LOG>>
+    //SYSMESSAGE @,,1 FN * LOG: <FLOATVAL <FLOAT.SCORE>>
+ENDIF
+RETURN <FLOAT.SCORE>
+
+[FUNCTION f_RankCalcPvM]
+IF (<TAG0.PvMLoss> < 200)
+    FLOAT.PNT = <FLOATVAL <EVAL <TAG0.PvMLoss>> * 3 / 4>
+    FLOAT.PNT = <FLOATVAL <FLOAT.PNT> + 50>
+ELSE
+    FLOAT.PNT = <EVAL <TAG0.PvMLoss>>
+ENDIF
+//SYSMESSAGE @,,1 PNT: <FLOATVAL <FLOAT.PNT>>
+IF (<TAG0.PvMGain> <= 0)
+    FLOAT.SCORE=0
+ELSE
+    FLOAT.LOG = <FLOATVAL LOGARITHM(<EVAL <TAG0.PvMGain>>,2)>
+    FLOAT.LOG = <FLOATVAL <FLOATVAL <FLOAT.LOG>> + 10>
+    FLOAT.SC = <FLOATVAL <EVAL <TAG0.PvMGain>> + <FLOAT.PNT>>
+    FLOAT.SC2 = <FLOATVAL <EVAL <TAG0.PvMGain>> / <FLOAT.SC>>
+    FLOAT.SCORE = <FLOATVAL <FLOAT.SC2> * <FLOAT.LOG>>
+ENDIF
+RETURN <FLOAT.SCORE>

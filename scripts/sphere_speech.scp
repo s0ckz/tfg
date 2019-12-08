@@ -1,0 +1,283 @@
+//****************************************************************************
+//SPHERE by : Menasoft �1997-2004
+//www.sphereserver.com
+// All SPHERE script files and formats are copyright Menasoft & Partners.
+// This file may be freely edited for personal use, but may not be distributed
+// in whole or in part, in any format without express written permission from
+// Menasoft & Partners.  All donations and contributions
+// become the property of Menasoft & Partners.
+//****************************************************************************
+// FILE LAST UPDATED: Saturday, November 15, 2003
+//
+VERSION=0.55i
+
+
+// In the process of moving this stuff to scripts.
+
+[function capture_speech]
+REF69=<UID>
+
+LOCAL.MODE=<VAR.MODE>
+
+IF <LOCAL.MODE>==talkmode_system
+LOCAL.HEAR_DIST=15
+ELSEIF <LOCAL.MODE>==talkmode_yell
+LOCAL.HEAR_DIST=30
+ELSEIF <LOCAL.MODE>==talkmode_whisper
+LOCAL.HEAR_DIST=3
+ENDIF
+
+LOCAL.SENTENCE=<args>
+
+IF <LOCAL.SENTENCE> > 0
+FORCLIENTS <LOCAL.HEAR_DIST>
+         TRYSRC <UID> REF69.MESSAGEUA 0 0 0 0  <EVAL <LOCAL.SENTENCE>>
+ENDFOR
+ELSE
+FORCLIENTS <LOCAL.HEAR_DIST>
+         TRYSRC <UID> REF69.MESSAGEUA 0 0 0 0  <LOCAL.SENTENCE>
+ENDFOR
+ENDIF
+
+[FUNCTION WRITESPEECH]
+return 0
+IF !(<FILE.INUSE>)
+FILE.MODE.CREATE=1
+FILE.MODE.APPEND=1
+IF (<FILE.OPEN logs\speech.txt>)
+FILE.WRITELINE <ARGS>
+ENDIF
+FILE.CLOSE
+ENDIF
+
+[SPEECH spk_player]
+
+ON=*
+IF (<TAG0.SAY_ONLY_COMMANDS>)
+	IF (STRCMPI("banker bank", "<ARGS>")) && (STRCMPI("all release", "<ARGS>")) && (STRCMPI("all stop", "<ARGS>")) && (STRCMPI("all come", "<ARGS>")) && (STRCMPI("all transfer", "<ARGS>")) && (STRCMPI("buy", "<ARGS>")) && (STRCMPI("sell", "<ARGS>"))
+		RETURN 1
+	ENDIF
+ENDIF
+
+IF <TAG0.MUTE>==1
+RETURN 1
+ENDIF
+
+IF (<FLAGS> & statf_hidden)
+	FLAGS = <FLAGS> & ~statf_hidden
+	SYSMESSAGE @,,1 <DEFMSG.hiding_revealed>
+ENDIF
+
+IF (<ACTION>== skill_magery) || (<ISEVENT.E_RUNADANO>)
+RETURN 1
+ENDIF
+
+//TAG.FLOOD 1
+//TIMERF 1, TAG.FLOOD
+//WRITESPEECH <NAME> falou: <ARGS> ASCII: <ASC <ARGS>>
+//LOCAL._COUNT = <EVAL (STRLEN("<ARGS>") - 2)>
+
+//IF (<dLOCAL._COUNT> > 70) || !(<SRC.ISGM>)
+//SRC.SYSMESSAGE @026 Frase muito longa.
+//RETURN 1
+//ENDIF
+
+IF !(STRMATCH(*banker bank*, <ARGS>)) && !(STRMATCH(*guards*, <ARGS>))
+	serv.writefile logs/mensagens.log [<serv.rtime>][SAY] - <name> (<account>) (<p>) "<ARGS>"
+ENDIF
+
+RETURN 0
+
+//WHILE <LOCAL._COUNT>
+//	LOCAL._LETTER = <STRSUB <dLOCAL._COUNT> 1 "<ARGS>">
+//	IF !STRCMPI(<ASC <LOCAL._LETTER>,07f)
+//	serv.log @<asc <local._letter>> <LOCAL._LETTER>
+//		SRC.SYSMESSAGE @0790 Caracteres invalidos!
+//		SERV.LOG <NAME> usou caracteres ilegais !!
+//		RETURN 1
+//	ENDIF
+//	LOCAL._COUNT -= 1
+//ENDWHILE
+
+// All players speech filtered through here.
+ON=home home home	//	Ghosts can F_GO home.
+	if (<flags>&STATF_DEAD)
+		F_GO <home>
+	endif
+
+ON=I must consider my sins
+SYSMESSAGE Murders: <KILLS>
+
+ON=I resign from my guild*
+IF (<GUILD>)
+    f_guildsys_removecharfromguild <guild.uid>,<uid>
+    RETURN 6
+ENDIF
+RETURN 1
+
+ON=I resign from my town
+IF (<TOWN>)
+ f_townsys_removecharfromtown <TOWN>,<UID>
+ENDIF
+
+ON=*Guard*
+if (<ctag0.guardsmute> != 1)
+	ctag.guardsmute 1
+	timerf 6, ctag.guardsmute
+elif (<ctag0.guardsmute> == 1)
+	sysmessage Voce nao pode chamar guards tao rapido.
+	return 1
+endif
+
+
+ON=Help Guards*
+	// trying to call guards for help.
+
+[FUNCTION f_transfer_one]
+IF !(<ARGO.ISPLAYER>==1)
+SYSMESSAGE Voce so pode transferir este animal para outro player.
+RETURN 1
+ELSE
+TAG.PETNAME <ARGV[1]>
+TAG.PETUID <ARGV[0]>
+TRYSRC <ARGO.UID> TAG.PETUID <ARGV[0]>
+TRYSRC <ARGO.UID> DIALOG d_TRPET
+ENDIF
+
+[SPEECH spk_pet]
+// Pets that cannot talk
+
+ON=TRANSFER
+IF (<TAG0.UNTRANSFERABLE>)
+	SRC.SYSMESSAGE @,,1 You can't transfer this mount.
+	RETURN 1
+ENDIF
+
+// fix temporario. talvez o codigo seja o misterio
+IF (<SRC.ISGM>) || (<I.OWNER.UID> == <SRC.UID>)
+	TARGETF f_transfer_one <I.UID>, <I.NAME>
+	SRC.SYSMESSAGE Para quem voce quer transferir o animal ?
+ENDIF
+RETURN 1
+
+ON=RELEASE
+IF (<TAG0.UNRELEASABLE>)
+	SRC.SYSMESSAGE @,,1 You can't release this mount.
+	RETURN 1
+ENDIF
+
+if <flags>&04000000
+REMOVE
+endif
+
+//ON=ATTACK
+//ON=COME
+//ON=DEFEND ME
+//ON=DISMISS
+
+ON=DROP	// "GIVE" ?
+RETURN 1
+
+ON=DROP ALL
+RETURN 1
+
+//ON=FETCH
+//ON=FOLLOW
+//ON=FOLLOW ME
+//ON=FRIEND
+//ON=GO
+//ON=GUARD
+//ON=GUARD ME
+//ON=KILL
+//ON=SPEAK
+//ON=STAY
+//ON=STAY HERE
+//ON=STOP
+
+[DIALOG d_TRPET]
+
+0, 0
+resizepic 300 000 3600 300 100
+page 0
+text 340 17 0 0
+text 370 37 1152 1
+text 370 67 1152 2
+button 350 40 1209 1210 1 0 1
+button 350 70 1209 1210 1 0 2
+
+[DIALOG d_TRPET TEXT]
+Voce aceita o <TAG.PETNAME> ?
+Sim
+Nao
+
+
+[DIALOG d_TRPET BUTTON]
+
+ON=0
+	SRC.SYSMESSAGE=Transferencia Cancelada
+	SYSMESSAGE Transferencia Cancelada
+	TAG.PETNAME
+	TAG.PETUID
+
+ON=1
+	SYSMESSAGE O animal foi transferido com sucesso.
+	SRC.SYSMESSAGE Voce aceitou o animal. Ele agora pertence a voce.
+
+	FORCONT <TAG0.PETUID> 0
+        IF (<BASEID> == i_memory)
+            IF (<COLOR> & memory_ipet) || (<COLOR> & memory_speak)
+                REMOVE
+            ENDIF
+        ENDIF
+    ENDFOR
+
+	serv.NEWITEM i_memory
+	NEW.COLOR memory_ipet
+	NEW.LINK <SRC.UID>
+	NEW.CONT <UID.<TAG.PETUID>>
+	UID.<TAG.PETUID>.UPDATEX
+	UID.<TAG.PETUID>.ACTION 06c
+	TAG.PETNAME
+	TAG.PETUID
+ON=2
+	SYSMESSAGE O animal foi rejeitado.
+	SRC.SYSMESSAGE Voce recusou o animal.
+	TAG.PETNAME
+	TAG.PETUID
+
+[SPEECH spk_hireling]
+// Pets that can talk.
+ON=ATTACK
+ON=BOUGHT
+ON=CASH
+ON=COME
+ON=DEFEND ME
+ON=DISMISS
+ON=DROP	// "GIVE" ?
+ON=DROP ALL
+ON=EQUIP
+ON=EQUIP ALL
+ON=FETCH
+ON=FOLLOW
+ON=FOLLOW ME
+ON=FRIEND
+ON=GET DRESSED
+ON=GO
+ON=GUARD
+ON=GUARD ME
+ON=INVENTORY
+ON=KILL
+ON=PRICE	// may have args ?
+ON=RECIEVED
+ON=RELEASE
+ON=SAMPLES
+ON=SPEAK
+ON=STATUS
+ON=STAY
+ON=STAY HERE
+ON=STOCK
+ON=STOP
+ON=SUIT UP
+ON=TRANSFER
+
+[EOF]

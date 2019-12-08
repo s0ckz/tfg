@@ -1,0 +1,162 @@
+﻿[EVENTS e_classificado_copa]
+//ON=@CLICK
+//MESSAGE @61,,1 (Classificado para a #CopaTFG)
+
+// GUMP
+[DIALOG d_condicoes_sorteio_copa]
+0,0
+page 0
+resizepic 1 1 9200 397 546
+dhtmlgump 9 37 378 407 1 0 <def.br><def.br><def.center>Condicoes de compra: <def.br><def.br> - Este ticket nao vale uma vaga para a copa. Ele vale apenas uma chance de ganhar uma das 8 vagas do sorteio do dia 30/06. <def.br><def.br> - Nenhum destes tickets é um item newbie. Voce deve guarda-lo com cuidado, pois pode perde-lo em seu loot ou para ladroes <def.br><def.br> - O valor de nenhum ticket sera reembolsado. Todo valor gasto com tickets é um risco que você assume. <def.br><def.br> - A data limite para vender os tickets premiados é 08/07. Apos esta data, os tickets que nao houverem confirmado participacao serao leiloados.
+dhtmlgump 11 7 375 27 0 0  <def.center><def.bfont_white><def.u>Sorteio da Copa
+dhtmlgump 44 453 344 25 0 0 <def.bfont_dred><def.u>Eu li e estou de acordo com as condiçoes de compra. 
+checkbox 15 452 210 211 0 0
+dhtmlgump 14 479 253 35 0 0 <def.bfont_white>Quantos tickets você deseja comprar? 50k cada 
+resizepic 270 479 3000 114 28
+dtextentry 272 483 108 20 0 0
+button 280 519 4005 4006 1 0 1
+dhtmlgump 320 521 103 23 0 0 <def.bfont_dgreen><def.u>COMPRAR
+dhtmlgump 11 517 230 25 0 0 <def.bfont_white>#CopaTFG #ACopaDasCopas
+
+[DIALOG d_condicoes_sorteio_copa button]
+ON=0
+src.ctag.compra_ticket_copa_qt = 
+src.sysmessage @,,1 Voce desistiu da compra.
+return 1
+
+ON=1
+if !(<argchk[0]>==1)
+	src.sysmessage @,,1 Voce precisa concordar com as condiçoes de compra.
+	return 1
+endif
+if <isnum <argtxt[0]>>
+	if (<argtxt[0]> > 0)
+		SDIALOG d_compra_ticket_copa_confirm,0,<argtxt[0]>
+		return 1
+	else
+		src.sysmessage "@,,1 O valor informado é muito baixo."
+		return 1	
+	endif
+else
+	src.sysmessage "@,,1 O valor informado nao é um numero."
+	return 1
+endif
+return 1
+
+// GUMP Confirmacao
+
+[DIALOG d_compra_ticket_copa_confirm]
+250,250
+page 0
+src.ctag.compra_ticket_copa_qt = <argv[0]>
+resizepic 6 8 3500 276 192
+dhtmlgump 33 24 212 24 0 0 <def.center><def.u>Comprar Cupons de Sorteio
+dhtmlgump 33 54 212 24 0 0 <def.center> Você possui <pontuanumero <src.gold>> gp's.
+dhtmlgump 20 84 250 70 1 0 <def.center><def.bfont_red>Você tem certeza que deja comprar <eval <argv[0]>> cupons para o sorteio da copa por <pontuanumero <eval <argv[0]> * 50000>> gp's?
+dhtmlgump 28 162 199 24 0 0 <def.div_right><def.Bfont_red><def.u>EU CONFIRMO A COMPRA<def.div_end>
+button 230 160 4023 4024 1 0 1
+
+[DIALOG d_compra_ticket_copa_confirm BUTTON]
+ON = 0
+src.ctag.compra_ticket_copa_qt = 
+src.sysmessage @,,1 Voce desistiu da compra.
+return 1
+
+ON = 1
+local.gold_ant = <src.gold>
+local.qt = <src.ctag.compra_ticket_copa_qt>
+local.price = <eval <src.ctag.compra_ticket_copa_qt> * 50000>
+if (<local.price> < 50000)
+	return 1
+endif
+if (<src.gold> >= <local.price>)
+	src.gold -= <local.price>
+	for 1 <local.qt>
+		var0.copa_tickets_num += 1
+		serv.newitem i_ticket_copa_eliminatorias
+		new.tag.numero = <var0.copa_tickets_num>
+		new.cont = <src.findlayer.21.uid>
+		ref1 = <new>
+		SERV.WRITEFILE Tickets_Comprados.txt <src.name> comprou um ticket <ref1.uid> numero <dvar0.copa_tickets_num>. Ele tinha <dlocal.gold_ant> gp's e agora tem <src.gold> gp's.
+	endfor
+	src.sysmessage @,,1 Voce comprou <dlocal.qt> tickets para a copa!
+else
+	src.sysmessage @,,1 Voce nao possui gold suficiente para esta compra.
+	return 1
+endif
+return 1
+
+
+// Ticket Item
+[ITEMDEF i_ticket_copa_eliminatorias]
+Name = Sorteio da Copa
+ID = i_cards
+
+ON=@CREATE
+COLOR = 0492
+
+ON=@CLICK
+message @,,1 Cupom no: <dtag.numero>
+message @,,1 Sorteio de Vaga para a Copa TFG
+return 1
+
+ON=@DESTROY
+SERV.WRITEFILE Destroy_Tickets.txt <name> <uid> em <topobj.name> <topobj.uid> destruido em <serv.rtime> por <src.name> <src.uid>.
+
+// NPC
+
+[CHARDEF c_copa_new]
+NAME=#NAMES_HUMANFEMALE Vendedora de Bilhetes
+ID=C_WOMAN
+DESIRES=i_gold,e_notoriety
+AVERSIONS=t_TRAP,t_eerie_stuff
+
+TSPEECH=spk_copa
+
+TEVENTS=e_Human_Needs
+TEVENTS=e_Human_Refuse
+TEVENTS=e_Human_Environ
+
+ON=@Create
+NPC=brain_vendor
+FLAGS=04
+COLOR=083ea
+STR={61 75}
+DEX={66 80}
+INT={51 68}
+HITS=100
+
+ITEMNEWBIE=i_hair_2_pigtails
+COLOR=01
+
+ON=@NPCRestock
+ITEM=i_hat_feather
+COLOR=07ad
+ITEM=i_shirt_fancy
+COLOR=07ac
+ITEM=i_skirt_long
+COLOR=07ad
+ITEM=i_sandals
+COLOR=01
+
+ON=@CLICK
+MESSAGE @55,,1 (#CopaTFG)
+MESSAGE @91,,1 (Vendedora de Cupons)
+MESSAGE @61,,1 <name>
+return 1
+
+ON=@DCLICK
+SDIALOG d_condicoes_sorteio_copa
+return 1
+
+[SPEECH spk_copa]
+ON=*buy*
+SDIALOG d_condicoes_sorteio_copa
+return 1
+
+[FUNCTION rem_all_tick_copa]
+FORINSTANCES i_ticket_copa_eliminatorias
+	SERV.LOG <name> <uid> removed.
+	REMOVE
+ENDFOR
+return 1

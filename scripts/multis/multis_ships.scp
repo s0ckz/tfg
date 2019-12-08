@@ -1,0 +1,1302 @@
+//****************************************************************************
+// SPHERE by : Menasoft �1997-2014
+// www.sphereserver.net
+// All SPHERE script files and formats are copyright Menasoft & Partners.
+// This file may be freely edited for personal use, but may not be distributed
+// in whole or in part, in any format without express written permission from
+// Menasoft & Partners.  All donations and contributions
+// become the property of Menasoft & Partners.
+//****************************************************************************
+// FILE LAST UPDATED: Tuesday, March 24, 2015
+//
+VERSION=56c
+
+[MULTIDEF 0AF]
+// Face E
+DEFNAME=m_multi_ship_giant_n
+Name=Giant Ship
+TYPE=T_SHIP
+VALUE=200000
+MULTIREGION=-2,-10,2,10
+
+
+[multidef 0]
+// Face N
+defname=m_small_ship_n
+name=Small Ship
+nameloc=1116741	// Small Ship
+type=t_ship
+value=14000
+height=3
+can=can_i_block
+tspeech=spk_ship_cmds
+SpeedMode=3
+ShipSpeed=5,1
+
+category=Multis
+subsection=Ships
+description=Small Ship
+
+multiregion=-2,-5,2,5
+component=03e4e,1, 4	// tiller.
+component=i_ship_hatch_n,0,-4	// hatch
+component=03eb2,2,0		// plank right
+component=03eb1,-2,0	// plank left
+
+[multidef 01]
+// Face E
+defname=m_small_ship_e
+name=Small Ship
+nameloc=1116741	// Small Ship
+type=t_ship
+value=14000
+height=3
+can=can_i_block
+tspeech=spk_ship_cmds
+SpeedMode=3
+ShipSpeed=5,1
+
+category=Multis
+subsection=Ships
+description=Small Ship
+
+multiregion=-5,-2,5,2
+component=03e55,-4,0
+component=i_ship_hatch_e,4, 0
+component=03e85,0, 2
+component=03e8a,0,-2
+
+[multidef 02]
+// Face S
+defname=m_small_ship_s
+name=Small Ship
+nameloc=1116741	// Small Ship
+type=t_ship
+value=14000
+height=3
+can=can_i_block
+tspeech=spk_ship_cmds
+SpeedMode=3
+ShipSpeed=5,1
+
+category=Multis
+subsection=Ships
+description=Small Ship
+
+multiregion=-2,-5,2,5
+component=03e4b,0, -4
+component=i_ship_hatch_s,0,  4
+component=03eb1,-2, 0
+component=03eb2,2,  0
+
+[multidef 03]
+// Face W
+defname=m_small_ship_w
+name=Small Ship
+nameloc=1116741	// Small Ship
+type=t_ship
+value=14000
+height=3
+can=can_i_block
+tspeech=spk_ship_cmds
+SpeedMode=3
+ShipSpeed=5,1
+
+category=Multis
+subsection=Ships
+description=Small Ship
+
+multiregion=-5,-2,5,2
+component=03e50,4, 0
+component=i_ship_hatch_w,-4,0
+component=03e8a,0,-2
+component=03e85,0, 2
+
+[multidef 04]
+// Face N
+defname=m_small_dragon_ship_n
+name=Small Dragon Ship
+nameloc=1116742	// Small Dragon Ship
+type=t_ship
+value=14500
+height=3
+can=can_i_block
+tspeech=spk_ship_cmds
+
+category=Multis
+subsection=Ships
+description=Small Dragon Ship
+SpeedMode=3
+ShipSpeed=5,1
+
+multiregion=-2,-5,2,5
+component=03e4e,1, 4,
+component=i_ship_hatch_n,0,-4
+component=03eb2,2, 0
+component=03eb1,-2, 0
+
+[multidef 05]
+// Face E
+defname=m_small_dragon_ship_e
+name=Small Dragon Ship
+nameloc=1116742	// Small Dragon Ship
+type=t_ship
+value=14500
+height=3
+can=can_i_block
+tspeech=spk_ship_cmds
+SpeedMode=3
+ShipSpeed=5,1
+
+category=Multis
+subsection=Ships
+description=a mast
+
+multiregion=-5,-2,5,2
+component=03e55,-4,0
+component=i_ship_hatch_e,4, 0
+component=03e85,0, 2
+component=03e8a,0,-2
+
+[multidef 06]
+// Face S
+defname=m_small_dragon_ship_s
+name=Small Dragon Ship
+nameloc=1116742	// Small Dragon Ship
+type=t_ship
+value=14500
+height=3
+can=can_i_block
+tspeech=spk_ship_cmds
+
+category=Multis
+subsection=Ships
+description=Small Dragon Ship
+SpeedMode=3
+ShipSpeed=5,1
+
+multiregion=-2,-5,2,5
+component=03e4b,0, -4
+component=i_ship_hatch_s,0,  4
+component=03eb2,2,  0
+component=03eb1,-2, 0
+
+[multidef 07]
+// Face W
+defname=m_small_dragon_ship_w
+name=Small Dragon Ship
+nameloc=1116742	// Small Dragon Ship
+type=t_ship
+value=14500
+height=3
+can=can_i_block
+tspeech=spk_ship_cmds
+SpeedMode=3
+ShipSpeed=5,1
+
+category=Multis
+subsection=Ships
+description=Small Dragon Ship
+
+multiregion=-5,-2,5,2
+component=03e50,4, 0
+component=i_ship_hatch_w,-4,0
+component=03e85,0, 2
+component=03e8a,0,-2
+
+[multidef 08]
+// Face N
+defname=m_medium_ship_n
+name=Medium Ship
+nameloc=1116743	// Medium Ship
+type=t_ship
+value=16000
+height=3
+can=can_i_block
+tspeech=spk_ship_cmds
+SpeedMode=3
+ShipSpeed=5,1
+
+category=Multis
+subsection=Ships
+description=Medium Ship
+
+multiregion=-2,-5,2,6
+component=03e4e,1, 5, 0
+component=i_ship_hatch_n,0,-4, 0
+component=03eb2,2, 0, 0
+component=03eb1,-2, 0, 0
+
+[multidef 09]
+// Face E
+defname=m_medium_ship_e
+name=Medium Ship
+nameloc=1116743	// Medium Ship
+type=t_ship
+value=16000
+height=3
+can=can_i_block
+tspeech=spk_ship_cmds
+SpeedMode=3
+ShipSpeed=5,1
+
+category=Multis
+subsection=Ships
+description=Medium Ship
+
+multiregion=-6,-2,5,2
+component=03e55,-5,0, 0
+component=i_ship_hatch_e,4, 0, 0
+component=03e85,0, 2, 0
+component=03e8a,0,-2, 0
+
+[multidef 0a]
+// Face S
+defname=m_medium_ship_s
+name=Medium Ship
+nameloc=1116743	// Medium Ship
+type=t_ship
+value=16000
+height=3
+can=can_i_block
+tspeech=spk_ship_cmds
+SpeedMode=3
+ShipSpeed=5,1
+
+category=Multis
+subsection=Ships
+description=Medium Ship
+
+multiregion=-2,-6,2,5
+component=03e4b,0,-5,0
+component=i_ship_hatch_s,0,4,0
+component=03eb2,2,0,0
+component=03eb1,-2,0,0
+
+[multidef 0b]
+// Face W
+defname=m_medium_ship_w
+name=Medium Ship
+nameloc=1116743	// Medium Ship
+type=t_ship
+value=16000
+height=3
+can=can_i_block
+tspeech=spk_ship_cmds
+SpeedMode=3
+ShipSpeed=5,1
+
+category=Multis
+subsection=Ships
+description=Medium Ship
+
+multiregion=-5,-2,6,2
+component=03e50,5, 0,0
+component=i_ship_hatch_w,-4,0,0
+component=03e85,0, 2,0
+component=03e8a,0,-2,0
+
+[multidef 0c]
+// Face N
+defname=m_medium_dragon_ship_n
+name=Medium Dragon Ship
+nameloc=1116744	// Medium Dragon Ship
+type=t_ship
+value=16500
+height=3
+can=can_i_block
+tspeech=spk_ship_cmds
+SpeedMode=3
+ShipSpeed=5,1
+
+category=Multis
+subsection=Ships
+description=Medium Dragon Ship
+
+multiregion=-2,-5,2,6
+component=03e4e,1, 5, 0
+component=i_ship_hatch_n,0,-4, 0
+component=03eb2,2, 0, 0
+component=03eb1,-2, 0, 0
+
+[multidef 0d]
+// Face E
+defname=m_medium_dragon_ship_e
+name=Medium Dragon Ship
+nameloc=1116744	// Medium Dragon Ship
+type=t_ship
+value=16500
+height=3
+can=can_i_block
+tspeech=spk_ship_cmds
+SpeedMode=3
+ShipSpeed=5,1
+
+category=Multis
+subsection=Ships
+description=Medium Dragon Ship
+
+multiregion=-6,-2,5,2
+component=i_ship_tillerman,-5,0, 0
+component=i_ship_hatch_e,4, 0, 0
+component=03e87,0, 2, 0
+component=03e8a,0,-2, 0
+
+[multidef 0e]
+// Face S
+defname=m_medium_dragon_ship_s
+name=Medium Dragon Ship
+nameloc=1116744	// Medium Dragon Ship
+type=t_ship
+value=16500
+height=3
+can=can_i_block
+tspeech=spk_ship_cmds
+SpeedMode=3
+ShipSpeed=5,1
+
+category=Multis
+subsection=Ships
+description=Medium Dragon Ship
+
+multiregion=-2,-6,2,5
+component=03e4b,0, -5,0
+component=i_ship_hatch_s,0,  4,0
+component=03ea9,2,  0,0
+component=03eb1,-2, 0,0
+
+[multidef 0f]
+// Face W
+defname=m_medium_dragon_ship_w
+name=Medium Dragon Ship
+nameloc=1116744	// Medium Dragon Ship
+type=t_ship
+value=16500
+height=3
+can=can_i_block
+tspeech=spk_ship_cmds
+SpeedMode=3
+ShipSpeed=5,1
+
+category=Multis
+subsection=Ships
+description=Medium Dragon Ship
+
+multiregion=-5,-2,6,2
+component=03e50,5, 0
+component=i_ship_hatch_w,-4,0
+component=03e87,0, 2
+component=03e8a,0,-2
+
+[multidef 010]
+// Face N
+defname=m_large_ship_n
+name=Large Ship
+nameloc=1116745	// Large Ship
+type=t_ship
+value=18000
+height=3
+can=can_i_block
+tspeech=spk_ship_cmds
+SpeedMode=4
+ShipSpeed=2,1
+
+category=Multis
+subsection=Ships
+description=Large Ship
+
+multiregion=-2,-6,2,6
+component=03e4e,1, 5, 0
+component=i_ship_hatch_n,0,-5, 0
+component=03eb2,2, -1, 0
+component=03eb1,-2, -1, 0
+
+[multidef 011]
+// Face E
+defname=m_large_ship_e
+name=Large Ship
+nameloc=1116745	// Large Ship
+type=t_ship
+value=18000
+height=3
+can=can_i_block
+tspeech=spk_ship_cmds
+SpeedMode=4
+ShipSpeed=2,1
+
+category=Multis
+subsection=Ships
+description=Large Ship
+
+multiregion=-6,-2,6,2
+component=03e55,-5,0, 0
+component=i_ship_hatch_e,5, 0, 0
+component=03e85,1, 2, 0
+component=03e8a,1,-2, 0
+
+[multidef 012]
+// Face S
+defname=m_large_ship_s
+name=Large Ship
+nameloc=1116745	// Large Ship
+type=t_ship
+value=18000
+height=3
+can=can_i_block
+tspeech=spk_ship_cmds
+SpeedMode=4
+ShipSpeed=2,1
+
+category=Multis
+subsection=Ships
+description=Large Ship
+
+multiregion=-2,-6,2,6
+component=03e4b,0, -5,0
+component=i_ship_hatch_s,0, 5,0
+component=03eb2,2, 1,0
+component=03eb1,-2, 1,0
+
+[multidef 013]
+// Face W
+defname=m_large_ship_w
+name=Large Ship
+nameloc=1116745	// Large Ship
+type=t_ship
+value=18000
+height=3
+can=can_i_block
+tspeech=spk_ship_cmds
+SpeedMode=4
+ShipSpeed=2,1
+
+category=Multis
+subsection=Ships
+description=Large Ship
+
+multiregion=-6,-2,6,2
+component=03e50,5, 0,0
+component=i_ship_hatch_w,-5,0,0
+component=03e85,-1, 2,0
+component=03e8a,-1,-2,0
+
+[multidef 014]
+// Face N
+defname=m_large_dragon_ship_n
+name=Large Dragon Ship
+nameloc=1116746	// Large Dragon Ship
+type=t_ship
+value=18500
+height=3
+can=can_i_block
+tspeech=spk_ship_cmds
+SpeedMode=4
+ShipSpeed=2,1
+
+category=Multis
+subsection=Ships
+description=Large Dragon Ship
+
+multiregion=-2,-6,2,6
+component=03e4e,1, 5, 0
+component=i_ship_hatch_n,0,-5, 0
+component=03eb2,2, -1, 0
+component=03eb1,-2, -1, 0
+
+[multidef 015]
+// Face E
+defname=m_large_dragon_ship_e
+name=Large Dragon Ship
+nameloc=1116746	// Large Dragon Ship
+type=t_ship
+value=18500
+height=3
+can=can_i_block
+tspeech=spk_ship_cmds
+SpeedMode=4
+ShipSpeed=2,1
+
+category=Multis
+subsection=Ships
+description=Large Dragon Ship
+
+multiregion=-6,-2,6,2
+component=03e55,-5,0, 0
+component=i_ship_hatch_e,5, 0, 0
+component=03e85,1, 2, 0
+component=03e8a,1,-2, 0
+tspeech=spk_ship_cmds
+
+[multidef 016]
+// Face S
+defname=m_large_dragon_ship_s
+name=Large Dragon Ship
+nameloc=1116746	// Large Dragon Ship
+type=t_ship
+value=18500
+height=3
+can=can_i_block
+tspeech=spk_ship_cmds
+SpeedMode=4
+ShipSpeed=2,1
+
+category=Multis
+subsection=Ships
+description=Large Dragon Ship
+
+multiregion=-2,-6,2,6
+component=03e4b,0, -5,0
+component=i_ship_hatch_s,0, 5,0
+component=03eb2,2, 1,0
+component=03eb1,-2, 1,0
+
+[multidef 017]
+// Face W
+defname=m_large_dragon_ship_w
+name=Large Dragon Ship
+nameloc=1116746	// Large Dragon Ship
+type=t_ship
+value=18500
+height=3
+can=can_i_block
+tspeech=spk_ship_cmds
+SpeedMode=4
+ShipSpeed=2,1
+
+category=Multis
+subsection=Ships
+description=Large Dragon Ship
+
+multiregion=-6,-2,6,2
+component=03e50,5, 0,0
+component=i_ship_hatch_w,-5,0,0
+component=03e85,-1, 2,0
+component=03e8a,-1,-2,0
+
+[speech spk_ship_cmds]
+
+
+on=furl sail	// stop
+on=stop			// stops current ship movement.
+	IF (<SRC.FLAGS> & statf_dead)
+		RETURN 1
+	ENDIF
+	shipstop
+
+on=turn left
+on=port			// turn left
+        IF (<SRC.FLAGS> & statf_dead)
+                RETURN 1
+        ENDIF
+	shipturnleft
+	
+
+on=turn right
+on=starboard	// turn right
+        IF (<SRC.FLAGS> & statf_dead)
+                RETURN 1
+        ENDIF
+	shipturnright
+
+on=left			// move ship in desired direction.
+on=drift left
+        IF (<SRC.FLAGS> & statf_dead)
+                RETURN 1
+        ENDIF
+	shipdriftleft
+
+on=right		// move ship in desired direction.
+on=drift right
+        IF (<SRC.FLAGS> & statf_dead)
+                RETURN 1
+        ENDIF
+	shipdriftright
+
+on=back			// move ship backwards
+on=backward		// move ship backwards
+on=backwards	// move ship backwards
+        IF (<SRC.FLAGS> & statf_dead)
+                RETURN 1
+        ENDIF
+	shipback
+
+on=forward
+on=foreward		// moves ship forward.
+on=unfurl sail	// moves ship forward.
+        IF (<SRC.FLAGS> & statf_dead)
+                RETURN 1
+        ENDIF
+	shipfore
+
+on=forward left
+        IF (<SRC.FLAGS> & statf_dead)
+                RETURN 1
+        ENDIF
+	shipforeleft
+
+on=forward right
+        IF (<SRC.FLAGS> & statf_dead)
+                RETURN 1
+        ENDIF
+	shipforeright
+
+on=backward left
+on=back left
+        IF (<SRC.FLAGS> & statf_dead)
+                RETURN 1
+        ENDIF
+	shipbackleft
+
+on=backward right
+on=back right
+        IF (<SRC.FLAGS> & statf_dead)
+                RETURN 1
+        ENDIF
+	shipbackright
+
+on=raise anchor
+	shipanchorraise
+
+on=drop anchor
+        IF (<SRC.FLAGS> & statf_dead)
+                RETURN 1
+        ENDIF
+	shipanchordrop
+
+on=turn around	// turns ship around and proceeds.
+on=come about	// turns ship around and proceeds.
+        IF (<SRC.FLAGS> & statf_dead)
+                RETURN 1
+        ENDIF
+	shipturn
+
+on=up
+        IF (<SRC.FLAGS> & statf_dead)
+                RETURN 1
+        ENDIF
+	shipup
+
+on=down
+        IF (<SRC.FLAGS> & statf_dead)
+                RETURN 1
+        ENDIF
+	shipdown
+
+on=land
+        IF (<SRC.FLAGS> & statf_dead)
+                RETURN 1
+        ENDIF
+	shipland
+
+ON=Redeed
+        IF (<SRC.FLAGS> & statf_dead)
+                RETURN 1
+        ENDIF
+	IF (<MORE1> == <SRC.UID>) || (<SRC.ISGM>)
+		MENU MENU_BARCO
+ 		SRC.SYSMESSAGE Bem vindo senhor!
+ 		return 1
+ 	ENDIF
+ 	SRC.SYSMESSAGE Somente o dono pode pegar a Redeed.
+
+////Here is the function:
+
+[MENU MENU_BARCO] // small ship
+Faca sua escolha
+
+ON=0 Desmontar o barco e pegar a deed
+	IF (<COLOR> == 060)
+ 		REMOVE
+ 		SRC.SYSMESSAGE Este barco ja foi removido
+ 		RETURN 1
+	ENDIF
+	MENU MENU_BARCO_REDEED
+
+[MENU MENU_BARCO_REDEED]
+Tem certeza?
+
+ON=0 Sim eu quero pegar a deed de volta
+
+IF ((<ID> == 04000) || (<ID> == 04001) || (<ID> == 04002) || (<ID> == 04003))
+ COLOR=060
+ REMOVE
+ serv.newitem i_deed_ship_small_N
+ new.bounce
+ RETURN 1
+ENDIF
+
+IF ((<ID> == 04004) || (<ID> == 04005) || (<ID> == 04006) || (<ID> == 04007))
+ COLOR=060
+ REMOVE
+ serv.newitem i_deed_ship_dragon_small_N
+ new.bounce
+ return 1
+ENDIF
+
+IF ((<ID>==04008) || (<ID>==04009) || (<ID>==0400A) || (<ID>==0400B))
+ COLOR=060
+ REMOVE
+ serv.newitem i_deed_ship_medium_N
+ new.BOUNCE
+ return 1
+ENDIF
+
+IF ((<ID>==0400C) || (<ID>==0400D) || (<ID>==0400E) || (<ID>==0400F))
+ COLOR=060
+ REMOVE
+ serv.newitem i_deed_ship_dragon_medium_N
+ new.BOUNCE
+ return 1
+ENDIF
+
+IF ((<ID>==04010) || (<ID>==04011) || (<ID>==04012) || (<ID>==04013))
+ COLOR=060
+ REMOVE
+ serv.newitem i_deed_ship_long_N
+ new.BOUNCE
+ return 1
+ENDIF
+
+IF ((<ID>==04014) || (<ID>==04015) || (<ID>==04016) || (<ID>==04017))
+ COLOR=060
+ REMOVE
+ serv.newitem i_deed_ship_dragon_long_N
+ new.BOUNCE
+ return 1
+ENDIF
+
+ON=0 Nao, eu nao quero desmontar o barco
+	SRC.SYSMESSAGE=Menu cancelado
+
+[FUNCTION shipfix]
+LOCAL.LEFTOK=0
+LOCAL.TMP=<REF69>
+REF69=<UID>
+FORITEMS 18
+	IF (<TYPE>==t_ship_plank) && (<REGION.UID>==<REF69>)
+		DCLICK
+	ENDIF
+ENDFOR
+
+IF (<REF69.BASEID>==m_multi_ship_small_n) || (<REF69.BASEID>==m_multi_ship_dragon_small_n)
+	LOCAL.HATCH 0 -4 0
+	LOCAL.TILLERMAN 1 4 0
+	LOCAL.LEFTSIDE -2 0 0
+	LOCAL.RIGHTSIDE 2 0 0
+ELIF (<REF69.BASEID>==m_multi_ship_small_w) || (<REF69.BASEID>==m_multi_ship_dragon_small_w)
+	LOCAL.HATCH -4 0 0
+	LOCAL.TILLERMAN 4 0 0
+	LOCAL.LEFTSIDE 0 2 0
+	LOCAL.RIGHTSIDE 0 -2 0
+ELIF (<REF69.BASEID>==m_multi_ship_small_s) || (<REF69.BASEID>==m_multi_ship_dragon_small_s)
+	LOCAL.HATCH 0 4 0
+	LOCAL.TILLERMAN 0 -4 0
+	LOCAL.LEFTSIDE 2 0 0
+	LOCAL.RIGHTSIDE -2 0 0
+ELIF (<REF69.BASEID>==m_multi_ship_small_e) || (<REF69.BASEID>==m_multi_ship_dragon_small_e)
+	LOCAL.HATCH 4 0 0
+	LOCAL.TILLERMAN -4 0 0
+	LOCAL.LEFTSIDE 0 -2 0
+	LOCAL.RIGHTSIDE 0 2 0
+ELIF (<REF69.BASEID>==m_multi_ship_medium_n) || (<REF69.BASEID>==m_multi_ship_dragon_medium_n)
+	LOCAL.HATCH 0 -4 0
+	LOCAL.TILLERMAN 1 5 0
+	LOCAL.LEFTSIDE -2 0 0
+	LOCAL.RIGHTSIDE 2 0 0
+ELIF (<REF69.BASEID>==m_multi_ship_medium_w) || (<REF69.BASEID>==m_multi_ship_dragon_medium_w)
+	LOCAL.HATCH -4 0 0
+	LOCAL.TILLERMAN 5 0 0
+	LOCAL.LEFTSIDE 0 2 0
+	LOCAL.RIGHTSIDE 0 -2 0
+ELIF (<REF69.BASEID>==m_multi_ship_medium_s) || (<REF69.BASEID>==m_multi_ship_dragon_medium_s)
+	LOCAL.HATCH 0 4 0
+	LOCAL.TILLERMAN 0 -5 0
+	LOCAL.LEFTSIDE 2 0 0
+	LOCAL.RIGHTSIDE -2 0 0
+ELIF (<REF69.BASEID>==m_multi_ship_medium_e) || (<REF69.BASEID>==m_multi_ship_dragon_medium_e)
+	LOCAL.HATCH 4 0 0
+	LOCAL.TILLERMAN -5 0 0
+	LOCAL.LEFTSIDE 0 -2 0
+	LOCAL.RIGHTSIDE 0 2 0
+// Long Ships
+ELIF (<REF69.BASEID>==m_multi_ship_long_n) || (<REF69.BASEID>==m_multi_ship_dragon_long_n)
+	LOCAL.HATCH 0 -5 0
+	LOCAL.TILLERMAN 1 5 0
+	LOCAL.LEFTSIDE -2 -1 0
+	LOCAL.RIGHTSIDE 2 -1 0
+ELIF (<REF69.BASEID>==m_multi_ship_long_w) || (<REF69.BASEID>==m_multi_ship_dragon_long_w)
+	LOCAL.HATCH -5 0 0
+	LOCAL.TILLERMAN 5 0 0
+	LOCAL.LEFTSIDE -1 2 0
+	LOCAL.RIGHTSIDE -1 -2 0
+ELIF (<REF69.BASEID>==m_multi_ship_long_s) || (<REF69.BASEID>==m_multi_ship_dragon_long_s)
+	LOCAL.HATCH 0 5 0
+	LOCAL.TILLERMAN 0 -5 0
+	LOCAL.LEFTSIDE 2 1 0
+	LOCAL.RIGHTSIDE -2 1 0
+ELIF (<REF69.BASEID>==m_multi_ship_long_e) || (<REF69.BASEID>==m_multi_ship_dragon_long_e)
+	LOCAL.HATCH 5 0 0
+	LOCAL.TILLERMAN -5 0 0
+	LOCAL.LEFTSIDE 1 -2 0
+	LOCAL.RIGHTSIDE 1 2 0
+ENDIF
+FORITEMS 18
+	IF (<BASEID>==i_ship_hatch_e) && (<REGION.UID>==<REF69>)
+		IF (<LINK.MORE2>==00) || (<LINK.MORE2>==01) || (<LINK.MORE2>==02) //N
+			DISPID 03eae
+		ELIF (<LINK.MORE2>==02020000) || (<LINK.MORE2>==02020001) || (<LINK.MORE2>==02020002) // E
+			DISPID i_ship_hatch_e
+		ELIF (<LINK.MORE2>==04040000) || (<LINK.MORE2>==04040001) || (<LINK.MORE2>==04040002) // S
+			DISPID 03eb9
+		ELIF (<LINK.MORE2>==06060000) || (<LINK.MORE2>==06060001) || (<LINK.MORE2>==06060002) // W
+			DISPID 03e93
+		ENDIF
+
+		P=<LINK.P>
+		MOVE=<LOCAL.HATCH>
+	ENDIF
+
+	IF (<REGION.UID>==<REF69>) && (<TYPE>==t_ship_tiller)
+		IF (<LINK.MORE2>==00) || (<LINK.MORE2>==01) || (<LINK.MORE2>==02) // N
+			DISPID 03e4e
+		ELIF (<LINK.MORE2>==02020000) || (<LINK.MORE2>==02020001) || (<LINK.MORE2>==02020002) // E
+			DISPID 03e55
+		ELIF (<LINK.MORE2>==04040000) || (<LINK.MORE2>==04040001) || (<LINK.MORE2>==04040002) // S
+			DISPID 03e4b
+		ELIF (<LINK.MORE2>==06060000) || (<LINK.MORE2>==06060001) || (<LINK.MORE2>==06060002) // W
+			DISPID 03e50
+		ENDIF
+
+		P=<LINK.P>
+		MOVE <LOCAL.TILLERMAN>
+	ENDIF
+
+	IF (<REGION.UID>==<REF69>) && (<UID>!=<LOCAL.LEFTSIDEUID>) && (<id>==03eb2) || (<ID>==03e85) || (<ID>==03ed4)
+	IF (<TYPE>==t_ship_plank) && (<REGION.UID>==<REF69>)
+		DCLICK
+	ENDIF
+	IF (<LINK.MORE2>==00) || (<LINK.MORE2>==01) || (<LINK.MORE2>==02) // N
+		ID=03eb2
+	ELIF (<LINK.MORE2>==02020000) || (<LINK.MORE2>==02020001) || (<LINK.MORE2>==02020002) // E
+		ID=03e85
+	ELIF (<LINK.MORE2>==04040000) || (<LINK.MORE2>==04040001) || (<LINK.MORE2>==04040002) // S
+		ID=03eb2
+	ELIF (<LINK.MORE2>==06060000) || (<LINK.MORE2>==06060001) || (<LINK.MORE2>==06060002) // W
+	ID=03e85
+	ENDIF
+	P=<LINK.P>
+	MOVE <LOCAL.RIGHTSIDE>
+	LOCAL.RIGHTSIDEUID=<UID>
+	TIMER -1
+	UPDATE
+	ENDIF
+
+	IF (<REGION.UID>==<REF69>) && (<UID>!=<LOCAL.RIGHTSIDEUID>) && (<ID>==03eb1) || (<ID>==03e8a) || (<ID>==03ed4)
+		IF (<TYPE>==t_ship_plank) && (<REGION.UID>==<REF69>)
+			DCLICK
+		ENDIF
+		IF (<LINK.MORE2>==00) || (<LINK.MORE2>==01) || (<LINK.MORE2>==02) // N
+			ID=03eb1
+		ELIF (<LINK.MORE2>==02020000) || (<LINK.MORE2>==02020001) || (<LINK.MORE2>==02020002) // E
+			ID=03e8a
+		ELIF (<LINK.MORE2>==04040000) || (<LINK.MORE2>==04040001) || (<LINK.MORE2>==04040002) // S
+			ID=03eb1
+		ELIF (<LINK.MORE2>==06060000) || (<LINK.MORE2>==06060001) || (<LINK.MORE2>==06060002) // W
+			ID=03e8a
+		ENDIF
+		P=<LINK.P>
+		MOVE <LOCAL.LEFTSIDE>
+		LOCAL.LEFTSIDEUID=<UID>
+		TIMER -1
+		UPDATE
+	ENDIF
+ENDFOR
+REF69=<local.tmp>
+
+
+// [Comment Navios_antigos_sphere56b]
+// [MULTIDEF 00]
+// // Face N
+// DEFNAME=M_multi_ship_small_n
+// Name=Small Ship
+// TYPE=T_SHIP
+// VALUE=14000
+// CATEGORY=Multis
+// SUBSECTION=Ships
+// DESCRIPTION=Small Ship
+// MULTIREGION=-2,-5,2,5
+// COMPONENT=03e4e,1, 4	// tiller.
+// COMPONENT=i_ship_hatch_n,0,-4	// hatch
+// COMPONENT=03eb2,2,0		// plank
+// COMPONENT=03eb1,-2,0	// plank
+// TSPEECH=spk_ship_cmds
+
+// [MULTIDEF 01]
+// // Face E
+// DEFNAME=m_multi_ship_small_e
+// Name=Small Ship
+// TYPE=T_SHIP
+// VALUE=14000
+// CATEGORY=Multis
+// SUBSECTION=Ships
+// DESCRIPTION=Small Ship
+// MULTIREGION=-5,-2,5,2
+// COMPONENT=03e55,-4,0
+// COMPONENT=i_ship_hatch_e,4, 0
+// COMPONENT=03e85,0, 2
+// COMPONENT=03e8a,0,-2
+// TSPEECH=spk_ship_cmds
+
+// [MULTIDEF 02]
+// // Face S
+// DEFNAME=m_multi_ship_small_s
+// Name=Small Ship
+// TYPE=T_SHIP
+// VALUE=14000
+// CATEGORY=Multis
+// SUBSECTION=Ships
+// DESCRIPTION=Small Ship
+// MULTIREGION=-2,-5,2,5
+// COMPONENT=03e4b,0, -4
+// COMPONENT=i_ship_hatch_s,0,  4
+// COMPONENT=03eb2,2,  0
+// COMPONENT=03eb1,-2, 0
+// TSPEECH=spk_ship_cmds
+
+// [MULTIDEF 03]
+// // Face W
+// DEFNAME=m_multi_ship_small_w
+// Name=Small Ship
+// TYPE=T_SHIP
+// VALUE=14000
+// CATEGORY=Multis
+// SUBSECTION=Ships
+// DESCRIPTION=Small Ship
+// MULTIREGION=-5,-2,5,2
+// COMPONENT=03e50,4, 0
+// COMPONENT=i_ship_hatch_w,-4,0
+// COMPONENT=03e85,0, 2
+// COMPONENT=03e8a,0,-2
+// TSPEECH=spk_ship_cmds
+
+// [MULTIDEF 04]
+// // Face N
+// DEFNAME=m_multi_ship_dragon_small_n
+// Name=Small Dragon Ship
+// TYPE=T_SHIP
+// VALUE=14500
+// CATEGORY=Multis
+// SUBSECTION=Ships
+// DESCRIPTION=Small Dragon Ship
+// MULTIREGION=-2,-5,2,5
+// COMPONENT=03e4e,1, 4, 0
+// COMPONENT=i_ship_hatch_n,0,-4, 0
+// COMPONENT=03eb2,2, 0, 0
+// COMPONENT=03eb1,-2, 0, 0
+// TSPEECH=spk_ship_cmds
+
+// [MULTIDEF 05]
+// // Face E
+// DEFNAME=m_multi_ship_dragon_small_e
+// Name=Small Dragon Ship
+// TYPE=T_SHIP
+// VALUE=14500
+// CATEGORY=Multis
+// SUBSECTION=Ships
+// DESCRIPTION=a mast
+// MULTIREGION=-5,-2,5,2
+// COMPONENT=03e55,-4,0
+// COMPONENT=i_ship_hatch_e,4, 0
+// COMPONENT=03e85,0, 2
+// COMPONENT=03e8a,0,-2
+// TSPEECH=spk_ship_cmds
+
+// [MULTIDEF 06]
+// // Face S
+// DEFNAME=m_multi_ship_dragon_small_s
+// Name=Small Dragon Ship
+// TYPE=T_SHIP
+// VALUE=14500
+// CATEGORY=Multis
+// SUBSECTION=Ships
+// DESCRIPTION=Small Dragon Ship
+// MULTIREGION=-2,-5,2,5
+// COMPONENT=03e4b,0, -4
+// COMPONENT=i_ship_hatch_s,0,  4
+// COMPONENT=03eb2,2,  0
+// COMPONENT=03eb1,-2, 0
+// TSPEECH=spk_ship_cmds
+
+// [MULTIDEF 07]
+// // Face W
+// DEFNAME=m_multi_ship_dragon_small_w
+// Name=Small Dragon Ship
+// TYPE=T_SHIP
+// VALUE=14500
+// CATEGORY=Multis
+// SUBSECTION=Ships
+// DESCRIPTION=Small Dragon Ship
+// MULTIREGION=-5,-2,5,2
+// COMPONENT=03e50,4, 0
+// COMPONENT=i_ship_hatch_w,-4,0
+// COMPONENT=03e85,0, 2
+// COMPONENT=03e8a,0,-2
+// TSPEECH=spk_ship_cmds
+
+// [MULTIDEF 04008]
+// // Face N
+// DEFNAME=m_multi_ship_medium_n
+// Name=Medium Ship
+// TYPE=T_SHIP
+// VALUE=16000
+// CATEGORY=Multis
+// SUBSECTION=Ships
+// DESCRIPTION=Medium Ship
+// MULTIREGION=-2,-6,2,6
+// COMPONENT=03e4e,1, 5, 0
+// COMPONENT=i_ship_hatch_n,0,-4, 0
+// COMPONENT=03eb2,2, 0, 0
+// COMPONENT=03eb1,-2, 0, 0
+// TSPEECH=spk_ship_cmds
+
+// [MULTIDEF 04009]
+// // Face E
+// DEFNAME=m_multi_ship_medium_e
+// Name=Medium Ship
+// TYPE=T_SHIP
+// VALUE=16000
+// CATEGORY=Multis
+// SUBSECTION=Ships
+// DESCRIPTION=Medium Ship
+// MULTIREGION=-6,-2,6,2
+// COMPONENT=03e55,-5,0, 0
+// COMPONENT=i_ship_hatch_e,4, 0, 0
+// COMPONENT=03e85,0, 2, 0
+// COMPONENT=03e8a,0,-2, 0
+// TSPEECH=spk_ship_cmds
+
+// [MULTIDEF 0400a]
+// // Face S
+// DEFNAME=m_multi_ship_medium_s
+// Name=Medium Ship
+// TYPE=T_SHIP
+// VALUE=16000
+// CATEGORY=Multis
+// SUBSECTION=Ships
+// DESCRIPTION=Medium Ship
+// MULTIREGION=-2,-6,2,5
+// COMPONENT=03e4b,0,-5,0
+// COMPONENT=i_ship_hatch_s,0,4,0
+// COMPONENT=03eb2,2,0,0
+// COMPONENT=03eb1,-2,0,0
+// TSPEECH=spk_ship_cmds
+
+// [MULTIDEF 0400b]
+// // Face W
+// DEFNAME=m_multi_ship_medium_w
+// Name=Medium Ship
+// TYPE=T_SHIP
+// VALUE=16000
+// CATEGORY=Multis
+// SUBSECTION=Ships
+// DESCRIPTION=Medium Ship
+// MULTIREGION=-6,-2,6,2
+// COMPONENT=03e50,5, 0,0
+// COMPONENT=i_ship_hatch_w,-4,0,0
+// COMPONENT=03e85,0, 2,0
+// COMPONENT=03e8a,0,-2,0
+// TSPEECH=spk_ship_cmds
+
+// [MULTIDEF 0400c]
+// // Face N
+// DEFNAME=m_multi_ship_dragon_medium_n
+// Name=Medium Dragon Ship
+// TYPE=T_SHIP
+// VALUE=16500
+// CATEGORY=Multis
+// SUBSECTION=Ships
+// DESCRIPTION=Medium Dragon Ship
+// MULTIREGION=-2,-6,2,6
+// COMPONENT=03e4e,1, 5, 0
+// COMPONENT=i_ship_hatch_n,0,-4, 0
+// COMPONENT=03eb2,2, 0, 0
+// COMPONENT=03eb1,-2, 0, 0
+// TSPEECH=spk_ship_cmds
+
+// [MULTIDEF 0400d]
+// // Face E
+// DEFNAME=m_multi_ship_dragon_medium_e
+// Name=Medium Dragon Ship
+// TYPE=T_SHIP
+// VALUE=16500
+// CATEGORY=Multis
+// SUBSECTION=Ships
+// DESCRIPTION=Medium Dragon Ship
+// MULTIREGION=-6,-2,6,2
+// COMPONENT=i_ship_tillerman,-5,0, 0
+// COMPONENT=i_ship_hatch_e,4, 0, 0
+// COMPONENT=03e87,0, 2, 0
+// COMPONENT=03e8a,0,-2, 0
+// TSPEECH=spk_ship_cmds
+
+// [MULTIDEF 0400e]
+// // Face S
+// DEFNAME=m_multi_ship_dragon_medium_s
+// Name=Medium Dragon Ship
+// TYPE=T_SHIP
+// VALUE=16500
+// CATEGORY=Multis
+// SUBSECTION=Ships
+// DESCRIPTION=Medium Dragon Ship
+// MULTIREGION=-2,-6,2,5
+// COMPONENT=03e4b,0, -5,0
+// COMPONENT=i_ship_hatch_s,0,  4,0
+// COMPONENT=03ea9,2,  0,0
+// COMPONENT=03eb1,-2, 0,0
+// TSPEECH=spk_ship_cmds
+
+// [MULTIDEF 0400f]
+// // Face W
+// DEFNAME=m_multi_ship_dragon_medium_w
+// Name=Medium Dragon Ship
+// TYPE=T_SHIP
+// VALUE=16500
+// CATEGORY=Multis
+// SUBSECTION=Ships
+// DESCRIPTION=Medium Dragon Ship
+// MULTIREGION=-6,-2,6,2
+// COMPONENT=03e50,5, 0
+// COMPONENT=i_ship_hatch_w,-4,0
+// COMPONENT=03e87,0, 2
+// COMPONENT=03e8a,0,-2
+// TSPEECH=spk_ship_cmds
+
+// [MULTIDEF 04010]
+// // Face N
+// DEFNAME=m_multi_ship_long_n
+// Name=Long Ship
+// TYPE=T_SHIP
+// VALUE=18000
+// CATEGORY=Multis
+// SUBSECTION=Ships
+// DESCRIPTION=Long Ship
+// MULTIREGION=-2,-7,2,7
+// COMPONENT=03e4e,1, 5, 0
+// COMPONENT=i_ship_hatch_n,0,-5, 0
+// COMPONENT=03eb2,2, -1, 0
+// COMPONENT=03eb1,-2, -1, 0
+// TSPEECH=spk_ship_cmds
+
+// [MULTIDEF 04011]
+// // Face E
+// DEFNAME=m_multi_ship_long_e
+// Name=Long Ship
+// TYPE=T_SHIP
+// VALUE=18000
+// CATEGORY=Multis
+// SUBSECTION=Ships
+// DESCRIPTION=Long Ship
+// MULTIREGION=-7,-2,7,2
+// COMPONENT=03e55,-5,0, 0
+// COMPONENT=i_ship_hatch_e,5, 0, 0
+// COMPONENT=03e85,1, 2, 0
+// COMPONENT=03e8a,1,-2, 0
+// TSPEECH=spk_ship_cmds
+
+// [MULTIDEF 04012]
+// // Face S
+// DEFNAME=m_multi_ship_long_s
+// Name=Long Ship
+// TYPE=T_SHIP
+// VALUE=18000
+// CATEGORY=Multis
+// SUBSECTION=Ships
+// DESCRIPTION=Long Ship
+// MULTIREGION=-2,-7,2,5
+// COMPONENT=03e4b,0, -5,0
+// COMPONENT=i_ship_hatch_s,0, 5,0
+// COMPONENT=03eb2,2, 1,0
+// COMPONENT=03eb1,-2, 1,0
+// TSPEECH=spk_ship_cmds
+
+// [MULTIDEF 04013]
+// // Face W
+// DEFNAME=m_multi_ship_long_w
+// Name=Long Ship
+// TYPE=T_SHIP
+// VALUE=18000
+// CATEGORY=Multis
+// SUBSECTION=Ships
+// DESCRIPTION=Long Ship
+// MULTIREGION=-7,-2,7,2
+// COMPONENT=03e50,5, 0,0
+// COMPONENT=i_ship_hatch_w,-5,0,0
+// COMPONENT=03e85,-1, 2,0
+// COMPONENT=03e8a,-1,-2,0
+// TSPEECH=spk_ship_cmds
+
+// [MULTIDEF 04014]
+// // Face N
+// DEFNAME=m_multi_ship_dragon_long_n
+// Name=Long Dragon Ship
+// TYPE=T_SHIP
+// VALUE=18500
+// CATEGORY=Multis
+// SUBSECTION=Ships
+// DESCRIPTION=Long Dragon Ship
+// MULTIREGION=-2,-7,2,7
+// COMPONENT=03e4e,1, 5, 0
+// COMPONENT=i_ship_hatch_n,0,-5, 0
+// COMPONENT=03eb2,2, -1, 0
+// COMPONENT=03eb1,-2, -1, 0
+// TSPEECH=spk_ship_cmds
+
+// [MULTIDEF 04015]
+// // Face E
+// DEFNAME=m_multi_ship_dragon_long_e
+// Name=Long Dragon Ship
+// TYPE=T_SHIP
+// VALUE=18500
+// CATEGORY=Multis
+// SUBSECTION=Ships
+// DESCRIPTION=Long Dragon Ship
+// MULTIREGION=-7,-2,7,2
+// COMPONENT=03e55,-5,0, 0
+// COMPONENT=i_ship_hatch_e,5, 0, 0
+// COMPONENT=03e85,1, 2, 0
+// COMPONENT=03e8a,1,-2, 0
+// TSPEECH=spk_ship_cmds
+
+// [MULTIDEF 04016]
+// // Face S
+// DEFNAME=m_multi_ship_dragon_long_s
+// Name=Long Dragon Ship
+// TYPE=T_SHIP
+// VALUE=18500
+// CATEGORY=Multis
+// SUBSECTION=Ships
+// DESCRIPTION=Long Dragon Ship
+// MULTIREGION=-2,-7,2,5
+// COMPONENT=03e4b,0, -5,0
+// COMPONENT=i_ship_hatch_s,0, 5,0
+// COMPONENT=03eb2,2, 1,0
+// COMPONENT=03eb1,-2, 1,0
+// TSPEECH=spk_ship_cmds
+
+// [MULTIDEF 04017]
+// // Face W
+// DEFNAME=m_multi_ship_dragon_long_w
+// Name=Long Dragon Ship
+// TYPE=T_SHIP
+// VALUE=18500
+// CATEGORY=Multis
+// SUBSECTION=Ships
+// DESCRIPTION=Long Dragon Ship
+// MULTIREGION=-7,-2,7,2
+// COMPONENT=03e50,5, 0,0
+// COMPONENT=i_ship_hatch_w,-5,0,0
+// COMPONENT=03e85,-1, 2,0
+// COMPONENT=03e8a,-1,-2,0
+// TSPEECH=spk_ship_cmds
+
+[eof]

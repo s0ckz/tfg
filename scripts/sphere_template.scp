@@ -1,0 +1,1018 @@
+//****************************************************************************
+//SPHERE by : Menasoft �1997-2004
+//www.sphereserver.com
+// All SPHERE script files and formats are copyright Menasoft & Partners.
+// This file may be freely edited for personal use, but may not be distributed
+// in whole or in part, in any format without express written permission from
+// Menasoft & Partners.  All donations and contributions
+// become the property of Menasoft & Partners.
+//****************************************************************************
+// FILE LAST UPDATED: Saturday, November 15, 2003
+// Changed all [template xxx] to [template blah] formats. Removed defnames since they're now repetitive.
+VERSION=0.55i
+
+///////////////////////////////////////////////////////
+//// ITENS TIRADOS DO SPHERE_DEFS E COLOCADOS AQUI ////
+//////////////////////////////////////////////////////
+
+[defname items_templates]
+random_coin_purse      { backpack_poor 1 backpack_meager 1 backpack_average 1 backpack_rich 1 }
+random_gold_pile       { poor_gold_pile 1 meager_gold_pile 1 average_gold_pile 1 rich_gold_pile 1 filthy_rich_gold_pile 1 }
+random_ptrues          { i_fire_p 1 i_ice_p 1 i_night_p 1 i_green_p 1 i_heaven_p 1 i_lava_p 1 i_magma_p 1 i_metal_p 1 i_water_p 1 i_purple_p 1 i_lgreen_p 1 }
+
+[defname items_hair]
+random_female_hair      { i_hair_short 1 i_hair_long 1 i_hair_ponytail 1 i_hair_pageboy 1 i_hair_buns 1 i_hair_afro 1 i_hair_receding 1 i_hair_2_pigtails 1 i_hair_krisna 1 }
+random_male_hair        { i_hair_short 1 i_hair_long 1 i_hair_ponytail 1 i_hair_mohawk 1 i_hair_pageboy 1 i_hair_afro 1 i_hair_receding 1 i_hair_2_pigtails 1 i_hair_krisna 1 }
+random_facial_hair      { i_beard_long 1 i_beard_short 1 i_beard_goatee 1 i_beard_mustache 1 i_beard_short_med 1 i_beard_long_med 1 i_beard_vandyke 1 }
+
+[defname items_clothing]
+random_hats            { i_floppy_hat 1 i_wide_brim_hat 1 i_cap 1 i_tall_straw_hat 1 i_straw_hat 1 i_wizards_hat 1 i_bonnet 1 i_feathered_hat 1 i_bandana 1 i_skull_cap 1 }
+random_over_armor      { i_tunic 1 i_doublet 1 i_sash 1 }
+random_female_tops     { i_shirt_plain 1 i_shirt_fancy 1 i_doublet 1 i_tunic 1 i_dress_full 1 i_dress_plain 1 i_robe 1 }
+random_female_pants    { i_pants_short 1 i_pants_long 1 i_kilt 1 i_skirt_long 1 i_dress_full 1 i_dress_plain 1 }
+random_masks           { i_helm_orc 1 i_mask_bear 1 i_mask_deer 1 i_mask_orc 1 i_mask_tribal_red 1 i_mask_blue 1 }
+random_boots           { i_boots_thigh 1 i_boots_calf 1 }
+random_male_pants      { i_pants_short 1 i_pants_long 1 i_kilt 1 }
+random_male_tops       { i_shirt_plain 1 i_pants_long 1 i_doublet 1 i_tunic 1 i_robe 1 }
+random_shoes           { i_shoes_plain 1 i_sandals 1 i_boots_calf 1 }
+random_footwear        { i_boots_thigh 1 i_boots_calf 1 i_shoes_plain 1 i_sandals 1 }
+random_pants           { i_pants_short 1 i_pants_long 1 }
+random_skirt           { i_skirt_long 1 i_kilt 1 i_skirt_short 1 }
+
+//56dstuff//layer_shoes
+random_footwear_all    { i_boots_calf 1 i_sandals 1 i_shoes_plain 1 i_boots_thigh 1 i_boots_fur 1 }
+random_footwear_human  { i_boots_calf 1 i_sandals 1 i_shoes_plain 1 i_boots_thigh 1 i_boots_fur 1 }
+random_footwear_elven    i_elven_boots
+random_footwear_gargoyle i_gargish_leather_talons
+random_boots_all       { i_boots_calf 1 i_boots_thigh 1 i_boots_fur 1 }
+random_boots_human     { i_boots_calf 1 i_boots_thigh 1 i_boots_fur 1 }
+random_boots_elven       i_elven_boots
+
+//layer_pants
+random_pants_all       { i_pants_short 1 i_pants_long 1 }
+random_pants_human     { i_pants_short 1 i_pants_long 1 }
+random_pants_elven       i_elven_pants
+random_pants_gargoyle  { i_gargish_cloth_leggings_female 1 i_gargish_leather_leggings_female 1 i_gargish_cloth_kilt_female 1 i_gargish_leather_kilt_female 1 i_gargish_cloth_leggings 1 i_gargish_leather_leggings 1 i_gargish_cloth_kilt 1 i_gargish_leather_kilt 1 i_gargish_leather_belt 1 }
+
+//layer_shirt
+random_shirts_all      { i_shirt_plain 1 i_shirt_fancy 1 }
+random_shirts_human    { i_shirt_plain 1 i_shirt_fancy 1 }
+random_shirts_elven    { i_elven_shirt 1 i_elven_shirt_female 1 }
+random_shirts_gargoyle { i_gargish_cloth_chest_female 1 i_gargish_cloth_chest 1 i_gargish_leather_wings 1 i_gargish_cloth_wings 1 i_gargish_sash_female 1 i_gargish_sash 1 }
+
+//layer_helm
+random_headgear_all    { i_mask_orc 1 i_bandana 1 i_skull_cap 1 i_mask_bear 1 i_mask_deer 1 i_mask_blue 1 i_mask_tribal_red 1 i_hat_floppy 1 i_hat_wide_brim 1 i_cap 1 i_hat_straw_tall 1 i_hat_straw 1 i_hat_wizards 1 i_bonnet 1 i_hat_feather 1 i_hat_tricorne 1 i_hat_jester 1 i_hat_kasa 1 i_hood_ninja 1 i_helm_garland 1 i_helm_circlet1 1 i_helm_circlet2 1 i_helm_circlet3 1 }
+random_headgear_human  { i_mask_orc 1 i_bandana 1 i_skull_cap 1 i_mask_bear 1 i_mask_deer 1 i_mask_blue 1 i_mask_tribal_red 1 i_hat_floppy 1 i_hat_wide_brim 1 i_cap 1 i_hat_straw_tall 1 i_hat_straw 1 i_hat_wizards 1 i_bonnet 1 i_hat_feather 1 i_hat_tricorne 1 i_hat_jester 1 i_hat_kasa 1 i_hood_ninja 1 }
+random_headgear_elven  { i_helm_garland 1 i_helm_circlet1 1 i_helm_circlet2 1 i_helm_circlet3 1 }
+
+//layer_skirt
+random_skirts_all      { i_skirt_long 1 i_skirt_short 1 i_kilt 1 i_sarong_fur 1 i_hakama 1 i_gargish_cloth_kilt_female 1 i_gargish_cloth_kilt 1 }
+random_skirts_human    { i_skirt_long 1 i_skirt_short 1 i_kilt 1 i_sarong_fur 1 i_hakama 1 }
+random_skirts_gargoyle { i_gargish_cloth_kilt_female 1 i_gargish_leather_kilt_female 1 i_gargish_cloth_kilt 1 i_gargish_leather_kilt 1 }
+
+//layer_half_apron
+random_aprons_all      { i_apron_half 1 i_belt_ninja_leather 1 i_obi 1 i_woodland_belt 1 }
+random_aprons_human    { i_apron_half 1 i_belt_ninja_leather 1 i_obi 1 }
+random_aprons_elven      i_woodland_belt
+random_aprons_gargoyle   i_gargish_apron
+
+//layer_arms
+random_arms_gargoyle   { i_gargish_cloth_arms_female 1 i_gargish_leather_arms_female 1 i_gargish_cloth_arms 1 i_gargish_leather_arms 1 }
+
+//layer_chest
+random_chests_human    i_jacket_ninja
+random_chests_gargoyle { i_gargish_cloth_chest_female 1 i_gargish_leather_chest_female 1 i_gargish_cloth_chest 1 i_gargish_leather_chest 1 }
+
+//layer_tunic
+random_tunics_all      { i_apron_full 1 i_sash 1 i_doublet 1 i_jester_suit 1 i_tunic 1 i_surcoat 1 i_shirt_formal 1 i_jinbaori 1 }
+// i_shirt_formal 1 i_jinbaori 1
+random_tunics_manly    { i_sash 1 i_doublet 1 i_tunic 1 i_surcoat 1 }
+
+//layer_robe
+random_robes_all       { i_dress_full 1 i_dress_plain 1 i_robe 1 i_dress_gilded 1 i_robe2 1 i_dress_fancy2 1 i_dress_fancy3 1 i_dress_long 1 i_kimono_male 1 i_kimono_female2 1 i_kamishimo 1 i_hakama_shita 1 i_elven_male_robe1 1 i_elven_male_robe2 1 }
+random_robes_human     { i_dress_full 1 i_dress_plain 1 i_robe 1 i_dress_gilded 1 i_robe2 1 i_dress_fancy2 1 i_dress_fancy3 1 i_dress_long 1 i_kimono_male 1 i_kimono_female2 1 i_kamishimo 1 i_hakama_shita 1 }
+random_robes_elven     { i_elven_male_robe1 1 i_elven_male_robe2 1 }
+random_robes_gargoyle  { i_gargish_robe 1 i_gargish_robe_fancy 1 }
+random_robes_manly     { i_robe 1 i_robe2 1 i_kimono_male 1 i_kamishimo 1 i_hakama_shita 1 i_elven_male_robe1 1 i_elven_male_robe2 1 }
+random_dresses         { i_dress_full 1 i_dress_plain 1 i_dress_gilded 1 i_dress_fancy2 1 i_dress_fancy3 1 i_dress_long 1 i_kimono_female2 1 }
+
+//layer_cape
+random_capes_all       { i_cape 1 i_cape_fur 1 }
+
+//layer_talisman
+random_talisman        { i_talisman1 1 i_talisman2 1 i_talisman3 1 i_talisman4 1 }
+
+[defname items_armor]
+random_leg_armor       { i_platemail_leggings 1 i_chainmail_leggings 1 i_leather_leggings 1 }
+random_arm_armor       { i_platemail_arms 1 i_leather_sleeves 1 }
+random_gloves          { i_platemail_gloves 1 i_leather_gloves 1 }
+random_shield          { i_shield_buckler 1i_shield_heater 1 i_shield_wood 1  }
+random_head_armor      { i_chainmail_coif 1 i_helm_closed 1 i_helm_open 1 i_helm_nose 1 i_bascinet 1 i_platemail_helm 1 }
+random_helmet          { i_helm_closed 1 i_helm_open 1 i_bascinet 1 i_helm_nose 1 i_platemail_helm 1 }
+random_chest_armor     { i_platemail_chest 1 i_chainmail_tunic 1 i_leather_tunic 1 }
+random_gorget          { i_platemail_gorget 1 i_leather_gorget 1 }
+
+[defname items_weapons]
+random_start_weapon    { i_axe_battle 1 i_sword_long 1 i_mace 1 }
+random_axe             { i_axe_exec 1 i_axe_battle 1 i_hatchet 1 i_axe 1 i_axe_double 1 i_axe_two_hand 1 i_axe_war 1 }
+random_pole_arm        { i_bardiche 1 i_spear_short 1 i_spear 1 i_war_fork 1 i_hammer_pick 1 }
+random_mace            { i_club 1 i_mace_war 1 i_mace 1 i_maul 1 i_hammer_war 1 }
+random_sword           { i_cutlass 1 i_halberd 1 i_katana 1 i_sword_broad 1 i_sword_long 1 i_sword_long_b 1 i_sword_viking 1 i_scimitar 1 }
+random_staff           { i_staff_gnarled 1 i_staff_quarter 1 }
+random_dagger          { i_dagger 1 i_kryss 1 }
+random_missile         { i_bow 1 i_crossbow 1 i_crossbow_heavy 1 }
+random_weapon          { random_axe 7 random_pole_arm 5 random_mace 5 random_sword 8 random_staff 2 random_dagger 2 random_missile 3 }
+
+[defname items_other]
+random_light			{ i_candle 1 i_torch 1 i_lantern 1 }
+random_fishing_junk		{ i_fishing_weight 1 i_fishing_pole 1 i_fish_cut_raw 1 i_fish_raw_head 1 i_fish_small 1 i_fish_big_1 1 i_fish_big_2 1 i_fish_big_3 1 i_fish_big_4 1 }
+
+[defname potions]
+random_potion			{ i_bottle_empty 1 i_potion_refresh 1 i_potion_agility 1 i_potion_nightsight 1 i_potion_heal 1 i_potion_strength 1 i_potion_poison 1 i_potion_cure 1 i_potion_explosion 1 }
+
+[defname reagents]
+random_reagent         { i_reag_black_pearl 1 i_reag_blood_moss 1 i_reag_garlic 1 i_reag_ginseng 1 i_reag_mandrake_root 1 i_reag_nightshade 1 i_reag_sulfur_ash 1 i_reag_spider_silk 1 }
+
+[defname items_misc]
+random_instrument      { i_drum 1 i_tambourine 1 i_lyre 1 i_lute 1 }
+
+[defname items_jewels]
+random_necklace        { i_necklace_silver_beads 1 i_necklace_gold_beads 1 i_necklace_gold 1 i_necklace_silver 1 }
+random_jewel           { i_gem_star_sapphire 1 i_gem_emerald 1 i_gem_sapphire 1 i_gem_ruby 1 i_gem_citrine 1 i_gem_amethyst 1 i_gem_tourmaline 1 i_gem_amber 1 i_gem_diamond 1 }
+
+[defname items_food]
+random_bread           { i_bread_loaf 1 i_bread_french 1 }
+random_other_food      { i_pie_baked 1 i_cake 1 i_muffin 1 i_jar_honey 1 i_pizza 1 i_cheese_wheel 1 }
+random_meat            { i_chicken_leg 1 i_lamb_leg 1 i_bird_cooked 1 i_ham 1 i_lamb_leg_raw 1 i_bird_raw 1 i_ribs_raw 1 i_ribs_cooked 1 i_bacon_slice 1 i_sausages 1 }
+random_veggie          { i_fruit_cabbage 1 i_fruit_carrot 1 i_fruit_corn 1 i_fruit_gourd1 1 i_fruit_gourd2 1 i_fruit_lettuce 1 i_fruit_onion 1 i_fruit_pumpkin 1 i_fruit_squash 1 i_fruit_turnip 1 }
+random_pitcher         { i_pitcher_ale 1 i_pitcher_cider 1 i_pitcher_glass 1 i_pitcher_liquor 1 i_pitcher_milk 1 i_pitcher_wine 1 i_pitcher_water 1 }
+random_bottle          { i_bottle_ale 1 i_bottle_wine 1 i_bottle_liquor 1 i_jug_cider 1 }
+random_fruit           { i_fruit_dates 1 i_fruit_peach 1 i_fruit_pear 1 i_fruit_lemon 1 i_fruit_lime 1 i_fruit_grapes 1 i_fruit_apple 1 i_fruit_banana 1 i_fruit_coconut 1 i_fruit_cantelope 1 i_fruit_honeydewmelon 1 i_fruit_watermelon 1 }
+random_food            { random_meat 1 random_bread 1 random_veggie 1 random_fruit 1 random_other_food 1 }
+
+[defname items_containers]
+random_chest           { i_chest_metal_brass 1 i_chest_metal 1 i_chest_wooden_brass 1 }
+random_crate           { i_crate_lg 1 i_crate_md 1 i_crate_small 1 }
+random_container       { i_barrel 1 i_barrel_open 1 random_crate 3 random_chest 4 }
+
+// items (scrolls)
+[defname items_scrolls]
+random_scroll          { random_lower_scroll 1 random_upper_scroll 1 }
+random_lower_scroll    { random_first_circle 1 random_second_circle 1 random_third_circle 1 random_fourth_circle 1 }
+random_upper_scroll    { random_fifth_circle 1 random_sixth_circle 1 random_seventh_circle 1 random_eighth_circle 1 }
+
+random_first_circle    { i_scroll_reactive_armor 1 i_scroll_clumsy 1 i_scroll_create_food 1 i_scroll_feeblemind 1 i_scroll_heal 1 i_scroll_magic_arrow 1 i_scroll_night_sight 1 i_scroll_weaken 1 }
+random_second_circle   { i_scroll_agility 1 i_scroll_cunning 1 i_scroll_cure 1 i_scroll_harm 1 i_scroll_magic_trap 1 i_scroll_magic_untrap 1 i_scroll_protection 1 i_scroll_strength 1 }
+random_third_circle    { i_scroll_bless 1 i_scroll_fireball 1 i_scroll_magic_lock 1 i_scroll_poison 1 i_scroll_telekinesis 1 i_scroll_teleport 1 i_scroll_unlock 1 i_scroll_wall_of_stone 1 }
+random_fourth_circle   { i_scroll_archcure 1 i_scroll_archprotection 1 i_scroll_curse 1 i_scroll_fire_field 1 i_scroll_greater_heal 1 i_scroll_lightning 1 i_scroll_mana_drain 1 i_scroll_recall 1 }
+random_fifth_circle    { i_scroll_blade_spirits 1 i_scroll_dispel_field 1 i_scroll_incognito 1 i_scroll_magic_reflection 1 i_scroll_mind_blast 1 i_scroll_paralyze 1 i_scroll_poison_field 1 i_scroll_summon_creature 1 }
+random_sixth_circle    { i_scroll_dispel 1 i_scroll_energy_bolt 1 i_scroll_explosion 1 i_scroll_invisibility 1 i_scroll_mark 1 i_scroll_mass_curse 1 i_scroll_paralyze_field 1 i_scroll_reveal 1 }
+random_seventh_circle  { i_scroll_chain_lightning 1 i_scroll_energy_field 1 i_scroll_flamestrike 1 i_scroll_gate_travel 1 i_scroll_mana_vampire 1 i_scroll_mass_dispel 1 i_scroll_meteor_swarm 1 i_scroll_polymorph 1 }
+random_eighth_circle   { i_scroll_earthquake 1 i_scroll_energy_vortex 1 i_scroll_resurrection 1 i_scroll_summon_elem_air 1 i_scroll_summon_daemon 1 i_scroll_summon_elem_earth 1 i_scroll_summon_elem_fire 1 i_scroll_summon_elem_water 1 }
+
+//*******************************************************************
+//items - random item spawns
+[defname items_random_spawns]
+random_all_items  { random_weapons 3 random_armor 3 random_scroll 3 random_targetables 2 random_wearables 2 random_activators 1 random_reagents 1 }
+
+// items - armor
+[defname items_random_armor]
+random_all_armor           { random_body_armor 1 random_extra_armor 1 random_helms 1 random_coifs 1 }
+random_armor               { random_body_armor 1 random_extra_armor 1 }
+random_extra_armor         { random_shields 1 }
+random_head_armor          { random_helms 1 random_coifs 1 }
+random_body_armor          { random_chest_armor 1 random_leg_armor 1 random_arm_armor 1 random_neck_armor 1 random_head_armor 1 random_hand_armor 1 }
+random_chest_armor         { random_chest_armor_male 2 random_chest_armor_female 1 }
+random_leg_armor           { random_leg_armor_male 2 random_leg_armor_female 1 }
+
+random_chest_armor_male    { i_bone_chest 1 i_chainmail_tunic 10 i_leather_tunic 30 i_platemail_chest 5 }
+random_chest_armor_female  { i_armor_female_plate 3 i_armor_female_leather 9 }
+random_leg_armor_male      { i_bone_leggings 1 i_chainmail_leggings 10 i_leather_leggings 30 i_platemail_leggings 5 }
+random_leg_armor_female    { i_armor_female_shorts 5 i_armor_female_skirt 5 i_armor_female_bustier 5 }
+random_arm_armor           { i_bone_arms 1 i_leather_sleeves 30 i_platemail_arms 5 }
+random_neck_armor          { i_leather_gorget 3 i_platemail_gorget 1 }
+random_helms               { i_platemail_helm 3 i_bone_helmet 1 i_helm_nose 2 } // i_closed, i_open , i_bascinet,
+random_coifs               { i_chainmail_coif 4 i_helm_closed 6 }
+random_hand_armor          { i_bone_gloves 3 i_leather_gloves 50 i_platemail_gloves 7 }
+random_shields             { i_shield_wood 3 i_shield_buckler 2 i_shield_heater 1 }
+
+//******************************************************************************// items - weapons
+[defname items_random_weapons]
+random_weapons             { random_everyday_weapons 1 random_real_weapons 5 }
+random_real_weapons        { random_blunt_weapons 1 random_edged_weapons 1 random_ranged_weapons 1 }
+random_blunt_weapons       { random_cudgels 1 random_maces 1 random_hammers 1 }
+random_edged_weapons       { random_axes 1 random_swords 1 random_pole_arms 1 random_daggers 1 }
+
+random_everyday_weapons    { i_pickaxe 5 i_pitchfork 1 i_staff_quarter 5 i_cleaver_meat 1 i_knife_skinning 1 i_shepherds_crook 2 i_knife_butcher 1 }
+random_cudgels             { i_staff_quarter 3 i_club 4 }
+random_maces               { i_maul 1 i_mace_war 5 i_mace 14 }
+random_hammers             { i_hammer_pick 1 i_hammer_war 4 }
+random_axes                { i_axe_war 1 i_hatchet 2 i_axe_battle 6 i_axe 8 i_axe_double 3 }
+random_swords              { i_sword_broad 4 i_sword_long 4 i_scimitar 4 i_sword_long_b 1 i_sword_viking 3 i_katana 1 i_cutlass 2 }
+random_pole_arms           { i_bardiche 2 i_spear 8 i_spear_short 4 i_axe_two_hand 2 i_war_fork 1 i_halberd 3 }
+random_daggers             { i_dagger 12 i_kryss 4 }
+random_ranged_weapons      { i_crossbow 2 i_crossbow_heavy 1 i_bow 2 }
+random_missiles            { i_arrow 1 }
+
+//*****************************************************************
+// items - wearables
+[defname items_random_wearables]
+random_cloaks              { i_cape 1 }
+random_boots               { i_boots_thigh 1 i_boots_calf 1 }
+random_hats                { i_hat_wide_brim 1 i_cap 1 i_hat_straw_tall 1 i_hat_straw 1 i_hat_wizards 1 i_bonnet 1 i_hat_feather 1 i_hat_tricorne 1 i_hat_jester 1 }
+random_belts               { i_sash 1 }
+random_bracelets           { i_bracelet_gold 1 i_bracelet_silver 1 }
+random_rings               { i_ring_gold 1 i_ring_silver 1  }
+random_earrings		   { i_earrings_gold 1 i_earrings_silver 1 }
+
+random_wearables           { random_clothing 1 random_jewelry 1 }
+random_clothing            { random_male_tops 1 random_female_tops 1 random_male_pants 1 random_female_pants 1 random_cloaks 1 random_boots 1 random_hats 1 random_belts 1 }
+random_jewelry             { random_necklace 1 random_bracelets 1 random_earrings 1 random_rings 1 }
+
+//*******************************************************************
+// items - magic related items
+[defname items_random_magic]
+random_reagents            { i_reag_black_pearl 1 i_reag_blood_moss 1 i_reag_garlic 1 i_reag_ginseng 1 i_reag_mandrake_root 1 i_reag_nightshade 1 i_reag_sulfur_ash 1 i_reag_spider_silk 1 }
+random_spellbooks          { i_spellbook 1 }
+random_unknown_scrolls     { i_scroll_x_red 1 i_scroll_x_blue 1 i_scroll_x_green 1 i_scroll_x_teal 1 i_scroll_x_brown 1 i_scroll_x_purp 1 }
+random_potions             { i_bottle_black 1 i_bottle_orange 1 i_bottle_blue 1 i_bottle_white 1 i_bottle_green 1 i_bottle_red 1 i_bottle_yellow 1 i_bottle_purple 1 }
+random_wands               { i_wand_1 1 i_wand_2 1 i_wand_3 1 i_wand_4 1 }
+random_staves              i_staff_gnarled
+random_crystal_balls       i_crystal_ball
+random_stationary          { i_brazier_2 1 i_statue_stone_sm 1 }
+
+random_activators          { random_crystal_balls 1 random_stationary 1 }
+random_magic_related_items { random_reagents 2 random_unknown_scrolls 3 random_potions 3 random_wearables 1 random_targetables 1 random_activators 1 }
+random_targetables         { random_wands 2 random_staves 1 }
+
+random_body_parts_1        { i_flesh_arm_right 1 i_flesh_upper_body 1 i_flesh_leggings 1 i_flesh_torso 1 i_flesh_head_2 1 i_flesh_legs_3 1 i_flesh 1 i_flesh_legs_3 1 i_flesh_arm_left 1 i_flesh_upper_body_2 1 i_flesh_legs_4 1 i_flesh_torso_2 1 i_flesh_head_2 1 i_flesh_2 1 i_flesh_legs_5 1 i_flesh_leg 1 i_flesh_heart 1 i_flesh_liver 1 i_flesh_entrails 1 i_flesh_brain 1 }
+random_body_parts_2        { i_flesh_torso 1 i_flesh_head 1 i_flesh_left_arm 1 i_flesh_right_arm 1 i_flesh_left_leg 1 i_flesh_right_leg 1 }
+
+//*******************************************************************
+// chars
+[defname npc_groups]
+horses                 { c_horse_tan 1 c_horse_gray 1 c_horse_brown_lt 1 c_horse_brown_dk 1 }
+lizard_men             { c_lizardman 1 c_lizardman_spear 1 c_lizardman_mace 1 }
+ratmen                 { c_ratman 1 c_ratman_w_sword 1 c_ratman_w_mace 1 }
+skeletons              { c_skeleton 1 c_skeleton_w_sword 1 c_skeleton_w_axe 1}
+trolls                 { c_troll 1 c_troll_w_axe 1 c_troll_w_mace 1 }
+
+
+//////////////////////////////////////////////////////
+
+[TEMPLATE tm_vend_vip]
+DEFNAME=VENDOR_VIP_VENDOR
+CATEGORY=Vendor Templates
+SUBSECTION=Sell Templates
+DESCRIPTION=Mage Commerce
+
+SELL=TM_BAG_OF_LIFE_BOOST,10
+PRICE=11500
+SELL=TM_BAG_OF_MANA_BOOST,10
+PRICE=16000
+SELL=TM_BAG_OF_REFILLING,10
+PRICE=20000
+SELL=TM_BAG_OF_PVP,10
+NAME=Bag of PVP
+PRICE=22000
+
+[TEMPLATE tm_BAG_OF_life_boost]
+CATEGORY=Item Templates
+SUBSECTION=Miscellaneous
+DESCRIPTION=Bag of Magic
+CONTAINER=i_bag
+NAME=Life Boost Reagents
+ITEM=i_reag_ginseng,600
+ITEM=i_reag_mandrake_root,600
+ITEM=i_reag_obsidian,600
+
+[TEMPLATE tm_BAG_OF_MANA_boost]
+CATEGORY=Item Templates
+SUBSECTION=Miscellaneous
+DESCRIPTION=Bag of Magic
+CONTAINER=i_bag
+NAME=Mana Boost Reagents
+ITEM=i_reag_fertile_dirt,600
+ITEM=i_reag_eye_of_newt,600
+
+[TEMPLATE tm_BAG_OF_refilling]
+CATEGORY=Item Templates
+SUBSECTION=Miscellaneous
+DESCRIPTION=Bag of Magic
+CONTAINER=i_bag
+NAME=Refilling Reagents
+ITEM=i_reag_blood_spawn,600
+ITEM=i_reag_ginseng,600
+ITEM=i_reag_mandrake_root,600
+ITEM=i_reag_eye_of_newt,600
+
+[TEMPLATE tm_vend_recall]
+DEFNAME=VENDOR_MAGE_COMMERCE
+CATEGORY=Vendor Templates
+SUBSECTION=Sell Templates
+DESCRIPTION=Mage Commerce
+SELL=i_reag_black_pearl,{10000}
+SELL=i_reag_blood_moss,{10000}
+SELL=i_reag_mandrake_root,{10000}
+
+//// RARE LOOTS
+[TEMPLATE ssh_rareloot_1] // ossos
+ITEM={ 01b09 1 01b0a 1 01b0b 1 01b0c 1 01b0d 1 01b0e 1 01b0f 1 01b10 1 01b11 1 01b12 1 01b13 1 01b14 1 01b15 01b16 01b17 1 01b18 1 01b19 1 01b1a 01b1b 1 01b1c 1 0eca 1 0ecb 1 0ecc 1 0ecd 1 0ece 1 0ecd 1 0ece 1 0ecf 1 0cd0 1 0cd1 1 0cd2 1}
+
+[TEMPLATE ssh_rareloot_2] // gravestone
+ITEM={ 01165 1 01166 1 01167 1 01167 1 01168 1 01169 1 0116a 1 0116b 1 0116c 1 0116d 1 0116e 1 0116f 1 01170 1 01171 1 01172 1 01173 1 01174 1 01175 1 01176 1 01177 1 01178 1 01179 1 0117a 1 0117b 1 0117c 1 0117d 1 0117e 1 0117f 1 01180 1 01181 1 01182 1 01183 1 01184 1 0ed4 1 0ed5 1 0ed6 1 0ed7 1 0ed8 1 0ed9 1 0eda 1 0edb 1 0edc 1}
+
+[TEMPLATE ssh_rareloot_3] // esqueletos
+ITEM={  1 01a01 1 01a02 1 01a03 1 01a04 1 01ae0 1 01ae1 1 01ae2 1 01ae3 1 01ae4 1 01b1d 1 01b7c 1 01b7d 1 01b7f 1 01b80 1}
+
+[TEMPLATE ssh_rareloot_4] // spider web
+ITEM={ 010d2 1 010d3 1 010d4 1 010d5 1 010d6 1 010d7 1 010d8 1 010d9 1 010da 1 010db 1 010dc 1 010dd 1 0ee3 1 0ee4 1 0ee5 1 0ee6 1}
+
+[TEMPLATE ssh_rareloot_5] // torture
+ITEM={ 01230 1 01245 1 01246 1 01247 1 01249 1 0124a 1 0124b 1 0124c 1 0124d 1 0125e 1 0125f 1 01260 1 01261 1 01262 1 01263 1 01640 1 0166d 1 0166e 1 0166f 1 01a07 1 01a08 1}
+
+[TEMPLATE ssh_rareloot_6] // traps
+ITEM={ 010f5 1 010fc 1 010fd 1 010fe 1 010ff 1 010ff 1 01100 1 01101 1 01102 1 01103 1 01104 1 01105 1 01106 1 01107 1 01108 1 01109 1 0110a 1 0110b 1 0110c 1 0110d 1 0110e 1 0110f 1 01110 1 01111 1 01112 1 01113 1 01114 1 01115 1}
+
+[TEMPLATE ssh_rareloot_7] // traps 2
+ITEM={ 01116 1 01117 1 01118 1 01119 1 0111a 1 0111b 1 0111c 1 0111d 1 0111e 1 0111f 1 01120 1 01121 1 01125 1 01126 1 01127 1 01128 1 01129 1 0112a 1 0112b 1 0112c 1 0112d 1 0112e 1 0112f 1 01130 1 01131 1 01131 1 01132 1 01133 1 01134 1}
+
+[TEMPLATE ssh_rareloot_8] // traps 3
+ITEM={ 01135 1 01136 1 01137 1 01138 1 01139 1 0113a 1 0113b 1 0113c 1 0113d 1 0113e 1 0113f 1 01140 1 01141 1 01142 1 01143 1 01144 1 01145 1 01146 1 01147 1 01148 1 01149 1 0114a 1 0114b 1 0114c 1 0114d 1 0114e 1 0114f 1}
+
+[TEMPLATE ssh_rareloot_9] // broken furniture
+ITEM={ 01bd3 1 01bd4 1 01bd5 1 01bd6 1 01bd7 1 01bd8 1 0c10 1 0c11 1 0c12 1 0c13 1 0c14 1 0c15 1 0c16 1 0c17 1 0c18 1 0c19 1 0c1a 1 0c1b 1 0c1c 1 0c1d 1 0c1e 1 0c1f 1 0c20 1 0c21 1 0c22 1 0c23 1 0c24 1 0c25 1 0c26 1 0c27 1 0c28 1 0c29 1 0c2a 1 0c2b 1 0c2c 1 0c2d 1 0c2e 1 0c2f 1 0c30 1}
+
+[TEMPLATE ssh_rareloot_10] // rede de dormir, peg board, stone bench, stone table
+ITEM={ 011f0 1 011f1 1 011f2 1 011f3 1 011fd 1 011fe 1 011ff 1 01200 1 0c39 1 0c3a 1 03dff 1 03e00 1 01201 1 01202 1 01204 1 01205 1 01dbb 1 01dbc 1 01dbe 1 01dbf 1 01dc1 1 01dc2 1 01dc4 1 01dc5 1}
+
+[TEMPLATE ssh_rareloot_11] // nautical
+ITEM={ 014f7 1 014f9 1 0163d 1 0fc4 1 0fc5 1 0fc6 1 0fc7 1 0fc8 1 0fc9 1 0fca 1 0fcb 1 0fcc 1 0fcd 1 0fce 1 0fcf 1 0fd0 1 0fd1 1 0fd2 1 0fd3 1 0fd4 1 01ed3 1 01ed4 1 01ed5 1 01ed6 1 01ed7 1 01ed8 1 01b6c 1}
+
+[TEMPLATE ssh_rareloot_12] // diversos e estatuas
+ITEM={ 01f2a 1 0139a 1 0139b 1 0139c 1 0139d 1 01223 1 01224 1 01225 1 01226 1 01227 1 01228 1 012ca 1 012cb 1 012d8 1 012d9 1 01f18 1}
+
+[TEMPLATE ssh_rareloot_13] // armor de paredes
+ITEM={ 01560 1 01561 1 01562 1 01563 1 01568 1 01569 1 0156a 1 0156b 1 0155c 1 0155d 1 0155e 1 0155f 1 0156c 1 0156d 1 01634 1 01635 1 01636 1 01637 1 01564 1 01565 1 01566 1 01567 1}
+
+[TEMPLATE ssh_rareloot_14] // alchemy items parte 1
+ITEM={ 01005 1 01006 1 01007 1 01810 1 01811 1 01812 1 01813 1 01814 1 01815 1 01816 1 01817 1 01818 1 01819 1 0181a 1 0181b 1 0181c 1 0181d 1 01829 1 0182a 1 0182b 1 0182c 1 0182d 1 0182e 1 0182f 1 01830 1 01831 1 01832 1 01833 1 01834 1 01835 1 01836 1 01837 1 01838 1 01839 1 0183a 1 0183b 1 0183c 1 0183d 1 0183e 1 0183f 1}
+
+[TEMPLATE ssh_rareloot_15] // alchemy items parte 2
+ITEM={ 01840 1 01841 1 01842 1 01843 1 01844 1 01845 1 01846 1 01847 1 01848 1 01849 1 0184a 1 0184b 1 0184c 1 0184d 1 0184e 1 0184f 1 01850 1 01851 1 01852 1 0185b 1 0185c 1 0185e 1 01865 1 01866 1 0e24 1 0e25 1 0e26 1 0e25 1 0e26 1 0e27 1 0e28 1 0e29 1 0e2a 1 0e2b 1 0e2c 1 0e44 1 0e45 1 0e46 1 0e47 1 0e48 1 0e49 1 0e4a 1}
+
+[TEMPLATE ssh_rareloot_16] // alchemy items parte 3
+ITEM={ 0e4b 1 0e4c 1 0e4d 1 0e4e 1 0e4f 1 0efb 1 0efc 1 0efd 1 0efe 1 0eff 1 0f00 1 0f01 1 0f02 1 0f03 1 0f04 1}
+
+[TEMPLATE ssh_rareloot_17] // profissoes, artist e barkeeper
+ITEM={ 012b3 1 0f65 1 0f66 1 0f67 1 0f68 1 0f69 1 0f6a 1 0f71 1 0f72 1 0f73 1 0f74 1 0f75 1 0f76 1 0fc1 1 010e1 1 010e2 1 01941 101942 101943 1 01e2e 1 01e2f 1 01e30 1 01e31 1 01e32 1 01e33 1 09c4 1 09c5 1 09c6 1 09c7 1 0e12 1 0e13 1 0e14 1 0e15 1 0e16 1 0e17 1 0e18 1 0e19 1 0e1a 1 0e1b 1 0fa2 1 0fa3 1 0fa4 1 0fa5 1 0fa6 1 0fa7 1 0fa8 1 0ffa 1}
+
+[TEMPLATE ssh_rareloot_18] // profissoes, beerkeper blacksmith e carpenteer
+ITEM={ 01420 1 01421 1 01422 1 01423 1 01424 1 01425 1 01426 1 01427 1 01428 1 01429 1 0142a 1 0142b 1 01376 1 01377 1 01378 1 01379 1 0fb6 1 0fb7 1 0fb8 1 01e6f 1 01e70 1 01e71 1 01e72 1 01e73 1 01e74 1 01e75 1 01e76 1 01e77 1 01e78 1 01e79 1 01e7a 1 01e7b 1 01e7c 1 01e7d 1 01e7e 1 01e82 1}
+
+[TEMPLATE ssh_rareloot_19] // profissoes, farmer, fisher, scribe
+ITEM={ 01500 1 01501 1 01502 1 01503 1 01504 1 01505 1 01506 1 01507 1 01e34 1 01e35 1 012a5 1 012a6 1 012a7 1 012a8 1 012a9 1 012aa 1 012ab 1 012ac 1 01e20 1 01e21 1 01e22 1 01e23 1 01e24 1 01e25 1 014e7 1 014e8 1 0107b 1 0107c 1}
+
+[TEMPLATE ssh_rareloot_20] // miscelaneous orc camp
+ITEM={ 01ad4 1 01ad5 1 0e73 1 0e74 1 041f 1 0420 1 0426 1  0427 1 0428 1 0429 1 042a 1 042b 1 0426c 1 042d 1 042e 1 042f 1 01c12 1 01c13 1 01c14 1 01f19 1 01f1a 1 01f1b 1 01f1c 1 01f1d 1 01f1e 1}
+
+[TEMPLATE ssh_rareloot_21]
+ITEM={ ssh_rareloot_1 1 ssh_rareloot_3 1 ssh_rareloot_4 1 ssh_rareloot_5 1}
+
+[TEMPLATE ssh_rareloot_22]
+ITEM={ ssh_rareloot_6 1 ssh_rareloot_7 1 ssh_rareloot_8 1 ssh_rareloot_9 1 ssh_rareloot_10 1}
+
+[TEMPLATE ssh_rareloot_23]
+ITEM={ ssh_rareloot_11 1 ssh_rareloot_12 1 ssh_rareloot_13 1 ssh_rareloot_14 1 ssh_rareloot_15 1}
+
+[TEMPLATE ssh_rareloot_24]
+ITEM={ ssh_rareloot_16 1 ssh_rareloot_17 1 ssh_rareloot_18 1 ssh_rareloot_19 1 ssh_rareloot_20 1}
+
+[TEMPLATE rareloot_ssh] // item q vai no loot
+ITEM={ ssh_rareloot_21 1 ssh_rareloot_22 1 ssh_rareloot_23 1 ssh_rareloot_24 1}
+
+
+/// END OF RARE LOOT
+//
+// A template is a collection of items.
+// Numbers are decimal not hex.
+
+[TEMPLATE tm_rocks]
+ITEM={i_rock_plain i_rock_plain_x}
+
+[TEMPLATE tm_boulders]
+ITEM={i_boulder i_boulder_x}
+
+[TEMPLATE POOR_GOLD_PILE]
+CATEGORY=Item Templates
+SUBSECTION=Miscellaneous
+DESCRIPTION=Poor Gold Pile
+ITEM=i_gold,{6 25}
+
+[TEMPLATE MEAGER_GOLD_PILE]
+CATEGORY=Item Templates
+SUBSECTION=Miscellaneous
+DESCRIPTION=Meager Gold Pile
+ITEM=i_gold,{20 50}
+
+[TEMPLATE AVERAGE_GOLD_PILE]
+CATEGORY=Item Templates
+SUBSECTION=Miscellaneous
+DESCRIPTION=Average Gold Pile
+ITEM=i_gold,{45 75}
+
+[TEMPLATE RICH_GOLD_PILE]
+CATEGORY=Item Templates
+SUBSECTION=Miscellaneous
+DESCRIPTION=Rich Gold Pile
+ITEM=i_gold,{60 120}
+
+[TEMPLATE FILTHY_RICH_GOLD_PILE]
+CATEGORY=Item Templates
+SUBSECTION=Miscellaneous
+DESCRIPTION=Filthy Rich Gold Pile
+ITEM=i_gold,{100 180}
+
+[TEMPLATE tm_BAG_OF_MAGIC]
+CATEGORY=Item Templates
+SUBSECTION=Miscellaneous
+DESCRIPTION=Bag of Magic
+CONTAINER=i_bag
+ITEM=i_reag_black_pearl,50
+ITEM=i_reag_blood_moss,50
+ITEM=i_reag_garlic,50
+ITEM=i_reag_ginseng,50
+ITEM=i_reag_mandrake_root,50
+ITEM=i_reag_nightshade,50
+ITEM=i_reag_sulfur_ash,50
+ITEM=i_reag_spider_silk,50
+ITEM=i_spellbook
+MORE1=0ffffffff
+MORE2=0ffffffff
+
+//********************************
+
+[TEMPLATE RANDOM_WAND_ONE]
+CATEGORY=Item Templates
+SUBSECTION=Random Wands
+DESCRIPTION=First Circle
+
+[TEMPLATE RANDOM_WAND_TWO]
+CATEGORY=Item Templates
+SUBSECTION=Random Wands
+DESCRIPTION=Second Circle
+
+[TEMPLATE RANDOM_WAND_THREE]
+CATEGORY=Item Templates
+SUBSECTION=Random Wands
+DESCRIPTION=Third Circle
+
+[TEMPLATE RANDOM_WAND_FOUR]
+CATEGORY=Item Templates
+SUBSECTION=Random Wands
+DESCRIPTION=Fourth Circle
+
+[TEMPLATE RANDOM_WAND_FIVE]
+CATEGORY=Item Templates
+SUBSECTION=Random Wands
+DESCRIPTION=Fifth Circle
+
+[TEMPLATE RANDOM_WAND_Six]
+CATEGORY=Item Templates
+SUBSECTION=Random Wands
+DESCRIPTION=Sixth Circle
+
+[TEMPLATE RANDOM_WAND_Seven]
+CATEGORY=Item Templates
+SUBSECTION=Random Wands
+DESCRIPTION=Seventh Circle
+
+[TEMPLATE RANDOM_WAND_Eight]
+CATEGORY=Item Templates
+SUBSECTION=Random Wands
+DESCRIPTION=Eighth Circle
+
+[TEMPLATE RANDOM_WAND_NEW]
+CATEGORY=Item Templates
+SUBSECTION=Random Wands
+DESCRIPTION=New
+
+[TEMPLATE RANDOM_MAGIC_WANDS]
+CATEGORY=Item Templates
+SUBSECTION=Random Wands
+DESCRIPTION=All
+
+[TEMPLATE RANDOM_PLATEMAIL_ARMOR]
+CATEGORY=Item Templates
+SUBSECTION=Random Armour
+DESCRIPTION=Platemail
+
+[TEMPLATE RANDOM_BONE_ARMOR]
+CATEGORY=Item Templates
+SUBSECTION=Random Armour
+DESCRIPTION=Bone
+
+[TEMPLATE RANDOM_CHAINMAIL_ARMOR]
+CATEGORY=Item Templates
+SUBSECTION=Random Armour
+DESCRIPTION=Chainmail
+
+[TEMPLATE RANDOM_LEATHER_ARMOR]
+CATEGORY=Item Templates
+SUBSECTION=Random Armour
+DESCRIPTION=Leather
+
+[TEMPLATE RANDOM_RINGMAIL_ARMOR]
+CATEGORY=Item Templates
+SUBSECTION=Random Armour
+DESCRIPTION=Ringmail
+
+[TEMPLATE RANDOM_STUDDED_ARMOR]
+CATEGORY=Item Templates
+SUBSECTION=Random Armour
+DESCRIPTION=Studded
+
+[TEMPLATE RANDOM_SWORDTYPE_RUIN]
+CATEGORY=Item Templates
+SUBSECTION=Random Swords
+DESCRIPTION=Ruin
+CONTAINER=i_bag
+
+[TEMPLATE RANDOM_SWORDTYPE_MIGHT]
+CATEGORY=Item Templates
+SUBSECTION=Random Swords
+DESCRIPTION=Might
+CONTAINER=i_bag
+
+[TEMPLATE RANDOM_SWORDTYPE_FORCE]
+CATEGORY=Item Templates
+SUBSECTION=Random Swords
+DESCRIPTION=Force
+CONTAINER=i_bag
+
+[TEMPLATE RANDOM_SWORDTYPE_POWER]
+CATEGORY=Item Templates
+SUBSECTION=Random Swords
+DESCRIPTION=Power
+CONTAINER=i_bag
+
+[TEMPLATE RANDOM_SWORDTYPE_vanq]
+CATEGORY=Item Templates
+SUBSECTION=Random Swords
+DESCRIPTION=Vanquishing
+CONTAINER=i_bag
+
+[TEMPLATE RANDOM_BOWTYPE_RUIN]
+CATEGORY=Item Templates
+SUBSECTION=Random Bows
+DESCRIPTION=Ruin
+CONTAINER=i_bag
+
+[TEMPLATE RANDOM_BOWTYPE_MIGHT]
+CATEGORY=Item Templates
+SUBSECTION=Random Bows
+DESCRIPTION=Might
+CONTAINER=i_bag
+
+[TEMPLATE RANDOM_BOWTYPE_FORCE]
+CATEGORY=Item Templates
+SUBSECTION=Random Bows
+DESCRIPTION=Force
+CONTAINER=i_bag
+
+
+[TEMPLATE RANDOM_BOWTYPE_POWER]
+CATEGORY=Item Templates
+SUBSECTION=Random Bows
+DESCRIPTION=Power
+CONTAINER=i_bag
+
+
+[TEMPLATE RANDOM_BOWTYPE_vanq]
+CATEGORY=Item Templates
+SUBSECTION=Random Bows
+DESCRIPTION=Vanquishing
+CONTAINER=i_bag
+
+
+[TEMPLATE RANDOM_FENCINGTYPE_RUIN]
+CATEGORY=Item Templates
+SUBSECTION=Random Fencing Weapons
+DESCRIPTION=Ruin
+CONTAINER=i_bag
+
+
+[TEMPLATE RANDOM_FENCINGTYPE_MIGHT]
+CATEGORY=Item Templates
+SUBSECTION=Random Fencing Weapons
+DESCRIPTION=Might
+CONTAINER=i_bag
+
+
+[TEMPLATE RANDOM_FENCINGTYPE_FORCE]
+CATEGORY=Item Templates
+SUBSECTION=Random Fencing Weapons
+DESCRIPTION=Force
+CONTAINER=i_bag
+
+
+[TEMPLATE RANDOM_FENCINGTYPE_POWER]
+CATEGORY=Item Templates
+SUBSECTION=Random Fencing Weapons
+DESCRIPTION=Power
+CONTAINER=i_bag
+
+
+[TEMPLATE RANDOM_FENCINGTYPE_vanq]
+CATEGORY=Item Templates
+SUBSECTION=Random Fencing Weapons
+DESCRIPTION=Vanquishing
+CONTAINER=i_bag
+
+
+[TEMPLATE RANDOM_MACETYPE_RUIN]
+CATEGORY=Item Templates
+SUBSECTION=Random Maces
+DESCRIPTION=Ruin
+CONTAINER=i_bag
+
+
+[TEMPLATE RANDOM_MACETYPE_MIGHT]
+CATEGORY=Item Templates
+SUBSECTION=Random Maces
+DESCRIPTION=Might
+CONTAINER=i_bag
+
+
+[TEMPLATE RANDOM_MACETYPE_FORCE]
+CATEGORY=Item Templates
+SUBSECTION=Random Maces
+DESCRIPTION=Force
+CONTAINER=i_bag
+
+
+[TEMPLATE RANDOM_MACETYPE_POWER]
+CATEGORY=Item Templates
+SUBSECTION=Random Maces
+DESCRIPTION=Power
+CONTAINER=i_bag
+
+
+[TEMPLATE RANDOM_MACETYPE_vanq]
+CATEGORY=Item Templates
+SUBSECTION=Random Maces
+DESCRIPTION=Vanquishing
+CONTAINER=i_bag
+
+
+[TEMPLATE RANDOM_AXETYPE_RUIN]
+CATEGORY=Item Templates
+SUBSECTION=Random Axes
+DESCRIPTION=Ruin
+CONTAINER=i_bag
+
+
+[TEMPLATE RANDOM_AXETYPE_MIGHT]
+CATEGORY=Item Templates
+SUBSECTION=Random Axes
+DESCRIPTION=Might
+CONTAINER=i_bag
+
+
+[TEMPLATE RANDOM_AXETYPE_FORCE]
+CATEGORY=Item Templates
+SUBSECTION=Random Axes
+DESCRIPTION=Force
+CONTAINER=i_bag
+
+
+[TEMPLATE RANDOM_AXETYPE_POWER]
+CATEGORY=Item Templates
+SUBSECTION=Random Axes
+DESCRIPTION=Power
+CONTAINER=i_bag
+
+
+[TEMPLATE RANDOM_AXETYPE_vanq]
+CATEGORY=Item Templates
+SUBSECTION=Random Axes
+DESCRIPTION=Vanquishing
+CONTAINER=i_bag
+
+
+[TEMPLATE RANDOM_WEAPON_RUIN]
+CATEGORY=Item Templates
+SUBSECTION=Random Weapons
+DESCRIPTION=Ruin
+
+
+[TEMPLATE RANDOM_WEAPON_MIGHT]
+CATEGORY=Item Templates
+SUBSECTION=Random Weapons
+DESCRIPTION=Might
+
+
+[TEMPLATE RANDOM_WEAPON_FORCE]
+CATEGORY=Item Templates
+SUBSECTION=Random Weapons
+DESCRIPTION=Force
+
+
+[TEMPLATE RANDOM_WEAPON_POWER]
+CATEGORY=Item Templates
+SUBSECTION=Random Weapons
+DESCRIPTION=Power
+
+
+[TEMPLATE RANDOM_WEAPON_vanq]
+CATEGORY=Item Templates
+SUBSECTION=Random Weapons
+DESCRIPTION=Vanquishing
+
+
+[TEMPLATE RANDOM_SHIELD_DEFENSE]
+CATEGORY=Item Templates
+SUBSECTION=Random Shields
+DESCRIPTION=Defense
+CONTAINER=i_bag
+
+
+[TEMPLATE RANDOM_SHIELD_GUARDING]
+CATEGORY=Item Templates
+SUBSECTION=Random Shields
+DESCRIPTION=Guarding
+CONTAINER=i_bag
+
+
+[TEMPLATE RANDOM_SHIELD_HARDENING]
+CATEGORY=Item Templates
+SUBSECTION=Random Shields
+DESCRIPTION=Hardening
+CONTAINER=i_bag
+
+
+[TEMPLATE RANDOM_SHIELD_FORTIFICATION]
+CATEGORY=Item Templates
+SUBSECTION=Random Shields
+DESCRIPTION=Fortification
+CONTAINER=i_bag
+
+
+[TEMPLATE RANDOM_SHIELD_INVULNERABILITY]
+CATEGORY=Item Templates
+SUBSECTION=Random Shields
+DESCRIPTION=Invulnerability
+CONTAINER=i_bag
+
+
+[TEMPLATE RANDOM_PLATEMAIL_DEFENSE]
+CATEGORY=Item Templates
+SUBSECTION=Random Magic Platemail
+DESCRIPTION=Defense
+CONTAINER=i_bag
+
+
+[TEMPLATE RANDOM_PLATEMAIL_GUARDING]
+CATEGORY=Item Templates
+SUBSECTION=Random Magic Platemail
+DESCRIPTION=Guarding
+CONTAINER=i_bag
+
+
+[TEMPLATE RANDOM_PLATEMAIL_HARDENING]
+CATEGORY=Item Templates
+SUBSECTION=Random Magic Platemail
+DESCRIPTION=Hardening
+CONTAINER=i_bag
+
+
+[TEMPLATE RANDOM_PLATEMAIL_FORTIFICATION]
+CATEGORY=Item Templates
+SUBSECTION=Random Magic Platemail
+DESCRIPTION=Fortification
+CONTAINER=i_bag
+
+
+[TEMPLATE RANDOM_PLATEMAIL_INVULNERABILITY]
+CATEGORY=Item Templates
+SUBSECTION=Random Magic Platemail
+DESCRIPTION=Invulnerability
+CONTAINER=i_bag
+
+
+[TEMPLATE RANDOM_CHAINMAIL_DEFENSE]
+CATEGORY=Item Templates
+SUBSECTION=Random Magic Chainmail
+DESCRIPTION=Defense
+CONTAINER=i_bag
+
+
+[TEMPLATE RANDOM_CHAINMAIL_GUARDING]
+CATEGORY=Item Templates
+SUBSECTION=Random Magic Chainmail
+DESCRIPTION=Guarding
+CONTAINER=i_bag
+
+
+[TEMPLATE RANDOM_CHAINMAIL_HARDENING]
+CATEGORY=Item Templates
+SUBSECTION=Random Magic Chainmail
+DESCRIPTION=Hardening
+CONTAINER=i_bag
+
+
+[TEMPLATE RANDOM_CHAINMAIL_FORTIFICATION]
+CATEGORY=Item Templates
+SUBSECTION=Random Magic Chainmail
+DESCRIPTION=Fortification
+CONTAINER=i_bag
+
+
+[TEMPLATE RANDOM_CHAINMAIL_INVULNERABILITY]
+CATEGORY=Item Templates
+SUBSECTION=Random Magic Chainmail
+DESCRIPTION=Invulnerability
+CONTAINER=i_bag
+
+
+[TEMPLATE RANDOM_RINGMAIL_DEFENSE]
+CATEGORY=Item Templates
+SUBSECTION=Random Magic Ringmail
+DESCRIPTION=Defense
+CONTAINER=i_bag
+
+
+[TEMPLATE RANDOM_RINGMAIL_GUARDING]
+CATEGORY=Item Templates
+SUBSECTION=Random Magic Ringmail
+DESCRIPTION=Guarding
+CONTAINER=i_bag
+
+
+[TEMPLATE RANDOM_RINGMAIL_HARDENING]
+CATEGORY=Item Templates
+SUBSECTION=Random Magic Ringmail
+DESCRIPTION=Hardening
+CONTAINER=i_bag
+
+
+[TEMPLATE RANDOM_RINGMAIL_FORTIFICATION]
+CATEGORY=Item Templates
+SUBSECTION=Random Magic Ringmail
+DESCRIPTION=Fortification
+CONTAINER=i_bag
+
+
+[TEMPLATE RANDOM_RINGMAIL_INVULNERABILITY]
+CATEGORY=Item Templates
+SUBSECTION=Random Magic Ringmail
+DESCRIPTION=Invulnerability
+CONTAINER=i_bag
+
+
+[TEMPLATE RANDOM_LEATHER_DEFENSE]
+CATEGORY=Item Templates
+SUBSECTION=Random Magic Leather
+DESCRIPTION=Defense
+
+[TEMPLATE RANDOM_LEATHER_GUARDING]
+CATEGORY=Item Templates
+SUBSECTION=Random Magic Leather
+DESCRIPTION=Guarding
+
+[TEMPLATE RANDOM_LEATHER_HARDENING]
+CATEGORY=Item Templates
+SUBSECTION=Random Magic Leather
+DESCRIPTION=Hardening
+
+[TEMPLATE RANDOM_LEATHER_FORTIFICATION]
+CATEGORY=Item Templates
+SUBSECTION=Random Magic Leather
+DESCRIPTION=Fortification
+
+[TEMPLATE RANDOM_LEATHER_INVULNERABILITY]
+CATEGORY=Item Templates
+SUBSECTION=Random Magic Leather
+DESCRIPTION=Invulnerability
+
+[TEMPLATE RANDOM_STUDDED_DEFENSE]
+CATEGORY=Item Templates
+SUBSECTION=Random Magic Studded
+DESCRIPTION=Defense
+
+[TEMPLATE RANDOM_STUDDED_GUARDING]
+CATEGORY=Item Templates
+SUBSECTION=Random Magic Studded
+DESCRIPTION=Guarding
+
+[TEMPLATE RANDOM_STUDDED_HARDENING]
+CATEGORY=Item Templates
+SUBSECTION=Random Magic Studded
+DESCRIPTION=Hardening
+
+[TEMPLATE RANDOM_STUDDED_FORTIFICATION]
+CATEGORY=Item Templates
+SUBSECTION=Random Magic Studded
+DESCRIPTION=Fortification
+
+[TEMPLATE RANDOM_STUDDED_INVULNERABILITY]
+CATEGORY=Item Templates
+SUBSECTION=Random Magic Studded
+DESCRIPTION=Invulnerability
+
+[TEMPLATE RANDOM_MAGIC_SWORD]
+CATEGORY=Item Templates
+SUBSECTION=Random Magic Weapons
+DESCRIPTION=Swords
+
+
+[TEMPLATE RANDOM_MAGIC_BOW]
+CATEGORY=Item Templates
+SUBSECTION=Random Magic Weapons
+DESCRIPTION=Bows
+
+[TEMPLATE loot_ai_archer]
+CATEGORY=Item Templates
+SUBSECTION=AI Templates
+DESCRIPTION=Monster AI Archer
+ITEMNEWBIE=random_weapon_archer_normal
+ITEMNEWBIE=random_weapon_all_normal
+ITEM=i_arrow,{25 35}
+ITEM=i_xbolt,{25 35}
+
+[TEMPLATE rareloot_bones] // ossos
+ITEM={01b09 1 01b0a 1 01b0b 1 01b0c 1 01b0d 1 01b0e 1 01b0f 1 01b10 1 01b11 1 01b12 1 01b13 1 01b14 1 01b15 01b16 01b17 1 01b18 1 01b19 1 01b1a 01b1b 1 01b1c 1 0eca 1 0ecb 1 0ecc 1 0ecd 1 0ece 1}
+
+[TEMPLATE rareloot_gravestones] // gravestone
+ITEM={01165 1 01166 1 01167 1 01167 1 01168 1 01169 1 0116a 1 0116b 1 0116c 1 0116d 1 0116e 1 0116f 1 01170 1 01171 1 01172 1 01173 1 01174 1 01175 1 01176 1 01177 1 01178 1 01179 1 0117a 1 0117b 1 0117c 1 0117d 1 0117e 1 0117f 1 01180 1 01181 1 01182 1 01183 1 01184 1 0ed4 1 0ed5 1 0ed6 1 0ed7 1 0ed8 1 0ed9 1 0eda 1 0edb 1 0edc 1}
+
+[TEMPLATE rareloot_skeletons] // esqueletos
+ITEM={01a01 1 01a02 1 01a03 1 01a04 1 01ae0 1 01ae1 1 01ae2 1 01ae3 1 01ae4 1 01b1d 1 01b7c 1 01b7d 1 01b7f 1 01b80 1}
+
+[TEMPLATE rareloot_spider] // spider web
+ITEM={010d2 1 010d3 1 010d4 1 010d5 1 010d6 1 010d7 1 010d8 1 010d9 1 010da 1 010db 1 010dc 1 010dd 1 0ee3 1 0ee4 1 0ee5 1 0ee6 1}
+
+[TEMPLATE rareloot_torture] // torture
+ITEM={01230 1 01245 1 01246 1 01247 1 01249 1 0124a 1 0124b 1 0124c 1 0124d 1 0125e 1 0125f 1 01260 1 01261 1 01262 1 01263 1 01640 1 0166d 1 0166e 1 0166f 1 01a07 1 01a08 1}
+
+[TEMPLATE rareloot_traps] // traps
+ITEM={010f5 1 010fc 1 010fd 1 010fe 1 010ff 1 010ff 1 01100 1 01101 1 01102 1 01103 1 01104 1 01105 1 01106 1 01107 1 01108 1 01109 1 0110a 1 0110b 1 0110c 1 0110d 1 0110e 1 0110f 1 01110 1 01111 1 01112 1 01113 1 01114 1 01115 1}
+
+[TEMPLATE rareloot_traps2] // traps 2
+ITEM={01116 1 01117 1 01118 1 01119 1 0111a 1 0111b 1 0111c 1 0111d 1 0111e 1 0111f 1 01120 1 01121 1 01125 1 01126 1 01127 1 01128 1 01129 1 0112a 1 0112b 1 0112c 1 0112d 1 0112e 1 0112f 1 01130 1 01131 1 01131 1 01132 1 01133 1 01134 1}
+
+[TEMPLATE rareloot_traps3] // traps 3
+ITEM={01135 1 01136 1 01137 1 01138 1 01139 1 0113a 1 0113b 1 0113c 1 0113d 1 0113e 1 01140 1 01141 1 01142 1 01143 1 01144 1 01145 1 01146 1 01147 1 01148 1 01149 1 0114b 1 0114c 1 0114d 1 0114e 1 0114f 1}
+
+[TEMPLATE rareloot_broken_furniture] // broken furniture
+ITEM={01bd3 1 01bd4 1 01bd5 1 01bd6 1 01bd7 1 01bd8 1 0c10 1 0c11 1 0c12 1 0c13 1 0c14 1 0c15 1 0c16 1 0c17 1 0c18 1 0c19 1 0c1a 1 0c1b 1 0c1c 1 0c1d 1 0c1e 1 0c1f 1 0c20 1 0c21 1 0c22 1 0c23 1 0c24 1 0c25 1 0c26 1 0c27 1 0c28 1 0c29 1 0c2a 1 0c2b 1 0c2c 1 0c2d 1 0c2e 1 0c2f 1 0c30 1}
+
+[TEMPLATE rareloot_misc] // rede de dormir, peg board, stone bench, stone table
+ITEM={011f0 1 011f1 1 011f2 1 011f3 1 011fd 1 011fe 1 011ff 1 01200 1 0c39 1 0c3a 1 03dff 1 03e00 1 01201 1 01202 1 01204 1 01205 1 01dbb 1 01dbc 1 01dbe 1 01dbf 1 01dc1 1 01dc2 1 01dc4 1 01dc5 1}
+
+[TEMPLATE rareloot_nautical] // nautical
+ITEM={014f7 1 014f9 1 0163d 1 0fc4 1 0fc5 1 0fc6 1 0fc7 1 0fc8 1 0fc9 1 0fca 1 0fcb 1 0fcc 1 0fcd 1 0fce 1 0fcf 1 0fd0 1 0fd1 1 0fd2 1 0fd3 1 0fd4 1 01ed3 1 01ed4 1 01ed5 1 01ed6 1 01ed7 1 01ed8 1 01b6c 1}
+
+[TEMPLATE rareloot_statues] // diversos e estatuas
+ITEM={01f2a 1 0139a 1 0139b 1 0139c 1 0139d 1 01223 1 01224 1 01225 1 01226 1 01227 1 01228 1 012ca 1 012cb 1 012d8 1 012d9 1 01f18 1}
+
+[TEMPLATE rareloot_armor] // armor de paredes
+ITEM={01560 1 01561 1 01562 1 01563 1 01568 1 01569 1 0156a 1 0156b 1 0155c 1 0155d 1 0155e 1 0155f 1 0156c 1 0156d 1 01634 1 01635 1 01636 1 01637 1 01564 1 01565 1 01566 1 01567 1}
+
+[TEMPLATE rareloot_alchemy] // alchemy items parte 1
+ITEM={01005 1 01006 1 01007 1 01810 1 01811 1 01812 1 01813 1 01814 1 01815 1 01816 1 01817 1 01818 1 01819 1 0181a 1 0181b 1 0181c 1 0181d 1 01829 1 0182a 1 0182b 1 0182c 1 0182d 1 0182e 1 0182f 1 01830 1 01831 1 01832 1 01833 1 01834 1 01835 1 01836 1 01837 1 01838 1 01839 1 0183a 1 0183b 1 0183c 1 0183d 1 0183e 1 0183f 1}
+
+[TEMPLATE rareloot_alchemy2] // alchemy items parte 2
+ITEM={01840 1 01841 1 01842 1 01843 1 01844 1 01845 1 01846 1 01847 1 01848 1 01849 1 0184a 1 0184b 1 0184c 1 0184d 1 0184e 1 0184f 1 01850 1 01851 1 01852 1 0185b 1 0185c 1 0185e 1 01865 1 01866 1 0e24 1 0e25 1 0e26 1 0e25 1 0e26 1 0e27 1 0e28 1 0e29 1 0e2a 1 0e2b 1 0e2c 1 0e44 1 0e45 1 0e46 1 0e47 1 0e48 1 0e49 1 0e4a 1}
+
+[TEMPLATE rareloot_alchemy3] // alchemy items parte 3
+ITEM={0e4b 1 0e4c 1 0e4d 1 0e4e 1 0e4f 1 0efb 1 0efc 1 0efd 1 0efe 1 0eff 1 0f00 1 0f01 1 0f02 1 0f03 1 0f04 1}
+
+[TEMPLATE rareloot_prof2] // profissoes, beerkeper blacksmith e carpenteer
+ITEM={01420 1 01421 1 01422 1 01423 1 01424 1 01425 1 01426 1 01427 1 01428 1 01429 1 0142a 1 0142b 1 01376 1 01377 1 01378 1 01379 1 0fb6 1 0fb7 1 0fb8 1 01e6f 1 01e70 1 01e71 1 01e72 1 01e73 1 01e74 1 01e75 1 01e76 1 01e77 1 01e78 1 01e79 1 01e7a 1 01e7b 1 01e7c 1 01e7d 1 01e7e 1 01e82 1}
+
+[TEMPLATE rareloot_prof3] // profissoes, farmer, fisher, scribe
+ITEM={01500 1 01501 1 01502 1 01503 1 01504 1 01505 1 01506 1 01507 1 01e34 1 01e35 1 012a5 1 012a6 1 012a7 1 012a8 1 012a9 1 012aa 1 012ab 1 012ac 1 01e20 1 01e21 1 01e22 1 01e23 1 01e24 1 01e25 1 014e7 1 014e8 1 0107b 1 0107c 1}
+
+[TEMPLATE rareloot_orc] // miscelaneous orc camp
+ITEM={01ad4 1 01ad5 1 0e73 1 0e74 1 041f 1 0420 1 0426 1  0427 1 0428 1 0429 1 042a 1 042b 1 042d 1 042e 1 042f 1 01c12 1 01c13 1 01c14 1 01f19 1 01f1a 1 01f1b 1 01f1c 1 01f1d 1 01f1e 1}
+
+[TEMPLATE random_value_whitewyrm]
+ITEM={i_panotrue_w 5 i_panotrue_b 5 i_panotrue_g 5 I_MAGIC_GEM 1 I_TREASURE_MAP_LVL_5 8}
+
+[TEMPLATE random_value_whitewyrm2]
+ITEM={i_panotrue_w 5 i_panotrue_b 5 i_panotrue_g 5 I_BUFFER_SCROLL 15 I_POWER_SCROLL 25 I_TREASURE_MAP_LVL_5 5 }
+
+[TEMPLATE random_rare_whitewyrm]
+ITEM={rareloot_statues 50 rareloot_armor 50 rareloot_skeletons 50 i_lww_trophy 1}
+
+[TEMPLATE random_minor_artic_ogre]
+ITEM={i_buffer_scroll 10 i_power_scroll 25 i_recipe_scroll 1}
+
+[TEMPLATE random_value_artic_ogre]
+ITEM={i_panotrue_g 1 i_panotrue_w 1 i_panotrue_b 1 i_treasure_map_lvl_4 5}
+
+[TEMPLATE random_rare_arctic_ogre]
+ITEM={rareloot_statues 50 rareloot_armor 50 rareloot_skeletons 50 i_artic_ogre_face 1}
+
+[EOF]

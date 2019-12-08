@@ -1,0 +1,2792 @@
+
+[chardef 144]
+defname=c_sea_horse
+name=Sea Horse
+can=mt_swim
+dam=1,4
+armor=25
+foodtype=30 t_food
+shelter=r_stables
+desires=c_man
+aversions=c_sea_monster2_osi, c_sea_monster1_osi
+
+category=Unlocked Monsters (Renassaince - AoS)
+subsection=Sea Monsters
+description=Sea Horse
+
+on=@create
+npc=brain_animal
+
+str=50
+dex=50
+int=50
+
+wrestling=80.0
+tactics=80.0
+magicresistance=50.0
+taming=120.0
+
+
+
+
+
+
+///////////////////////////////////////////////////////
+//////////////////// TAMEABLE WYRMS ///////////////////
+///////////////////////////////////////////////////////
+
+
+
+
+[CHARDEF c_m_dragon_wyrm_chemical]
+
+//DEFNAME2=C_M_WYRM
+NAME=Chemical Wyrm
+ID=c_DRAGON_GREEN
+SOUND=snd_MONSTER_DRAGON1
+ICON=i_pet_dragon
+DAM=10,15
+ARMOR=30
+RESOURCES=20 i_ribs_raw,40 i_hides_wyrm,8 i_reag_dragon_blood
+CAN=MT_WALK|MT_FLY
+FOODTYPE=80 t_meat_raw
+DESIRES=i_gold
+AVERSIONS=r_civilization,r_water
+
+ON=@Create
+ TAG.LOOTPROPRIO 1
+ TAG.MTAME 1
+ COLOR=035
+ STR={1150 1250}
+ DEX={180 250}
+ INT=10
+ PARRYING={95.0 115.0}
+ MAGERY=1.0
+ MAGICRESISTANCE={99.0 100.0}
+ TACTICS={100.0 110.0}
+ WRESTLING={105.0 120.0}
+ NPC=brain_dragon
+ FAME={8000 9500}
+ KARMA=10000
+
+[CHARDEF c_m_dragon_wyrm_gay]
+
+//DEFNAME2=C_M_WYRM
+NAME=Gay Wyrm
+ID=c_DRAGON_GREEN
+SOUND=snd_MONSTER_DRAGON1
+ICON=i_pet_dragon
+DAM=10,15
+ARMOR=30
+RESOURCES=20 i_ribs_raw,40 i_hides_wyrm,8 i_reag_dragon_blood
+CAN=MT_WALK|MT_FLY
+FOODTYPE=80 t_meat_raw
+DESIRES=i_gold
+AVERSIONS=r_civilization,r_water
+
+ON=@Create
+ TAG.LOOTPROPRIO 1
+ TAG.MTAME 1
+ COLOR=024
+ STR={1150 1250}
+ DEX={180 250}
+ INT=10
+ PARRYING={95.0 115.0}
+ MAGERY=1.0
+ MAGICRESISTANCE={99.0 100.0}
+ TACTICS={100.0 110.0}
+ WRESTLING={105.0 120.0}
+ NPC=brain_dragon
+ FAME={8000 9500}
+ KARMA=10000
+
+[CHARDEF c_m_dragon_wyrm_black]
+
+//DEFNAME2=C_M_WYRM
+NAME=Black Wyrm
+ID=c_DRAGON_GREEN
+SOUND=snd_MONSTER_DRAGON1
+ICON=i_pet_dragon
+DAM=10,15
+ARMOR=30
+RESOURCES=20 i_ribs_raw,40 i_hides_wyrm,8 i_reag_dragon_blood
+CAN=MT_WALK|MT_FLY
+FOODTYPE=80 t_meat_raw
+DESIRES=i_gold
+AVERSIONS=r_civilization,r_water
+
+ON=@Create
+ TAG.LOOTPROPRIO 1
+ TAG.MTAME 1
+ COLOR=0455
+ STR={1150 1250}
+ DEX={180 250}
+ INT=10
+ PARRYING={95.0 115.0}
+ MAGERY=1.0
+ MAGICRESISTANCE={99.0 100.0}
+ TACTICS={100.0 110.0}
+ WRESTLING={105.0 120.0}
+ NPC=brain_dragon
+ FAME={8000 9500}
+ KARMA=10000
+
+[CHARDEF c_m_dragon_wyrm_ice]
+
+//DEFNAME2=C_M_WYRM
+NAME=Ice Wyrm
+ID=c_DRAGON_GREEN
+SOUND=snd_MONSTER_DRAGON1
+ICON=i_pet_dragon
+DAM=10,15
+ARMOR=30
+RESOURCES=20 i_ribs_raw,40 i_hides_wyrm,8 i_reag_dragon_blood
+CAN=MT_WALK|MT_FLY
+FOODTYPE=80 t_meat_raw
+DESIRES=i_gold
+AVERSIONS=r_civilization,r_water
+
+ON=@Create
+ TAG.LOOTPROPRIO 1
+ TAG.MTAME 1
+ COLOR=color_ice
+ STR={1150 1250}
+ DEX={180 250}
+ INT=10
+ PARRYING={95.0 115.0}
+ MAGERY=1.0
+ MAGICRESISTANCE={99.0 100.0}
+ TACTICS={100.0 110.0}
+ WRESTLING={105.0 120.0}
+ NPC=brain_dragon
+ FAME={8000 9500}
+ KARMA=10000
+
+[CHARDEF c_m_dragon_chemical]
+
+//DEFNAME2=C_M_WYRM
+NAME=Chemical Dragpn
+ID=c_DRAGON_RED
+SOUND=snd_MONSTER_DRAGON1
+ICON=i_pet_dragon
+DAM=9,14
+ARMOR=25
+RESOURCES=20 i_ribs_raw,40 i_hides_wyrm,8 i_reag_dragon_blood
+CAN=MT_WALK|MT_FLY
+FOODTYPE=80 t_meat_raw
+DESIRES=i_gold
+AVERSIONS=r_civilization,r_water
+
+ON=@Create
+ TAG.LOOTPROPRIO 1
+ TAG.MTAME 1
+ COLOR=035
+ STR={850 1050}
+ DEX={180 250}
+ INT=10
+ PARRYING={95.0 115.0}
+ MAGERY=1.0
+ MAGICRESISTANCE={99.0 100.0}
+ TACTICS={100.0 110.0}
+ WRESTLING={105.0 120.0}
+ NPC=brain_dragon
+ FAME={8000 9500}
+ KARMA=10000
+
+[CHARDEF c_m_dragon_gay]
+
+//DEFNAME2=C_M_WYRM
+NAME=Gay Dragpn
+ID=c_DRAGON_RED
+SOUND=snd_MONSTER_DRAGON1
+ICON=i_pet_dragon
+DAM=9,14
+ARMOR=25
+RESOURCES=20 i_ribs_raw,40 i_hides_wyrm,8 i_reag_dragon_blood
+CAN=MT_WALK|MT_FLY
+FOODTYPE=80 t_meat_raw
+DESIRES=i_gold
+AVERSIONS=r_civilization,r_water
+
+ON=@Create
+ TAG.LOOTPROPRIO 1
+ TAG.MTAME 1
+ COLOR=024
+ STR={850 1050}
+ DEX={180 250}
+ INT=10
+ PARRYING={95.0 115.0}
+ MAGERY=1.0
+ MAGICRESISTANCE={99.0 100.0}
+ TACTICS={100.0 110.0}
+ WRESTLING={105.0 120.0}
+ NPC=brain_dragon
+ FAME={8000 9500}
+ KARMA=10000
+
+[CHARDEF c_m_dragon_black]
+
+//DEFNAME2=C_M_WYRM
+NAME=Black Dragpn
+ID=c_DRAGON_RED
+SOUND=snd_MONSTER_DRAGON1
+ICON=i_pet_dragon
+DAM=9,14
+ARMOR=25
+RESOURCES=20 i_ribs_raw,40 i_hides_wyrm,8 i_reag_dragon_blood
+CAN=MT_WALK|MT_FLY
+FOODTYPE=80 t_meat_raw
+DESIRES=i_gold
+AVERSIONS=r_civilization,r_water
+
+ON=@Create
+ TAG.LOOTPROPRIO 1
+ TAG.MTAME 1
+ COLOR=0455
+ STR={850 1050}
+ DEX={180 250}
+ INT=10
+ PARRYING={95.0 115.0}
+ MAGERY=1.0
+ MAGICRESISTANCE={99.0 100.0}
+ TACTICS={100.0 110.0}
+ WRESTLING={105.0 120.0}
+ NPC=brain_dragon
+ FAME={8000 9500}
+ KARMA=10000
+
+[CHARDEF c_m_dragon_ice]
+NAME=Ice Dragpn
+ID=c_DRAGON_RED
+SOUND=snd_MONSTER_DRAGON1
+ICON=i_pet_dragon
+DAM=9,14
+ARMOR=25
+RESOURCES=20 i_ribs_raw,40 i_hides_wyrm,8 i_reag_dragon_blood
+CAN=MT_WALK|MT_FLY
+FOODTYPE=80 t_meat_raw
+DESIRES=i_gold
+AVERSIONS=r_civilization,r_water
+
+ON=@Create
+ TAG.LOOTPROPRIO 1
+ TAG.MTAME 1
+ COLOR=color_ice
+ STR={850 1050}
+ DEX={180 250}
+ INT=10
+ PARRYING={95.0 115.0}
+ MAGERY=1.0
+ MAGICRESISTANCE={99.0 100.0}
+ TACTICS={100.0 110.0}
+ WRESTLING={105.0 120.0}
+ NPC=brain_dragon
+ FAME={8000 9500}
+ KARMA=10000
+
+
+[CHARDEF c_m_drake_chemical]
+//DEFNAME2=C_M_WYRM
+NAME=Chemical Drake
+ID=c_DRAGON_small_black
+SOUND=snd_MONSTER_DRAGON1
+ICON=i_pet_dragon
+DAM=9,14
+ARMOR=20
+RESOURCES=20 i_ribs_raw,40 i_hides_wyrm,8 i_reag_dragon_blood
+CAN=MT_WALK|MT_FLY
+FOODTYPE=80 t_meat_raw
+DESIRES=i_gold
+AVERSIONS=r_civilization,r_water
+
+ON=@Create
+ TAG.LOOTPROPRIO 1
+ TAG.MTAME 1
+ COLOR=035
+ STR={650 800}
+ DEX={180 250}
+ INT=10
+ PARRYING={95.0 115.0}
+ MAGERY=1.0
+ MAGICRESISTANCE={99.0 100.0}
+ TACTICS={100.0 110.0}
+ WRESTLING={105.0 120.0}
+ NPC=brain_dragon
+ FAME={8000 9500}
+ KARMA=10000
+
+[CHARDEF c_m_drake_gay]
+//DEFNAME2=C_M_WYRM
+NAME=Gay Drake
+ID=c_DRAGON_small_black
+SOUND=snd_MONSTER_DRAGON1
+ICON=i_pet_dragon
+DAM=9,14
+ARMOR=20
+RESOURCES=20 i_ribs_raw,40 i_hides_wyrm,8 i_reag_dragon_blood
+CAN=MT_WALK|MT_FLY
+FOODTYPE=80 t_meat_raw
+DESIRES=i_gold
+AVERSIONS=r_civilization,r_water
+
+ON=@Create
+ TAG.LOOTPROPRIO 1
+ TAG.MTAME 1
+ COLOR=024
+ STR={650 800}
+ DEX={180 250}
+ INT=10
+ PARRYING={95.0 115.0}
+ MAGERY=1.0
+ MAGICRESISTANCE={99.0 100.0}
+ TACTICS={100.0 110.0}
+ WRESTLING={105.0 120.0}
+ NPC=brain_dragon
+ FAME={8000 9500}
+ KARMA=10000
+
+[CHARDEF c_m_drake_black]
+//DEFNAME2=C_M_WYRM
+NAME=Black Drake
+ID=c_DRAGON_small_black
+SOUND=snd_MONSTER_DRAGON1
+ICON=i_pet_dragon
+DAM=9,14
+ARMOR=20
+RESOURCES=20 i_ribs_raw,40 i_hides_wyrm,8 i_reag_dragon_blood
+CAN=MT_WALK|MT_FLY
+FOODTYPE=80 t_meat_raw
+DESIRES=i_gold
+AVERSIONS=r_civilization,r_water
+
+ON=@Create
+ TAG.LOOTPROPRIO 1
+ TAG.MTAME 1
+ COLOR=0455
+ STR={650 800}
+ DEX={180 250}
+ INT=10
+ PARRYING={95.0 115.0}
+ MAGERY=1.0
+ MAGICRESISTANCE={99.0 100.0}
+ TACTICS={100.0 110.0}
+ WRESTLING={105.0 120.0}
+ NPC=brain_dragon
+ FAME={8000 9500}
+ KARMA=10000
+
+[CHARDEF c_m_drake_ice]
+//DEFNAME2=C_M_WYRM
+NAME=Ice Drake
+ID=c_DRAGON_small_black
+SOUND=snd_MONSTER_DRAGON1
+ICON=i_pet_dragon
+DAM=9,14
+ARMOR=20
+RESOURCES=20 i_ribs_raw,40 i_hides_wyrm,8 i_reag_dragon_blood
+CAN=MT_WALK|MT_FLY
+FOODTYPE=80 t_meat_raw
+DESIRES=i_gold
+AVERSIONS=r_civilization,r_water
+
+ON=@Create
+ TAG.LOOTPROPRIO 1
+ TAG.MTAME 1
+ COLOR=color_ice
+ STR={650 800}
+ DEX={180 250}
+ INT=10
+ PARRYING={95.0 115.0}
+ MAGERY=1.0
+ MAGICRESISTANCE={99.0 100.0}
+ TACTICS={100.0 110.0}
+ WRESTLING={105.0 120.0}
+ NPC=brain_dragon
+ FAME={8000 9500}
+ KARMA=10000
+
+
+
+[FUNCTION teste]
+IF !(<FILE.INUSE>)
+ FILE.DELETEFILE c:\accounts-venda.txt
+ FILE.MODE.CREATE=1
+// FILE.MODE.APPEND=1
+ FILE.MODE.WRITEFLAG=1
+ IF (<FILE.OPEN c:\accounts-venda.txt>)
+
+
+
+
+For 0 <eval <serv.accounts>-1>
+CALL miii <EXPLODE /: , <SERV.ACCOUNT.<dLOCAL._FOR>.LASTCONNECTDATE>>
+IF <dLOCAL.MES>==7
+IF <SERV.ACCOUNT.<dLOCAL._FOR>.TOTALCONNECTTIME> > 10000
+FILE.WRITELINE ACCOUNT <SERV.ACCOUNT.<dLOCAL._FOR>.NAME>
+FILE.WRITELINE SENHA <SERV.ACCOUNT.<dLOCAL._FOR>.PASSWORD>
+FILE.WRITELINE CHARUID <SERV.ACCOUNT.<dLOCAL._FOR>.LASTCHARUID>
+FILE.WRITELINE -----------
+ENDIF
+ELIF (<dLOCAL.MES>==8) && (<dLOCAL.DIA> < 11)
+IF <SERV.ACCOUNT.<dLOCAL._FOR>.TOTALCONNECTTIME> > 10000
+FILE.WRITELINE ACCOUNT <SERV.ACCOUNT.<dLOCAL._FOR>.NAME>
+FILE.WRITELINE SENHA <SERV.ACCOUNT.<dLOCAL._FOR>.PASSWORD>
+FILE.WRITELINE CHARUID <SERV.ACCOUNT.<dLOCAL._FOR>.LASTCHARUID>
+FILE.WRITELINE -----------
+ENDIF
+ENDIF
+ENDFOR
+FILE.CLOSE
+
+
+
+////////////////////////////////////
+//////////// POKEMONS //////////////
+////////////////////////////////////
+
+////////////////////////////////////
+////////////////////////////////////
+
+
+
+[CHARDEF c_bull_stone]
+NAME=Stone Bull
+SOUND=snd_ANIMALS_BULL1
+icon=020ef
+ID=0E8
+DAM=11,20
+ARMOR=35
+
+//TEVENTS=e_timeblock
+ON=@CREATE
+
+COLOR=0387
+
+STR=300
+DEX=110
+int=100
+
+PARRYING=150.0 190.0
+MAGICRESISTANCE=18.0 25.0
+TACTICS=68.0 85.0
+WRESTLING=90.0 97.0
+TAMING=63.0
+
+FAME=50
+KARMA=-100 -150
+NPC=brain_animal
+
+
+
+
+
+[CHARDEF c_elder_bear_polar]
+NAME=Polar Bear
+ID=c_bear_polar
+DAM=9,15
+ARMOR=35
+
+ON=@Create
+ COLOR 0481
+ STR={150 250}
+ DEX={86 105}
+ INT={385 425}
+ PARRYING={55.0 95.0}
+ MAGICRESISTANCE={99.0 100.0}
+ TACTICS={98.0 100.0}
+ WRESTLING={90.0 93.0}
+ NPC=brain_monster
+ FAME={100 2000}
+ KARMA=-3000
+ TAG.LOOTPROPRIO 1
+
+ON=@NPCRESTOCK
+ITEM=i_mask_polarbear,R12
+
+
+[CHARDEF c_elder_bear_black]
+NAME=Black Bear
+ID=c_bear_brown
+DAM=9,15
+ARMOR=35
+
+ON=@Create
+ COLOR 0455
+ STR={150 250}
+ DEX={86 105}
+ INT={385 425}
+ PARRYING={55.0 95.0}
+ MAGICRESISTANCE={99.0 100.0}
+ TACTICS={98.0 100.0}
+ WRESTLING={90.0 93.0}
+ NPC=brain_monster
+ FAME={100 2000}
+ KARMA=-3000
+ TAG.LOOTPROPRIO 1
+
+ON=@NPCRESTOCK
+ ITEM=i_mask_blackbear,R8
+
+///////////////////////////////////////////////////////
+////////////////////// Mustangs////////////////////////
+///////////////////////////////////////////////////////
+
+
+[CHARDEF c_redroan_musta]
+ID=c_horse_gray
+NAME=Red Roan Mustang
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=0279
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={70 100}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=60.0
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_light_green_musta]
+ID=c_horse_brown_dk
+NAME=Light Green Mustang
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=0231
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={70 100}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=60.0
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_dark_green_musta]
+ID=c_horse_brown_dk
+NAME=Dark Green Mustang
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=0233
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={70 100}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=49.0
+ FAME=10
+ KARMA={1 99}
+
+//////////////// Roan Mustang  Taming 72 no spherechar_anim.scp /////////
+
+//////////////// Crimson Mustang  Taming 74 no spherechar_anim.scp /////////
+
+//////////////// Sky Gray Mustang  Taming 76 no spherechar_anim.scp /////////
+
+
+//////////////// Pamamino Mustang  Taming 76 no spherechar_anim.scp /////////
+
+//////////////// (old) Red Roan Mustang  Taming 78 no spherechar_anim.scp /////////
+
+//////////////// Wimmimate Mustang  Taming 82 no spherechar_anim.scp /////////
+
+//////////////// Chocolate Mustang  Taming 85 no spherechar_anim.scp /////////
+
+
+[CHARDEF c_dark_brown_musta]
+ID=0CC
+NAME=Dark Brown Mustang
+DAM=5,9
+ARMOR=15
+
+
+
+ON=@Create
+ COLOR=0750
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={70 100}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=59.5
+ FAME=10
+ KARMA={1 99}
+
+//////////////// Grey Mustang  Taming 86 no spherechar_anim.scp /////////
+
+//////////////// Sky Mustang  Taming 88 no spherechar_anim.scp /////////
+
+
+[CHARDEF c_olive_musta]
+ID=c_horse_brown_dk
+NAME=Olive Mustang
+DAM=5,9
+ARMOR=15
+
+
+
+ON=@Create
+ COLOR=0039
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={70 100}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=59.5
+ FAME=10
+ KARMA={1 99}
+
+
+[CHARDEF c_black_musta]
+ID=c_horse_brown_dk
+NAME=Black Mustang
+DAM=5,9
+ARMOR=15
+
+
+
+ON=@Create
+ COLOR=0455
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={70 100}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=95.0
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_hard_musta]
+ID=0CC
+NAME=Hard Mustang
+DAM=5,9
+ARMOR=15
+
+
+
+ON=@Create
+ COLOR=0740
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={70 100}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=63.0
+ FAME=10
+ KARMA={1 99}
+
+
+[CHARDEF c_storm_musta]
+ID=0CC
+NAME=Storm Mustang
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=0515
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={70 100}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=83.0
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_swamp_musta]
+ID=c_horse_brown_dk
+NAME=Swamp Mustang
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=0590
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={70 100}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=63.0
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_flame_musta]
+ID=c_horse_brown_dk
+NAME=Flame Mustang
+DAM=5,9
+ARMOR=15
+
+
+
+ON=@Create
+ COLOR=02b
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={70 100}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=66.5
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_poison_musta]
+ID=c_horse_brown_dk
+NAME=Poison Mustang
+DAM=5,9
+ARMOR=15
+
+
+
+ON=@Create
+ COLOR=043
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={70 100}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=66.5
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_golden_musta]
+ID=c_horse_brown_dk
+NAME=Golden Mustang
+DAM=5,9
+ARMOR=15
+
+
+
+ON=@Create
+ COLOR=045e
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={70 100}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=40.0
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_mage_musta]
+ID=c_horse_brown_dk
+NAME=Mage Mustang
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=030
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={70 100}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=75.0
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_night_musta]
+ID=c_horse_brown_dk
+NAME=Night Mustang
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=052d
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={70 100}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=80.0
+ FAME=10
+ KARMA={1 99}
+
+/////////////////////////// Mustang's Novos ////////////
+
+[CHARDEF 01118]
+DEFNAME=C_A_MUSTANG_PAMAMINO
+DEFNAME2=c_panamino_mustang
+NAME=Panamino Mustang
+SOUND=snd_ANIMALS_HORSE1
+ID=c_horse_gray
+ICON=i_pet_horse_brown_dk
+DAM=3,4
+ARMOR=9
+RESOURCES=15 i_ribs_raw,10 i_hide
+CAN=MT_WALK|MT_RUN
+FOODTYPE=55 t_crops, 55 t_fruit, 55 t_grain, 64 t_grass
+DESIRES=e_horses,c_man,c_woman
+TEVENTS=e_horses
+AVERSIONS=e_carnivores3
+DESCRIPTION=Horse (Pamamino Mustang)
+SUBSECTION=Land (Wild)
+CATEGORY=Animals
+
+ON=@Create
+	COLOR=033
+	STR={100 180}
+	DEX={90 130}
+	INT={6 10}
+	PARRYING={35.0 45.0}
+	MAGICRESISTANCE={25.0 30.0}
+	TACTICS={29.0 44.0}
+	WRESTLING={29.0 44.0}
+	TAMING=70.0
+	NPC=brain_animal
+	FAME=0
+	KARMA={-1 -99}
+
+[CHARDEF c_blood_musta]
+ID=c_horse_brown_dk
+NAME=Blood Mustang
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=026
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={70 100}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=69.0
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_snow_musta]
+ID=c_horse_brown_dk
+NAME=Snow Mustang
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=0481
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={70 100}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=85.0
+ FAME=10
+ KARMA={1 99}
+
+
+[CHARDEF c_stone_musta]
+ID=c_horse_brown_dk
+NAME=Stone Mustang
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=0482
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={70 100}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=90.0
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_marine_musta]
+ID=c_horse_brown_dk
+NAME=Marine Mustang
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=057
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={70 100}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=78.0
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_gay_musta]
+ID=c_horse_brown_dk
+NAME=Gay Mustang
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=024
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=80.0
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_Grey_musta]
+ID=c_horse_gray
+NAME=Grey Mustang
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=03e7
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=76.0
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_shadow_musta]
+ID=c_horse_brown_lt
+NAME=Shadow Mustang
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=0770
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=56.0
+ FAME=10
+ KARMA={6000 10000}
+
+
+/////// Horses Especiais ///////////////////////////////
+
+[CHARDEF c_nightmare]
+ID=c_horse_tan
+NAME=Nightmare
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=0515
+ NPC=brain_animal
+ STR={320 360}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=105.0
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_elder_nightmare]
+ID=c_horse_tan
+NAME=Elder Nightmare
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=0455
+ NPC=brain_animal
+ STR={350 460}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={89.0 119.0}
+ WRESTLING={89.0 109.0}
+ TAMING=75.0
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_indian_horse]
+ID=0e2
+NAME=Indian Horse
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=04b9
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=50.0
+ FAME=10
+ KARMA={1 5}
+
+/////// Llamas Coloridas ////////////////////////////
+
+[CHARDEF c_stone_llama]
+ID=c_llama
+NAME=Stone Llama
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=0482
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={70 100}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=90.0
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_night_llama]
+ID=c_llama
+NAME=Night Llama
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=052d
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={70 100}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=80.0
+ FAME=10
+ KARMA={1 99}
+
+
+[CHARDEF c_mage_llama]
+ID=c_llama
+NAME=Mage Llama
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=030
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=75.0
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_redroan_llama]
+ID=c_llama
+NAME=Red Roan Llama
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=0279
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=60.0
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_light_green_llama]
+ID=c_llama
+NAME=Light Green Llama
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=0231
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=60.0
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_panamino_llama]
+ID=c_llama
+NAME=Panamino Llama
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=033
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=70.0
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_storm_llama]
+ID=c_llama
+NAME=Storm Llama
+DAM=5,9
+ARMOR=20
+
+ON=@Create
+ COLOR=0515
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=83.0
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_marine_llama]
+ID=c_llama
+NAME=Marine Llama
+DAM=5,9
+ARMOR=20
+
+ON=@Create
+ COLOR=057
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=78.0
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_Grey_llama]
+ID=c_llama
+NAME=Grey Llama
+DAM=5,9
+ARMOR=20
+
+ON=@Create
+ COLOR=03e7
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=76.0
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_blood_llama]
+ID=c_llama
+NAME=Blood Llama
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=04b9
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=70.0
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_blue_llama]
+ID=c_llama
+NAME=Blue Llama
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=color_o_mytheril
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=63.0
+ FAME=10
+ KARMA={1000 5000}
+
+[CHARDEF c_black_llama]
+ID=c_llama
+NAME=Black Llama
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=0455
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=95.0
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_shadow_llama]
+ID=c_llama
+NAME=Shadow Llama
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=color_o_shadow
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=56.0
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_gay_llama]
+ID=c_llama
+NAME=Gay Llama
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=024
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=80.0
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_pale_llama]
+ID=c_llama
+NAME=Pale Llama
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=color_o_copper
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=66.5
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_golden_llama]
+ID=c_llama
+NAME=Golden Llama
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=030
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=63.0
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_sun_llama]
+ID=c_llama
+NAME=Sun Llama
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=color_o_golden
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=70.0
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_snow_llama]
+ID=c_llama
+NAME=Snow Llama
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=0481
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=85.0
+ FAME=10
+ KARMA={1 99}
+
+/////////// Dinos Coloridos /////////////////////
+
+/////////// Oclock //////////////
+
+[CHARDEF c_chemical_oclock]
+ID=c_ostard_desert
+NAME=Chemical Oclock
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=035
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=56.0
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_swampl_oclock]
+ID=c_ostard_desert
+NAME=Swamp Oclock
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+COLOR=0590
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=56.0
+ FAME=10
+ KARMA={1 99}
+
+
+
+[CHARDEF c_snow_oclock]
+ID=c_ostard_desert
+NAME=Snow Oclock
+DAM=5,9
+ARMOR=15
+
+
+
+ON=@Create
+ COLOR=0481
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=85.0
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_mage_oclock]
+ID=c_ostard_desert
+NAME=Mage Oclock
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=030
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=75.0
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_stone_oclock]
+ID=c_ostard_desert
+NAME=Stone Oclock
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=0482
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=63.0
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_marine_oclock]
+ID=c_ostard_desert
+NAME=Marine Oclock
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=057
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=52.5
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_night_oclock]
+ID=c_ostard_desert
+NAME=Night Oclock
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=052d
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=70.0
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_dark_oclock]
+ID=c_ostard_desert
+NAME=Dark Oclock
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=0455
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=66.5
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_flame_oclock]
+ID=c_ostard_desert
+NAME=Flame Oclock
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=02b
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=56.0
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_gay_oclock]
+ID=c_ostard_desert
+NAME=Gay Oclock
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=024
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=80.0
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_nature_oclock]
+ID=c_ostard_desert
+NAME=Nature Oclock
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=052
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=52.5
+ FAME=10
+ KARMA={1 99}
+
+///////// Orn /////////////////////////
+
+[CHARDEF c_chemical_orn]
+ID=c_ostard_forest
+NAME=Chemical Orn
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=035
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=56.0
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_swamp_orn]
+ID=c_ostard_forest
+NAME=Swamp Orn
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+COLOR=0590
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=56.0
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_snow_orn]
+ID=c_ostard_forest
+NAME=Snow Orn
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=0481
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=85.0
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_mage_orn]
+ID=c_ostard_forest
+NAME=Mage Orn
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=030
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=75.0
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_stone_orn]
+ID=c_ostard_forest
+NAME=Stone Orn
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=0482
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=63.0
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_marine_orn]
+ID=c_ostard_forest
+NAME=Marine Orn
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=057
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=52.5
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_night_orn]
+ID=c_ostard_forest
+NAME=Night Orn
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=052d
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=70.0
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_dark_orn]
+ID=c_ostard_forest
+NAME=Dark Orn
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=0455
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=66.5
+ FAME=10
+ KARMA={1 99}
+
+
+[CHARDEF c_flame_orn]
+ID=c_ostard_forest
+NAME=Flame Orn
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=02b
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=56.0
+ FAME=10
+ KARMA={1 99}
+
+
+[CHARDEF c_gay_orn]
+ID=c_ostard_forest
+NAME=Gay Orn
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=024
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=80.0
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_nature_orn]
+ID=c_ostard_forest
+NAME=Nature Orn
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=052
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=52.5
+ FAME=10
+ KARMA={1 99}
+
+/////////// Zostrich ////////////////////////////////////
+
+[CHARDEF c_redroan_zos]
+ID=c_ostard_zostrich
+NAME=Red Roan Zostrich
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=0279
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=60.0
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_light_green_zos]
+ID=c_ostard_zostrich
+NAME=Light Green Zostrich
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=0231
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=60.0
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_panamino_zos]
+ID=c_ostard_zostrich
+NAME=Panamino Zostrich
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=033
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=70.0
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_dark_green_zos]
+ID=c_ostard_zostrich
+NAME=Dark Green Zostrich
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=0233
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=49.0
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_olive_zos]
+ID=c_ostard_zostrich
+NAME=Olive Zostrich
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=0039
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=59.5
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_rock_zos]
+ID=c_ostard_zostrich
+NAME=Rock Zostrich
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=02eb
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=59.5
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_Swamp_zos]
+ID=c_ostard_zostrich
+NAME=Swamp Zostrich
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+COLOR=0590
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=63.0
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_snow_zos]
+ID=c_ostard_zostrich
+NAME=Snow Zostrich
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=0481
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=85.0
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_golden_zos]
+ID=c_ostard_zostrich
+NAME=Golden Zostrich
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=045e
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=70.0
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_mage_zos]
+ID=c_ostard_zostrich
+NAME=Mage Zostrich
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=030
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=75.0
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_stone_zos]
+ID=c_ostard_zostrich
+NAME=Stone Zostrich
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=0482
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=90.0
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_flame_zos]
+ID=c_ostard_zostrich
+NAME=Flame Zostrich
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=02b
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=63.0
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_marine_zos]
+ID=c_ostard_zostrich
+NAME=Marine Zostrich
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=057
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=78.0
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_Grey_zos]
+ID=c_ostard_zostrich
+NAME=Grey Zostrich
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=03e7
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=76.0
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_night_zos]
+ID=c_ostard_zostrich
+NAME=Night Zostrich
+DAM=5,9
+ARMOR=15
+
+
+
+ON=@Create
+ COLOR=052d
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=80.0
+ FAME=10
+ KARMA={1 99}
+
+
+[CHARDEF c_black_zos]
+ID=c_ostard_zostrich
+NAME=Black Zostrich
+DAM=5,9
+ARMOR=15
+
+
+
+ON=@Create
+ COLOR=0455
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=95.0
+ FAME=10
+ KARMA={1 99}
+
+
+[CHARDEF c_gay_zos]
+ID=c_ostard_zostrich
+NAME=Gay Zostrich
+DAM=5,9
+ARMOR=15
+
+
+
+ON=@Create
+ COLOR=024
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=80.0
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_poison_zos]
+ID=c_ostard_zostrich
+NAME=Poison Zostrich
+DAM=5,9
+ARMOR=15
+
+
+
+ON=@Create
+ COLOR=043
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=66.5
+ FAME=10
+ KARMA={1 99}
+
+
+
+
+
+
+[CHARDEF c_dark_brown_zos]
+ID=c_ostard_zostrich
+NAME=Dark Brown Zostrich
+DAM=5,9
+ARMOR=15
+
+
+
+ON=@Create
+ COLOR=0750
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=44.0
+ FAME=10
+ KARMA={1 99}
+
+[CHARDEF c_storm_zos]
+ID=c_ostard_zostrich
+NAME=Storm Zostrich
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+ COLOR=0515
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=83.0
+ FAME=10
+ KARMA={1 99}
+
+
+[CHARDEF c_hard_zos]
+ID=c_ostard_zostrich
+NAME=Hard Zostrich
+DAM=5,9
+ARMOR=15
+
+
+
+ON=@Create
+ COLOR=0740
+ NPC=brain_animal
+ MAXHITS={150 200}
+ STR={120 160}
+ DEX={110 255}
+ INT={16 30}
+ PARRYING={75.0 100.0}
+ MAGICRESISTANCE={65.0 120.0}
+ TACTICS={79.0 119.0}
+ WRESTLING={69.0 99.0}
+ TAMING=44.0
+ FAME=10
+ KARMA={1 99}
+
+// New mounts generated by script
+[CHARDEF c_crimson_musta]
+ID=0CC
+NAME=Crimson Mustang
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+        COLOR=01b6
+        NPC=brain_animal
+        MAXHITS={150 200}
+        STR={120 160}
+        DEX={70 100}
+        INT={16 30}
+        PARRYING={75.0 100.0}
+        MAGICRESISTANCE={65.0 120.0}
+        TACTICS={79.0 119.0}
+        WRESTLING={69.0 99.0}
+        TAMING=52.0
+        FAME=10
+        KARMA={1 99}
+
+[CHARDEF c_crimson_llama]
+ID=c_llama
+NAME=Crimson Llama
+DAM=5,9
+ARMOR=20
+
+ON=@Create
+        COLOR=01b6
+        NPC=brain_animal
+        MAXHITS={150 200}
+        STR={120 160}
+        DEX={110 255}
+        INT={16 30}
+        PARRYING={75.0 100.0}
+        MAGICRESISTANCE={65.0 120.0}
+        TACTICS={79.0 119.0}
+        WRESTLING={69.0 99.0}
+        TAMING=52.0
+        FAME=10
+        KARMA={1 99}
+
+[CHARDEF c_crimson_zos]
+ID=c_ostard_zostrich
+NAME=Crimson Zostrich
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+        COLOR=01b6
+        NPC=brain_animal
+        MAXHITS={150 200}
+        STR={120 160}
+        DEX={110 255}
+        INT={16 30}
+        PARRYING={75.0 100.0}
+        MAGICRESISTANCE={65.0 120.0}
+        TACTICS={79.0 119.0}
+        WRESTLING={69.0 99.0}
+        TAMING=52.0
+        FAME=10
+        KARMA={1 99}
+
+[SPAWN SPW_crimson_MOUNTS]
+DEFNAME=SPAWN_crimson_mounts
+CATEGORY=Spawn Groups
+SUBSECTION=TFG Mounts
+DESCRIPTION=storm
+ID=c_crimson_musta
+ID=c_crimson_zos
+ID=c_crimson_llama
+
+[CHARDEF c_sky_musta]
+ID=c_horse_brown_lt
+NAME=Sky Mustang
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+        COLOR=0263
+        NPC=brain_animal
+        MAXHITS={150 200}
+        STR={120 160}
+        DEX={70 100}
+        INT={16 30}
+        PARRYING={75.0 100.0}
+        MAGICRESISTANCE={65.0 120.0}
+        TACTICS={79.0 119.0}
+        WRESTLING={69.0 99.0}
+        TAMING=65.0
+        FAME=10
+        KARMA={1 99}
+
+[CHARDEF c_sky_llama]
+ID=c_llama
+NAME=Sky Llama
+DAM=5,9
+ARMOR=20
+
+ON=@Create
+        COLOR=0263
+        NPC=brain_animal
+        MAXHITS={150 200}
+        STR={120 160}
+        DEX={110 255}
+        INT={16 30}
+        PARRYING={75.0 100.0}
+        MAGICRESISTANCE={65.0 120.0}
+        TACTICS={79.0 119.0}
+        WRESTLING={69.0 99.0}
+        TAMING=65.0
+        FAME=10
+        KARMA={1 99}
+
+[CHARDEF c_sky_zos]
+ID=c_ostard_zostrich
+NAME=Sky Zostrich
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+        COLOR=0263
+        NPC=brain_animal
+        MAXHITS={150 200}
+        STR={120 160}
+        DEX={110 255}
+        INT={16 30}
+        PARRYING={75.0 100.0}
+        MAGICRESISTANCE={65.0 120.0}
+        TACTICS={79.0 119.0}
+        WRESTLING={69.0 99.0}
+        TAMING=65.0
+        FAME=10
+        KARMA={1 99}
+
+[SPAWN SPW_sky_MOUNTS]
+DEFNAME=SPAWN_sky_mounts
+CATEGORY=Spawn Groups
+SUBSECTION=TFG Mounts
+DESCRIPTION=storm
+ID=c_sky_musta
+ID=c_sky_zos
+ID=c_sky_llama
+
+[CHARDEF c_wimmimate_musta]
+ID=c_horse_gray
+NAME=Wimmimate Mustang
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+        COLOR=0158
+        NPC=brain_animal
+        MAXHITS={150 200}
+        STR={120 160}
+        DEX={70 100}
+        INT={16 30}
+        PARRYING={75.0 100.0}
+        MAGICRESISTANCE={65.0 120.0}
+        TACTICS={79.0 119.0}
+        WRESTLING={69.0 99.0}
+        TAMING=87.0
+        FAME=10
+        KARMA={1 99}
+
+[CHARDEF c_wimmimate_llama]
+ID=c_llama
+NAME=Wimmimate Llama
+DAM=5,9
+ARMOR=20
+
+ON=@Create
+        COLOR=0158
+        NPC=brain_animal
+        MAXHITS={150 200}
+        STR={120 160}
+        DEX={110 255}
+        INT={16 30}
+        PARRYING={75.0 100.0}
+        MAGICRESISTANCE={65.0 120.0}
+        TACTICS={79.0 119.0}
+        WRESTLING={69.0 99.0}
+        TAMING=87.0
+        FAME=10
+        KARMA={1 99}
+
+[CHARDEF c_wimmimate_zos]
+ID=c_ostard_zostrich
+NAME=Wimmimate Zostrich
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+        COLOR=0158
+        NPC=brain_animal
+        MAXHITS={150 200}
+        STR={120 160}
+        DEX={110 255}
+        INT={16 30}
+        PARRYING={75.0 100.0}
+        MAGICRESISTANCE={65.0 120.0}
+        TACTICS={79.0 119.0}
+        WRESTLING={69.0 99.0}
+        TAMING=87.0
+        FAME=10
+        KARMA={1 99}
+
+[SPAWN SPW_wimmimate_MOUNTS]
+DEFNAME=SPAWN_wimmimate_mounts
+CATEGORY=Spawn Groups
+SUBSECTION=TFG Mounts
+DESCRIPTION=storm
+ID=c_wimmimate_musta
+ID=c_wimmimate_zos
+ID=c_wimmimate_llama
+
+[CHARDEF c_chemical_musta]
+ID=0CC
+NAME=Chemical Mustang
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+        COLOR=035
+        NPC=brain_animal
+        MAXHITS={150 200}
+        STR={120 160}
+        DEX={70 100}
+        INT={16 30}
+        PARRYING={75.0 100.0}
+        MAGICRESISTANCE={65.0 120.0}
+        TACTICS={79.0 119.0}
+        WRESTLING={69.0 99.0}
+        TAMING=78.0
+        FAME=10
+        KARMA={1 99}
+
+[CHARDEF c_chemical_llama]
+ID=c_llama
+NAME=Chemical Llama
+DAM=5,9
+ARMOR=20
+
+ON=@Create
+        COLOR=035
+        NPC=brain_animal
+        MAXHITS={150 200}
+        STR={120 160}
+        DEX={110 255}
+        INT={16 30}
+        PARRYING={75.0 100.0}
+        MAGICRESISTANCE={65.0 120.0}
+        TACTICS={79.0 119.0}
+        WRESTLING={69.0 99.0}
+        TAMING=78.0
+        FAME=10
+        KARMA={1 99}
+
+[CHARDEF c_chemical_zos]
+ID=c_ostard_zostrich
+NAME=Chemical Zostrich
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+        COLOR=035
+        NPC=brain_animal
+        MAXHITS={150 200}
+        STR={120 160}
+        DEX={110 255}
+        INT={16 30}
+        PARRYING={75.0 100.0}
+        MAGICRESISTANCE={65.0 120.0}
+        TACTICS={79.0 119.0}
+        WRESTLING={69.0 99.0}
+        TAMING=78.0
+        FAME=10
+        KARMA={1 99}
+
+[SPAWN SPW_chemical_MOUNTS]
+DEFNAME=SPAWN_chemical_mounts
+CATEGORY=Spawn Groups
+SUBSECTION=TFG Mounts
+DESCRIPTION=storm
+ID=c_chemical_musta
+ID=c_chemical_zos
+ID=c_chemical_llama
+
+[CHARDEF c_nature_musta]
+ID=0CC
+NAME=Nature Mustang
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+        COLOR=052
+        NPC=brain_animal
+        MAXHITS={150 200}
+        STR={120 160}
+        DEX={70 100}
+        INT={16 30}
+        PARRYING={75.0 100.0}
+        MAGICRESISTANCE={65.0 120.0}
+        TACTICS={79.0 119.0}
+        WRESTLING={69.0 99.0}
+        TAMING=72.0
+        FAME=10
+        KARMA={1 99}
+
+[CHARDEF c_nature_llama]
+ID=c_llama
+NAME=Nature Llama
+DAM=5,9
+ARMOR=20
+
+ON=@Create
+        COLOR=052
+        NPC=brain_animal
+        MAXHITS={150 200}
+        STR={120 160}
+        DEX={110 255}
+        INT={16 30}
+        PARRYING={75.0 100.0}
+        MAGICRESISTANCE={65.0 120.0}
+        TACTICS={79.0 119.0}
+        WRESTLING={69.0 99.0}
+        TAMING=72.0
+        FAME=10
+        KARMA={1 99}
+
+[CHARDEF c_nature_zos]
+ID=c_ostard_zostrich
+NAME=Nature Zostrich
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+        COLOR=052
+        NPC=brain_animal
+        MAXHITS={150 200}
+        STR={120 160}
+        DEX={110 255}
+        INT={16 30}
+        PARRYING={75.0 100.0}
+        MAGICRESISTANCE={65.0 120.0}
+        TACTICS={79.0 119.0}
+        WRESTLING={69.0 99.0}
+        TAMING=72.0
+        FAME=10
+        KARMA={1 99}
+
+[SPAWN SPW_nature_MOUNTS]
+DEFNAME=SPAWN_nature_mounts
+CATEGORY=Spawn Groups
+SUBSECTION=TFG Mounts
+DESCRIPTION=storm
+ID=c_nature_musta
+ID=c_nature_zos
+ID=c_nature_llama
+
+[EOF]

@@ -1,0 +1,59 @@
+// roda na placa
+
+[FUNCTION f_housing_checkplacement]
+ref1 = <link.more1> // dono da casa
+if !(<ref1.f_housing_can_add_house>)
+	ref1.sysmessage "@,,1 Você já tem uma casa associada a sua conta global. Para colocar outra remova a atual."
+	if (strmatch(i_multi_*, <link.baseid>) || (strmatch(m_multi_*, <link.baseid>)
+		local.giveback = i_deed<strsub strlen(i_multi) 0 <link.baseid>>
+		if <serv.itemdef.<local.giveback>>
+			serv.newitem <local.giveback>
+
+			IF (<NEW.ISTEVENT.t_vip_deed>)
+				NEW.LINK <REF1.UID>
+			ENDIF
+
+			ref1.bounce <new>
+		endif
+	endif
+	link.remove
+	return 1
+endif
+ref1.f_housing_removekeys <link.uid>
+local.reason = <link.f_housing_checkarea>
+if !strmatch(<def.housing.badplacement_ok>, <local.reason>)
+	link.remove
+	if (strmatch(i_multi_*, <link.baseid>) || (strmatch(m_multi_*, <link.baseid>)
+		local.giveback = i_deed<strsub strlen(i_multi) 0 <link.baseid>>
+		if <serv.itemdef.<local.giveback>>
+			serv.newitem <local.giveback>
+
+			IF (<NEW.ISTEVENT.t_vip_deed>)
+				NEW.LINK <REF1.UID>
+			ENDIF
+
+			ref1.bounce <new>
+		endif
+	endif
+	ref1.sysmessage <local.reason>
+	return 1
+endif
+link.more2 = <uid>
+link.region.events +r_house_system
+link.region.events +r_house_private
+link.tag0.global = <ref1.account.tag0.global>
+tag.waiting_confirm = 1
+tag.house_owner = <ref1.uid>
+timer = 10
+ref1.sysmessage "@,,1 Você tem 10 segundos para confirmar."
+trysrc <ref1.uid> dialog d_house_confirm_placement
+ref1.p = <ref1.p>
+if <ref1.region.uid> == <link.uid>
+	ref1.p <p>
+	ref1.fix
+	ref1.update
+endif
+
+[regiontype r_house_system]
+
+[EOF]

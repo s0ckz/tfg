@@ -1,0 +1,403 @@
+[PLEVEL 1]
+strip
+online
+//cheque
+//gmap
+//quest
+//download
+disarm
+
+
+///////////////////////////////////////////////////////////
+/////////////////////////// G MAP /////////////////////////
+///////////////////////////////////////////////////////////
+
+[FUNCTION gmap]
+if !(<GUILD>)
+sysmessage Voce nao possui uma guild
+else
+Sdialog d_map_guild
+endif
+
+[DIALOG d_map_guild]
+40,40
+PAGE 0
+gumppic 0 0 5528
+
+FOR <GUILD.MEMBER.COUNT>
+	REF69=<GUILD.MEMBER.<HVAL <LOCAL._FOR>-1>.uid>
+	IF <REF69.ISONLINE>
+		LOCAL.X <eval (<REF69.P.X>*375)/5104>
+		LOCAL.Y <eval (<REF69.P.Y>*375)/4096>
+		IF !(<REF69.UID>==<SRC.UID>)
+			button <dLOCAL.X> <dLOCAL.Y> 2360 2361 1 0 <dLOCAL._FOR>
+		ELSE
+			button <dLOCAL.X> <dLOCAL.Y>  2362 2361 1 0 <dLOCAL._FOR>
+		ENDIF
+		dtext <eval <LOCAL.X>-15> <eval <LOCAL.Y>+7> 044 <REF69.NAME>
+	ENDIF
+
+ENDFOR
+
+[DIALOG d_map_guild BUTTON]
+ON=1 100
+//S <SRC.GUILD.MEMBER.COUNT>
+REF69 <SRC.GUILD.MEMBER.<HVAL <ARGN>-1>.UID>
+sdialog d_char_props
+
+
+
+
+
+
+[DIALOG d_char_props]
+50,71
+page 0
+resizepic 0 0 2620 280 197
+IF <REF69.HITS> < <REF69.MAXHITS>/3
+LOCAL.COLOR 021
+ELIF <REF69.HITS> < (<REF69.MAXHITS>/3)*2
+LOCAL.COLOR 037
+ELSE
+LOCAL.COLOR 044
+ENDIF
+dtext 55 7 0466 <REF69.NAME>'s Profile
+dtext 15 35 0c1 Hitpoints:
+dtext 130 35 <dLOCAL.COLOR> <REF69.HITS>/<REF69.MAXHITS>
+IF <REF69.MANA> < <REF69.MAXMANA>/3
+LOCAL.COLOR 021
+ELIF <REF69.MANA> < (<REF69.MAXMANA>/3)*2
+LOCAL.COLOR 037
+ELSE
+LOCAL.COLOR 044
+ENDIF
+dtext 15 55 0c1 Mana:
+dtext 130 55 <dLOCAL.COLOR> <REF69.MANA>/<REF69.MAXMANA>
+IF <REF69.STAM> < <REF69.MAXSTAM>/3
+LOCAL.COLOR 021
+ELIF <REF69.STAM> < (<REF69.MAXSTAM>/3)*2
+LOCAL.COLOR 037
+ELSE
+LOCAL.COLOR 044
+ENDIF
+dtext 15 75 0c1 Stamina:
+dtext 130 75 <dLOCAL.COLOR> <REF69.STAM>/<REF69.MAXSTAM>
+dtext 15 95 0c1 Location:
+dtext 130 95 044 <REF69.P>
+dtext 15 115 0c1 Action:
+dtext 130 115 044 <SERV.SKILL.<REF69.ACTION>.NAME>
+
+////////////////////////////////////////////////////////////
+///////////////////// Check System /////////////////////////
+////////////////////////////////////////////////////////////
+
+[FUNCTION cheque]
+IF !(<SRC.RESCOUNT i_gold> > 49999)
+SRC.SYSMESSAGE Voce precisa de pelo menos 50.000gps para fazer um cheque.
+RETURN 1
+ENDIF
+SERV.NEWITEM i_deed_gold
+NEW.MORE <SRC.RESCOUNT i_gold>
+NEW.NAME Cheque (<SRC.RESCOUNT i_gold> gp)
+NEW.CONT <SRC.UID>
+SRC.CONSUME <SRC.RESCOUNT i_gold> i_gold
+
+[ITEMDEF i_deed_gold]
+ID=i_deed
+NAME=Cheque
+TYPE=t_normal
+
+ON=@CREATE
+COLOR 036
+
+
+ON=@DCLICK
+IF !(<CONT>==<SRC.FINDLAYER.21.UID>)
+SRC.SYSMESSAGE O cheque deve estar em seu backpack.
+ELSE
+SRC.SYSMESSAGE Voce descontou um cheque no valor de <MORE> gps
+SRC.NEWGOLD <MORE>
+REMOVE
+ENDIF
+RETURN 1
+
+[FUNCTION ONLINE]
+SYSMESSAGE @0481,,1 Players Online: <eval (<SERV.CLIENTS>)>
+SYSMESSAGE @0bb7,,1 Recorde em 2018: <Eval <VAR.MAXCLIENTS2017>>
+SYSMESSAGE @0bb7,,1 Recorde: <Eval <VAR.MAXCLIENTS>>
+SYSMESSAGE @0481,,1 The Fifteen Gems Free Shard
+
+[PLEVEL 1]
+discord
+votar
+wiki
+site
+
+[FUNCTION discord]
+SYSMESSAGE Voce esta sendo direcionado para nosso Discord.
+src.timerf 2, WEBLINK http:\\discord.tfg.com.br
+
+[FUNCTION votar]
+if !(<src.tag0.votouhoje>)
+	SYSMESSAGE Voce esta sendo direcionado para a pagina de voto.
+	src.timerf 2, WEBLINK https:\\www.uogateway.com/shard.php?id=1096&act=vote
+	src.gold += 1000
+	src.tag0.votouhoje = 1
+else
+	src.smsg @,,1 Voce já votou nas ultimas 24h.
+	return 1
+endif
+
+[FUNCTION f_unvote]
+TAG.VOTE
+
+[FUNCTION DISARM]
+IF !(<FLAGS> & STATF_FREEZE)
+FINDLAYER(1).unequip
+FINDLAYER(2).unequip
+return 0
+Else
+Src.Sysmessage Voce nao pode fazer isso no seu estado.
+ENDIF
+
+[PLEVEL 1]
+ARMORUNEQUIP
+
+[FUNCTION ARMORUNEQUIP]
+IF !(<FLAGS> & STATF_FREEZE)
+	FINDLAYER(6).UNEQUIP
+	FINDLAYER(7).UNEQUIP
+	FINDLAYER(10).UNEQUIP
+	FINDLAYER(13).UNEQUIP
+	FINDLAYER(19).UNEQUIP
+	FINDLAYER(24).UNEQUIP
+ENDIF
+
+
+
+
+
+
+[itemdef i_ress_tile2]
+ID=i_floor_sandstone_2
+NAME=Ress
+
+ON=@CREATE
+COLOR=26
+ATTR=attr_invis
+
+ON=@STEP
+if <src.hits> < 1
+src.F_GO 1539, 1371, -5
+src.resurrect
+return 1
+ELSE
+return 1
+ENDIF
+
+
+[PLEVEL 1]
+bandage
+totalmana
+gheal
+refresh
+gcure
+runename
+fs
+cl
+lifeboost
+manaboost
+refilling
+titulo
+inv
+war_status
+
+[FUNCTION titulo]
+SDIALOG d_title
+
+[DIALOG d_title]
+0,0
+page 0 // Basic layout
+resizepic 100 40 2620 650 497 // Background
+gumppictiled 105 45 640 485 2604
+gumppictiled 105 45 640 25 2624
+//gumppictiled 105 410 640 22 2624
+gumppictiled 105 75 315 457 2624
+gumppictiled 425 75 320 457 2624
+checkertrans 105 45 640 487
+dtext 350 40 0c1 Selecione o seu Titulo
+For 0 25
+button 120 <eval 59+(<local._for>*18)> 4005 4006 1 0 <EVAL <dLOCAL._FOR> +1>
+dtext 160 <eval 59+(<local._for>*18)> 0c1 Grandmaster <SERV.SKILL.<dLOCAL._FOR>.NAME>
+button 440 <eval 59+(<local._for>*18)> 4005 4006 1 0 <EVAL <LOCAL._FOR>+27>
+dtext 480 <eval 59+(<local._for>*18)> 0c1 Grandmaster <SERV.SKILL.<EVAL <LOCAL._FOR>+26>.NAME>
+ENDFOR
+
+[DIALOG d_title BUTTON]
+ON=1 51
+SRC <uid>
+IF (<src.<eval <argn> -1>> > 999 )
+TITLE Grandmaster <SERV.SKILL.<EVAL <ARGN>-1>.TITLE>
+Sysmessage Seu titulo agora e "Grandmaster <SERV.SKILL.<EVAL <ARGN>-1>.TITLE>"
+ELSE
+SYSMESSAGE Voce nao e gm nessa skill...
+ENDIF
+
+//////////////////////////////////////////////////////////
+////////////////// Auto Quests //////////////////////////
+////////////////////////////////////////////////////////
+
+[DEFNAME quest_names]
+quest1	Black Knight's Fortress
+quest2	Cook's Assistant
+quest3	Demon Slayer
+quest4	Dragon Slayer
+quest5	Ernest the Chicken
+quest6	Imp Catcher
+quest7	Knight's Sword
+quest8	Pirate's Treasure
+quest9	Prince Ali Rescue
+quest10	Sheep Shearer
+quest11	Witches Potion
+quest12	Fight Arena
+quest13	Wanted!
+
+[DEFNAME quest_levels]
+questl1		2
+questl2		1
+questl3		3
+questl4		4
+questl5		3
+questl6		1
+questl7		3
+questl8		2
+questl9		3
+questl10 	1
+questl11	1
+questl12	3
+questl13	2
+
+[DEFNAME quest_status]
+//1= Ativa | 0=Inativa
+
+quests1		0
+quests2		0
+quests3		0
+quests4		0
+quests5		0
+quests6		0
+quests7		0
+quests8		0
+quests9		0
+quests10	0
+quests11	0
+quests12	0
+quests13	0
+
+
+[FUNCTION quest]
+SDIALOG d_quest
+
+
+[DIALOG d_quest]
+0,0
+page 0 // Basic layout
+resizepic 200 40 2620 350 500 // Background
+dtext 325 50 0481 Menu de Quests
+dtext 235 90 021 Nome da Quest
+dtext 440 90 021 Dificuldade
+LOCAL.QUESTNUM 1
+FOR 1 13
+IF !(<def0.QUESTS<dLOCAL._FOR>>)
+	LOCAL.COLOR 0481
+ELSE
+	IF (<TAG0.QUESTCOMPLETE>&<LOCAL.QUESTNUM>)
+		LOCAL.COLOR 044
+	ELIF (<TAG0.QUESTSTART>&<LOCAL.QUESTNUM>)
+		LOCAL.COLOR 031
+	ELSE
+		LOCAL.COLOR 021
+	ENDIF
+ENDIF
+	dtext 220 <eval 120 + <dLOCAL.DIFF>> <LOCAL.COLOR> <def0.quest<dLOCAL._FOR>>
+	LOCAL.BUTTON
+
+	FOR 1 <dDEF0.QUESTL<dLOCAL._FOR>>
+		gumppic <eval 500+<dLOCAL.BUTTON>> <eval 125 + <dLOCAL.DIFF>> 2360 0481
+		LOCAL.BUTTON -=12
+	ENDFOR
+	LOCAL.DIFF +=25
+	LOCAL.QUESTNUM += <LOCAL.QUESTNUM>
+ENDFOR
+
+[FUNCTION war_status]
+IF (<SRC.FLAGS> & statf_war)
+	SRC.SYSMESSAGE @,,1 You are in war mode.
+ELSE
+	SRC.SYSMESSAGE @,,1 You are in peace mode.
+ENDIF
+
+[FUNCTION inv]
+IF <RESTEST 1 i_potion_Invisibility>
+  findid.i_potion_Invisibility.dclick
+ENDIF
+
+[FUNCTION lifeboost]
+IF <RESTEST 1 i_potion_life_boost_great>
+  findid.i_potion_life_boost_great.dclick
+ENDIF
+
+[FUNCTION manaboost]
+IF <RESTEST 1 i_potion_mana_boost_great>
+  findid.i_potion_mana_boost_great.dclick
+ENDIF
+
+[FUNCTION refilling]
+IF <RESTEST 1 i_potion_refilling_great.dclick>
+  findid.i_potion_refilling_great.dclick
+ENDIF
+
+[FUNCTION bandage]
+IF <RESTEST 1 i_bandage>
+  findid.i_bandage.dclick
+ENDIF
+
+
+[FUNCTION totalmana]
+IF <RESTEST 1 i_potion_manatotal>
+  findid.i_potion_manatotal.dclick
+ENDIF
+
+
+[FUNCTION gheal]
+IF <RESTEST 1 i_potion_healgreat>
+  findid.i_potion_healgreat.dclick
+ENDIF
+
+
+[FUNCTION refresh]
+IF <RESTEST 1 i_potion_refreshtotal>
+  findid.i_potion_refreshtotal.dclick
+ENDIF
+
+
+[FUNCTION gcure]
+IF <RESTEST 1 i_potion_curegreat>
+  findid.i_potion_curegreat.dclick
+ENDIF
+
+[function fs]
+IF <restest.i_scroll_flamestrike>
+findid(i_scroll_flamestrike).dclick
+ELSE
+sysmessage @07a1 Voce nao possui flamestrike scroll.
+ENDIF
+
+[function cl]
+IF <restest.i_scroll_chain_lightning>
+findid(i_scroll_chain_lightning).dclick
+ELSE
+sysmessage @07a1 Voce nao possui Chain Lightning scroll.
+ENDIF
+
+

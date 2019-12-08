@@ -1,0 +1,363 @@
+
+
+
+[ITEMDEF i_potion_CureLess]
+ID=i_bottle_empty
+TYPE=T_POTION
+NAME=Lesser Cure
+TDATA1=i_bottle_empty
+RESOURCES=i_reag_garlic, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 0.1
+VALUE=15
+ON=@Create
+	MORE1=s_Cure
+	MORE2=40.0
+	COLOR 08f
+
+ON=@DCLICK
+//IF !(<SRC.FINDID.i_poison_effect>)
+// && !(<SRC.FINDID.i_rune_poison>)
+//	SRC.SYSMESSAGE Voce nao esta envenenado e nao precisa de cura no momento.
+//ELSE
+	//IF <SRC.FINDID.i_poison_effect.MORE2> > 1
+	//	SRC.SYSMESSAGE Esta pocao nao cura este tipo de veneno !!
+	//ELSE
+		IF <AMOUNT> > 1
+			AMOUNT -=1
+		ELSE
+			REMOVE
+		ENDIF
+		SRC.FINDID.i_potion_control.timer 10
+		IF (<SRC.FINDID.i_poison_effect>) && !(<SRC.FINDID.i_poison_effect.MORE2> > 1)
+			SRC.SYSMESSAGE Voce se sente melhor !
+			SRC.FINDID.i_poison_effect.REMOVE
+			SRC.FLAGS <SRC.FLAGS>&~080
+			SRC.f_updateplayer
+		ENDIF
+		//SRC.FINDID.i_rune_poison.REMOVE
+	//ENDIF
+//ENDIF
+RETURN 1
+
+
+
+[ITEMDEF i_potion_Cure]
+NAME=Cure
+ID=i_bottle_empty
+TYPE=T_POTION
+TDATA1=i_bottle_empty
+RESOURCES=i_reag_garlic 3, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 25.1
+VALUE=25
+ON=@Create
+	MORE1=s_Cure
+	MORE2=60.0
+	COLOR 08f
+
+
+ON=@DCLICK
+//IF !(<SRC.FINDID.i_poison_effect>)
+//	SRC.SYSMESSAGE Voce nao esta envenenado e nao precisa de cura no momento.
+//ELSE
+	//IF <SRC.FINDID.i_poison_effect.MORE2> > 3
+		//SRC.SYSMESSAGE Esta pocao nao cura este tipo de veneno !!
+	//ELSE
+
+		//IF <SRC.CTAG0.CUREUSADO> == 1
+		//	SRC.SYSMESSAGE Voce ainda nao pode tomar outra pocao.
+		//	RETURN 1
+		//ENDIF
+
+		IF <AMOUNT> > 1
+			AMOUNT -=1
+		ELSE
+			REMOVE
+		ENDIF
+
+		SRC.FINDID.i_potion_control.timer 10
+		//SRC.CTAG.CUREUSADO 1
+		//SRC.TIMERF 15, CTAG.CUREUSADO
+		IF (<SRC.FINDID.i_poison_effect>) && !(<SRC.FINDID.i_poison_effect.MORE2> > 3)
+			SRC.SYSMESSAGE Voce se sente melhor !
+			SRC.FINDID.i_poison_effect.REMOVE
+			SRC.FLAGS <SRC.FLAGS>&~080
+			SRC.f_updateplayer
+		ENDIF
+	//ENDIF
+//ENDIF
+RETURN 1
+
+[ITEMDEF i_potion_CureGreat]
+NAME=Greater Cure
+ID=i_bottle_empty
+TYPE=T_POTION
+TDATA1=i_bottle_empty
+RESOURCES=i_reag_garlic 6, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 65.1
+VALUE=60
+ON=@Create
+	MORE1=s_archcure
+	MORE2=101.0
+	COLOR 08f
+
+
+ON=@DCLICK
+
+	//IF <SRC.CTAG0.CUREUSADO> == 1
+	//	SRC.SYSMESSAGE Voce ainda nao pode tomar outra pocao.
+	//	RETURN 1
+	//ENDIF
+
+	IF <AMOUNT> > 1
+		AMOUNT -=1
+	ELSE
+		REMOVE
+	ENDIF
+
+	SRC.SYSMESSAGE Voce se sente melhor!
+	SRC.FINDID.i_potion_control.timer 10
+	//SRC.CTAG.CUREUSADO 1
+	//SRC.TIMERF 15, CTAG.CUREUSADO
+	IF (<SRC.FINDID.i_poison_effect>)
+		SRC.FINDID.i_poison_effect.REMOVE
+		SRC.FLAGS <SRC.FLAGS>&~080
+		SRC.f_updateplayer
+	ENDIF
+//ENDIF
+RETURN 1
+
+[ITEMDEF i_potion_PoisonLess]
+NAME=Lesser Poison
+ID=i_bottle_empty
+TYPE=T_POTION
+TDATA1=i_bottle_empty
+RESOURCES=i_reag_nightshade 1, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 15.1
+VALUE=15
+ON=@Create
+	COLOR 049
+	MORE2 50.0
+	MORE1 s_poison
+
+	TAG.PLVL 1
+
+
+[ITEMDEF i_potion_Poison]
+NAME=Poison
+ID=i_bottle_empty
+TYPE=T_POTION
+TDATA1=i_bottle_empty
+RESOURCES=i_reag_nightshade 2, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 45.1
+VALUE=25
+ON=@Create
+	COLOR 049
+	MORE2 50.0
+	MORE1 s_poison
+	TAG.PLVL 2
+
+
+[ITEMDEF i_potion_PoisonGreat]
+NAME=Greater Poison
+ID=i_bottle_empty
+TYPE=T_POTION
+TDATA1=i_bottle_empty
+RESOURCES=i_reag_nightshade 4, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 65.1
+VALUE=60
+ON=@Create
+	COLOR 049
+	MORE2 50.0
+	MORE1 s_poison
+	TAG.PLVL 3
+
+
+
+[ITEMDEF i_potion_PoisonDeadly]
+NAME=Deadly Poison
+ID=i_bottle_empty
+TYPE=T_POTION
+TDATA1=i_bottle_empty
+RESOURCES=i_reag_nightshade 8, i_bottle_EMPTY
+SKILLMAKE=ALCHEMY 69.9
+VALUE=100
+ON=@Create
+	COLOR 049
+	MORE2 50.0
+	MORE1 s_poison
+	TAG.PLVL 4
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[ITEMDEF i_poison_effect]
+Name=Poison Effect
+ID=i_memory
+TYPE=t_eq_Script
+
+
+ON=@CREATE
+ATTR 096
+LINK <SRC.UID>
+
+
+ON=@EQUIP
+SRC.FLAGS <SRC.FLAGS>|080
+SRC.EVENTS +e_envenenado
+CONT.f_updateplayer
+IF <MORE2>==1
+SRC.EMOTE Have been poisoned with lesser poison
+DORAND 3
+	SAY @100,8 You Have been poisoned with poison
+	SAY @100,8 You Have been poisoned with greater poison
+	SAY @100,8 You Have been poisoned with deadly poison
+ENDDO
+ELIF <MORE2>==2
+SRC.EMOTE Have been poisoned with poison
+DORAND 3
+	SAY @100,8 You Have been poisoned with lesser poison
+	SAY @100,8 You Have been poisoned with greater poison
+	SAY @100,8 You Have been poisoned with deadly poison
+ENDDO
+ELIF <MORE2>==3
+SRC.EMOTE Have been poisoned with greater poison
+DORAND 3
+	SAY @100,8 You Have been poisoned with lesser poison
+	SAY @100,8 You Have been poisoned with poison
+	SAY @100,8 You Have been poisoned with deadly poison
+ENDDO
+ELIF <MORE2>==4
+SRC.EMOTE Have been poisoned with deadly poison
+DORAND 3
+	SAY @100,8 You Have been poisoned with lesser poison
+	SAY @100,8 You Have been poisoned with poison
+	SAY @100,8 You Have been poisoned with greater poison
+ENDDO
+ELIF <MORE2>==5
+SRC.EMOTE Have been poisoned with magic poison
+ENDIF
+
+
+
+
+
+
+ON=@TIMER
+IF <MORE> > 0
+	MORE -=1
+	LINK.POISONEFFECT <MORE2>, <TAG0.ATTACKER>
+	TIMER <TAG.POISONTIMER>
+	LINK.FLAGS= <LINK.FLAGS>|080
+	RETURN 1
+ELSE
+	LINK.FLAGS <LINK.FLAGS>&~080
+	LINK.SYSMESSAGE O Veneno se dissipou do seu corpo e voce nao se sente mais doente.
+
+	RETURN 0
+ENDIF
+
+[EVENTS e_envenenado]
+ON=@Death
+	SRC.SYSMESSAGE Voce nao foi capaz de se curar a tempo.
+	SRC.FLAGS = <SRC.FLAGS> & ~statf_poisoned
+	SRC.FINDID.i_poison_effect.remove
+	SRC.EVENTS -e_envenenado
+
+[FUNCTION POISONEFFECT]
+IF <FLAGS>&02
+	RETURN 1
+ENDIF
+
+REF69 <ARGV[1]>
+IF !(<REF69.UID>)
+REF69 05e49e
+ENDIF
+
+IF (<ISPLAYER>)
+	CTAG.LAST_POISON_HIT <SERV.TIME>
+ENDIF
+
+IF <ARGV[0]> == 04
+SYSMESSAGE You feel deathly sick.
+	IF (<eval (<HITS>/4)> < 7)
+		DAMAGE 7 04 <REF69.UID>
+	ELSE
+		IF (<eval (<HITS>/4)> > 26)
+			DAMAGE 26 04 <REF69.UID>
+		ELSE
+			DAMAGE <HITS>/4 04 <REF69.UID>
+		ENDIF
+	ENDIF
+ELIF <ARGv[0]> == 03
+SYSMESSAGE You feel extremely sick.
+	IF (<eval (<HITS>/8)> < 6)
+		DAMAGE 6 04 <REF69.UID>
+	ELSE
+		IF (<eval (<HITS>/8)> > 26)
+			DAMAGE 26 04 <REF69.UID>
+		ELSE
+			DAMAGE <HITS>/8 04 <REF69.UID>
+		ENDIF
+	ENDIF
+ELIF <ARGv[0]> == 02
+SYSMESSAGE You feel sick.
+	IF (<eval (<HITS>/32)> < 5)
+		DAMAGE 5 04 <REF69.UID>
+	ELSE
+		IF (<eval (<HITS>/32)> > 26)
+			DAMAGE 26 04 <REF69.UID>
+		ELSE
+			DAMAGE <HITS>/32 04 <REF69.UID>
+		ENDIF
+	ENDIF
+ELIF <ARGv[0]> == 01
+SYSMESSAGE You feel nauseous.
+	IF (<eval (<HITS>/40)> < 3)
+		DAMAGE 3 04 <REF69.UID>
+	ELSE
+		IF (<eval (<HITS>/40)> > 26)
+			DAMAGE 26 04 <REF69.UID>
+		ELSE
+			DAMAGE <HITS>/40 04 <REF69.UID>
+		ENDIF
+	ENDIF
+ELIF <ARGv[0]> == 05
+SYSMESSAGE You feel nauseous.
+	IF (<eval (<HITS>/40)> < 3)
+		DAMAGE 3 04 <REF69.UID>
+	ELSE
+		IF (<eval (<HITS>/40)> > 13)
+			DAMAGE 13 04 <REF69.UID>
+		ELSE
+			DAMAGE <HITS>/40 04 <REF69.UID>
+		ENDIF
+	ENDIF
+ENDIF
+
+[ITEMDEF i_poison_buffer]
+NAME=Poison Buffer
+ID=i_handr_1
+TYPE=t_eq_script
+
+ON=@Create
+	ATTR=attr_invis|attr_decay|attr_can_decay
+
+ON=@Timer
+	REMOVE
+	RETURN 1
+
+[EOF]

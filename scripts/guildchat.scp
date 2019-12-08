@@ -1,0 +1,112 @@
+//**************************Guild Chat**********************************
+[plevel 1]
+gc
+gon
+gonline
+
+[FUNCTION gc]
+//if (STRMATCH(*lagarantiasoyyo*,<args>))
+//	s <name> enviando macro de autotarget. Mensagem: <args>. A mensagem foi bloqueada.
+//endif
+
+
+ref1 = <guild>
+if <ref1.tag0.vigilance>
+	local.msg = <f_gc_changeserial <explode " ",<args>>>
+else
+	local.msg = <args>
+endif
+IF <memoryfindtype.memory_guild.link.uid>
+  SERV.ALLCLIENTS guild_c <memoryfindtype.memory_guild.link.uid>,<name> : <local.msg>
+ELSE
+  SYSMESSAGE Voce nao pertence a nenhuma guilda!
+ENDIF
+
+[FUNCTION f_gc_changeserial]
+for x 0 <eval <argv> - 1>
+	if (STRMATCH(*0x0*,<argv[<dlocal.x>]>))
+		local.<dlocal.x> = "x 0x00<uid>"
+		s <name> usando macro de target. Target alterado.
+	elif (<isnum <argv[<dlocal.x>]>> || <f_ishexnum <argv[<dlocal.x>]>>)
+		ref1 = <argv[<dlocal.x>]>
+		if <ref1.isplayer>
+			local.<dlocal.x> = "x <uid>"
+			s <name> usando macro de target em <ref1.name>. Target alterado.
+		else
+			local.<dlocal.x> = "x <argv[<dlocal.x>]>"
+		endif
+		local.newuid = 0<argv[<dlocal.x>]>
+		ref1 = <local.newuid>
+		if <ref1.isplayer>
+			local.<dlocal.x> = "x <uid>"
+			s <name> usando macro de target em <ref1.name>. Target alterado. (Segunda Analise)
+		endif
+	else
+		local.<dlocal.x> = "x <argv[<dlocal.x>]>"
+	endif
+	if (<local.x> == 1)
+		//if <isnum <local.1>>
+		//	s 1 
+			local.msg = "x <streat <local.1>>"
+		//else
+		//	S 2
+		//	local.msg = <local.1>
+		//endif
+	elif (<local.x> > 1)
+		//if (<isnum <local.<dlocal.x>>>)
+			//s a <local.<dlocal.x>> .. <dlocal.<dlocal.x>> .. <eval <local.<dlocal.x>>>
+			//s <local.msg> to <streat <local.msg>>
+			local.msg = "x <streat <local.msg>> <streat <local.<dlocal.x>>>"
+		//else
+			//s b <local.<dlocal.x>>
+		//	local.msg = "<local.msg> <local.<dlocal.x>>"
+		//endif
+	endif
+endfor
+return <streat <local.msg>>
+
+[FUNCTION f_ishexnum]
+if (strmatch(*[^a-f0-9]*,<args>))
+	return 0
+else
+	return 1
+endif
+
+[FUNCTION f_isdecnum]
+if (strmatch(*[^0-9]*,<args>))
+	return 0
+else
+	return 1
+endif
+
+[FUNCTION gon]
+IF <memoryfindtype.memory_guild.link.uid>
+ SERV.ALLCLIENTS guild_c_on_2
+ENDIF
+
+[FUNCTION gonline]
+IF <memoryfindtype.memory_guild.link.uid>
+ SERV.ALLCLIENTS guild_c_on
+ENDIF
+
+[FUNCTION guild_c_on]
+IF <memoryfindtype.memory_guild.link.uid> == <src.memoryfindtype.memory_guild.link.uid>
+ SRC.SYSMESSAGE @36,,1 <NAME> (<P.X>,<P.Y>,<P.Z> <REGION.NAME>)
+ENDIF
+
+[FUNCTION guild_c_on_2]
+IF <memoryfindtype.memory_guild.link.uid> == <src.memoryfindtype.memory_guild.link.uid>
+ SRC.SYSMESSAGE @36,,1 <NAME> (<P.X>,<P.Y>,<P.Z>)
+ENDIF
+
+[FUNCTION guild_c]
+ref1 = <argv[0]>
+IF <memoryfindtype.memory_guild.link.uid> == <src.memoryfindtype.memory_guild.link.uid>
+  SYSMESSAGE @36,,1 [GC] "<argv[1]>"
+ENDIF
+if (<account.plevel> >= 2) && (<tag0.can_i_hear_guilds>)
+  SYSMESSAGE @61,,1 [GC <ref1.name>] "<argv[1]>"
+endif
+
+
+[EOF]

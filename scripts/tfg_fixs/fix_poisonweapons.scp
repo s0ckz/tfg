@@ -1,0 +1,70 @@
+// [PLEVEL 1]
+// showsig
+
+[FUNCTION showsig]
+local.sig = <findid.i_cadastro.tag0.sig>
+if <isnum <local.sig>>
+	SYSMESSAGE @,,1 Seu SIG: <eval <findid.i_cadastro.tag0.sig>>
+	SYSMESSAGE @,,1 Seu SIG: <findid.i_cadastro.tag0.sig>
+else
+	SYSMESSAGE @,,1 Seu SIG: <findid.i_cadastro.tag0.sig>
+endif
+return 1
+
+[FUNCTION fix_poisonweapons]
+local.ctplay = 0
+FORITEMS 6500
+local.cttotal ++
+	if (<TYPE>==t_weapon_sword) || (<TYPE>==t_weapon_axe) || (<TYPE>==t_weapon_fence)
+		morez = 0
+		local.ct ++
+	endif
+	if (<type> == t_container) || (<type> == t_secure) || (<type> == t_corpse) || (<type> == t_container_locked) || (<type> == t_trash_can)
+		local.ctcont ++
+		local.ct += <f_fixpw_cont>
+	endif
+ENDFOR
+sysmessage @,,1 <dlocal.ct> armas cortantes corrigidas. container: <dlocal.ctcont> total items: <dlocal.cttotal>
+FORPLAYERS 6500
+	local.ctplay += <f_fixpw_cont>
+	ref1 = <findlayer.29.uid> // bankbox
+	local.ctplay += <ref1.f_fixpw_cont>
+ENDFOR
+local.total = <eval <local.ctplay> + <local.ct>>
+sysmessage @,,1 <dlocal.ctplay> armas em players! Total com mundo: <dlocal.total>
+return 1
+
+[FUNCTION f_fixpw_cont]
+FORCONTTYPE t_weapon_sword
+		morez = 0
+		local.ct ++
+ENDFOR
+FORCONTTYPE t_weapon_axe
+		morez = 0
+		local.ct ++
+ENDFOR
+FORCONTTYPE t_weapon_fence
+		morez = 0
+		local.ct ++
+ENDFOR
+RETURN <local.ct>
+
+[FUNCTION xai]
+REF1 = <findlayer.29.uid>
+ref1.f_fixpw_teste
+
+[FUNCTION f_fixpw_teste]
+FORCONTTYPE t_weapon_sword
+		morez = 0
+		local.ct ++
+ENDFOR
+FORCONTTYPE t_weapon_axe
+		morez = 0
+		local.ct ++
+ENDFOR
+FORCONTTYPE t_weapon_fence
+		name = xainirou
+		morez = 0
+		local.ct ++
+ENDFOR
+RETURN <local.ct>

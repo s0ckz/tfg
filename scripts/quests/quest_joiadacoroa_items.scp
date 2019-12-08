@@ -1,0 +1,595 @@
+[itemdef i_sword_british_ally]
+id=013ba
+name=British Ally Sword
+TYPE=T_WEAPON_SWORD
+TWOHANDS=N
+REQSTR=40
+DAM=5,7
+Weight=1
+
+ON=@Create
+    color 024f
+    attr attr_newbie
+
+On=@Click
+    if (<link> != 04fffffff) && (<link>)
+        Message @<color_o_order>,,1 <link.name>'s British Ally Sword //'
+        return 1
+    endif
+
+on=@equiptest
+    if (<src.uid> != <link>)
+        src.smsg @17,,1 That sword doesnt belong to you.
+        link.bounce <uid>
+        return 1
+    endif
+
+ON=@Destroy
+    IF !(<TAG0.DESTROY>)
+        HITS=<MAXHITS>
+        RETURN 1
+    ENDIF
+
+ON=@equip
+    SRC.EFFECT 3,i_fx_bless_effect,6,15,1
+
+on=@damage
+return 1
+
+On=@DropOn_Trade
+//if !(<argo.baseid>==c_lord_british) && !(<argo.baseid>==c_lord_blackthorne)
+	src.sysmessage "@,,1 Este tipo de item de quest nao pode ser transferido!"
+	return 1
+//endif
+
+On=@DropOn_Char
+//if !(<argo.baseid>==c_lord_british) && !(<argo.baseid>==c_lord_blackthorne)
+	src.sysmessage "@,,1 Este tipo de item de quest nao pode ser transferido!"
+	return 1
+//endif
+
+On=@DropOn_Ground
+src.sysmessage "@,,1 Este tipo de item de quest nao pode ser colocado no chao!"
+return 1
+
+On=@DropOn_Item
+if !(<argo.uid> == <link.findlayer(21).uid>) || !(<argo.uid> == <link.findlayer(29).uid>)
+	src.sysmessage "@,,1 Este tipo de item de quest nao pode sair da sua bag ou banco!"
+	cont = <link.findlayer(21).uid>
+	update
+	return 1
+endif
+
+[itemdef i_sword_british_knight]
+id=i_sword_long
+name=British Elite Warrior Sword
+TYPE=T_WEAPON_SWORD
+TWOHANDS=Y
+speed=54
+REQSTR=100
+DAM=17,25
+Weight=1
+
+ON=@Create
+    color 0803
+    attr attr_newbie
+
+On=@Click
+    if (<link> != 04fffffff) && (<link>)
+        Message @<color_o_order>,,1 <link.name>'s British Elite Warrior Sword //'
+        return 1
+    endif
+
+on=@equiptest
+    if (<src.uid> != <link>)
+        src.smsg @17,,1 That sword doesnt belong to you.
+        link.bounce <uid>
+        return 1
+    endif
+
+ON=@equip
+    SRC.EFFECT 3,i_fx_bless_effect,6,15,1
+
+on=@damage
+return 1
+
+On=@DropOn_Trade
+//if !(<argo.baseid>==c_lord_british) && !(<argo.baseid>==c_lord_blackthorne)
+	src.sysmessage "@,,1 Este tipo de item de quest nao pode ser transferido!"
+	return 1
+//endif
+
+On=@DropOn_Char
+//if !(<argo.baseid>==c_lord_british) && !(<argo.baseid>==c_lord_blackthorne)
+	src.sysmessage "@,,1 Este tipo de item de quest nao pode ser transferido!"
+	return 1
+//endif
+
+On=@DropOn_Ground
+src.sysmessage "@,,1 Este tipo de item de quest nao pode ser colocado no chao!"
+return 1
+
+On=@DropOn_Item
+if !(<argo.uid> == <link.findlayer(21).uid>) || !(<argo.uid> == <link.findlayer(29).uid>)
+	src.sysmessage "@,,1 Este tipo de item de quest nao pode sair da sua bag ou banco!"
+	cont = <link.findlayer(21).uid>
+	update
+	return 1
+endif
+
+[itemdef i_sword_blackthorne_ally]
+id=013ba
+name=Blackthorne Ally Sword
+TYPE=T_WEAPON_SWORD
+TWOHANDS=N
+REQSTR=40
+DAM=5,7
+Weight=1
+
+ON=@Create
+    color=03df
+    attr attr_newbie
+
+On=@Click
+    if (<link>)
+        Message @<color_o_chaos>,,1 <link.name>'s Blackthorne Ally Sword //'
+        return 1
+    endif
+
+on=@equiptest
+    if (<src.uid> != <link>)
+        src.smsg @17,,1 That sword doesn't belong to you. //'
+        link.bounce <uid>
+        return 1
+    endif
+
+ON=@Destroy
+    IF !(<TAG0.DESTROY>)
+        HITS=<MAXHITS>
+        RETURN 1
+    ENDIF
+
+ON=@equip
+    SRC.EFFECT 3,i_fx_bless_effect,6,15,1
+
+on=@damage
+return 1
+
+On=@DropOn_Trade
+//if !(<argo.baseid>==c_lord_british) && !(<argo.baseid>==c_lord_blackthorne)
+	src.sysmessage "@,,1 Este tipo de item de quest nao pode ser transferido!"
+	return 1
+//endif
+
+On=@DropOn_Char
+//if !(<argo.baseid>==c_lord_british) && !(<argo.baseid>==c_lord_blackthorne)
+	src.sysmessage "@,,1 Este tipo de item de quest nao pode ser transferido!"
+	return 1
+//endif
+
+On=@DropOn_Ground
+src.sysmessage "@,,1 Este tipo de item de quest nao pode ser colocado no chao!"
+return 1
+
+On=@DropOn_Item
+if !(<argo.uid> == <link.findlayer(21).uid>) || !(<argo.uid> == <link.findlayer(29).uid>)
+	src.sysmessage "@,,1 Este tipo de item de quest nao pode sair da sua bag ou banco!"
+	cont = <link.findlayer(21).uid>
+	update
+	return 1
+endif
+
+[ITEMDEF i_door_cabana_quest_joias]
+id=06df
+TYPE=T_DOOR_locked
+
+[ITEMDEF i_door_cabana_quest_joias1]
+id=06e3
+TYPE=T_DOOR_locked
+
+[ITEMDEF i_door_cabana_quest_joias2]
+id=06d9
+TYPE=T_DOOR_locked
+
+[TYPEDEF t_door_broken]
+ON=@DCLICK
+src.sysmessage @,,1 Esta porta ja foi aberta por outro guerreiro e com sua violenta forca, foi quebrada.
+return 1
+
+[ITEMDEF i_chave_cabana_quest_joias]
+ID=i_key_copper
+TYPE=T_KEY
+
+on=@create
+tag.jew = 011adc8
+tag.door1 = 04001370f
+tag.door2 = 040013769
+tag.door3 = 04001371e
+link = 04012d91a
+more1 = 04012d91a
+color = 31
+
+on=@dclick
+    target
+    src.smsg @,,1 Where do you want to use this key?
+    return 1
+
+ON=@TARGON_ITEM
+    if (strmatch(i_door_cabana_quest_joias*,<argo.baseid>))
+        src.smsg @,,1 You have unlocked that cabin and released the Jeweler.
+
+		uid.<tag0.jew>.tag0.aberto = 1
+		uid.<tag0.jew>.tag0.libertador = <src.uid>
+
+	uid.<tag0.door1>.timerd 1
+	uid.<tag0.door2>.timerd 1
+	uid.<tag0.door3>.timerd 1
+
+	uid.<tag0.door1>.timerf 1,defineporta
+	uid.<tag0.door2>.timerf 1,defineporta
+	uid.<tag0.door3>.timerf 1,defineporta
+
+	serv.b @91 <src.name> resolveu a sexta etapa da quest!
+	return 1
+    else
+        src.smsg @,,1 That key can't be used there... // '
+	return 1
+    endif
+
+
+ON=@TARGON_GROUND
+
+    src.smsg @,,1 What are you doing?
+    return 1
+
+On=@TARGON_Char
+
+    src.smsg @,,1 What are you doing?
+    return 1
+
+
+[function defineporta]
+timer = -1
+type = t_door_broken
+
+[itemdef i_quest_joias_perg_brit]
+id=i_scroll_flamestrike
+name=Jurgen Manuscripts
+
+on=@Create
+color = 0a23
+
+on=@dclick
+	dispid = i_Scroll_blank
+    if (<src.uid> == <link>)
+        if (<cont> == <src.findlayer.21.uid>)
+            src.dialog d_quest_joias_perg_brit
+            return 1
+        else
+            src.smsg @,,1 This scroll must be in your backpack.
+            src.bounce <uid>
+            return 1
+        endif
+    else
+        src.smsg @,,1 This scroll doesn't belong to you. It was sent to it's owner.
+        link.bounce <uid>
+        return 1
+    endif
+
+On=@DropOn_Trade
+if !(<argo.baseid>==c_lord_british) && !(<argo.baseid>==c_lord_blackthorne) && !(<argo.baseid>==c_mago_black_quest_joias) && !(<argo.baseid>==c_mago_white_quest_joias)
+	src.sysmessage "@,,1 Este tipo de item de quest nao pode ser transferido para outros jogadores ou npcs fora da quest!"
+	return 1
+endif
+
+On=@DropOn_Char
+if !(<argo.baseid>==c_lord_british) && !(<argo.baseid>==c_lord_blackthorne) && !(<argo.baseid>==c_mago_black_quest_joias) && !(<argo.baseid>==c_mago_white_quest_joias)
+	src.sysmessage "@,,1 Este tipo de item de quest nao pode ser transferido para outros jogadores ou npcs fora da quest!"
+	return 1
+endif
+
+On=@DropOn_Ground
+src.sysmessage "@,,1 Este tipo de item de quest nao pode ser colocado no chao!"
+return 1
+
+On=@DropOn_Item
+if !(<argo.uid> == <link.findlayer(21).uid>)
+	ref1 = <argo.topobj>
+	if !(<ref1.baseid>==c_lord_british) && !(<ref1.baseid>==c_lord_blackthorne) && !(<ref1.baseid>==c_mago_black_quest_joias) && !(<ref1.baseid>==c_mago_white_quest_joias)
+		src.sysmessage "@,,1 Este tipo de item de quest nao pode sair da sua bag deste modo!"
+		cont = <link.findlayer(21).uid>
+		update
+		return 1
+	endif
+endif
+
+
+[itemdef i_quest_joias_perg_black]
+id=i_scroll_flamestrike
+name=Jurgen Manuscripts
+
+on=@Create
+color = 0a23
+
+on=@dclick
+    dispid = i_Scroll_blank
+    if (<src.uid> == <link>)
+        if (<cont> == <src.findlayer.21.uid>)
+            src.dialog d_quest_joias_perg_black
+            return 1
+        else
+            src.smsg @,,1 This scroll must be in your backpack.
+            src.bounce <uid>
+            return 1
+        endif
+    else
+        src.smsg @,,1 This scroll doesn't belong to you. It was sent to it's owner.
+        link.bounce <uid>
+        return 1
+    endif
+
+On=@DropOn_Trade
+if !(<argo.baseid>==c_lord_british) && !(<argo.baseid>==c_lord_blackthorne) && !(<argo.baseid>==c_mago_black_quest_joias) && !(<argo.baseid>==c_mago_white_quest_joias)
+	src.sysmessage "@,,1 Este tipo de item de quest nao pode ser transferido para outros jogadores ou npcs fora da quest!"
+	return 1
+endif
+
+On=@DropOn_Char
+if !(<argo.baseid>==c_lord_british) && !(<argo.baseid>==c_lord_blackthorne) && !(<argo.baseid>==c_mago_black_quest_joias) && !(<argo.baseid>==c_mago_white_quest_joias)
+	src.sysmessage "@,,1 Este tipo de item de quest nao pode ser transferido para outros jogadores ou npcs fora da quest!"
+	return 1
+endif
+
+On=@DropOn_Ground
+src.sysmessage "@,,1 Este tipo de item de quest nao pode ser colocado no chao!"
+return 1
+
+On=@DropOn_Item
+if !(<argo.uid> == <link.findlayer(21).uid>)
+	ref1 = <argo.topobj>
+	if !(<ref1.baseid>==c_lord_british) && !(<ref1.baseid>==c_lord_blackthorne) && !(<ref1.baseid>==c_mago_black_quest_joias) && !(<ref1.baseid>==c_mago_white_quest_joias)
+		src.sysmessage "@,,1 Este tipo de item de quest nao pode sair da sua bag deste modo!"
+		cont = <link.findlayer(21).uid>
+		update
+		return 1
+	endif
+endif
+
+
+[DIALOG d_quest_joias_perg_black]
+0,0
+page 0
+resizepic 91 64 9390 475 169
+text 118 128 0 0
+text 118 103 0 1
+text 118 149 0 2
+gumppic 486 154 92
+
+[DIALOG d_quest_joias_perg_black text]
+Kriiink! Ilawi Shius Hinuruwa Bicha Hya Pirate Dunlk,
+Oh Blackthrone jiuai !
+Luk Scroll duka Partiruk awai, lulusand fund.
+
+[DIALOG d_quest_joias_perg_black button]
+
+[DIALOG d_quest_joias_perg_brit]
+0,0
+page 0
+resizepic 91 64 9390 475 169
+text 118 128 0 0
+text 118 103 0 1
+text 118 149 0 2
+text 118 170 0 3
+gumppic 486 154 92
+
+[DIALOG d_quest_joias_perg_brit text]
+Tut liattud mik!
+Oh British jiuai!
+Ilawi Shius Hinuruwa Bicha Hya Pirate Dunlk,
+Luk Scroll duka Partiruk awai, lulusand fund.
+
+[DIALOG d_quest_joias_perg_brit button]
+
+[itemdef i_quest_tresshorn_letter]
+id=i_scroll_flamestrike
+name=Lady Tresshorn`s Letter
+
+on=@dclick
+    src.dialogclose d_quest_joias_perg_lady_tress
+    src.dialog d_quest_joias_perg_lady_tress
+
+on=@Create
+color = 0a22
+attr = attr_move_never
+
+on=@pickup_ground
+src.smsg @,,1 The scroll is stuck in the sand.
+return 1
+
+[DIALOG d_quest_joias_perg_lady_tress]
+0,0
+page 0
+resizepic 91 64 9390 485 266
+text 118 123 0 0
+text 118 103 0 1
+text 118 154 0 2
+gumppic 483 252 92
+text 118 173 0 3
+text 118 193 0 4
+text 118 222 0 5
+text 118 244 0 6
+text 314 267 0 7
+
+[DIALOG d_quest_joias_perg_lady_tress text]
+pouparei a vida de tua família.
+Querido Amigo, sua lealdade será recompensada,
+Só não esqueça que mudo de idéia rápido e que tenho pressa.
+Assim que trancar a ourives, venha para minha cidade e
+disfarce-se como um comerciante qualquer.
+Um de meus servos virá até você, vestido com um chapéu com uma pena,
+e dirá o código. Você deve entregá-lo as jóias.
+Ass: Lady Tresshorn
+
+[DIALOG d_quest_joias_perg_lady_tress button]
+
+[TYPEDEF t_pedra_tortuga]
+on=@timer
+ref1 <uid>
+foritems 100
+    if (<type> == t_ship) && (<more1>)
+        ref2 = <more1>
+        if (<ref1.distance <ref2>>  > 150 )
+            ref2.timerf <r1,15>, dialog d_afundamos_barco
+            remove
+        endif
+    endif
+endfor
+
+timer 60
+return 1
+
+[DIALOG d_afundamos_barco]
+0,0
+page 0
+resizepic 91 64 9390 475 182
+text 239 139 0 0
+text 118 103 0 1
+gumppic 490 166 92
+text 303 177 0 2
+
+[DIALOG d_afundamos_barco text]
+Afundamos seu barco :)
+Querido Amigo,
+Ass: Piratas de Tortuga
+
+[DIALOG d_afundamos_barco button]
+
+[TYPEDEF t_crown_jewel]
+on=@equip
+    src.events +e_crownjewel
+    SRC.EFFECT 3,i_fx_bless_effect,6,15,1
+    Region.allclients sysmessage @,,1 <src.name> is now wearing a Britannia Crown Jewel in your region.
+    timer 3
+
+on=@unequip
+    local.hascrown 0
+    FOR 1 24
+		IF !((<dLOCAL._FOR>==11) || (<dLOCAL._FOR>==21) || (<dLOCAL._FOR>==15))
+			if (strmatch(*t_crown_jewel*,<serv.itemdef.<baseid>.tevents>))
+                local.hascrown 1
+            endif
+		ENDIF
+	ENDFOR
+
+    if (<local.hascrown> == 0)
+        src.events -e_crownjewel
+    endif
+    timer -1
+
+on=@damage
+return 1
+
+[itemdef i_bracelet_da_coroa]
+name=Britannia Crown Jewel
+id=i_bracelet_gold
+tevents=t_crown_jewel
+
+on=@create
+    attr = attr_move_always
+
+on=@timer
+    if (<cont.hits> < <cont.maxhits>)
+        cont.hits += 1
+    endif
+    timer 3
+    return 1
+
+On=@DropOn_Char
+if (<argo.baseid>==c_lord_british)
+	var.joia1 = <src.uid>
+	var.joia1lid = brit
+	serv.b @91 Uma joia da coroa foi entregue! <src.name> entregou <name> para Lord British!
+	timerf 1,remove
+	return 1
+endif
+if (<argo.baseid>==c_lord_blackthorne)
+	var.joia1 = <src.uid>
+	var.joia1lid = black
+	serv.b @33 Uma joia da coroa foi entregue! <src.name> entregou <name> para Lord Blackthorne!
+	timerf 1,remove
+	return 1
+endif
+
+[itemdef i_anel_da_coroa]
+name=Britannia Crown Jewel
+id=i_ring_gold
+
+on=@create
+    attr = attr_move_always
+
+on=@timer
+    if (<cont.stam> < <cont.maxstam>)
+        cont.stam += 1
+    endif
+    timer 3
+    return 1
+
+On=@DropOn_Char
+if (<argo.baseid>==c_lord_british)
+	var.joia2 = <src.uid>
+	var.joia2lid = brit
+	serv.b @91 Uma joia da coroa foi entregue! <src.name> entregou <name> para Lord British!
+	timerf 1,remove
+	return 1
+endif
+if (<argo.baseid>==c_lord_blackthorne)
+	var.joia2 = <src.uid>
+	var.joia2lid = black
+	serv.b @33 Uma joia da coroa foi entregue! <src.name> entregou <name> para Lord Blackthorne!
+	timerf 1,remove
+	return 1
+endif
+
+[itemdef i_colar_da_coroa]
+name=Britannia Crown Jewel
+id=i_necklace_gold
+
+on=@create
+    attr = attr_move_always
+
+on=@timer
+    if (<cont.mana> < <cont.maxmana>)
+        cont.mana += 1
+    endif
+    timer 3
+    return 1
+
+On=@DropOn_Char
+if (<argo.baseid>==c_lord_british)
+	var.joia3 = <src.uid>
+	var.joia3lid = brit
+	serv.b @91 Uma joia da coroa foi entregue! <src.name> entregou <name> para Lord British!
+	timerf 1,remove
+	return 1
+endif
+if (<argo.baseid>==c_lord_blackthorne)
+	var.joia3 = <src.uid>
+	var.joia3lid = black
+	serv.b @33 Uma joia da coroa foi entregue! <src.name> entregou <name> para Lord Blackthorne!
+	timerf 1,remove
+	return 1
+endif
+
+[template tm_crown_jewels]
+container=i_chest_metal_brass
+ITEM=i_colar_da_coroa
+item=i_anel_da_coroa
+item=i_bracelet_da_coroa
+
+[events e_crownjewel]
+on=@death
+    serv.allclients sysmessage @,,1 <name> died bearing one of the famous Britannia Crown Jewels.
+
+[EOF]
+
+

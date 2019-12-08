@@ -1,0 +1,29 @@
+// Lixeira
+
+[Itemdef i_lixeira]
+ID=i_barrel_open
+NAME=Lixeira
+WEIGHT=10
+CATEGORY=Provisions - Miscellaneous
+SUBSECTION=Containers
+DESCRIPTION=Lixeira
+SKILLMAKE=TINKERING 55.0,t_tinker_tools
+RESOURCES=30 i_log
+
+ON=@CREATE
+TIMER=600
+
+On=@dclick
+TIMER=600
+EMPTY
+sfx=snd_WEAPONS_GILOTIN1
+Src.targ.say A lixeira foi esvaziada por <src.name>
+return 1
+
+ON=@TIMER
+EMPTY
+sfx=snd_WEAPONS_GILOTIN1
+TIMER=600
+RETURN 1
+
+[EOF]

@@ -1,0 +1,587 @@
+/////////// CORES /////////////////
+[DEFNAME COLOR_LEATHER]
+color_l_wyrm 0902
+color_l_dragon 04B9
+color_l_drake 05A5
+color_l_ogre 06C8
+
+
+/////////////// COUROS /////////////
+[ITEMDEF i_hides_wyrm]
+ID=i_hide
+NAME=Wyrm Leather
+TYPE=t_hide
+WEIGHT=2
+
+ON=@CREATE
+COLOR color_l_wyrm
+
+[ITEMDEF i_hides_dragon]
+ID=i_hide
+NAME=Dragon Leather
+TYPE=t_hide
+WEIGHT=2
+
+ON=@CREATE
+COLOR color_l_dragon
+
+[ITEMDEF i_hides_drake]
+ID=i_hide
+NAME=Drake Leather
+TYPE=t_hide
+WEIGHT=2
+
+ON=@CREATE
+COLOR color_l_drake
+
+[ITEMDEF i_hides_ogre]
+ID=i_hide
+NAME=Ogre Lord Leather
+TYPE=t_hide
+WEIGHT=2
+
+ON=@CREATE
+COLOR color_l_ogre
+
+////////// ARMORS ///////////
+[ITEMDEF i_leather_leggings_Wyrm]
+NAME=Wyrm Leather Legs
+ID=i_leather_leggings
+TYPE=t_armor_leather
+RESOURCES=10 i_hides_wyrm
+SKILLMAKE=TAILORING 85.0, t_sewing_kit
+WEIGHT=6
+FLIP=1
+ARMOR=30
+REQSTR=90
+VALUE=150
+//LAYER=24
+
+ON=@CREATE
+	HITPOINTS 30
+	COLOR color_l_Wyrm
+
+ON=@EQUIP
+	SRC.MODDEX +=6
+
+ON=@UNEQUIP
+	SRC.MODDEX -=6
+
+[ITEMDEF i_leather_tunic_Wyrm]
+NAME=Wyrm Leather Tunic
+ID=i_leather_tunic
+TYPE=t_armor_leather
+RESOURCES=12 i_hides_wyrm
+SKILLMAKE=TAILORING 85.0, t_sewing_kit
+WEIGHT=6
+FLIP=1
+ARMOR=30
+REQSTR=90
+VALUE=150
+LAYER=5
+
+ON=@CREATE
+	HITPOINTS 30
+	COLOR color_l_Wyrm
+
+ON=@EQUIP
+	SRC.MODDEX +=6
+
+ON=@UNEQUIP
+	SRC.MODDEX -=6
+
+[ITEMDEF i_leather_gorget_Wyrm]
+NAME=Wyrm Leather Gorget
+ID=i_leather_gorget
+TYPE=t_armor_leather
+RESOURCES=4 i_hides_wyrm
+SKILLMAKE=TAILORING 85.0, t_sewing_kit
+WEIGHT=2
+FLIP=1
+ARMOR=30
+REQSTR=90
+VALUE=150
+
+ON=@CREATE
+	HITPOINTS 30
+	COLOR color_l_Wyrm
+
+ON=@EQUIP
+	SRC.MODDEX +=6
+
+ON=@UNEQUIP
+	SRC.MODDEX -=6
+
+[ITEMDEF i_leather_gloves_Wyrm]
+NAME=Wyrm Leather Gloves
+ID=i_leather_gloves
+TYPE=t_armor_leather
+RESOURCES=4 i_hides_wyrm
+SKILLMAKE=TAILORING 85.0, t_sewing_kit
+WEIGHT=1
+FLIP=1
+ARMOR=30
+REQSTR=90
+VALUE=150
+
+ON=@CREATE
+	HITPOINTS 30
+	COLOR color_l_Wyrm
+
+ON=@EQUIP
+	SRC.MODDEX +=6
+
+ON=@UNEQUIP
+	SRC.MODDEX -=6
+
+[ITEMDEF i_leather_sleeves_Wyrm]
+NAME=Wyrm Leather Sleeves
+ID=i_leather_sleeves
+TYPE=t_armor_leather
+RESOURCES=6 i_hides_wyrm
+SKILLMAKE=TAILORING 85.0, t_sewing_kit
+WEIGHT=6
+FLIP=1
+ARMOR=30
+REQSTR=90
+VALUE=150
+
+ON=@CREATE
+	HITPOINTS 30
+	COLOR color_l_Wyrm
+
+ON=@EQUIP
+	SRC.MODDEX +=6
+
+ON=@UNEQUIP
+	SRC.MODDEX -=6
+
+[ITEMDEF i_leather_cap_Wyrm]
+NAME= Wyrm Leather Cap
+ID=i_leather_cap
+TYPE=t_armor_leather
+FLIP=1
+SKILLMAKE=TAILORING 85.0, t_sewing_kit
+RESOURCES=3 i_hides_wyrm
+ARMOR=30
+REQSTR=90
+VALUE=150
+
+ON=@CREATE
+	HITPOINTS 30
+	COLOR color_l_Wyrm
+
+ON=@EQUIP
+	SRC.MODDEX +=6
+
+ON=@UNEQUIP
+	SRC.MODDEX -=6
+
+/////////////////////////////////////
+//////////// HORNED /////////////////
+/////////////////////////////////////
+
+[ITEMDEF i_leather_leggings_Dragon]
+NAME=Dragon Leather Legs
+ID=i_leather_leggings
+TYPE=t_armor_leather
+RESOURCES=10 i_hides_dragon
+SKILLMAKE=TAILORING 76.0, t_sewing_kit
+WEIGHT=6
+FLIP=1
+ARMOR=25
+REQSTR=85
+VALUE=150
+
+ON=@CREATE
+	HITPOINTS 25
+	COLOR color_l_Dragon
+
+ON=@EQUIP
+	SRC.MODDEX +=5
+
+ON=@UNEQUIP
+	SRC.MODDEX -=5
+
+[ITEMDEF i_leather_tunic_Dragon]
+NAME=Dragon Leather Tunic
+ID=i_leather_tunic
+TYPE=t_armor_leather
+RESOURCES=12 i_hides_dragon
+SKILLMAKE=TAILORING 76.0, t_sewing_kit
+WEIGHT=6
+FLIP=1
+ARMOR=25
+REQSTR=85
+VALUE=150
+LAYER=5
+
+ON=@CREATE
+	HITPOINTS 25
+	COLOR color_l_Dragon
+
+ON=@EQUIP
+	SRC.MODDEX +=5
+
+ON=@UNEQUIP
+	SRC.MODDEX -=5
+
+[ITEMDEF i_leather_gorget_Dragon]
+NAME=Dragon Leather Gorget
+ID=i_leather_gorget
+TYPE=t_armor_leather
+RESOURCES=4 i_hides_dragon
+SKILLMAKE=TAILORING 76.0, t_sewing_kit
+WEIGHT=2
+FLIP=1
+ARMOR=25
+REQSTR=85
+VALUE=150
+
+ON=@CREATE
+	HITPOINTS 25
+	COLOR color_l_Dragon
+
+ON=@EQUIP
+	SRC.MODDEX +=5
+
+ON=@UNEQUIP
+	SRC.MODDEX -=5
+
+[ITEMDEF i_leather_gloves_Dragon]
+NAME=Dragon Leather Gloves
+ID=i_leather_gloves
+TYPE=t_armor_leather
+RESOURCES=4 i_hides_dragon
+SKILLMAKE=TAILORING 76.0, t_sewing_kit
+WEIGHT=1
+FLIP=1
+ARMOR=25
+REQSTR=85
+VALUE=150
+
+ON=@CREATE
+	HITPOINTS 25
+	COLOR color_l_Dragon
+
+ON=@EQUIP
+	SRC.MODDEX +=5
+
+ON=@UNEQUIP
+	SRC.MODDEX -=5
+
+[ITEMDEF i_leather_sleeves_Dragon]
+NAME=Dragon Leather Sleeves
+ID=i_leather_sleeves
+TYPE=t_armor_leather
+RESOURCES=6 i_hides_dragon
+SKILLMAKE=TAILORING 76.0, t_sewing_kit
+WEIGHT=6
+FLIP=1
+ARMOR=25
+REQSTR=85
+VALUE=150
+
+ON=@CREATE
+	HITPOINTS 25
+	COLOR color_l_Dragon
+
+ON=@EQUIP
+	SRC.MODDEX +=5
+
+ON=@UNEQUIP
+	SRC.MODDEX -=5
+
+[ITEMDEF i_leather_cap_Dragon]
+NAME= Dragon Leather Cap
+ID=i_leather_cap
+TYPE=t_armor_leather
+FLIP=1
+SKILLMAKE=TAILORING 76.0, t_sewing_kit
+RESOURCES=3 i_hides_dragon
+ARMOR=25
+REQSTR=85
+VALUE=150
+
+ON=@CREATE
+	HITPOINTS 25
+	COLOR color_l_Dragon
+
+ON=@EQUIP
+	SRC.MODDEX +=5
+
+ON=@UNEQUIP
+	SRC.MODDEX -=5
+
+/////////////////////////////////////
+//////////// SPINED /////////////////
+/////////////////////////////////////
+
+[ITEMDEF i_leather_leggings_Drake]
+NAME=Drake Leather Legs
+ID=i_leather_leggings
+TYPE=t_armor_leather
+RESOURCES=10 i_hides_drake
+SKILLMAKE=TAILORING 70.0, t_sewing_kit
+WEIGHT=5
+FLIP=1
+ARMOR=20
+REQSTR=70
+VALUE=150
+
+ON=@CREATE
+	HITPOINTS 20
+	COLOR color_l_Drake
+
+ON=@EQUIP
+	SRC.MODDEX +=4
+
+ON=@UNEQUIP
+	SRC.MODDEX -=4
+
+[ITEMDEF i_leather_tunic_Drake]
+NAME=Drake Leather Tunic
+ID=i_leather_tunic
+TYPE=t_armor_leather
+RESOURCES=12 i_hides_drake
+SKILLMAKE=TAILORING 70.0, t_sewing_kit
+WEIGHT=5
+FLIP=1
+ARMOR=20
+REQSTR=70
+VALUE=150
+LAYER=5
+
+ON=@CREATE
+	HITPOINTS 20
+	COLOR color_l_Drake
+
+ON=@EQUIP
+	SRC.MODDEX +=4
+
+ON=@UNEQUIP
+	SRC.MODDEX -=4
+
+[ITEMDEF i_leather_gorget_Drake]
+NAME=Drake Leather Gorget
+ID=i_leather_gorget
+TYPE=t_armor_leather
+RESOURCES=4 i_hides_drake
+SKILLMAKE=TAILORING 70.0, t_sewing_kit
+WEIGHT=2
+FLIP=1
+ARMOR=20
+REQSTR=70
+VALUE=150
+
+ON=@CREATE
+	HITPOINTS 20
+	COLOR color_l_Drake
+
+ON=@EQUIP
+	SRC.MODDEX +=4
+
+ON=@UNEQUIP
+	SRC.MODDEX -=4
+
+[ITEMDEF i_leather_gloves_Drake]
+NAME=Drake Leather Gloves
+ID=i_leather_gloves
+TYPE=t_armor_leather
+RESOURCES=4 i_hides_drake
+SKILLMAKE=TAILORING 70.0, t_sewing_kit
+WEIGHT=1
+FLIP=1
+ARMOR=20
+REQSTR=70
+VALUE=150
+ON=@CREATE
+	HITPOINTS 20
+	COLOR color_l_Drake
+
+ON=@EQUIP
+	SRC.MODDEX +=4
+
+ON=@UNEQUIP
+	SRC.MODDEX -=4
+
+[ITEMDEF i_leather_sleeves_Drake]
+NAME=Drake Leather Sleeves
+ID=i_leather_sleeves
+TYPE=t_armor_leather
+RESOURCES=5 i_hides_drake
+SKILLMAKE=TAILORING 70.0, t_sewing_kit
+WEIGHT=4
+FLIP=1
+ARMOR=20
+REQSTR=70
+VALUE=150
+
+ON=@CREATE
+	HITPOINTS 20
+	COLOR color_l_Drake
+
+ON=@EQUIP
+	SRC.MODDEX +=4
+
+ON=@UNEQUIP
+	SRC.MODDEX -=4
+
+[ITEMDEF i_leather_cap_Drake]
+NAME= Drake Leather Cap
+ID=i_leather_cap
+TYPE=t_armor_leather
+FLIP=1
+SKILLMAKE=TAILORING 70.0, t_sewing_kit
+RESOURCES=3 i_hides_drake
+ARMOR=20
+REQSTR=70
+VALUE=150
+
+ON=@CREATE
+	HITPOINTS 20
+	COLOR color_l_Drake
+
+ON=@EQUIP
+	SRC.MODDEX +=4
+
+ON=@UNEQUIP
+	SRC.MODDEX -=4
+
+/////////////////////////////////////
+//////////// OGRE ///////////////////
+/////////////////////////////////////
+
+[ITEMDEF i_leather_leggings_ogre]
+NAME=Ogre Lord Leather Legs
+ID=i_leather_leggings
+TYPE=t_armor_leather
+RESOURCES=10 i_hides_ogre
+SKILLMAKE=TAILORING 65.0, t_sewing_kit
+WEIGHT=4
+FLIP=1
+ARMOR=20
+REQSTR=50
+VALUE=150
+
+ON=@CREATE
+	HITPOINTS 20
+	COLOR color_l_ogre
+
+ON=@EQUIP
+	SRC.MODDEX +=3
+
+ON=@UNEQUIP
+	SRC.MODDEX -=3
+
+[ITEMDEF i_leather_tunic_ogre]
+NAME=Ogre Lord Leather Tunic
+ID=i_leather_tunic
+TYPE=t_armor_leather
+RESOURCES=12 i_hides_ogre
+SKILLMAKE=TAILORING 65.0, t_sewing_kit
+WEIGHT=3
+FLIP=1
+ARMOR=20
+REQSTR=50
+VALUE=150
+LAYER=5
+
+ON=@CREATE
+	HITPOINTS 20
+	COLOR color_l_ogre
+
+ON=@EQUIP
+	SRC.MODDEX +=3
+
+ON=@UNEQUIP
+	SRC.MODDEX -=3
+
+[ITEMDEF i_leather_gorget_ogre]
+NAME=Ogre Lord Leather Gorget
+ID=i_leather_gorget
+TYPE=t_armor_leather
+RESOURCES=4 i_hides_ogre
+SKILLMAKE=TAILORING 65.0, t_sewing_kit
+WEIGHT=2
+FLIP=1
+ARMOR=20
+REQSTR=50
+VALUE=150
+
+ON=@CREATE
+	HITPOINTS 20
+	COLOR color_l_ogre
+
+ON=@EQUIP
+	SRC.MODDEX +=3
+
+ON=@UNEQUIP
+	SRC.MODDEX -=3
+
+[ITEMDEF i_leather_gloves_ogre]
+NAME=Ogre Lord Leather Gloves
+ID=i_leather_gloves
+TYPE=t_armor_leather
+RESOURCES=4 i_hides_ogre
+SKILLMAKE=TAILORING 65.0, t_sewing_kit
+WEIGHT=1
+FLIP=1
+ARMOR=20
+REQSTR=50
+VALUE=150
+
+ON=@CREATE
+	HITPOINTS 20
+	COLOR color_l_ogre
+
+ON=@EQUIP
+	SRC.MODDEX +=3
+
+ON=@UNEQUIP
+	SRC.MODDEX -=3
+
+[ITEMDEF i_leather_sleeves_ogre]
+NAME=Ogre Lord Leather Sleeves
+ID=i_leather_sleeves
+TYPE=t_armor_leather
+RESOURCES=5 i_hides_ogre
+SKILLMAKE=TAILORING 65.0, t_sewing_kit
+WEIGHT=5
+FLIP=1
+ARMOR=20
+REQSTR=50
+VALUE=150
+
+ON=@CREATE
+	HITPOINTS 20
+	COLOR color_l_ogre
+
+ON=@EQUIP
+	SRC.MODDEX +=3
+
+ON=@UNEQUIP
+	SRC.MODDEX -=3
+
+[ITEMDEF i_leather_cap_ogre]
+NAME= Ogre Lord Leather Cap
+ID=i_leather_cap
+TYPE=t_armor_leather
+FLIP=1
+SKILLMAKE=TAILORING 65.0, t_sewing_kit
+RESOURCES=3 i_hides_ogre
+ARMOR=20
+REQSTR=50
+VALUE=150
+
+ON=@CREATE
+	HITPOINTS 20
+	COLOR color_l_ogre
+
+ON=@EQUIP
+	SRC.MODDEX +=3
+
+ON=@UNEQUIP
+	SRC.MODDEX -=3
+
+[EOF]

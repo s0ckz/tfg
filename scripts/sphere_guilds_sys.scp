@@ -1,0 +1,471 @@
+////////////////////////////////////////
+/////////// DEFNAMES ///////////////////
+////////////////////////////////////////
+[DEFNAME primary_skills]
+mageskills	7
+primmage1	0
+primmage2	16
+primmage3	17
+primmage4	23
+primmage5	25
+primmage6	26	
+primmage7	46
+
+
+
+[DEFNAME guild_titles]
+mage1	Associate
+mage2	Apprentice
+mage3	Journeyman
+mage4	Evoker
+mage5	Conjurer
+mage6	Magician
+mage7	Warlock
+mage8	Wizard
+mage9	Master Wizard
+mage10	Arch-Mage
+
+fighter1	Associate
+fighter2	Apprentice
+fighter3	Journeyman
+fighter4	Swordsman
+fighter5	Protector
+fighter6	Defender
+fighter7	Warder
+fighter8	Guardian
+fighter9	Champion
+fighter10	Master
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////// Mages Guild ///////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////
+//////////////////////// Mages Guild Event ///////////////////////
+/////////////////////////////////////////////////////////////////
+
+
+[EVENTS e_mage_guild]
+
+ON=@CLICK
+MESSAGE [<def0.mage<dtag0.magelvl>>]
+
+///////////////////////////////////////////////////////////////////
+//////////////////////// Mages Guild Chars ///////////////////////
+/////////////////////////////////////////////////////////////////
+
+
+
+
+////////////////////////////
+//// Mages Guild Master ///
+//////////////////////////
+
+[CHARDEF c_mage_guildmaster]
+NAME=Trebonius Artorius
+ID=C_MAN
+TEVENTS=e_mage_guild
+TSPEECH=spk_mgm
+
+ON=@Create
+SPEECH=spk_mgm
+TAG.MAGELVL 10
+FLAGS 05
+NPC=brain_vendor
+COLOR=083ea
+STR={61 75}
+DEX={71 85}
+INT=4000
+
+//NEED=i_gold
+//NEED=i_reag_black_pearl
+//NEED=i_reag_blood_moss
+//NEED=i_reag_mandrake_root
+
+MEDITATION=400.0
+INSCRIPTION={50.0 65.0}
+MAGERY=400.0
+WRESTLING={15.0 38.0}
+MAGICRESISTANCE={55.0 78.0}
+TACTICS={15.0 38.0}
+
+ITEMNEWBIE=random_male_hair
+COLOR=colors_hair
+ITEMNEWBIE=random_facial_hair
+COLOR=match_hair
+ITEMNEWBIE=i_robe
+COLOR=0481
+ITEMNEWBIE=i_hat_wizards
+COLOR=0481
+
+
+///////////////////////////////////////
+//// Mages Guild -  1st lvl. Quests///
+/////////////////////////////////////
+
+[CHARDEF c_mage_1st]
+NAME=Ajira
+ID=C_MAN
+TEVENTS=e_mage_guild
+TSPEECH=spk_m1
+
+ON=@Create
+SPEECH=spk_m1
+TAG.MAGELVL 3
+FLAGS 05
+NPC=brain_vendor
+COLOR=083ea
+STR={61 75}
+DEX={71 85}
+INT=4000
+
+//NEED=i_gold
+//NEED=i_reag_black_pearl
+//NEED=i_reag_blood_moss
+//NEED=i_reag_mandrake_root
+
+MEDITATION=400.0
+INSCRIPTION={50.0 65.0}
+MAGERY=400.0
+WRESTLING={15.0 38.0}
+MAGICRESISTANCE={55.0 78.0}
+TACTICS={15.0 38.0}
+
+ITEMNEWBIE=random_male_hair
+COLOR=colors_hair
+ITEMNEWBIE=random_facial_hair
+COLOR=match_hair
+ITEMNEWBIE=i_robe
+COLOR=0794
+ITEMNEWBIE=i_hat_wizards
+COLOR=0794
+
+
+
+///////////////////////////////////////
+//// Mages Guild -  2nd lvl. Quests///
+/////////////////////////////////////
+
+[CHARDEF c_mage_2nd]
+NAME=Ranis Athrys
+ID=C_MAN
+TEVENTS=e_mage_guild
+TSPEECH=spk_m2
+
+ON=@Create
+SPEECH=spk_m2
+TAG.MAGELVL 6
+FLAGS 05
+NPC=brain_vendor
+COLOR=083ea
+STR={61 75}
+DEX={71 85}
+INT=4000
+
+//NEED=i_gold
+//NEED=i_reag_black_pearl
+//NEED=i_reag_blood_moss
+//NEED=i_reag_mandrake_root
+
+MEDITATION=400.0
+INSCRIPTION={50.0 65.0}
+MAGERY=400.0
+WRESTLING={15.0 38.0}
+MAGICRESISTANCE={55.0 78.0}
+TACTICS={15.0 38.0}
+
+ITEMNEWBIE=random_male_hair
+COLOR=colors_hair
+ITEMNEWBIE=random_facial_hair
+COLOR=match_hair
+ITEMNEWBIE=i_robe
+COLOR=0482
+ITEMNEWBIE=i_hat_wizards
+COLOR=0482
+
+
+
+///////////////////////////////////////
+//// Mages Guild -  3rd lvl. Quests///
+/////////////////////////////////////
+
+[CHARDEF c_mage_3rd]
+NAME=Edwinna Elbert
+ID=C_WOMAN
+TEVENTS=e_mage_guild
+TSPEECH=spk_m3
+
+ON=@Create
+SPEECH=spk_m3
+TAG.MAGELVL 9
+FLAGS 05
+NPC=brain_vendor
+COLOR=083ea
+STR={61 75}
+DEX={71 85}
+INT=4000
+
+//NEED=i_gold
+//NEED=i_reag_black_pearl
+//NEED=i_reag_blood_moss
+//NEED=i_reag_mandrake_root
+
+MEDITATION=400.0
+INSCRIPTION={50.0 65.0}
+MAGERY=400.0
+WRESTLING={15.0 38.0}
+MAGICRESISTANCE={55.0 78.0}
+TACTICS={15.0 38.0}
+
+ITEMNEWBIE=random_female_hair
+COLOR=colors_hair
+ITEMNEWBIE=i_robe
+COLOR=1
+ITEMNEWBIE=i_hat_wizards
+COLOR=01
+
+
+
+/////////////////////////////////////////
+/////// Mage GuildMaster Speech /////////
+/////////////////////////////////////////
+
+[SPEECH spk_mgm]
+
+ON=*requisitos*
+ON=*precisa*
+
+SAY <SRC.NAME>, tens interesse em se inscrever na Mages Guild ? Pois bem, Voce necessita de 2 Skills Primarias em 80.0 e 2 Skills Primarias em 40.0.
+SAY Nao sabes o que eh Skill Primaria? Pergunte.
+
+ON=*Primaria*
+
+SAY As Skills Primarias referente a Mages Guild sao: Magery, Meditation, Evaluating Intel., Alchemy, Healing, Resisting Spells e Inscription.
+
+ON=*info*
+ON=*mage*
+ON=*guild*
+
+SAY Ola, <SRC.NAME>. Eu me chamo <NAME>, o Guildmaster da Mages Guild.
+SAY Voce deseja fazer parte da Guild ? Se sim, fique atento aos REQUISITOS.
+
+ON=*join*
+ON=*ingressar*
+ON=*entrar*
+
+IF (<SRC.TAG0.magelvl>)
+    SAY Voce ja eh um membro da Mages guild, <def0.mage<src.dtag0.magelvl>> <SRC.NAME>.
+ELIF (<SRC.TAG0.fighterlvl>)
+    SAY Voce ja pertence a uma outra Guild, <SRC.NAME>. Para se aliar a Mages Guild, voce deve sair de sua guild atual.
+ELSE
+    SRC.TAG.MAGELVL 1
+    SRC.EVENTS +e_mage_guild
+    SAY Bem Vindo a Mages Guild, <SRC.NAME>. Procure sempre saber se algum membro da guild precisa de seus SERVICOS.
+ENDIF
+
+
+ON=*SERVICOS*
+IF !(<SRC.TAG0.MAGELVL>)
+    SAY Ei, estranho. Servicos somente para membros.
+ELIF <SRC.TAG0.MAGELVL> < 3
+    SAY Voce ainda eh muito novato para meus servicos, <SRC.NAME>.
+    TIMERF 1,SAY Talvez voce deva ir visitar XXXXX. Sua morada se situa nas imediacoes de YYYYYYY. 
+ELIF <SRC.TAG0.MAGELVL> < 6
+    SAY Vejo que estas se tornando um bom Mago, <SRC.NAME>.
+    TIMERF 1, SAY Mas ainda nao posso revelar meus segredos para ti.
+    TIMERF 2, SAY Procure ZZZZZZZZZ em sua casa em TTTTTTTT. Ele deve ter algo para voce.
+ELIF <SRC.TAG0.MAGELVL> < 9
+    SAY Dias dificeis estao por vir, <DEF0.<SRC.TAG0.MAGELVL>> <SRC.NAME>.
+    TIMERF 1, SAY Fique atento que em breve necessitarei de teus servicos.
+    TIMERF 2, SAY Mas por enquanto, podes encontrar tarefas com MMMMMMMMM.
+ENDIF
+
+
+/////////////////////////////////////////
+/////// Mage 1st Lvl Speech ////////////
+///////////////////////////////////////
+
+[SPEECH spk_m1]
+
+ON=*requisitos*
+ON=*precisa*
+
+SAY <SRC.NAME>, tens interesse em se inscrever na Mages Guild ? Pois bem, Voce necessita de 2 Skills Primarias em 80.0 e 2 Skills Primarias em 40.0.
+SAY Nao sabes o que eh Skill Primaria ? Pergunte.
+
+ON=*Skill Primaria*
+
+SAY As Skills Primarias referente a Mages Guild sao: Magery, Meditation, Evaluating Intel., Alchemy, Healing, Resisting Spells e Inscription.
+
+
+
+
+ON=*info*
+ON=*mage*
+ON=*guild*
+
+SAY Ola, <SRC.NAME>. Eu me chamo <NAME>, sou um aprendiz filiado a Mages Guild.
+TIMERF 1,SAY Voce deseja fazer parte da Guild ? Se sim, fique atento aos REQUISITOS.
+
+
+
+ON=*join*
+ON=*ingressar*
+ON=*entrar*
+
+IF (<SRC.TAG0.magelvl>)
+SAY Voce ja eh um membro da Mages guild, <def0.mage<src.dtag0.magelvl>> <SRC.NAME>.
+ELIF (<SRC.TAG0.fighterlvl>)
+SAY Voce ja pertence a uma outra Guild, <SRC.NAME>. Para se aliar a Mages Guild, voce deve sair de sua guild atual.
+ELSE
+SAY Para se tornar membro da Mages Guild, Voce deve falar com o Arch-Mage Trebonius Artorius
+ENDIF
+
+
+ON=*SERVICOS*
+IF !(<SRC.TAG0.MAGELVL>)
+SAY Meus servicos sao apenas para membros, estranho.
+ELIF <SRC.TAG0.MAGELVL> > 3
+SAY Nao tenho mais nada a lhe ensinar, <SRC.NAME>.
+TIMERF 1,SAY Procure Trebonius para obter maiores informacoes sobre servicos mais complexos.
+ELSE
+TRY SRC.f_magejob_<SRC.dTAG0.MAGEJOBS> <UID>
+ENDIF
+
+
+/////////////////////////////////////////
+/////// Mage 2nd Lvl Speech /////////
+/////////////////////////////////////////
+
+[SPEECH spk_m2]
+
+ON=*requisitos*
+ON=*precisa*
+
+SAY <SRC.NAME>, tens interesse em se inscrever na Mages Guild ? Pois bem, Voce necessita de 2 Skills Primarias em 80.0 e 2 Skills Primarias em 40.0.
+SAY Nao sabes o que eh Skill Primaria ? Pergunte.
+
+ON=*Skill Primaria*
+
+SAY As Skills Primarias referente a Mages Guild sao: Magery, Meditation, Evaluating Intel., Alchemy, Healing, Resisting Spells e Inscription.
+
+
+
+
+ON=*info*
+ON=*mage*
+ON=*guild*
+
+SAY Ola, <SRC.NAME>. Eu me chamo <NAME>, o Guildmaster da Mages Guild.
+TIMERF 1,SAY Voce deseja fazer parte da Guild ? Se sim, fique atento aos REQUISITOS.
+
+
+
+ON=*join*
+ON=*ingressar*
+ON=*entrar*
+
+IF (<SRC.TAG0.magelvl>)
+SAY Voce ja eh um membro da Mages guild, <def0.mage<src.dtag0.magelvl>> <SRC.NAME>.
+ELIF (<SRC.TAG0.fighterlvl>)
+SAY Voce ja pertence a uma outra Guild, <SRC.NAME>. Para se aliar a Mages Guild, voce deve sair de sua guild atual.
+ELSE
+SAY Para se tornar membro da Mages Guild, Voce deve falar com o Arch-Mage Trebonius Artorius
+ENDIF
+
+
+ON=*SERVICOS*
+IF !(<SRC.TAG0.MAGELVL>)
+SAY Procure manter distancia, <SRC.NAME>.
+TIMERF 1, SAY Nao costumo perder meu tempo com desconhecidos.
+ELIF <SRC.TAG0.MAGELVL> < 4
+SAY Tudo em seu tempo, <def0.mage<SRC.dTAG0.MAGELVL>> <SRC.NAME>
+TIMERF 1, SAY Por enquanto, procure por Ajira. Fale comigo quando possuir maior experiencia.
+ELIF <SRC.TAG0.MAGELVL> > 6
+SAY Avancaste muito em seu caminho para o aperfeicoamento na arte das magias.
+TIMERF 1,SAY Infelizmente, nao ha nada mais que eu possa lhe ensinar.
+TIMERF 2,SAY IIIIIIIIIII, em EEEEEEEE provavelmente precisa de suas habilidades.
+ELSE
+SAY IHUUU
+ENDIF
+
+
+/////////////////////////////////////////
+/////// Mage 3rd Lvl Speech /////////
+/////////////////////////////////////////
+
+[SPEECH spk_m3]
+
+ON=*requisitos*
+ON=*precisa*
+
+SAY <SRC.NAME>, tens interesse em se inscrever na Mages Guild ? Pois bem, Voce necessita de 2 Skills Primarias em 80.0 e 2 Skills Primarias em 40.0.
+SAY Nao sabes o que eh Skill Primaria ? Pergunte.
+
+ON=*Skill Primaria*
+
+SAY As Skills Primarias referente a Mages Guild sao: Magery, Meditation, Evaluating Intel., Alchemy, Healing, Resisting Spells e Inscription.
+
+
+
+
+ON=*info*
+ON=*mage*
+ON=*guild*
+
+SAY Ola, <SRC.NAME>. Eu me chamo <NAME>, o Guildmaster da Mages Guild.
+TIMERF 1,SAY Voce deseja fazer parte da Guild ? Se sim, fique atento aos REQUISITOS.
+
+
+
+ON=*join*
+ON=*ingressar*
+ON=*entrar*
+
+IF (<SRC.TAG0.magelvl>)
+SAY Voce ja eh um membro da Mages guild, <def0.mage<src.dtag0.magelvl>> <SRC.NAME>.
+ELIF (<SRC.TAG0.fighterlvl>)
+SAY Voce ja pertence a uma outra Guild, <SRC.NAME>. Para se aliar a Mages Guild, voce deve sair de sua guild atual.
+ELSE
+SAY Para se tornar membro da Mages Guild, Voce deve falar com o Arch-Mage Trebonius Artorius
+ENDIF
+
+
+ON=*SERVICOS*
+IF !(<SRC.TAG0.MAGELVL>)
+SAY Se nao queres virar um sapo, eh bom que SUMA da minha frente.
+ELIF <SRC.TAG0.MAGELVL> < 8
+SAY Lembre-se, <SRC.NAME>: A pressa eh inimiga da perfeicao.
+TIMERF 1,SAY Estas a percorrer um longo e tortuoso caminho atras do conhecimento.
+TIMERF 2,SAY Mostre-se merecedor e lhe recompensarei.
+ELSE
+SAY IHUUU
+ENDIF
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////// Mages Guild Mini-Quests and Jobs ////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+[FUNCTION f_magejob_0]
+REF69 <ARGS>
+REF69.SAY LELELEL
+SRC.SAY AAAAAAA
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

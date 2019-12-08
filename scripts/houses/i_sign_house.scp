@@ -1,0 +1,351 @@
+[ITEMDEF i_sign_house]
+ID = i_sign_brass
+DEFNAME  = i_sign_house
+TYPE     = t_sign_gump
+CAN      = can_i_dcignorelos
+//DUPELIST = i_sign_house_2
+CATEGORY    = Decoration - Signs
+SUBSECTION  = Blank
+DESCRIPTION = Brass Blank
+
+ON=@Create
+	timerf 1, f_housing_checkplacement
+
+ON=@CLICK
+     if <tag0.sentenced>
+       message @32,,1 [Casa Condenada]
+     endif
+
+On=@DCLICK
+IF !(<LINK.BASEID>)
+RETURN 0
+ENDIF
+LINK.TAG.SECMAX <LINK.VALUE>/20000
+LINK.TAG.LOCKMAX <LINK.VALUE>/10000
+IF <DISTANCE> >= 15
+SRC.SYSMESSAGE You are to far away to access the house sign
+return 1
+endif
+
+IF (<SRC.ACCOUNT.PLEVEL> > 01)
+	LINK.DIALOG d_house_staff
+	LINK.REGION.TAG.SIGNP=<UID>
+	SRC.SYSMESSAGE Welcome back to the house, sir!
+	RETURN 1
+ENDIF
+
+
+IF (<SRC.UID> == <LINK.MORE>)
+TIMER 2592000
+LINK.TIMER -1
+LINK.DIALOG d_house_private
+SRC.SYSMESSAGE Welcome back to the house, friend!
+LINK.REGION.EVENTS r_house_private
+RETURN 1
+ENDIF
+
+FOR 10
+	IF (<SRC.UID> == <LINK.TAG0.F<eval <local._for>>UID>)
+		LINK.DIALOG d_house_private
+		SRC.SYSMESSAGE Welcome back to the house, friend!
+		LINK.REGION.EVENTS r_house_private
+		RETURN 1
+	ENDIF
+ENDFOR
+FOR 10
+
+	IF (<SRC.UID> == <LINK.TAG0.CO<eval <local._for>>UID>)
+		LINK.TIMER -1
+		LINK.DIALOG d_house_private
+		SRC.SYSMESSAGE Welcome back to the house, friend!
+		LINK.REGION.EVENTS r_house_private
+
+		RETURN 1
+
+	ENDIF
+
+ENDFOR
+RETURN 1
+
+
+//ON=@DClick
+//	if <link.type> == t_multi
+//		if <tag0.waiting_confirm>
+//			return 1
+//		endif
+//		if <link.f_housing_getaccess <src>> >= <def.housing.access_friend>
+//			if (<src.region.uid> != <region.uid>) && (!<src.isgm>)
+//				src.sysmessage "@,,1 Você precisa estar dentro de casa para acessar o menu."
+//			else
+//				src.f_house_closedialogs
+//				dialog d_house_menu
+//			endif
+//		endif
+//		return 1
+//	endif
+
+ON=@Timer
+        if <tag0.sentenced>
+		ref1 = <link.more1>
+		local.giveback = i_deed<strsub strlen(i_multi) 0 <link.baseid>>
+		if <serv.itemdef.<local.giveback>>
+			serv.newitem <local.giveback>
+
+			IF (<NEW.ISTEVENT.t_vip_deed>)
+				NEW.LINK <REF1.UID>
+			ENDIF
+
+			new.cont = <ref1.findlayer.29.uid>
+            new.update
+		endif
+		f_house_sentenced_destroy <ref1.uid>
+                f_house_sentenced_area <link.multiregion>,<link.p.x>,<link.p.y>,<link.p.z>,<link.uid>
+		link.remove
+        endif
+        //
+	if <tag0.waiting_confirm> && <tag0.house_owner>
+		ref1 = <tag0.house_owner>
+		ref1.sysmessage "@,,1 Você decidiu não colocar sua casa aqui."
+		local.giveback = i_deed<strsub strlen(i_multi) 0 <link.baseid>>
+		if <serv.itemdef.<local.giveback>>
+			serv.newitem <local.giveback>
+
+			IF (<NEW.ISTEVENT.t_vip_deed>)
+				NEW.LINK <REF1.UID>
+			ENDIF
+
+			ref1.bounce <new>
+		endif
+		trysrc <ref1> dialogclose d_house_confirm_placement
+		link.remove
+	endif
+	tag0.waiting_confirm =
+	tag0.house_owner =
+	return 1
+
+[ITEMDEF i_sign_house_2]
+ID = i_sign_brass_2
+DEFNAME  = i_sign_house_2
+TYPE     = t_sign_gump
+CAN      = can_i_dcignorelos
+//DUPELIST = i_sign_house_2
+CATEGORY    = Decoration - Signs
+SUBSECTION  = Blank
+DESCRIPTION = Brass Blank
+
+ON=@Create
+	timerf 1, f_housing_checkplacement
+
+ON=@CLICK
+     if <tag0.sentenced>
+       message @32,,1 [Casa Condenada]
+     endif
+
+On=@DCLICK
+IF !(<LINK.BASEID>)
+RETURN 0
+ENDIF
+LINK.TAG.SECMAX <LINK.VALUE>/20000
+LINK.TAG.LOCKMAX <LINK.VALUE>/10000
+IF <DISTANCE> >= 15
+SRC.SYSMESSAGE You are to far away to access the house sign
+return 1
+endif
+
+IF (<SRC.ACCOUNT.PLEVEL> > 01)
+	LINK.DIALOG d_house_staff
+	LINK.REGION.TAG.SIGNP=<UID>
+	SRC.SYSMESSAGE Welcome back to the house, sir!
+	RETURN 1
+ENDIF
+
+
+IF (<SRC.UID> == <LINK.MORE>)
+TIMER 2592000
+LINK.TIMER -1
+LINK.DIALOG d_house_private
+SRC.SYSMESSAGE Welcome back to the house, friend!
+LINK.REGION.EVENTS r_house_private
+RETURN 1
+ENDIF
+
+FOR 10
+	IF (<SRC.UID> == <LINK.TAG0.F<eval <local._for>>UID>)
+		LINK.DIALOG d_house_private
+		SRC.SYSMESSAGE Welcome back to the house, friend!
+		LINK.REGION.EVENTS r_house_private
+		RETURN 1
+	ENDIF
+ENDFOR
+FOR 10
+
+	IF (<SRC.UID> == <LINK.TAG0.CO<eval <local._for>>UID>)
+		LINK.TIMER -1
+		LINK.DIALOG d_house_private
+		SRC.SYSMESSAGE Welcome back to the house, friend!
+		LINK.REGION.EVENTS r_house_private
+
+		RETURN 1
+
+	ENDIF
+
+ENDFOR
+RETURN 1
+
+
+//ON=@DClick
+//	if <link.type> == t_multi
+//		if <tag0.waiting_confirm>
+//			return 1
+//		endif
+//		if <link.f_housing_getaccess <src>> >= <def.housing.access_friend>
+//			if (<src.region.uid> != <region.uid>) && (!<src.isgm>)
+//				src.sysmessage "@,,1 Você precisa estar dentro de casa para acessar o menu."
+//			else
+//				src.f_house_closedialogs
+//				dialog d_house_menu
+//			endif
+//		endif
+//		return 1
+//	endif
+
+ON=@Timer
+    if <tag0.sentenced>
+		ref1 = <link.more1>
+		local.giveback = i_deed<strsub strlen(i_multi) 0 <link.baseid>>
+			if <serv.itemdef.<local.giveback>>
+				serv.newitem <local.giveback>
+
+				IF (<NEW.ISTEVENT.t_vip_deed>)
+					NEW.LINK <REF1.UID>
+				ENDIF
+
+				new.cont = <ref1.findlayer.29.uid>
+				new.update
+			endif
+		f_house_sentenced_destroy <ref1.uid>
+                f_house_sentenced_area <link.multiregion>,<link.p.x>,<link.p.y>,<link.p.z>,<link.uid>
+		link.remove
+    endif
+        //
+	if <tag0.waiting_confirm> && <tag0.house_owner>
+		ref1 = <tag0.house_owner>
+		ref1.sysmessage "@,,1 Você decidiu não colocar sua casa aqui."
+		local.giveback = i_deed<strsub strlen(i_multi) 0 <link.baseid>>
+		if <serv.itemdef.<local.giveback>>
+			serv.newitem <local.giveback>
+
+			IF (<NEW.ISTEVENT.t_vip_deed>)
+				NEW.LINK <REF1.UID>
+			ENDIF
+
+			ref1.bounce <new>
+		endif
+		trysrc <ref1> dialogclose d_house_confirm_placement
+		link.remove
+	endif
+	tag0.waiting_confirm =
+	tag0.house_owner =
+	return 1
+
+
+[EOF]
+
+//brass sign
+ID=i_sign_brass
+TYPE=t_house_sign
+TDATA2=064
+FLIP=1
+RESOURCES=2 i_board_2, 1 i_ingot_iron
+CATEGORY=Decoration - Signs
+SUBSECTION=Blank
+DESCRIPTION=Brass Blank
+DUPELIST=0bd2
+
+ON=@CREATE
+timerf 1, f_housing_checkplacement
+tag.cant_click = 1
+TIMER 1296000
+
+
+ON=@Timer
+IF !(<LINK.UID>) // se nao for placa de casa de player
+	RETURN 0
+ELSE
+//	LINK.REMOVEHOUSE
+	TIMER 1296000
+	RETURN 1
+ENDIF
+
+
+
+ON=@CLICK
+IF (<LINK.UID>)
+//MESSAGE @0481 Demolicao em: <eval <TIMER>/86400> dias
+MESSAGE @026 Demolicao temporariamente desativada.
+ENDIF
+
+
+
+
+ON=@DClick
+if <tag0.cant_click>
+	src.sysmessage @,,1 Voce deve validar a casa antes de usar esta placa.
+	return 1
+endif
+
+if !<link.tag0.global>
+	src.sysmessage @,,1 Esta casa nao esta vinculada a uma account global e foi bloqueada.
+	return 1
+endif
+
+
+IF !(<LINK.BASEID>)
+RETURN 0
+ENDIF
+LINK.TAG.SECMAX <LINK.VALUE>/20000
+LINK.TAG.LOCKMAX <LINK.VALUE>/10000
+IF <DISTANCE> >= 15
+SRC.SYSMESSAGE You are to far away to access the house sign
+return 1
+endif
+
+IF (<SRC.ACCOUNT.PLEVEL> > 01)
+	LINK.DIALOG d_house_staff
+	LINK.REGION.TAG.SIGNP=<UID>
+	SRC.SYSMESSAGE Welcome back to the house, sir!
+	RETURN 1
+ENDIF
+
+
+IF (<SRC.UID> == <LINK.MORE>)
+TIMER 2592000
+LINK.TIMER -1
+LINK.DIALOG d_house_private
+SRC.SYSMESSAGE Welcome back to the house, friend!
+LINK.REGION.EVENTS r_house_private
+RETURN 1
+ENDIF
+
+FOR 10
+	IF (<SRC.UID> == <LINK.TAG0.F<eval <local._for>>UID>)
+		LINK.DIALOG d_house_private
+		SRC.SYSMESSAGE Welcome back to the house, friend!
+		LINK.REGION.EVENTS r_house_private
+		RETURN 1
+	ENDIF
+ENDFOR
+FOR 10
+
+	IF (<SRC.UID> == <LINK.TAG0.CO<eval <local._for>>UID>)
+		LINK.TIMER -1
+		LINK.DIALOG d_house_private
+		SRC.SYSMESSAGE Welcome back to the house, friend!
+		LINK.REGION.EVENTS r_house_private
+
+		RETURN 1
+
+	ENDIF
+
+ENDFOR
+RETURN 1

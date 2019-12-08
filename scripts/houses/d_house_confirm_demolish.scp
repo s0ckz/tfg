@@ -1,0 +1,45 @@
+[DIALOG d_house_confirm_demolish]
+300,200
+page 0
+resizepic 0 0 3500 300 120
+dhtmlgump 0 30 300 17 0 0 <def.center>Tem certeza que deseja demolir a casa?<def.centere>
+button 100 80 0FB1 0FB2 0FB3 0 0
+button 160 80 0FB7 0FB8 0FB9 0 1
+
+[DIALOG d_house_confirm_demolish BUTTON]
+ON=1
+	if (<link.distance <src>> > 2) && !<src.isgm>
+		src.sysmessage "@,,1 Você precisa estar próximo da placa da casa para demolir."
+		return 0
+	endif
+	if <link.f_housing_getaccess <src>> >= <def.housing.access_owner>
+		local.giveback = i_deed<strsub strlen(i_multi) 0 <baseid>>
+		if <serv.itemdef.<local.giveback>>
+			serv.newitem <local.giveback>
+
+			IF (<NEW.ISTEVENT.t_vip_deed>)
+				NEW.LINK <SRC.UID>
+			ENDIF
+
+			src.bounce <new>
+
+			//if <tag0.sentenced>
+				f_house_sentenced_area <multiregion>,<p.x>,<p.y>,<p.z>,<uid>
+			//endif
+			DB.EXECUTE "DELETE FROM casa WHERE UidCasa='<eval <uid>>'"
+			remove
+		else
+			if !<src.isgm>
+				src.sysmessage "@,,1 Não foi possível gerar o deed para devolução. Sua casa não pode ser removida."
+			else
+				//if <tag0.sentenced>
+					f_house_sentenced_area <multiregion>,<p.x>,<p.y>,<p.z>,<uid>
+				//endif
+				DB.EXECUTE "DELETE FROM casa WHERE UidCasa='<eval <uid>>'"
+				remove
+			endif
+		endif
+	else
+		src.sysmessage "@,,1 Você não tem permissão para fazer isso."
+	endif
+return 1

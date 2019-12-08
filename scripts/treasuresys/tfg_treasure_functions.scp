@@ -1,0 +1,189 @@
+/////////////////////////////////////////
+//                                     //
+//                                     //
+//      Funcoes Mapa de Tesouro        //
+//                                     //
+//                                     //
+//                                     //
+/////////////////////////////////////////
+
+[FUNCTION f_treasure_randcoords]
+for i 1 20
+	args = <def0.treasure_quad_<r1,<def0.treasure_quads>>>
+	local.coords = "<eval {<dargv0> <dargv2>}>,<eval {<dargv1> <dargv3>}>"
+	local.type = <serv.map(<local.coords>).type>
+	if (<local.type> == t_sand) || (<local.type> == t_grass) || (<local.type> == t_snow)
+		if <f_treasure_is_valid_point <local.coords>>
+			serv.newnpc c_pig
+			new.flags = statf_invul|statf_insubstantial
+			new.p     = <local.coords>
+			new.fix
+			new.timerf 1, remove
+			return <new.p>
+		endif
+	endif
+endfor
+return 0
+
+[FUNCTION f_treasure_is_valid_point]
+local.coords = <args>
+if <serv.map(<local.coords>).isneartype t_tree>
+	return 0
+elseif <serv.map(<local.coords>).isneartype t_tree 3>
+	return 0
+elseif <serv.map(<local.coords>).isneartype t_arock>
+	return 0
+elseif <serv.map(<local.coords>).isneartype t_wall>
+	return 0
+elseif <serv.map(<local.coords>).isneartype t_wall 4>
+	return 0
+elseif <serv.map(<local.coords>).isneartype t_normal>
+	return 0
+elseif <serv.map(<local.coords>).isneartype t_normal 3>
+	return 0
+elseif <serv.map(<local.coords>).isneartype t_trap_active>
+	return 0
+elseif <serv.map(<local.coords>).isneartype t_water 5>
+	return 0
+elseif <serv.map(<local.coords>).isneartype t_rock 3>
+	return 0
+elseif <serv.map(<local.coords>).region.flags> & region_flag_guarded
+	return 0
+elseif !<isempty <serv.map(<local.coords>).region.type>>
+	return 0
+elseif <serv.map(<local.coords>).region.isevent.r_house_private>
+	return 0
+else
+	return 1
+endif
+
+//uso: f_gettreasure LEVEL,SHOVEL_UID,MAP_UID,COORDENADAS
+[FUNCTION f_gettreasure]
+local.coord=<dargv3>,<dargv4>,<dargv5>
+ctag.treasure_shovel_use = 1
+sound <r293,294>
+anim <r10,13>
+serv.newitem 2321  //que item?
+new.p = <local.coord>
+new.z
+new.attr = attr_move_never | attr_invis
+face <new.uid>
+update
+  for i 1 4
+	new.timerf <dlocal.i>,f_changeanimation <uid>,<dlocal.i>
+  endfor
+new.timerf 5,f_treasurechance <uid>,<dargv0>,<argv1>,<argv2>
+
+[FUNCTION f_changeanimation]
+ref1=<argv0>
+if <distance <ref1>> > 2
+  ref1.sysmessage @,,1 Você se afastou muito do local e parou de escavar.
+	ref1.ctag.treasure_shovel_use =
+  remove
+  return 1
+endif
+ref1.sound <r293,294>
+ref1.anim <r10,13>
+ref1.face <uid>
+dispid = 232<dargv1>
+attr = attr_move_never
+updatex
+
+[FUNCTION f_treasurechance]
+ref1=<argv0>
+if <distance <ref1>> > 2
+  ref1.sysmessage @,,1 Você se afastou muito do local e parou de escavar.
+  ref1.ctag.treasure_shovel_use =
+  remove
+  return 1
+endif
+local.level=<argv1>
+local.elemental_chance = <eval (100 - (<ref1.mining> / 10)) + (<local.level> * 15)>
+ if <local.elemental_chance> > 95
+   local.elemental_chance = 95
+ endif
+local.chance = <r1,100>
+if <local.chance> <= <local.elemental_chance>
+  trysrc <ref1> f_treasure_elemental_born <argv2>
+else
+  trysrc <ref1> f_treasure_born <argv2>,<local.level>,<argv3>
+endif
+
+
+[FUNCTION f_treasure_elemental_born]
+ref1=<args> //shovel
+args = <p>
+local.coords = "<eval <argn1>>,<eval <argn2>>"
+local.typetile = <serv.map(<local.coords>).type>
+	if (<local.typetile> == t_snow)
+		local.elemid = c_m_elem_snow
+		local.nametile = neve
+	else
+		local.elemid = c_elem_earth
+		local.nametile = terra
+	endif
+serv.newnpc <local.elemid>
+new.p <p>
+new.sound 608
+new.findlayer.21.remove
+src.anim 20
+IF !(<R4>)
+	src.sysmessage @,,1 Sua pa se quebrou enquanto voce tentava retirar o tesouro da <local.nametile>.
+	ref1.timerf 1,remove
+ENDIF
+src.ctag.treasure_shovel_use =
+remove
+
+[FUNCTION f_treasure_born]
+SRC.F_GM_QUEST_SKILL_INCREASE 12,<UID.<ARGV2>.BASEID>
+serv.newitem i_chest_metal_brass
+new.more1 = 4
+new.p <p>
+new.z <eval <p.z> - 5>
+new.link <uid>
+new.timerf 1,f_treasure_nudgeup <src.uid>,<argv1>,<argv0>,<argv2>
+src.sound <r293,294>
+src.anim <r10,13>
+
+[FUNCTION f_treasure_nudgeup]
+local.level=<argv1>
+local.shovel=<argv2>
+local.map=<argv3>
+ref1=<argv0>
+if <distance <ref1>> > 2
+	ref1.sysmessage @,,1 Você se afastou muito do local e perdeu o mapa do tesouro.
+	ref1.ctag.treasure_shovel_use =
+	link.remove
+	remove
+	uid.<local.map>.remove
+	return 1
+endif
+if <more1>
+	z += 1
+	more1 -= 1
+	updatex
+	timerf 1,f_treasure_nudgeup <ref1>,<local.level>,<local.shovel>,<local.map>
+	ref1.sound <r293,294>
+	ref1.anim <r10,13>
+	ref1.face <uid>
+else
+	ref1.sysmessage @,,1 Você retirou um bau da terra.
+	serv.newitem tm_treasure_chest_lvl_<dlocal.level>
+	new.p = <p>
+	new.attr = attr_move_never
+	new.events +t_treasure_chest
+	new.tag.map.level = <local.level>
+	new.timerf 1200, remove
+	link.timerf 1200, remove
+	ref3 = <local.map>
+	ref3.remove
+	ref4 = <local.shovel>
+	if !(<R4>)
+	    ref1.sysmessage @,,1 Sua pa quebrou tirando o bau da terra.
+		ref4.remove
+	endif
+	ref1.ctag.treasure_shovel_use =
+	remove
+endif
+
+[EOF]

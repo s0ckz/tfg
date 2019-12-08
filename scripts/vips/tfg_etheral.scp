@@ -1,0 +1,210 @@
+[function bodyhex]
+local.body=<hval <body> & 0ffff>
+local.len=<eval STRLEN(<local.body>)>
+return 0x<strsub 1 <dlocal.len> <local.body>>
+
+[typedef t_eth]
+On=@Click
+	if <timer> > 0
+		if (<link.uid> == <src.uid>)
+			SDIALOG d_vip_pet_color 0,1
+		endif
+	endif
+	
+on=@Dclick
+	if (<src.flags>&statf_dead) || (<src.flags>&statf_freeze) || (<src.flags>&statf_polymorph) || (<src.flags>&statf_stone) // || (<src.flags>&statf_fly)
+		src.sysmessage @,,1 Voce nao pode usar seu animal neste estado.
+		return 1
+	endif
+	if <timer> < 1
+		sdialog d_vip_recharge
+		return 1
+	endif 
+if (<tag0.lastuse> > <serv.time>)
+	float.timeleft = <floatval <eval <tag0.lastuse> - <serv.time>> / 10>
+	src.sysmessage @,,1 Queira aguardar <strsub 0 4 <float.timeleft>> segundos para utilisar este animal novamente!
+	return 1
+endif
+tag0.lastuse = 
+src.dialogclose d_vip_pet_color 0
+local.id=<tag0.ethid>
+if <local.id>	//If a id is received then the code proceed
+		serv.newnpc=<local.id>	//When ridding it, a real NPC with this ID is created
+		new.color=<color>
+		new.timer=<timer>
+		new.tag.etglobal=<tag.ethid>
+		new.p <src.p> // so pra ter certeza que ele sera criado perto
+		ref1=<new>
+		
+		serv.newitem=i_memory_pet_link
+		new.link=<src>
+		new.more1=<ref1>
+		new.timer=<timer>
+		trysrc <src.uid> new.equip
+		ref2=<new>
+		
+		serv.newitem=i_memory	//A memory_ipet is given to the NPC, so the player can ride it.
+		new.color=memory_ipet
+		new.link=<src>
+		new.cont=<ref1>
+		ref1.mount=<src>		//this function does dismount you if needed, hence I didn't check it before.
+		src.events +e_ridding_vip	//This event handle the @Dismount, the rest of the script
+
+		if (<ref1.flags>&statf_ridden) && (<src.flags>&statf_onhorse // verifica se o script funcionou antes de remover o bixo.
+			tag.auth_destroy = 2
+			remove
+		else
+		    f_vip_logs 3,"Por alguma razao (bug), <name> (uid: <uid>) nao pode ser deshirinkado em <region.name> <p> <serv.Rtime>"
+			src.sysmessage @,,1 Ocorreu um erro! Tente montar novamente!
+			ref1.remove 
+			ref2.remove
+		endif
+else
+	src.sysmessage @,,1 Este animal ainda nao foi customizado. Defina sua forma e cor.
+	SDIALOG d_vip_pet_color 0,1
+ENDIF
+return 1
+
+on=@DropOn_Ground
+cont=<src.findlayer.21>
+if (<tag0.ethid>)
+	dispid=<serv.chardef.<tag.ethid>.icon>
+	update
+endif
+return 1
+
+[ITEMDEF i_memory_pet_link]
+BASEID=i_memory
+TYPE=t_eq_script
+NAME=Pet Link
+
+On=@timer
+ref1 = <more1>
+if <ref1.timer> > 0
+	timer = <ref1.timer>
+	return 1 
+elif <tag0.alert> < 3
+	link.sysmessage @33,,1 ATENCAO: O tempo do seu animal VIP expirou! Voce sera desmontado em <eval 3 - <tag0.alert>> minutos!
+	timer = 60
+	tag0.alert += 1
+	return 1
+endif
+link.dismount
+link.sysmessage @,,1 Seu animal VIP expirou !
+remove 
+
+[function f_remove_pet_memory]
+forcontid i_memory_pet_link
+	if (<more1> == <args>)
+		local.timer = <timer>
+		remove
+	endif
+endfor
+return <local.timer>
+
+[events e_ridding_vip]
+ON=@Dismount
+events -e_ridding_vip	
+ref1=<argo>
+if (<ref1.tag0.etglobal>)
+	serv.newitem=i_pet_vip
+	new.color=<ref1.color>
+	new.timer=<f_remove_pet_memory <ref1>>
+	f_vip_logs 5,"SHIRINK <name> <uid> com timer original <ref1.timer> e destinatorio <new.timer> em <serv.rtime>. tag etglobal <ref1.tag.etglobal>" 
+	//new.tag0.lastuse = <eval <serv.time> + <eval <def.vip_pet_respawn_time> * 10>>
+	new.tag.ethid=<ref1.tag.etglobal>
+	new.dispid=<ref1.icon>
+	new.name = <ref1.name>
+	new.link = <uid>
+	new.cont=<findlayer.21>
+	findlayer.25.remove
+	return 1
+endif
+
+ON=@Death
+events -e_ridding_vip	
+ref1=<findlayer(25).more2>
+if (<ref1.tag0.etglobal>)
+	serv.newitem=i_pet_vip
+	new.color=<ref1.color>
+	new.timer=<f_remove_pet_memory <ref1>>
+	f_vip_logs 5,"SHRINK <name> <uid> com timer original <ref1.timer> e destinatorio <new.timer> em <serv.rtime>. tag etglobal <ref1.tag.etglobal>" 
+	new.tag0.lastuse = <eval <serv.time> + <eval <def.vip_pet_respawn_time> * 10>>
+	new.tag.ethid=<ref1.tag.etglobal>
+	new.dispid=<ref1.icon>
+	new.name = <ref1.name>
+	new.link = <uid>
+	new.cont=<findlayer.21>
+	findlayer.25.remove
+endif
+events +e_post_ridding_ressurection
+
+[EVENTS e_post_ridding_ressurection]
+ON=@SpellEffect
+if (<argn1>==59)
+ forconttype t_eth
+	tag0.lastuse = <eval <serv.time> + <eval <def.vip_pet_respawn_time> * 10>>
+ endfor
+sysmessage @,,1 Voce ressucitou e podera utilisar seu animal VIP novamente dentro de um minuto.
+endif
+events -e_post_ridding_ressurection
+
+
+[ITEMDEF i_pet_vip]
+ID=i_pet_horse_brown_dk
+NAME=Animal VIP
+TYPE=t_eth
+TEVENTS=t_vip_all
+TEVENTS=t_vip_item_time_control
+VALUE=120
+TDATA1=2592000
+
+ON=@Create
+attr = attr_newbie
+f_vip_create
+
+on=@DropOn_Char
+	if (<argo.isplayer>)
+	if !(<argo.topobj>==<link.uid>)
+		src.sysmessage @,,1 Este item e intransferivel. Guarde-o em sua bag ou bank.
+		return 1
+	endif
+	endif
+
+	if !<argo.isplayer>
+		if <def.vip_pet_cloner>
+			if (<def0.mount_<argo.bodyhex>>)
+			 tag0.ethid=<argo.baseid>
+			 name=<argo.name>
+			 color=<argo.color>
+			 dispid=<argo.icon>
+			 update 
+			else
+			 src.sysmessage @,,1 Isto nao e uma montaria.
+			endif
+		endif
+	endif
+return 1
+
+On=@DropOn_Item
+	if (<argo> != <link.findlayer(21).uid>) && (<argo> != <link.findlayer(29).uid>)
+		src.sysmessage @,,1 Este item e intransferivel. Guarde-o em sua bag ou bank. 
+		return 1
+	endif
+
+	if !(<argo.topobj>==<link.uid>)
+		src.sysmessage @,,1 Este item e intransferivel. Guarde-o em sua bag ou bank.
+		return 1
+	endif
+
+ON=@DROPON_GROUND //révisé
+	src.sysmessage @,,1 Este item nao pode ser colocado no chao.
+	cont=<link.findlayer.21.uid>
+	updatex
+	return 1
+
+ON=@DropOn_Trade
+	return 1
+
+
+[EOF]

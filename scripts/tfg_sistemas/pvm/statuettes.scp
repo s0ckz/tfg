@@ -1,0 +1,49 @@
+///////////////////////TFG 2017//////////////////////////
+////////////////////PVM STATUETTES///////////////////////
+/////////////////////////////////////////////////////////
+
+[ITEMDEF 02104]
+DEFNAME=i_statuette_daemon
+NAME=Daemon Statuette
+TYPE=T_FIGURINE
+TAG.STATUETTE=1
+TAG.SOUNDMIN=357
+TAG.SOUNDMAX=361
+
+[ITEMDEF i_statuette_prisma_w]
+ID=i_statuette_daemon
+NAME=Prisma Lord Statuette
+TYPE=T_FIGURINE
+TAG.STATUETTE=1
+TAG.SOUNDMIN=357
+TAG.SOUNDMAX=361
+
+ON=@CREATE
+	COLOR=0481
+	SERV.LOG New statuette dropped: <NAME>
+
+[ITEMDEF i_statuette_prisma_b]
+ID=i_statuette_daemon
+NAME=Prisma Lord Statuette
+TYPE=T_FIGURINE
+TAG.STATUETTE=1
+TAG.SOUNDMIN=357
+TAG.SOUNDMAX=361
+
+ON=@CREATE
+	COLOR=01
+	SERV.LOG New statuette dropped: <NAME>
+
+[ITEMDEF i_statuette_prisma_g]
+ID=i_statuette_daemon
+NAME=Prisma Lord Statuette
+TYPE=T_FIGURINE
+TAG.STATUETTE=1
+TAG.SOUNDMIN=357
+TAG.SOUNDMAX=361
+
+ON=@CREATE
+	COLOR=0482
+	SERV.LOG New statuette dropped: <NAME>
+
+[EOF]

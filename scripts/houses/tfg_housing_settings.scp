@@ -1,0 +1,31 @@
+[DEFNAME housing_settings]
+housing.placement.dist.multi 3
+housing.placement.dist.tree 1
+housing.placement.dist.water 1
+housing.placement.dist.rock 1
+housing.placement.dist.prot 30
+housing.placement.dist.entrance 20
+housing.placement.dist.blocker 20
+//
+housing.badplacement_ok "OK"
+housing.badplacement_road "@,,1 A construção não está em terreno apropriado."
+housing.badplacement_blocking "@,,1 A construção não pode bloquear a passagem."
+housing.badplacement_tree "@,,1 A construção não pode estar tão próxima de árvores."
+housing.badplacement_water "@,,1 A construção não pode estar tão próxima da água."
+housing.badplacement_rock "@,,1 A construção não pode estar tão próxima de rochas."
+housing.badplacement_multi "@,,1 A construção não pode estar tão próxima de outra construção."
+housing.badplacement_item "@,,1 Existe algo bloqueando a estrutura."
+housing.badplacement_prot "@,,1 A construção não pode estar tão próxima da proteção dos guardas."
+housing.badplacement_entrance "@,,1 A construção não pode estar tão próxima da entrada de uma mina ou dungeon."
+housing.badplacement_blocker "@,,1 Não é permitido casas neste local."
+//
+housing.nbkey.color 33
+//
+housing.access_owner 3
+housing.access_coowner 2
+housing.access_friend 1
+housing.access_none 0
+housing.access_name_3 Dono
+housing.access_name_2 Co-dono
+housing.access_name_3 Amigo
+housing.access_name_0 Nada

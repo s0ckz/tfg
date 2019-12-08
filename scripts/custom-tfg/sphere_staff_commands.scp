@@ -1,0 +1,409 @@
+[function goinat]
+F_GO <R5376,5412>,<R1257,1279>
+
+[function moverinativas]
+serv.account unused 60 F_GO <src.p>
+update
+
+[FUNCTION puxaplayerinat]
+FORPLAYERS 6500
+	IF <ACCOUNT.TAG.INATIVA60> == 1>
+		F_GO <SRC.P>
+	ENDIF
+ENDFOR
+
+[function findcrimson]
+FORPLAYERS 8000
+	FORCONT <findlayer.29.uid>
+			IF <MORE1>==c_a_mustang_crimson
+				SERV.LOG @<TOPOBJ.NAME>
+			ENDIF
+		ENDFOR
+ENDFOR
+
+[FUNCTION toctoc]
+forplayers 0
+	EMOTE <NAME>
+endfor
+
+[FUNCTION puxagm]
+forplayers 8000
+	if <ACCOUNT.PLEVEL> > 1
+		F_GO <SRC.P>
+	endif
+endfor
+
+//[function DELACCTS]
+//forplayers 10
+//	if <account.plevel> < 2
+//		account.delete
+//	endif
+//endfor
+
+[FUNCTION deltags]
+FORPLAYERS 8000
+TAG.lastspell
+LOCAL.COUNT +=1
+ENDFOR
+SYSMESSAGE <eval <LOCAL.COUNT>*2> Tags deletadas
+
+[FUNCTION showcp]
+SYSMESSAGE Selecione o Detento.
+TARGETF f_showcp
+
+[FUNCTION f_showcp]
+SYSMESSAGE Ainda restam <aRGO.dTAG0.CPAMOUNT> resources para <ARGO.NAME> sair da CP !
+
+[FUNCTION topconnection]
+LOCAL.LOOPZ <eval <serv.accounts> -1>
+FOR 0 <dlocal.Loopz>
+	IF <serv.account.<dlocal._for>.totalconnecttime> > <ARGS>
+		REF69 <serv.account.<dlocal._for>.lastcharuid>
+		IF !(<FILE.INUSE>)
+	//		FILE.MODE.CREATE=1 
+			FILE.MODE.WRITEFLAG=1 
+			IF (<FILE.OPEN  E:\Programs Files\TFGSHARD\scripts\topconnect.txt>) 
+				FILE.WRITELINE <REF69.NAME> <serv.account.<dlocal._for>.totalconnecttime>
+				FILE.CLOSE 
+			ENDIF
+		ENDIF
+	ENDIF
+ENDFOR
+
+[FUNCTION Mostralocation]
+SYSMESSAGE Qual baseid ?
+TARGETF f_mostra_location
+
+[FUNCTION f_mostra_location]
+REF69 <ARGO.UID>
+
+FORINSTANCES <REF69.BASEID>
+SRC.SYSMESSAGE O <NAME> esta em <P>
+ENDFOR
+
+[FUNCTION goitem]
+src.dialog d_goitem
+
+[dialog d_goitem]
+10, 10
+PAGE 0
+nodispose
+resizepic 0 0 9350 400 150
+resizepic 10 10 9300 380 130
+resizepic 32 45 9350 330 22
+text 33 19 0 0
+textentry 38 45 253 15 197 0 1
+button 30 100 2151 2154 2154 0 1
+text 33 70 0 2
+text 62 105 0 3
+button 200 100 2151 2154 2154 0 2
+text 232 105 0 4
+
+[DIALOG d_goitem TEXT]
+Sistema de Procura
+<SRC.TAG.goitem>
+Atencao: Facilita na procura de item edit.
+Confirmar
+Cancelar
+
+[DIALOG d_goitem BUTTON]
+ONBUTTON=1
+SRC.TAG.goitem=<ARGTXT[0]>
+SRC.SYSMESSAGE @38 Procurando por: <SRC.TAG.goitem>
+src.goitemid <SRC.TAG.goitem>
+
+ONBUTTON=2
+src.sysmessage Menu de procurar canelado.
+
+[FUNCTION luz]
+IF <FLAGS>&0100
+FLAGS <FLAGS>&~0100
+SYSMESSAGE Luz desligada
+ELSE
+FLAGS <FLAGS>|0100
+SYSMESSAGE Luz ligada
+ENDIF
+UPDATE
+
+[FUNCTION novaconta]
+SERV.ACCOUNT ADD <argv[0]> <argv[1]>
+SERV.ACCOUNT <argv[0]> password mudar
+
+[FUNCTION desatender]
+SYSMESSAGE Selecione o player para voltar ao local de origem.
+targetf f_desatender
+
+[FUNCTION f_desatender]
+REF69 <ARGO.UID>
+REF69.F_GO <REF69.CTAG.ORIGP>
+
+[FUNCTION atender]
+SYSMESSAGE Selecione o player a ser atendido.
+targetf f_atender
+
+[FUNCTION F_atender]
+REF69 <ARGO.UID>
+REF69.SYSMESSAGE Voce sera atendido agora por um staff.
+REF69.CTAG.ORIGP <REF69.P>
+REF69.F_GO 4572,309,0,1
+F_GO 4572,309,0,1
+
+[function gologin]
+gouid <SERV.ACCOUNT.<ARGS>.lastcharuid>
+
+[FUNCTION mudarmundo]
+IF <ISEMPTY <ARGS>>
+	SYSMESSAGE Sintaxe correta: .mudamundo AREA_de_ALCANCE
+	RETURN 1
+ENDIF
+IF <MAP>==1
+	LOCAL.NEWMAP 0
+ELSE
+	LOCAL.NEWMAP 1
+ENDIF
+
+FORITEMS <ARGS>
+	MOVETO <p.x>,<p.y>,<z>,<dLOCAL.NEWMAP>
+ENDFOR
+
+[FUNCTION moverpara]
+SYSMESSAGE Quem voce deseja mover ?
+targetf f_moverpara_obj
+
+[FUNCTION f_moverpara_obj]
+IF <ARGO.UID>
+	VAR.MOVEOBJ <ARGO.UID>
+	SYSMESSAGE Para onde voce deseja mover <ARGO.NAME> ?
+	targetfg f_moverpara_targ
+ELSE
+	SYSMESSAGE Voce precisa selecionar algo para mover.
+ENDIF
+
+[FUNCTION f_moverpara_targ]
+REF69 <VAR.MOVEOBJ>
+IF <REF69.ISITEM>
+	REF69.MOVETO <TARGP>
+ELSE
+	REF69.F_GO <TARGP>
+ENDIF
+
+[FUNCTION goplayer]
+FORPLAYERS 6500
+	IF STRMATCH(<NAME>,<ARGS>)
+		IF !(<ACCOUNT.PLEVEL> > <SRC.ACCOUNT.PLEVEL>)
+			SRC.F_GO <P>
+		ENDIF
+	ENDIF
+ENDFOR
+
+[FUNCTION puxalogin]
+FORPLAYERS 6500
+	IF STRMATCH(<ACCOUNT.NAME>,<ARGS>)
+		IF !(<ACCOUNT.PLEVEL> > <SRC.ACCOUNT.PLEVEL>)
+			F_GO <SRC.P>
+		ENDIF
+	ENDIF
+ENDFOR
+
+[FUNCTION puxaplayer]
+FORPLAYERS 6500
+	IF STRMATCH(<NAME>,<ARGS>)
+		IF !(<ACCOUNT.PLEVEL> > <SRC.ACCOUNT.PLEVEL>)
+			F_GO <SRC.P>
+		ENDIF
+	ENDIF
+ENDFOR
+
+[FUNCTION puxachar]
+FORCHARS 6500
+	IF STRMATCH(<NAME>,<ARGS>)
+		IF !(<ACCOUNT.PLEVEL> > <SRC.ACCOUNT.PLEVEL>)
+			F_GO <SRC.P>
+		ENDIF
+	ENDIF
+ENDFOR
+
+[FUNCTION showtames]
+SYSMESSAGE Ver tentativas de tamada de quem ?
+targetf f_showtame
+
+[FUNCTION f_showtame]
+REF69 <ARGO.UID>
+SYSMESSAGE Drake Tames: <REF69.dTAG0.DRAKETAMES>
+SYSMESSAGE Dragon Tames: <REF69.dTAG0.DRAGONTAMES>
+SYSMESSAGE Wyrm Tames: <REF69.dTAG0.WYRMTAMES>
+
+[FUNCTION gospawn]
+FORINSTANCES i_worldgem_bit
+IF !STRCMPI(<ARGS>,<MORE1>)
+SRC.F_GO <P>
+RETURN 0
+ENDIF
+ENDFOR
+
+[FUNCTION searchforitem]
+FORINSTANCES <ARGS>
+	FORITEM <UID>
+		SRC.SYSMESSAGE  <AMOUNT> <SERV.ITEMDEF.<ARGS>.NAME> no container <TOPOBJ.UID> location <TOPOBJ.P>
+	ENDFOR
+ENDFOR
+
+[FUNCTION topkills]
+FORPLAYERS 6500
+	IF <KILLS> > <ARGS>
+		SRC.SYSMESSAGE <NAME> possui <KILLS> kills.
+	ENDIF
+ENDFOR
+
+[FUNCTION topdeaths]
+FORPLAYERS 6500
+IF <DEATHS> > <ARGS>
+SRC.SYSMESSAGE <NAME> possui <DEATHS> mortes.
+ENDIF
+ENDFOR
+
+[FUNCTION achargpbank]
+	REF69 <UID>
+	LOCAL.AMOUNT
+	FORCHARLAYER 29
+		FORCONT <UID> 100
+			IF <TYPE>==t_gold
+				LOCAL.AMOUNT +=<AMOUNT>
+			ENDIF
+		ENDFOR
+	ENDFOR
+	IF (<LOCAL.AMOUNT> > <ARGS>) 
+		SERV.LOG @O Player <REF69.NAME> possui <dLOCAL.AMOUNT> gps no bank.
+	ENDIF
+
+[FUNCTION achargold]
+local.fff <serv.MaxLoopTimes>
+serv.MaxLoopTimes 0
+SERV.WRITEFILE GOLDSEARCH.TXT -------INICIO DA CONTAGEM DE GOLD EM Containers (<serv.rtime>) ----------
+FORITEMS 6500
+	IF (<TYPE>==t_container) || (<TYPE>==t_secure) || (<TYPE>==t_container_locked)
+		REF69 <UID>
+		LOCAL.AMOUNT
+		FORCONT <UID> 100
+			IF <TYPE>==t_gold
+				LOCAL.AMOUNT += <AMOUNT>
+			ENDIF
+		ENDFOR
+		IF <LOCAL.AMOUNT> > 20000
+			SERV.WRITEFILE GOLDSEARCH.TXT Encontrado <dLOCAL.AMOUNT> gps em <REF69.TOPOBJ.NAME> location <REF69.TOPOBJ.P>
+		ENDIF
+	ENDIF
+ENDFOR
+SERV.WRITEFILE GOLDSEARCH.TXT -------FIM DA CONTAGEM DE GOLD EM Containers (<serv.rtime>) ----------
+serv.MaxLoopTimes <local.fff>
+
+[FUNCTION ContaGold]
+local.fff <serv.MaxLoopTimes>
+serv.MaxLoopTimes 0
+SERV.WRITEFILE GOLDSEARCH.TXT -------INICIO DA CONTAGEM DE GOLD EM PLAYERS (<serv.rtime>) ----------
+FORPLAYERS 6500
+	IF <GOLD> > 30000
+		SERV.WRITEFILE GOLDSEARCH.TXT <NAME> (Acc: <ACCOUNT>) possui <GOLD> gps.
+	ENDIF
+ENDFOR
+SERV.WRITEFILE GOLDSEARCH.TXT -------FIM DA CONTAGEM DE GOLD EM PLAYERS (<serv.rtime>) -------------
+serv.MaxLoopTimes <local.fff>
+
+[FUNCTION acharitembank]
+FORPLAYERS 6500
+	REF69 <UID>
+	LOCAL.AMOUNT
+	FORCHARLAYER 29
+		FORCONT <UID> 100
+			IF <BASEID>==<ARGS>
+				LOCAL.AMOUNT +=<AMOUNT>
+			ENDIF
+		ENDFOR
+	ENDFOR
+	IF (<LOCAL.AMOUNT> > 500) 
+		SRC.SYSMESSAGE O Player <REF69.NAME> possui <dLOCAL.AMOUNT> <SERV.ITEMDEF.<ARGS>.NAME> no bank.
+	ENDIF
+ENDFOr
+
+[FUNCTION acharitem]
+FORITEMS 6500
+	IF (<TYPE>==t_container) || (<TYPE>==t_secure) || (<TYPE>==t_container_locked)
+		REF69 <UID>
+		LOCAL.AMOUNT
+		FORCONT <UID> 100
+			IF <BASEID>==<ARGS>
+				LOCAL.AMOUNT += <AMOUNT>
+			ENDIF
+		ENDFOR
+		IF <LOCAL.AMOUNT> > 500
+			SRC.SYSMESSAGE Encontrado <dLOCAL.AMOUNT> <SERV.ITEMDEF.<ARGS>.NAME> em <REF69.TOPOBJ.UID> location <REF69.TOPOBJ.P>
+		ENDIF
+	ENDIF
+ENDFOR
+
+[FUNCTION DELITEM]
+FORINSTANCES <ARGS>
+	REMOVE
+	LOCAL.COUNT +=1
+ENDFOR
+SYSMESSAGE <dLOCAL.COUNT> <SERV.ITEMDEF.<ARGS>.NAME> excluidos.
+
+[FUNCTION delhouses]
+FORITEMS <ARGS>
+	IF <TYPE>==t_multi
+		IF !(<UID.<MORE1>.ISPLAYER>)
+			REF69 <UID>
+			FORITEMS 40
+				IF <REGION.DEFNAME>==<REF69.REGION.DEFNAME>
+					LOCAL.ITEMCOUNT +=1
+					REMOVE
+				ENDIF
+			ENDFOR
+			LOCAL.HOUSECOUNT +=1
+			REF69.REMOVE
+		ENDIF
+	ENDIF
+ENDFOR
+SRC.SYSMESSAGE <dLOCAL.ITEMCOUNT> itens removidos. <dLOCAL.HOUSECOUNT> casas removidas.
+
+[FUNCTION acharnavios]
+FORITEMS 6500
+	IF (<TYPE>==t_ship)
+		REMOVE
+		LOCAL.AMOUNT +=1
+	ENDIF
+ENDFOR
+SRC.SYSMESSAGE Encontrados <dLOCAL.AMOUNT> navios.
+
+[FUNCTION allspawns]
+FORINSTANCES i_worldgem_bit
+	if <type>==t_spawn_char
+		TIMER 1
+	ENDIF
+ENDFOR
+
+[FUNCTION acharnavios]
+FORITEMS 6500
+	IF (<TYPE>==t_ship)
+		LOCAL.AMOUNT +=1
+	ENDIF
+ENDFOR
+SRC.SYSMESSAGE Encontrados <dLOCAL.AMOUNT> navios
+
+[FUNCTION itemcounter]
+FOR 0 <ARGS>
+	IF <SERV.ITEMDEF.<dLOCAL._FOR>.INSTANCES> > 8000
+		SYSMESSAGE <SERV.ITEMDEF.<dLOCAL._FOR>.INSTANCES> <SERV.ITEMDEF.<dLOCAL._FOR>.NAME>
+	ENDIF
+ENDFOR
+
+[FUNCTION totalgold]
+FORINSTANCES i_gold
+	LOCAL.COUNT += <AMOUNT>
+ENDFOR
+SALL Total de Gold Coins no Server: <dLOCAL.COUNT>
+
+[eof]
+
+
+

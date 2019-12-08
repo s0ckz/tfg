@@ -1,0 +1,269 @@
+[itemdef i_buffer_scroll]
+ID=i_scroll_heal
+NAME=Buffer Scroll
+TYPE=t_normal
+VALUE=10000
+
+ON=@create
+local.rand <eval {6 1 11 1 12 1}>
+more1=<def.work<dlocal.rand>>
+more2=<EVAL {250 3 500 2 1000 1}>
+name=<SERV.SKILL.<MORE1>.NAME> Buffer Scroll
+color=315
+
+SERV.LOG <NAME> <eval <more2>> criado.
+
+on=@click
+	message @,,1 [+<eval <more2>>]
+	message @084d,,1 <amount> <name>
+	return 1
+
+on=@dclick
+if (<more1> == 012) && ((<var0.conta_<src.account.dtag.global>.fishbuffer> + <more2>) > <DEF.Buffer_inicial_fishes>)
+	src.sysmessage You can't have more than the maximum fishing buffer.
+elseif (<more1> == 02d) && ((<var0.conta_<src.account.dtag.global>.orebuffer> + <more2>) > <DEF.Buffer_inicial_ores>)
+	src.sysmessage You can't have more than the maximum mining buffer.
+elseif (<more1> == 02c) && ((<var0.conta_<src.account.dtag.global>.logbuffer> + <more2>) > <DEF.Buffer_inicial_logs>)
+	src.sysmessage You can't have more than the maximum lumberjacking buffer.
+else
+	if (<more1> == 012)
+		local.old_buffer <var0.conta_<src.account.dtag.global>.fishbuffer>
+		var0.conta_<src.account.dtag.global>.fishbuffer += <more2>
+		SERV.LOG <NAME> (+<EVAL <MORE2>>) increased <SRC.NAME>'s (<SRC.ACCOUNT>) fish buffer from <dlocal.old_buffer> to <EVAL <var0.conta_<src.account.dtag.global>.fishbuffer>>.
+	elseif (<more1> == 02d)
+		local.old_buffer <var0.conta_<src.account.dtag.global>.orebuffer>
+		var0.conta_<src.account.dtag.global>.orebuffer += <more2>
+		SERV.LOG <NAME> (+<EVAL <MORE2>>) increased <SRC.NAME>'s (<SRC.ACCOUNT>) ore buffer from <dlocal.old_buffer> to <EVAL <var0.conta_<src.account.dtag.global>.orebuffer>>.
+	elseif (<more1> == 02c)
+		local.old_buffer <var0.conta_<src.account.dtag.global>.logbuffer>
+		var0.conta_<src.account.dtag.global>.logbuffer += <more2>
+		SERV.LOG <NAME> (+<EVAL <MORE2>>) increased <SRC.NAME>'s (<SRC.ACCOUNT>) log buffer from <dlocal.old_buffer> to <EVAL <var0.conta_<src.account.dtag.global>.logbuffer>>.
+	endif
+	src.effect 1,i_gold,99,45
+	src.effect 3,i_fx_heal_effect, 0,20,1
+	src.sound snd_special_agility
+	src.message @315 Buffer Scroll!
+	consume 1
+endif
+return 1
+
+[ITEMDEF i_recipe_scroll]
+ID=i_scroll_heal
+NAME=Recipe Scroll
+TYPE=t_normal
+VALUE=10000
+
+ON=@Create
+LOCAL.RAND <EVAL { 1 1 2 1 4 1 7 1 9 1 12 1 13 1 14 1 }>
+// LOCAL.RAND <R<DEF.WORK_MIN>,<DEF.WORK_MAX>>
+MORE1 = <DEF.WORK<DLOCAL.RAND>>
+NAME = <SERV.SKILL.<MORE1>.NAME> Recipe Scroll
+COLOR = 05b
+
+SERV.LOG <NAME> created.
+
+ON=@Click
+	MESSAGE @<COLOR>,,1 <NAME>
+	RETURN 1
+
+ON=@Dclick
+IF (!<TAG0.DECIPHERED>)
+	SRC.SYSMESSAGE @,,1 You must look for a <SERV.SKILL.<MORE1>.NAME> Teacher NPC to decipher this scroll. They enjoy hiding inside the dungeons.
+	RETURN 1
+ENDIF
+
+SRC.TAG.GM_QUEST_SKILL_<DMORE1> 1
+
+IF (<MORE1> == 0)
+	SRC.SYSMESSAGE @,,1 You can make kegs of 100 life boosts, mana boosts or refillings to increase 0.1% with a chance of 50%. You can also make kegs of 1000 life boosts, mana boosts or refillings to increase by 0.5% - guaranteed.
+ELSEIF (<MORE1> == 7)
+	SRC.SYSMESSAGE @,,1 Your Blacksmithing Skill will have a chance to increase by 0.1% whenever you craft an item with rusty or better ores. The better the ore, the better the chance.
+ELSEIF (<MORE1> == 11)
+	IF (<TAG0.CERAMIC_COUNT> < <DEF.QUEST_CARPENTRY_CERAMIC_COUNT>)
+		SRC.SYSMESSAGE @,,1 I'm hungry. I want more <EVAL <DEF.QUEST_CARPENTRY_CERAMIC_COUNT> - <TAG0.CERAMIC_COUNT>> ceramic ingots!
+		SRC.TARGETF f_carpentry_quest_consume <UID>,i_ingot_ceramic,<EVAL <DEF.QUEST_CARPENTRY_CERAMIC_COUNT> - <TAG0.CERAMIC_COUNT>>,CERAMIC_COUNT
+	ELSEIF (<TAG0.RUSTY_COUNT> < <DEF.QUEST_CARPENTRY_RUSTY_COUNT>)
+		SRC.SYSMESSAGE @,,1 I'm hungry. I want more <EVAL <DEF.QUEST_CARPENTRY_RUSTY_COUNT> - <TAG0.RUSTY_COUNT>> rusty ingots!
+		SRC.TARGETF f_carpentry_quest_consume <UID>,i_ingot_rusty,<EVAL <DEF.QUEST_CARPENTRY_RUSTY_COUNT> - <TAG0.RUSTY_COUNT>>,RUSTY_COUNT
+	ELSEIF (<TAG0.OLD_COPPER_COUNT> < <DEF.QUEST_CARPENTRY_OLD_COPPER_COUNT>)
+		SRC.SYSMESSAGE @,,1 I'm hungry. I want more <EVAL <DEF.QUEST_CARPENTRY_OLD_COPPER_COUNT> - <TAG0.OLD_COPPER_COUNT>> old copper ingots!
+		SRC.TARGETF f_carpentry_quest_consume <UID>,i_ingot_old_copper,<EVAL <DEF.QUEST_CARPENTRY_OLD_COPPER_COUNT> - <TAG0.OLD_COPPER_COUNT>>,OLD_COPPER_COUNT
+	ELSEIF (<TAG0.DULL_COPPER_COUNT> < <DEF.QUEST_CARPENTRY_DULL_COPPER_COUNT>)
+		SRC.SYSMESSAGE @,,1 I'm hungry. I want more <EVAL <DEF.QUEST_CARPENTRY_DULL_COPPER_COUNT> - <TAG0.DULL_COPPER_COUNT>> dull copper ingots!
+		SRC.TARGETF f_carpentry_quest_consume <UID>,i_ingot_dull_copper,<EVAL <DEF.QUEST_CARPENTRY_DULL_COPPER_COUNT> - <TAG0.DULL_COPPER_COUNT>>,DULL_COPPER_COUNT
+	ELSEIF (<TAG0.COPPER_COUNT> < <DEF.QUEST_CARPENTRY_COPPER_COUNT>)
+		SRC.SYSMESSAGE @,,1 I'm hungry. I want more <EVAL <DEF.QUEST_CARPENTRY_COPPER_COUNT> - <TAG0.COPPER_COUNT>> copper ingots!
+		SRC.TARGETF f_carpentry_quest_consume <UID>,i_ingot_copper,<EVAL <DEF.QUEST_CARPENTRY_COPPER_COUNT> - <TAG0.COPPER_COUNT>>,COPPER_COUNT
+	ELSEIF (<TAG0.BRONZE_COUNT> < <DEF.QUEST_CARPENTRY_BRONZE_COUNT>)
+		SRC.SYSMESSAGE @,,1 I'm hungry. I want more <EVAL <DEF.QUEST_CARPENTRY_BRONZE_COUNT> - <TAG0.BRONZE_COUNT>> bronze ingots!
+		SRC.TARGETF f_carpentry_quest_consume <UID>,i_ingot_bronze,<EVAL <DEF.QUEST_CARPENTRY_BRONZE_COUNT> - <TAG0.BRONZE_COUNT>>,BRONZE_COUNT
+	ELSEIF (<TAG0.SHADOW_COUNT> < <DEF.QUEST_CARPENTRY_SHADOW_COUNT>)
+		SRC.SYSMESSAGE @,,1 I'm hungry. I want more <EVAL <DEF.QUEST_CARPENTRY_SHADOW_COUNT> - <TAG0.SHADOW_COUNT>> shadow ingots!
+		SRC.TARGETF f_carpentry_quest_consume <UID>,i_ingot_shadow,<EVAL <DEF.QUEST_CARPENTRY_SHADOW_COUNT> - <TAG0.SHADOW_COUNT>>,SHADOW_COUNT
+	ELSEIF (<TAG0.AGAPITE_COUNT> < <DEF.QUEST_CARPENTRY_AGAPITE_COUNT>)
+		SRC.SYSMESSAGE @,,1 I'm hungry. I want more <EVAL <DEF.QUEST_CARPENTRY_AGAPITE_COUNT> - <TAG0.AGAPITE_COUNT>> agapite ingots!
+		SRC.TARGETF f_carpentry_quest_consume <UID>,i_ingot_agapite,<EVAL <DEF.QUEST_CARPENTRY_AGAPITE_COUNT> - <TAG0.AGAPITE_COUNT>>,AGAPITE_COUNT
+	ELSEIF (<TAG0.ROSE_COUNT> < <DEF.QUEST_CARPENTRY_ROSE_COUNT>)
+		SRC.SYSMESSAGE @,,1 I'm hungry. I want more <EVAL <DEF.QUEST_CARPENTRY_ROSE_COUNT> - <TAG0.ROSE_COUNT>> rose ingots!
+		SRC.TARGETF f_carpentry_quest_consume <UID>,i_ingot_rose,<EVAL <DEF.QUEST_CARPENTRY_ROSE_COUNT> - <TAG0.ROSE_COUNT>>,ROSE_COUNT
+	ELSEIF (<TAG0.SILVER_COUNT> < <DEF.QUEST_CARPENTRY_SILVER_COUNT>)
+		SRC.SYSMESSAGE @,,1 I'm hungry. I want more <EVAL <DEF.QUEST_CARPENTRY_SILVER_COUNT> - <TAG0.SILVER_COUNT>> silver ingots!
+		SRC.TARGETF f_carpentry_quest_consume <UID>,i_ingot_silver,<EVAL <DEF.QUEST_CARPENTRY_SILVER_COUNT> - <TAG0.SILVER_COUNT>>,SILVER_COUNT
+	ENDIF
+ELSEIF (<MORE1> == 12)
+	SRC.SYSMESSAGE @,,1 Your Cartography Skill will have a chance to increase by 0.1% whenever you try to dig a treasure. The better the treasure, the better the chance.
+ELSEIF (<MORE1> == 23)
+	SRC.SYSMESSAGE @,,1 Your Inscription Skill will have a chance to increase by 0.1% whenever you craft an scroll having full mana. The spell must require more than 30 mana.
+ELSEIF (<MORE1> == 30)
+	SRC.SYSMESSAGE @,,1 Your Poisoning Skill will have a chance to increase by 0.1% whenever you kill a Poison monster.
+ELSEIF (<MORE1> == 35)
+	SRC.SYSMESSAGE @,,1 Your Taming Skill will increase by 0.3% whenever you tame a Color Animal  (Mustang, Zostrich or Llama) from a respawn.
+ELSEIF (<MORE1> == 45)
+	SRC.SYSMESSAGE @,,1 Your Mining Skill will increase 0.1%, 0.3%, 0.5%, 1.0% whenever you collect blood rock, black rock, mytheril or adamantium ores, respectively.
+ELSE
+	SERV.B TODO
+ENDIF
+
+IF (<f_get_real_skill <SRC.UID>,<MORE1>> >= 1000)
+	REMOVE
+ENDIF
+
+RETURN 1
+
+[FUNCTION f_gm_quest_skill_increase]
+IF (<ARGV> != 2)
+	RETURN 1
+ENDIF
+
+LOCAL.SKILL <ARGV[0]>
+LOCAL.OBJECT_ID <ARGV[1]>
+
+IF (<f_get_real_skill <SRC.UID>,<LOCAL.SKILL>> < 950) || (<f_get_real_skill <SRC.UID>,<LOCAL.SKILL>> >= 1000)
+	RETURN 1
+ENDIF
+
+IF !(<SRC.TAG0.GM_QUEST_SKILL_<DLOCAL.SKILL>>)
+	RETURN 1
+ENDIF
+
+LOCAL.INCREASE 0
+
+// Alchemy
+IF (<LOCAL.SKILL> == 0)
+	IF (i_keg_glb1 == <LOCAL.OBJECT_ID>) || (i_keg_gmb1 == <LOCAL.OBJECT_ID>) || (i_keg_grf1 == <LOCAL.OBJECT_ID>)
+		IF !(<R2>)
+			LOCAL.INCREASE 1
+		ENDIF
+	ELSEIF (i_keg_glb == <LOCAL.OBJECT_ID>) || (i_keg_gmb == <LOCAL.OBJECT_ID>) || (i_keg_grf == <LOCAL.OBJECT_ID>)
+		LOCAL.INCREASE 5
+	ENDIF
+ELSEIF (<LOCAL.SKILL> == 7)
+	LOCAL.CHANCE 0
+
+	IF (STRMATCH(*_rusty*, "<LOCAL.OBJECT_ID>"))
+		LOCAL.CHANCE 260
+	ELSEIF (STRMATCH(*_old_copper*, "<LOCAL.OBJECT_ID>"))
+		LOCAL.CHANCE 220
+	ELSEIF (STRMATCH(*_dull_copper*, "<LOCAL.OBJECT_ID>"))
+		LOCAL.CHANCE 180
+	ELSEIF (STRMATCH(*_copper*, "<LOCAL.OBJECT_ID>"))
+		LOCAL.CHANCE 140
+	ELSEIF (STRMATCH(*_bronze*, "<LOCAL.OBJECT_ID>"))
+		LOCAL.CHANCE 100
+	ELSEIF (STRMATCH(*_shadow*, "<LOCAL.OBJECT_ID>"))
+		LOCAL.CHANCE 90
+	ELSEIF (STRMATCH(*_agapite*, "<LOCAL.OBJECT_ID>"))
+		LOCAL.CHANCE 80
+	ELSEIF (STRMATCH(*_rose*, "<LOCAL.OBJECT_ID>"))
+		LOCAL.CHANCE 70
+	ELSEIF (STRMATCH(*_silver*, "<LOCAL.OBJECT_ID>"))
+		LOCAL.CHANCE 60
+	ELSEIF (STRMATCH(*_valorite*, "<LOCAL.OBJECT_ID>"))
+		LOCAL.CHANCE 50
+	ELSEIF (STRMATCH(*_verite*, "<LOCAL.OBJECT_ID>"))
+		LOCAL.CHANCE 40
+	ELSEIF (STRMATCH(*_gold*, "<LOCAL.OBJECT_ID>"))
+		LOCAL.CHANCE 30
+	ELSEIF (STRMATCH(*_bloodrock*, "<LOCAL.OBJECT_ID>")) || (STRMATCH(*_blood_rock*, "<LOCAL.OBJECT_ID>"))
+		LOCAL.CHANCE 20
+	ELSEIF (STRMATCH(*_blackrock*, "<LOCAL.OBJECT_ID>")) || (STRMATCH(*_black_rock*, "<LOCAL.OBJECT_ID>")) || (STRMATCH(*_order*, "<LOCAL.OBJECT_ID>")) || (STRMATCH(*_chaos*, "<LOCAL.OBJECT_ID>"))
+		LOCAL.CHANCE 10
+	ELSEIF (STRMATCH(*_mytheril*, "<LOCAL.OBJECT_ID>"))
+		LOCAL.CHANCE 5
+	ELSEIF (STRMATCH(*_adamantiu*, "<LOCAL.OBJECT_ID>"))
+		LOCAL.CHANCE 2
+	ENDIF
+
+	IF (<LOCAL.CHANCE>) && !(<R<LOCAL.CHANCE>>)
+		LOCAL.INCREASE 1
+	ENDIF
+ELSEIF (<LOCAL.SKILL> == 11)
+	LOCAL.INCREASE 5
+ELSEIF (<LOCAL.SKILL> == 12)
+	LOCAL.CHANCE 16
+
+	IF (i_treasure_map_lvl_1 == <LOCAL.OBJECT_ID>)
+		LOCAL.CHANCE 16
+	ELSEIF (i_treasure_map_lvl_2 == <LOCAL.OBJECT_ID>)
+		LOCAL.CHANCE 12
+	ELSEIF (i_treasure_map_lvl_3 == <LOCAL.OBJECT_ID>)
+		LOCAL.CHANCE 8
+	ELSEIF (i_treasure_map_lvl_4 == <LOCAL.OBJECT_ID>)
+		LOCAL.CHANCE 6
+	ELSEIF (i_treasure_map_lvl_5 == <LOCAL.OBJECT_ID>)
+		LOCAL.CHANCE 3
+	ENDIF
+
+	IF (<LOCAL.CHANCE>) && !(<R<LOCAL.CHANCE>>)
+		LOCAL.INCREASE 1
+	ENDIF
+ELSEIF (<LOCAL.SKILL> == 23)
+	IF !(<R30>) && (<SRC.MANA> >= <SRC.MAXMANA>) && (<SERV.SPELL.<LOCAL.OBJECT_ID>.MANAUSE> > 30)
+		LOCAL.INCREASE 1
+	ENDIF
+ELSEIF (<LOCAL.SKILL> == 30)
+	IF !(<R30>)
+		LOCAL.INCREASE 1
+	ENDIF
+ELSEIF (<LOCAL.SKILL> == 35)
+	IF (<LOCAL.OBJECT_ID> != 0)
+		LOCAL.INCREASE 3
+	ENDIF
+ELSEIF (<LOCAL.SKILL> == 45)
+	IF (i_ore_bloodrock == <LOCAL.OBJECT_ID>)
+		LOCAL.INCREASE 1
+	ELSEIF (i_ore_blackrock == <LOCAL.OBJECT_ID>)
+		LOCAL.INCREASE 3
+	ELSEIF (i_ore_mytheril == <LOCAL.OBJECT_ID>)
+		LOCAL.INCREASE 5
+	ELSEIF (i_ore_adamantium == <LOCAL.OBJECT_ID>)
+		LOCAL.INCREASE 10
+	ENDIF
+ELSE
+	SERV.B TODO
+	RETURN 1
+ENDIF
+
+IF (<LOCAL.INCREASE> > 0)
+	IF (<EVAL <f_get_real_skill <SRC.UID>,<LOCAL.SKILL>> + <LOCAL.INCREASE>> > 1000)
+		SRC.<LOCAL.SKILL> 1000 + (<SRC.<LOCAL.SKILL>> - <f_get_real_skill <SRC.UID>,<LOCAL.SKILL>>)
+	ELSE
+		SRC.<LOCAL.SKILL> += <LOCAL.INCREASE>
+	ENDIF
+
+	SERV.LOG Increasing <SRC.NAME>'s <SERV.SKILL.<LOCAL.SKILL>.NAME> to <FVAL <SRC.<LOCAL.SKILL>>>%
+
+	IF (<f_get_real_skill <SRC.UID>,<LOCAL.SKILL>> >= 1000)
+		SRC.TAG0.GM_QUEST_SKILL_<DLOCAL.SKILL>
+
+		FORCONT <SRC.FINDLAYER.layer_pack> 3
+			IF (<BASEID> == i_recipe_scroll)
+				IF (<TAG0.DECIPHERED>) && (<MORE1> == <LOCAL.SKILL>)
+					REMOVE
+				ENDIF
+			ENDIF
+		ENDFOR
+	ENDIF
+ENDIF
+
+[EOF]

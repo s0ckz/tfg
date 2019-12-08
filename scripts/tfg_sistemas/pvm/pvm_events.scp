@@ -1,0 +1,30 @@
+[COMMENT script_event_ranking]
+CREATE TABLE `event_ranking` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `event` varchar(16) NOT NULL,
+  `account` varchar(16) NOT NULL,
+  `name` varchar(70) NOT NULL,
+  `score` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+[FUNCTION f_compute_event_ranking]
+IF (<ARGV> != 2)
+	RETURN 1
+ENDIF
+
+LOCAL.EVENT_NAME <ARGV[0]>
+LOCAL.EVENT_TAG_NAME <ARGV[1]>
+
+DB.EXECUTE DELETE FROM event_ranking WHERE event = "<LOCAL.EVENT_NAME>"
+
+FOR X 0 <EVAL <SERV.ACCOUNTS> - 1>
+	IF (<SERV.ACCOUNT.<DLOCAL.X>.CHARS> > 0)
+		FOR Y 0 <EVAL <SERV.ACCOUNT.<DLOCAL.X>.CHARS> -1>
+			REF1 = <SERV.ACCOUNT.<DLOCAL.X>.CHAR.<DLOCAL.Y>>
+			IF (<REF1.TAG0.<LOCAL.EVENT_TAG_NAME>> != 0)
+				DB.EXECUTE INSERT INTO event_ranking (event, account, name, score, global_account_id) VALUES ("<LOCAL.EVENT_NAME>", "<REF1.ACCOUNT>", "<REF1.NAME>", "<DREF1.TAG.<LOCAL.EVENT_TAG_NAME>>", "<DREF1.ACCOUNT.TAG.GLOBAL>")
+			ENDIF
+		ENDFOR
+	ENDIF
+ENDFOR

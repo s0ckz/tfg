@@ -1,0 +1,25 @@
+[FUNCTION f_housing_removekeys]
+if <findlayer.21.rescount>
+	for 0 <findlayer.21.rescount>
+		ref1 = <findlayer.21.findcont(<local._for>)>
+		if (<ref1.dispid>==i_key_copper)
+			if strmatch("t_multi*","<ref1.link.type>") 
+				if (<ref1.link>==<args>)
+					ref1.remove
+				endif
+			endif
+		endif
+	endfor
+endif
+if <findlayer.29.rescount>
+	for 0 <findlayer.29.rescount>
+		ref1 = <findlayer.29.findcont(<local._for>)>
+		if (<ref1.dispid> == i_key_copper)
+			if strmatch("t_multi*","<ref1.link.type>")
+				if (<ref1.link>==<args>)
+					ref1.remove
+				endif
+			endif
+		endif
+	endfor
+endif

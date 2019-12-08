@@ -1,0 +1,185 @@
+// Plevel 2 que podera um dia ser plevel 1, sem tanta importancia
+[PLEVEL 2]
+UNDERWEAR
+SUICIDE // nao coloquei no post
+HelpPage
+ANIM
+
+// todos os comandos de conseulor
+[PLEVEL 2]
+classificar
+// Comandos de Evento - autorizacao via Tag
+Todos_Invis
+//// Camp Mine 1x1
+Iniciar_luta_1x1
+Iniciar_CampMine
+start_paintball
+stop_paintball
+Tirar_arena
+Iniciar_ModoFinais
+fecha_gate_campmine
+ganhar_luta_wo
+///// Boxe
+Iniciar_Boxe
+Iniciar_Luta_Boxe
+Fecha_Gate_Boxe
+// Ctf
+Stop_Ctf
+//FFA
+criar_ffa
+iniciar_ffa
+fecha_gate_ffa
+stop_ffa
+//
+//
+VERMAIL
+SENDCOMMERCE
+STONAR
+BANKSELF
+B
+LUZ
+ATENDER
+DESATENDER
+SHOWTAMES
+PAG
+TEL
+TELE
+TELETO
+FIX
+TELE
+GM  // nao funfa :(
+CAST
+PAGE
+GO
+GONEXT
+INVIS
+INVUL
+SUMIR
+GOPLAYER
+GOLOGIN
+PUXAPLAYER
+S
+NCS
+STAFFGERAL // nao colokei no post
+MAP
+
+[PLEVEL 3]
+// subir qd doug subir pro pl 4
+// automatizar tudo isso por dialogs no futuro
+novoprismaevento
+FINALIZA_CTF_FORCE
+novomine1x1
+mine_arena
+mine_arena2
+gan_jogo
+modofinais
+tirarinvis
+novoffa
+vagasffa
+todosregiao
+TRAVARANIMAL
+liberaranimal
+bb
+//
+SEND
+moverpara
+GOUID
+condenar
+abrirgate
+KILL
+BODY
+GONAME
+XSTONE
+STONE
+XGO
+INFO // sem editar, so informacoes
+// eventos automaticos - seer
+// mudar stats dos bixos para eventos? (via .info)
+// criar bixos p eventos? (criar um comando)
+// Um xname e xcolor soh pra npc (autorizar no .info so pra npc)
+
+[PLEVEL 4]
+TMSG
+ADD
+descondenar
+mudarmundo
+shrink
+searchforitem
+find
+findacc
+findip
+resp
+ADMIN
+GMB
+BADSPAWN
+TILE
+GOTYPE
+REMOVE
+COLOR
+XCOLOR
+gmcolor
+gmstone
+gmadd
+gmname
+XNAME
+NAME
+allshow
+// DUPE?
+
+[PLEVEL 5]
+SAVE
+LINK
+achargpbank
+achargold
+nukeid
+pushp
+popp
+bank
+xbank
+RECTFG
+GOITEM
+DUPE
+NUKE
+TAG
+
+[PLEVEL 6]
+xpass
+SERV.ACCOUNT
+GOSOCK
+GOCLI
+GOCHAR
+DIALOG
+JAIL
+FORGIVE
+
+[PLEVEL 7]
+ACCOUNT
+SETPRIV
+BLOCKIP
+TOME
+EXTRACT
+UNEXTRACT
+EXPORT
+IMPORT
+SERV.CLEARVARS
+SRC
+OBJ
+NEW
+DB
+FILE
+TRY
+TRYP
+TRYSRC
+TRYSRV
+PLEVEL
+CHARLIST
+SLEEP // Meio bobo !
+BARK // Pra que serve?
+
+// comandos perigosos ou que nao sao mais pra usar
+// ou desusados
+[PLEVEL 8]
+novaconta
+SALL
+
+[EOF]

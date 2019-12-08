@@ -1,0 +1,571 @@
+[Function trocartaggate]
+local.ct 0
+			for x 0 <eval <serv.accounts> -1>
+							for y 0 <eval <serv.account.<dlocal.x>.chars> -1>
+								ref1 = <serv.account.<dlocal.x>.char.<dlocal.y>>
+								ref1.tag.gumpgate=
+								REF1.TAG.GATEON=1,1,0,0,0,0
+								local.ct ++
+							endfor
+			endfor
+			sysmessage @,,1 <dlocal.ct> contas afetadas.
+return 1
+
+
+[TYPEDEF t_telepad]
+ON=@STEP
+REF2=<TAG.GATE>
+REF10=<TAG.CRIADOR>
+
+//IF (<REF2.checawall>)
+//	src.sysmessage @,,1 Nao e possivel entrar nesse gate.
+//	RETURN 1
+//ENDIF
+
+IF (<SRC.NPC>)
+	RETURN 6
+ENDIF
+
+//IF (<REGION.SAFE>)
+//	src.sysmessage @,,1 Voce nao pode entrar em gate para uma regiao safe.
+//	RETURN 1
+//ENDIF
+
+IF (<eval <arrayshow 4,<SRC.TAG.GATEON>>>)
+	IF (<REF10.GUILD>==<SRC.GUILD>)
+		RETURN 0
+	ENDIF
+ENDIF
+
+IF (<eval <arrayshow 5,<SRC.TAG.GATEON>>>) && (<SRC.ISINPARTY>)
+	FOR 0 <eval <SRC.PARTY.MEMBERS> - 1>
+		 IF (<REF10.UID>==<SRC.PARTY.MEMBER.<dLOCAL._FOR>>)
+			RETURN 0
+		 ENDIF
+	ENDFOR
+ENDIF
+
+IF (<eval <arrayshow 3,<SRC.TAG.GATEON>>>)
+	IF (<COLOR>==026)
+		RETURN 6
+	ENDIF
+ENDIF
+
+IF (<eval <arrayshow 2,<SRC.TAG.GATEON>>>)
+	IF (<COLOR>==063)
+		RETURN 6
+	ENDIF
+ENDIF
+
+IF (<eval <arrayshow 1,<SRC.TAG.GATEON>>>)
+	IF (<COLOR>==026)
+		DIALOGCLOSE D_GATES
+		DIALOG D_GATES
+		RETURN 6
+	ENDIF
+ENDIF
+
+	IF (<eval <arrayshow 0,<SRC.TAG.GATEON>>>) || (<SRC.KILLS> > 0)
+		IF (<COLOR>==063)
+			DIALOGCLOSE D_GATES
+			DIALOG D_GATES
+			RETURN 6
+		ENDIF
+	ENDIF
+
+
+[plevel 1]
+gateconf
+
+[function gateconf]
+IF (<arrayshow 0,<TAG.GATEON>>) && (<arrayshow 1,<TAG.GATEON>>)
+SRC.SYSMESSAGE @,,1 Gate Protection: OFF
+TAG.GATEON=0,0,0,0,0,0
+ELSE
+SRC.SYSMESSAGE @,,1 Gate Protection: ON
+TAG.GATEON=1,1,0,0,0,0
+ENDIF
+RETURN 1
+
+[PLEVEL 1]
+gateoptions
+
+[function gateoptions]
+DIALOGCLOSE d_gates
+DIALOGCLOSE d_gates_new
+DIALOG d_gates_new
+RETURN 1
+
+[DIALOG d_gates_new]
+100,100
+page 0
+resizepic 76 26 9200 187 316
+resizepic 83 52 9350 174 76
+dtext 148 30 50 Gates
+dtext 90 57 50 Me avisar em:
+checkbox 89 81 210 211 <eval <arrayshow 0,<SRC.TAG.GATEON>>> 0
+checkbox 89 102 210 211 <eval <arrayshow 1,<SRC.TAG.GATEON>>> 1
+resizepic 83 133 9350 174 77
+dtext 90 137 50 Nunca entrar em:
+checkbox 89 159 210 211 <eval <arrayshow 2,<SRC.TAG.GATEON>>> 2
+checkbox 89 180 210 211 <eval <arrayshow 3,<SRC.TAG.GATEON>>> 3
+dtext 112 81 3 Gates Blue
+dtext 112 159 3 Gates Blue
+dtext 112 180 32 Gates Red
+resizepic 83 215 9350 174 77
+dtext 90 220 50 Sempre entrar em:
+checkbox 89 242 210 211 <eval <arrayshow 4,<SRC.TAG.GATEON>>> 4
+checkbox 89 263 210 211 <eval <arrayshow 5,<SRC.TAG.GATEON>>> 5
+dtext 112 242 66 Gates da Guilda
+dtext 112 263 66 Gates da Party
+dtext 112 102 32 Gates Red
+button 93 295 4005 4006 1 0 1
+dtext 127 296 50 Salvar Alteracoes
+dtext 107 316 32 www.tfg.com.br
+
+[DIALOG d_gates_new text]
+Gates
+Me avisar em:
+Nunca entrar em:
+Gates Blue
+Gates Blue
+Gates Red
+Sempre entrar em:
+Gates da Guilda
+Gates da Party
+Gates Red
+Salvar Alteracoes
+www.tfg.com.br
+
+[DIALOG d_gates_new button]
+ON=0
+SRC.SYSMESSAGE @32,,1 Voce nao gravou suas alteracoes.
+
+ON=1
+SRC.TAG.GATEON=<ARGCHK[0]>,<ARGCHK[1]>,<ARGCHK[2]>,<ARGCHK[3]>,<ARGCHK[4]>,<ARGCHK[5]>
+SRC.SYSMESSAGE @478,,1 Voce gravou suas alteracoes.
+
+[DIALOG d_gates]
+150,200
+page 0
+resizepic 100 20 9200 200 80
+button 165 65 2071 2072 1 0 0
+button 123 40 2151 2153 1 0 1
+dtext 155 45 0480 Entrar no Gate ?
+
+[DIALOG d_gates BUTTON]
+on=0
+RETURN 1
+
+on=1
+REF2=<TAG.GATE>
+//IF (<REF2.checawall>)
+	//src.sysmessage Nao e possivel entrar nesse gate.
+	//RETURN 1
+//ENDIF
+if (<distance> > 1 )
+return 1
+elif (<distance> <= 1)
+src.f_go <morep>
+RETURN 0
+else
+RETURN 0
+ENDIF
+
+///////////////////////
+
+
+[FUNCTION GATE_VERIFY2]
+REF1=<ARGS>
+IF <isneartype t_traparea>
+	REF1.SYSMESSAGE @,,1 O gate falhou pois trata-se de um local muito fechado.
+	return 1
+ENDIF
+//
+IF <VERIFYGATE>
+REF1.SYSMESSAGE @,,1 Voce nao pode abrir um gate tao proximo de outro.
+RETURN 1
+ENDIF
+//
+IF !<REGION.GUARDED>
+IF <NEARGUARDS 1>
+REF1.SYSMESSAGE @,,1 Voce nao pode abrir gate tao proximo de uma regiao com guards.
+RETURN 1
+ENDIF
+ENDIF
+//
+IF <VERIFYBAUS <P>>
+REF1.SYSMESSAGE @,,1 Voce nao pode abrir gate tao proximo de um container.
+RETURN 1
+ENDIF
+//
+IF (<MOVE_TRAPS_A> < 1)
+REF1.SYSMESSAGE @,,1 Tente abrir o gate em um local mais aberto ou sem itens proximos.
+RETURN 1
+ENDIF
+//
+IF (<BLOCK_BORDAS2 1>)
+REF1.SYSMESSAGE @,,1 O gate falhou pois voce esta em um local com muitos desniveis.
+RETURN 1
+ENDIF
+RETURN 0
+
+///////////////////////////
+
+
+[FUNCTION GATE_VERIFY3]
+REF1=<ARGS>
+IF <isneartype t_traparea>
+	REF1.SYSMESSAGE @,,1 O gate falhou pois trata-se de um local muito fechado.
+	return 1
+ENDIF
+//
+IF <VERIFYGATE>
+REF1.SYSMESSAGE @,,1 O gate falhou pois existe outro gate no local de destino.
+RETURN 1
+ENDIF
+//
+IF !<REGION.GUARDED>
+IF <NEARGUARDS 1>
+REF1.SYSMESSAGE @,,1 O gate falhou pois o gate de destino esta muito proximo de uma regiao com guards.
+RETURN 1
+ENDIF
+ENDIF
+//
+IF <VERIFYBAUS <P>>
+REF1.SYSMESSAGE @,,1 O gate falhou pois existe um container exatamente no local de destino.
+RETURN 1
+ENDIF
+//
+IF (<MOVE_TRAPS_A> < 1)
+REF1.SYSMESSAGE @,,1 O gate falhou pois o gate de destino esta em um local muito fechado.
+RETURN 1
+ENDIF
+//
+//IF (<P.TERRAIN.Z> > <P.Z>)
+//REF1.SYSMESSAGE @,,1 O gate falhou pois o gate de destino esta em um local desnivelado.
+//RETURN 1
+//ENDIF
+//
+IF (<BLOCK_BORDAS2 1>)
+REF1.SYSMESSAGE @,,1 O gate falhou pois o gate de destino esta em um local com muitos desniveis.
+RETURN 1
+ENDIF
+//
+RETURN 0
+
+/////////////////////////////
+
+[FUNCTION VERIFYITEMS]
+IF ((<ISNEARTYPE t_foliage, 1, 1>) || (<ISNEARTYPE t_tree, 1, 1>) || (<ISNEARTYPE t_arock, 1, 1>))
+RETURN 1
+ENDIF
+RETURN 0
+
+
+////////////////////////
+
+
+[FUNCTION BLOCK_BORDASX]  //nao lembro exatamente pq incrementei isso so em +1 , +1
+SERV.NEWNPC c_pig
+NEW.FLAGS=statf_invul|statf_insubstantial
+NEW.P <eval <P.X> + 1>,<P.Y>,<P.Z>
+IF (<eval <NEW.BLOCK_BORDAS3> - <P.Z>> > 3)
+NEW.REMOVE
+RETURN 1
+ENDIF
+NEW.P <P.X>,<eval <P.Y> + 1>,<P.Z>
+IF (<eval <NEW.BLOCK_BORDAS3> - <P.Z>> > 1)
+NEW.REMOVE
+RETURN 1
+ENDIF
+NEW.REMOVE
+RETURN 0
+
+[FUNCTION BLOCK_BORDAS2]
+LOCAL.CT=0
+LOCAL.MIN=0
+LOCAL.MAX=0
+local.occ 0
+SERV.NEWNPC c_pig
+NEW.FLAGS=statf_insubstantial|statf_invul
+NEW.P <P>
+REF1=<NEW.UID>
+FOR 0 <eval <ARGS> - 1>
+LOCAL.MIN --
+LOCAL.MAX ++
+LOCAL.CT ++
+  FOR k <LOCAL.MIN> <LOCAL.MAX>
+  REF1.P <P>
+  REF1.MOVE <eval <LOCAL.CT> * -1> <LOCAL.K> 0 0
+  REF1.FIX
+		//sysmessage @,,1 <ref1.P> .... <REF1.Z> - <P.Z>
+	IF (<eval <REF1.Z> - <P.Z>> > 5)
+		local.occ ++
+		if (<local.occ> >= 3)
+			REF1.REMOVE
+			RETURN 1
+		endif
+	ENDIF
+  ENDFOR
+  //
+  FOR l <eval <LOCAL.MIN> + 1> <LOCAL.MAX>
+  REF1.P <P>
+  REF1.MOVE <LOCAL.L> <eval <LOCAL.CT> * -1> 0 0
+  REF1.FIX
+		//sysmessage @,,1 <ref1.P> .... <REF1.Z> - <P.Z>
+	IF (<eval <REF1.Z> - <P.Z>> > 5)
+		local.occ ++
+		if (<local.occ> >= 3)
+			REF1.REMOVE
+			RETURN 1
+		endif
+	ENDIF
+  ENDFOR
+  //
+  FOR m <eval <LOCAL.MIN> + 1> <LOCAL.MAX>
+  REF1.P <P>
+  REF1.MOVE <LOCAL.CT> <LOCAL.m> 0 0
+  REF1.FIX
+		//sysmessage @,,1 <ref1.P> .... <REF1.Z> - <P.Z>
+	IF (<eval <REF1.Z> - <P.Z>> > 5)
+		local.occ ++
+		if (<local.occ> >= 3)
+			REF1.REMOVE
+			RETURN 1
+		endif
+	ENDIF
+  ENDFOR
+  //
+  FOR n <eval <LOCAL.MIN> + 1> <eval <LOCAL.MAX> - 1>
+  REF1.P <P>
+  REF1.MOVE <LOCAL.N> <LOCAL.CT> 0 0
+  REF1.FIX
+		//sysmessage @,,1 <ref1.P> .... <REF1.Z> - <P.Z>
+	IF (<eval <REF1.Z> - <P.Z>> > 5)
+		local.occ ++
+		if (<local.occ> >= 3)
+			REF1.REMOVE
+			RETURN 1
+		endif
+	ENDIF
+  ENDFOR
+ENDFOR
+REF1.REMOVE
+RETURN 0
+
+[FUNCTION BLOCK_BORDAS3]
+RETURN <P.TERRAIN.Z>
+
+[FUNCTION testebordas]
+LOCAL.CT=0
+LOCAL.MIN=0
+LOCAL.MAX=0
+local.occ 0
+SERV.NEWITEM i_cards
+NEW.ATTR 04090
+NEW.P <P>
+REF1=<NEW.UID>
+FOR 0 <eval <ARGS> - 1>
+LOCAL.MIN --
+LOCAL.MAX ++
+LOCAL.CT ++
+  FOR k <LOCAL.MIN> <LOCAL.MAX>
+  REF1.P <P>
+  REF1.MOVE <eval <LOCAL.CT> * -1> <LOCAL.K> 0 0
+	//IF (<eval <REF1.BLOCK_BORDAS3> - <P.Z>> > 5)
+		serv.newitem i_cards
+		new.p <ref1.p>
+		//local.occ ++
+		if (<local.occ> >= 3)
+			REF1.REMOVE
+			RETURN 1
+		endif
+	//ENDIF
+  ENDFOR
+  //
+  FOR l <eval <LOCAL.MIN> + 1> <LOCAL.MAX>
+  REF1.P <P>
+  REF1.MOVE <LOCAL.L> <eval <LOCAL.CT> * -1> 0 0
+	//IF (<eval <REF1.BLOCK_BORDAS3> - <P.Z>> > 5)
+		serv.newitem i_cards
+		new.p <ref1.p>
+		//local.occ ++
+		if (<local.occ> >= 3)
+			REF1.REMOVE
+			RETURN 1
+		endif
+	//ENDIF
+  ENDFOR
+  //
+  FOR m <eval <LOCAL.MIN> + 1> <LOCAL.MAX>
+  REF1.P <P>
+  REF1.MOVE <LOCAL.CT> <LOCAL.m> 0 0
+	//IF (<eval <REF1.BLOCK_BORDAS3> - <P.Z>> > 5)
+		serv.newitem i_cards
+		new.p <ref1.p>
+		//local.occ ++
+		if (<local.occ> >= 3)
+			REF1.REMOVE
+			RETURN 1
+		endif
+	//ENDIF
+  ENDFOR
+  //
+  FOR n <eval <LOCAL.MIN> + 1> <eval <LOCAL.MAX> - 1>
+  REF1.P <P>
+  REF1.MOVE <LOCAL.N> <LOCAL.CT> 0 0
+	//IF (<eval <REF1.BLOCK_BORDAS3> - <P.Z>> > 5)
+		serv.newitem i_cards
+		new.p <ref1.p>
+		//local.occ ++
+		if (<local.occ> >= 3)
+			REF1.REMOVE
+			RETURN 1
+		endif
+	//ENDIF
+  ENDFOR
+ENDFOR
+REF1.REMOVE
+RETURN 0
+///////////////////////////////////
+
+[TYPEDEF t_traparea]
+
+////////////////////////////////////
+
+[FUNCTION MOVE_TRAPS_A]
+LOCAL.CT 0
+SERV.NEWNPC c_pig
+NEW.FLAGS=statf_invul|statf_insubstantial
+NEW.P <P>
+  LOCAL.MOVE=<NEW.CANMOVE nw>
+  IF <LOCAL.MOVE>
+  LOCAL.CT ++
+  ENDIF
+  LOCAL.MOVE=<NEW.CANMOVE n>
+  IF <LOCAL.MOVE>
+  LOCAL.CT ++
+  ENDIF
+  LOCAL.MOVE=<NEW.CANMOVE ne>
+  IF <LOCAL.MOVE>
+  LOCAL.CT ++
+  ENDIF
+  LOCAL.MOVE=<NEW.CANMOVE e>
+  IF <LOCAL.MOVE>
+  LOCAL.CT ++
+  ENDIF
+  LOCAL.MOVE=<NEW.CANMOVE se>
+  IF <LOCAL.MOVE>
+  LOCAL.CT ++
+  ENDIF
+  LOCAL.MOVE=<NEW.CANMOVE s>
+  IF <LOCAL.MOVE>
+  LOCAL.CT ++
+  ENDIF
+  LOCAL.MOVE=<NEW.CANMOVE sw>
+  IF <LOCAL.MOVE>
+  LOCAL.CT ++
+  ENDIF
+  LOCAL.MOVE=<NEW.CANMOVE w>
+  IF <LOCAL.MOVE>
+  LOCAL.CT ++
+  ENDIF
+NEW.REMOVE
+RETURN <dLOCAL.CT>
+
+///////////////////////////////////
+
+
+[FUNCTION NEARGUARDS]
+LOCAL.CT=0
+LOCAL.MIN=0
+LOCAL.MAX=0
+SERV.NEWITEM i_cards
+NEW.ATTR 04090
+NEW.P <P>
+REF1=<NEW.UID>
+FOR 0 <eval <ARGS> - 1>
+LOCAL.MIN --
+LOCAL.MAX ++
+LOCAL.CT ++
+  FOR k <LOCAL.MIN> <LOCAL.MAX>
+  REF1.P <P>
+  REF1.MOVE <eval <LOCAL.CT> * -1> <LOCAL.K> 0 0
+  IF <REF1.REGION.GUARDED>
+  REF1.REMOVE
+  RETURN 1
+  ENDIF
+  ENDFOR
+  //
+  FOR l <eval <LOCAL.MIN> + 1> <LOCAL.MAX>
+  REF1.P <P>
+  REF1.MOVE <LOCAL.L> <eval <LOCAL.CT> * -1> 0 0
+  IF <REF1.REGION.GUARDED>
+  REF1.REMOVE
+  RETURN 1
+  ENDIF
+  ENDFOR
+  //
+  FOR m <eval <LOCAL.MIN> + 1> <LOCAL.MAX>
+  REF1.P <P>
+  REF1.MOVE <LOCAL.CT> <LOCAL.m> 0 0
+  IF <REF1.REGION.GUARDED>
+  REF1.REMOVE
+  RETURN 1
+  ENDIF
+  ENDFOR
+  //
+  FOR n <eval <LOCAL.MIN> + 1> <eval <LOCAL.MAX> - 1>
+  REF1.P <P>
+  REF1.MOVE <LOCAL.N> <LOCAL.CT> 0 0
+  IF <REF1.REGION.GUARDED>
+  REF1.REMOVE
+  RETURN 1
+  ENDIF
+  ENDFOR
+ENDFOR
+REF1.REMOVE
+RETURN 0
+
+
+//
+
+[FUNCTION VERIFYGATE]
+REF1=<UID>
+LOCAL.CT 0
+FORITEMS 1
+IF (<BASEID>==i_moongate_blue)
+IF !(<UID>==<REF1.UID>)
+LOCAL.CT=1
+ENDIF
+ENDIF
+ENDFOR
+RETURN <LOCAL.CT>
+
+//
+
+[FUNCTION VERIFYBAUS]
+SERV.NEWITEM i_gold
+NEW.P <ARGS>
+IF <NEW.VERIFYBAUS2>
+NEW.REMOVE
+RETURN 1
+ELSE
+NEW.REMOVE
+RETURN 0
+ENDIF
+
+[FUNCTION VERIFYBAUS2]
+LOCAL.CT 0
+FORITEMS 1
+IF (<TYPE>==t_container) && !(<region.isevent.r_house_private>)
+LOCAL.CT=0
+ENDIF
+ENDFOR
+RETURN <LOCAL.CT>
+
+//
+
+
+[EOF]

@@ -1,0 +1,44 @@
+// Crested 11/2/2009 05:56:23, with GumpStudio
+// Exported SphereExporter ver 2.0.
+// Script ver 0.56/Revisions
+
+[FUNCTION pagehelpteste2]
+SRC.DIALOG d_menu_help_2
+
+[DIALOG d_menu_help_2]
+0,0
+page 0
+gumppic 430 151 1416 883
+gumppic 174 151 1416 883
+gumppic 302 151 1416 883
+gumppic 445 150 1416 883
+gumppic 123 136 10421
+gumppic 147 122 10420
+gumppic 569 135 10431
+gumppic 541 121 10430
+resizepic 208 128 9200 332 25
+dtext 287 130 567 Menu Do Personagem
+gumppic 193 167 9762 900
+gumppic 193 197 9762 900
+gumppic 156 269 10462
+gumppic 210 269 10462
+gumppic 264 269 10462
+gumppic 318 269 10462
+gumppic 372 269 10462
+gumppic 426 269 10462
+gumppic 481 269 10462
+gumppic 535 269 10462
+gumppic 193 224 9762 900
+dtext 214 166 567 Pagar para remover kills
+dtext 214 196 567 Arrumar Status
+dtext 214 223 567 Voltar ao menu de ajuda
+
+[DIALOG d_menu_help_2 text] // useless
+Menu Do Personagem
+Pagar para remover kills
+Arrumar Status
+Voltar ao menu de ajuda
+
+[DIALOG d_menu_help_2 button]
+
+[EOF]

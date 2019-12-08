@@ -1,0 +1,284 @@
+[ITEMDEF i_weekly_pvp_single_champion_horse]
+ID=i_pet_horse
+NAME=Death Knight Horse
+TYPE=t_normal
+
+ON=@Create
+	ATTR=attr_newbie
+	COLOR=0a00
+
+ON=@DClick
+	IF !(<SRC.ISEVENT.e_weekly_pvp_single_champion>)
+		SRC.SYSMESSAGE @,,1 You must be the champion of the weekly pvp challenge to use this item.
+		RETURN 1
+	ENDIF
+
+	IF (<UID.<TAG0.EXISTING_MOUNT>>)
+		REF1 <TAG0.EXISTING_MOUNT>
+		IF (<REF1.OWNER> == <SRC.UID>)
+			SRC.SYSMESSAGE @,,1 There's a mount created at <UID.<TAG0.EXISTING_MOUNT>.P>.
+			RETURN 1
+		ELSE
+			REF1.REMOVE
+		ENDIF
+	ENDIF
+
+	IF (<EVAL <SERV.TIME> - <TAG0.LAST_REMOVAL>> < 6000)
+		LOCAL.WAIT_TIME <EVAL (6000 - (<SERV.TIME> - <TAG0.LAST_REMOVAL>)) / 10>
+		SRC.SYSMESSAGE @,,1 You must wait more <DLOCAL.WAIT_TIME> seconds to use this item.
+		RETURN 1
+	ENDIF
+
+	SERV.NEWNPC c_weekly_pvp_single_champion_horse
+	NEW.P <SRC.P>
+	REF1 <NEW.UID>
+
+	TAG.EXISTING_MOUNT <REF1.UID>
+
+	SERV.NEWITEM i_memory
+	NEW.COLOR memory_ipet
+	NEW.LINK <SRC.UID>
+	NEW.CONT <REF1.UID>
+	REF1.UPDATEX
+	REF1.ACTION 06c
+
+	REF1.TAG.HORSE_ITEM <UID>
+
+	RETURN 1
+
+[CHARDEF c_weekly_pvp_single_champion_horse]
+ID=c_horse_tan
+NAME=Death Knight Horse
+DAM=9,15
+ARMOR=25
+TAG.UNSHRINKABLE=1
+TAG.UNRELEASABLE=1
+TAG.UNTRANSFERABLE=1
+
+ON=@Create
+	COLOR=0a00
+	NPC=brain_animal
+	MAXHITS={250 300}
+	STR={120 160}
+	DEX={70 100}
+	INT={16 30}
+	PARRYING={75.0 100.0}
+	MAGICRESISTANCE={65.0 120.0}
+	TACTICS={79.0 119.0}
+	WRESTLING={69.0 99.0}
+	TAMING=200.0
+	FAME=10
+	KARMA={1 99}
+
+ON=@PetDesert
+	UID.<TAG.HORSE_ITEM>.TAG.LAST_REMOVAL <SERV.TIME>
+
+	REMOVE
+	RETURN 1
+
+ON=@Death
+	UID.<TAG.HORSE_ITEM>.TAG.LAST_REMOVAL <SERV.TIME>
+
+[ITEMDEF i_weekly_pvp_single_champion_robe]
+id=0204e
+name=Death Knight Robe
+TYPE=T_CLOTHING
+weight=0
+ARMOR=0
+
+ON=@Create
+	HITPOINTS={5000 5000}
+	DISPID = 02683
+	COLOR=0a00
+	ATTR=04
+
+ON=@DClick
+	IF (<CONT> == <SRC.UID>) && !(<SRC.TAG0.DISABLE_SPECIAL_ROBE_GUMP>)
+		SDIALOG d_vip_robe_format
+	ENDIF
+
+on=@equiptest
+	IF !(<SRC.ISEVENT.e_weekly_pvp_single_champion>)
+		SRC.SYSMESSAGE @,,1 You must be the champion of the weekly pvp challenge to use this item.
+		RETURN 1
+	ENDIF
+
+ON=@equip
+	name <SRC.NAME>'s Death Knight Robe
+
+	src.modstr += 12
+	src.moddex += 12
+	src.modint += 12
+
+	SRC.MODAR += 30
+
+	SRC.TAG.GOLD_INCREASE_PERCENTAGE 25
+	SRC.TAG.SPECIAL_LOOT_INCREASE_PERCENTAGE 25
+	SRC.TAG.PVM_HIT_INCREASE_PERCENTAGE 50
+	SRC.TAG.PVM_GET_HIT_DECREASE_PERCENTAGE 50
+
+ON=@unequip
+	SRC.TAG.GOLD_INCREASE_PERCENTAGE
+	SRC.TAG.SPECIAL_LOOT_INCREASE_PERCENTAGE
+	SRC.TAG.PVM_HIT_INCREASE_PERCENTAGE
+	SRC.TAG.PVM_GET_HIT_DECREASE_PERCENTAGE
+
+	src.modstr -= 12
+	src.moddex -= 12
+	src.modint -= 12
+
+	SRC.MODAR -= 30
+
+	IF <SRC.MODAR> < 0
+		SRC.MODAR = 0
+	ENDIF
+
+[EVENTS e_weekly_pvp_single_champion]
+
+[EVENTS e_arena_invul]
+ON=@GetHit
+	RETURN 1
+
+ON=@HitTry
+	RETURN 1
+
+ON=@SpellEffect
+	RETURN 1
+
+ON=@SkillPreStart
+	RETURN 1
+
+ON=@SkillStart
+	RETURN 1
+
+ON=@SpellBook
+	RETURN 1
+
+ON=@SpellSelect
+	RETURN 1
+
+ON=@SpellCast
+	RETURN 1
+
+ON=@UserWarmode
+	RETURN 1
+
+ON=@Attack
+	RETURN 1
+
+ON=@ItemDClick
+	RETURN 1
+
+ON=@ItemClick
+	RETURN 1
+
+ON=@ItemPickUp_Ground
+	RETURN 1
+
+ON=@ItemDropOn_Char
+	RETURN 1
+
+ON=@ItemDropOn_Ground
+	RETURN 1
+
+ON=@ItemDropOn_Item
+	RETURN 1
+
+ON=@RegionLeave
+	SRC.EVENTS -e_arena_invul
+	SRC.FLAGS <SRC.FLAGS> & ~statf_freeze
+
+[FUNCTION set_weekly_pvp_single_champion]
+TARGETF f_set_weekly_pvp_single_champion
+
+[FUNCTION f_set_weekly_pvp_single_champion]
+IF !(<ARGO.ISPLAYER>)
+	SRC.SYSMESSAGE @,,1 This function must be used on players only.
+ELSE
+	f_set_weekly_pvp_single_champion_char_uid <ARGO.UID>
+ENDIF
+
+[FUNCTION f_set_weekly_pvp_single_champion_char_uid]
+IF (<ARGV> != 1)
+	RETURN 1
+ENDIF
+
+REF1 <ARGV[0]>
+
+IF !(<REF1.ISPLAYER>)
+	RETURN 1
+ENDIF
+
+IF (<REF1.FLAGS> & statf_stone) || (<REF1.ACCOUNT.JAIL>) || (<REF1.ACCOUNT.BLOCK>)
+	RETURN 1
+ENDIF
+
+FOR X 0 <EVAL <SERV.ACCOUNTS> - 1>
+    IF (<SERV.ACCOUNT.<DLOCAL.X>.CHARS> > 0)
+        FOR Y 0 <EVAL <SERV.ACCOUNT.<DLOCAL.X>.CHARS> -1>
+            REF2 <SERV.ACCOUNT.<DLOCAL.X>.CHAR.<DLOCAL.Y>>
+
+            REF2.EVENTS -e_weekly_pvp_single_champion
+        ENDFOR
+    ENDIF
+ENDFOR
+
+FORINSTANCES i_weekly_pvp_single_champion_robe
+	IF (<TOPOBJ.ISPLAYER>)
+		IF (<TOPOBJ.FINDLAYER.<LAYER>> == <UID>)
+			CONT <TOPOBJ.FINDLAYER.layer_pack>
+		ENDIF
+	ENDIF
+ENDFOR
+
+FORINSTANCES c_weekly_pvp_single_champion_horse
+	REMOVE
+ENDFOR
+
+REF1.EVENTS +e_weekly_pvp_single_champion
+
+SERV.NEWITEM i_weekly_pvp_single_champion_robe
+NEW.CONT <REF1.FINDLAYER.layer_pack>
+
+SERV.NEWITEM i_weekly_pvp_single_champion_horse
+NEW.CONT <REF1.FINDLAYER.layer_pack>
+
+[PLEVEL 1]
+sit_throne
+leave_throne
+
+[FUNCTION sit_throne]
+IF !(<SRC.ISEVENT.e_weekly_pvp_single_champion>)
+	SRC.SYSMESSAGE @,,1 You must be the champion of the weekly pvp challenge to sit the arena throne.
+	RETURN 1
+ENDIF
+
+IF (STRCMPI("Tfg Arena-Torcida Corneta", "<SRC.REGION.NAME>"))
+	SRC.SYSMESSAGE @,,1 You must be at the arena outside part to run this command.
+	RETURN 1
+ENDIF
+
+IF (<SRC.FINDLAYER.layer_horse>)
+	SRC.SYSMESSAGE @,,1 You can't sit the throne while riding.
+	RETURN 1
+ENDIF
+
+SRC.GO 6058,1205,10
+SRC.Z 10
+SRC.FLAGS <SRC.FLAGS> | statf_freeze
+SRC.EVENTS +e_arena_invul
+
+[FUNCTION leave_throne]
+IF !(<SRC.ISEVENT.e_weekly_pvp_single_champion>)
+	SRC.SYSMESSAGE @,,1 You must be the champion of the weekly pvp challenge to sit the arena throne.
+	RETURN 1
+ENDIF
+
+IF !(<SRC.ISEVENT.e_arena_invul>)
+	SRC.SYSMESSAGE @,,1 You must be sitted at the throne to run this command.
+	RETURN 1
+ENDIF
+
+SRC.GO 6058,1215
+
+[EOF]

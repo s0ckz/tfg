@@ -1,0 +1,375 @@
+[DEFNAME EVIL_EASTER_2018_SETTINGS]
+EVIL_EASTER_2018_COLOR_1 0786
+EVIL_EASTER_2018_COLOR_2 07ac
+EVIL_EASTER_2018_COLOR_COUNT 2
+
+[ITEMDEF i_evil_easter_2018_easter_egg]
+name=Evil Easter 2018 Egg
+id=i_eggs_fresh
+weight=1
+
+ON=@Create
+	COLOR=<DEF.EVIL_EASTER_2018_COLOR_<R1,<DEF.EVIL_EASTER_2018_COLOR_COUNT>>>
+	TIMERF 1,ATTR attr_newbie|attr_move_always
+
+ON=@PickUp_Pack
+	TAG.EVIL_EASTER_2018_EGG_FOUND 1
+
+ON=@PickUp_Ground
+	TAG.EVIL_EASTER_2018_EGG_FOUND 1
+
+ON=@DClick
+	IF (<TOPOBJ> != <SRC.UID>)
+		SRC.SYSMESSAGE @,,1 This item must be inside your bag.
+		RETURN 1
+	ENDIF
+
+	SRC.TAG0.EVIL_EASTER_2018_EGGS_FOUND += 1
+	SRC.SYSMESSAGE @,,1 Congratulations! You found an Evil Easter 2018 Egg. Your score now is: <DSRC.TAG0.EVIL_EASTER_2018_EGGS_FOUND>.
+
+	REMOVE
+
+	RETURN 1
+
+[FUNCTION f_evil_easter_2018_remove_all_eggs]
+FORINSTANCES i_evil_easter_2018_easter_egg
+	IF !(<TAG0.EVIL_EASTER_2018_EGG_FOUND>)
+		REMOVE
+	ENDIF
+ENDFOR
+
+[FUNCTION f_evil_easter_2018_announce_hint]
+FORINSTANCES i_evil_easter_2018_easter_egg
+	IF !(<TAG0.EVIL_EASTER_2018_EGG_FOUND>)
+		LOCAL.MINX <EVAL ((<P.X> / 1000) - 1) * 1000>
+		LOCAL.MINY <EVAL ((<P.Y> / 1000) - 1) * 1000>
+		LOCAL.MAXX <EVAL ((<P.X> / 1000) + 1) * 1000>
+		LOCAL.MAXY <EVAL ((<P.Y> / 1000) + 1) * 1000>
+
+		IF (<LOCAL.MINX> < 0)
+			LOCAL.MINX 0
+		ENDIF
+
+		IF (<LOCAL.MINY> < 0)
+			LOCAL.MINY 0
+		ENDIF
+
+		IF (<LOCAL.MAXX> > 6144)
+			LOCAL.MAXX 6144
+		ENDIF
+
+		IF (<LOCAL.MAXY> > 6144)
+			LOCAL.MAXY 6144
+		ENDIF
+
+		IF (<TOPOBJ.P.TYPE> == t_forest)
+			LOCAL.TERRAIN = "Forest"
+		ELIF (<TOPOBJ.P.TYPE> == t_water)
+			LOCAL.TERRAIN = "Water"
+		ELIF (<TOPOBJ.P.TYPE> == t_normal)
+			LOCAL.TERRAIN = "Terrain or Building"
+		ELIF (<TOPOBJ.P.TYPE> == t_swamp)
+			LOCAL.TERRAIN = "Swamp"
+		ELIF (<TOPOBJ.P.TYPE> == t_rock)
+			LOCAL.TERRAIN = "Rock, Sand, Mine or Dungeon"
+		ELIF (<TOPOBJ.P.TYPE> == t_sand)
+			LOCAL.TERRAIN = "Sand or Desert"
+		ELIF (<TOPOBJ.P.TYPE> == t_dirt)
+			LOCAL.TERRAIN = "Plantation or Arable"
+		ELIF (<TOPOBJ.P.TYPE> == t_grass)
+			LOCAL.TERRAIN = "Grass or Flower"
+		ELIF (<TOPOBJ.P.TYPE> == t_jungle)
+			LOCAL.TERRAIN = "Jungle"
+		ELIF (<TOPOBJ.P.TYPE> == t_snow)
+			LOCAL.TERRAIN = "Snow"
+		ELSE
+			LOCAL.TERRAIN = "Unknown"
+		ENDIF
+
+		SERV.B @55 There's an Evil Easter 2018 Egg somewhere between: (<DLOCAL.MINX>, <DLOCAL.MINY>) and (<DLOCAL.MAXX>, <DLOCAL.MAXY>) ! Why don't you try to find it?? The terrain type is: <LOCAL.TERRAIN>.
+		RETURN
+	ENDIF
+ENDFOR
+
+SERV.B @55 A new Evil Easter 2018 Egg will be spawned somewhere in the next hour.
+RETURN
+
+[FUNCTION f_evil_easter_2018_spawn_egg]
+LOCAL.POSITION <f_get_world_random_location>
+SERV.NEWITEM i_evil_easter_2018_easter_egg
+NEW.P <LOCAL.POSITION>
+
+SERV.LOG A new <NEW.NAME> is at <NEW.P>.
+
+[ITEMDEF i_evil_easter_2018_jin_baori]
+ID=i_jinbaori
+TYPE=t_clothing
+LAYER=layer_ears
+NAME=Evil Easter 2018 Jin-Baori
+TEVENTS=t_global_bound_item
+
+ON=@Create
+	COLOR=<DEF.EVIL_EASTER_2018_COLOR_<R1,<DEF.EVIL_EASTER_2018_COLOR_COUNT>>>
+	ATTR attr_newbie
+
+[ITEMDEF i_evil_easter_2018_ethereal_mount_talisman]
+ID=i_talisman4
+NAME=Evil Easter 2018 Ethereal Mount Talisman
+TEVENTS=t_global_bound_item
+
+ON=@Create
+	ATTR=attr_newbie
+	COLOR=<DEF.EVIL_EASTER_2018_COLOR_<R1,<DEF.EVIL_EASTER_2018_COLOR_COUNT>>>
+
+[ITEMDEF i_evil_easter_2018_bottle_hair_dye]
+ID=i_bottle_hair_dye
+NAME=Evil Easter 2018 Hair Dye
+
+ON=@Create
+	ATTR=attr_newbie
+	COLOR=<DEF.EVIL_EASTER_2018_COLOR_<R1,<DEF.EVIL_EASTER_2018_COLOR_COUNT>>>
+
+ON=@Click
+	MESSAGE @<f_get_evil_easter_2018_text_color <COLOR>>,,1 <NAME>
+	RETURN 1
+
+ON=@DClick
+	IF (<TOPOBJ.UID> != <SRC.UID>)
+		SRC.SYSMESSAGE @,,1 This item must be inside your backpack or bank to be used.
+		RETURN 1
+	ENDIF
+
+	IF (<SRC.FINDLAYER.layer_hair.UID>)
+		SRC.FINDLAYER.layer_hair.COLOR <COLOR>
+		REMOVE
+	ELSE
+		SRC.SYSMESSAGE @,,1 <DEFMSG.itemuse_dye_nohair>
+	ENDIF
+
+	RETURN 1
+
+[ITEMDEF i_evil_easter_2018_dye_tub]
+ID=0fab
+NAME=Evil Easter 2018 Dye Tub
+TYPE=T_NORMAL
+VALUE=20
+
+ON=@Create
+	MOREX = 1
+	COLOR = <DEF.EVIL_EASTER_2018_COLOR_<R1,<DEF.EVIL_EASTER_2018_COLOR_COUNT>>>
+
+ON=@Click
+	MESSAGE @,,1 <QVAL (<MOREX> < 2) ? [<DMOREX> charge] : [<DMOREX> charges] >
+
+ON=@DClick
+IF (<ATTR> == attr_move_never)
+	SRC.SYSMESSAGE @,,1 This item is locked.
+	RETURN 1
+ELSEIF (<MOREX> < 1)
+	REMOVE
+	RETURN 1
+ELSE
+	TARGET @,,1 Select what you want to dye.
+ENDIF
+RETURN 1
+
+ON=@Targon_Item
+IF (<ARGO.UID> == <UID>)
+	SRC.SYSMESSAGE @,,1 This dye tub is already colored.
+	RETURN 1
+ENDIF
+
+IF (<ARGO.BASEID> == <BASEID>) && (<ARGO.COLOR> == <COLOR>)
+  ARGO.MOREX += <MOREX>
+  SRC.SYSMESSAGE @,,1 You merged both dye tubs.
+  REMOVE
+  RETURN 1
+ENDIF
+
+if (<ARGO.BASEID> == i_dye_tub) && !(<ARGO.COLOR>)
+	if (<ARGO.CONT> == <SRC.FINDLAYER(21).UID>)
+		ARGO.REMOVE
+		SERV.NEWITEM i_evil_easter_2018_dye_tub
+		NEW.COLOR <COLOR>
+		NEW.MOREX = 1
+		NEW.LINK <SRC>
+		SRC.NEW.BOUNCE
+
+		SRC.SYSMESSAGE @,,1 You added one charge to this blank dye tube.
+
+		MOREX -= 1
+
+		IF (<MOREX> <= 0) || (<MOREX> > 100)
+			REMOVE
+		ENDIF
+
+		RETURN 1
+	ELSE
+		SRC.SYSMESSAGE @,,1 The dye tub must be inside your bag.
+	ENDIF
+ENDIF
+
+LOCAL.CHARGE_COST 1
+
+IF (<MOREX> <= 0) || (<MOREX> > 100)
+	REMOVE
+	RETURN 1
+ELSEIF (<ARGO.TYPE> != t_clothing)
+	SRC.SYSMESSAGE @,,1 You can't dye this item.
+	RETURN 1
+ELSEIF (<ARGO.ATTR> & attr_newbie) && !(STRMATCH(i_paragon_*, <ARGO.BASEID>))
+	LOCAL.CHARGE_COST 4
+ENDIF
+
+IF (<LOCAL.CHARGE_COST> > <MOREX>)
+	SRC.SYSMESSAGE @,,1 You must have <DLOCAL.CHARGE_COST> charges to dye this item.
+	RETURN 1
+ENDIF
+
+IF (<ARGO.TOPOBJ> == <SRC.UID>)
+	ARGO.COLOR <COLOR>
+	MOREX -= <LOCAL.CHARGE_COST>
+	IF (<MOREX> <= 0) || (<MOREX> > 100)
+		REMOVE
+	ENDIF
+
+	RETURN 1
+ELSE
+	SRC.SYSMESSAGE @,,1 The item to be dyed must be inside your backpack or bank.
+	RETURN 1
+ENDIF
+
+ON=@TargOn_Char
+	RETURN 1
+
+
+[FUNCTION f_become_evil_easter_2018_monster]
+IF (<ARGV> != 1)
+	RETURN
+ENDIF
+
+REF1 <ARGS>
+REF1.COLOR <DEF.EVIL_EASTER_2018_COLOR_<R1,<DEF.EVIL_EASTER_2018_COLOR_COUNT>>>
+REF1.EVENTS +e_evil_easter_2018
+REF1.STR <EVAL (<REF1.STR> * 12) / 10>
+REF1.MAXHITS <EVAL (<REF1.MAXHITS> * 12) / 10>
+REF1.HITS <REF1.MAXHITS>
+REF1.TAG.DISABLE_DEFAULT_LOOT 1
+
+[FUNCTION f_evil_easter_2018_decision]
+LOCAL.CHANCE 7
+
+IF (<STR> > 500)
+	LOCAL.CHANCE *= 3
+ENDIF
+
+IF !(<R<LOCAL.CHANCE>>)
+	SERV.NEWNPC <BASEID>
+	NEW.P <P>
+	NEW.HOME <NEW.P>
+	NEW.HOMEDIST 6
+
+	f_become_evil_easter_2018_monster <NEW.UID>
+
+	SERV.LOG A new <NEW.NAME> Evil Easter 2018 monster has been spawned at <NEW.P> (<NEW.REGION.NAME>) !
+ENDIF
+
+[FUNCTION f_get_evil_easter_2018_text_color]
+IF (<ARGS> == <DEF.EVIL_EASTER_2018_COLOR_1>)
+	RETURN 05
+ELSE
+	RETURN 01db
+ENDIF
+
+[PLEVEL 1]
+score_evil_easter_2018
+
+[FUNCTION score_evil_easter_2018]
+SRC.SYSMESSAGE @,,1 Monsters killed in Evil Easter 2018 event: <SRC.DTAG0.EVIL_EASTER_2018_MONSTERS_KILLED>
+SRC.SYSMESSAGE @,,1 Eggs found in Evil Easter 2018 event: <SRC.DTAG0.EVIL_EASTER_2018_EGGS_FOUND>
+
+[FUNCTION f_check_prizes_evil_easter_2018]
+IF (<ARGV> != 1)
+	RETURN
+ENDIF
+
+REF1 <ARGV[0]>
+
+IF (<REF1.TAG0.EVIL_EASTER_2018_MONSTERS_KILLED> == 150)
+	SERV.NEWITEM i_paragon_half_apron
+	NEW.CONT <REF1.findlayer.layer_pack>
+	REF1.SYSMESSAGE Congratulations! You've earned <NEW.NAME> for killing <DREF1.TAG0.EVIL_EASTER_2018_MONSTERS_KILLED> monsters !
+	SERV.LOG <REF1.NAME> has earned <NEW.NAME> for killing <DREF1.TAG0.EVIL_EASTER_2018_MONSTERS_KILLED> monsters.
+ELSEIF (<REF1.TAG0.EVIL_EASTER_2018_MONSTERS_KILLED> == 300)
+	SERV.NEWITEM i_paragon_cape
+	NEW.CONT <REF1.findlayer.layer_pack>
+	REF1.SYSMESSAGE Congratulations! You've earned <NEW.NAME> for killing <DREF1.TAG0.EVIL_EASTER_2018_MONSTERS_KILLED> monsters !
+	SERV.LOG <REF1.NAME> has earned <NEW.NAME> for killing <DREF1.TAG0.EVIL_EASTER_2018_MONSTERS_KILLED> monsters.
+ELSEIF (<REF1.TAG0.EVIL_EASTER_2018_MONSTERS_KILLED> == 500)
+	SERV.NEWITEM i_ethereal_mount_deed
+	NEW.CONT <REF1.findlayer.layer_pack>
+	REF1.SYSMESSAGE Congratulations! You've earned <NEW.NAME> for killing <DREF1.TAG0.EVIL_EASTER_2018_MONSTERS_KILLED> monsters !
+	SERV.LOG <REF1.NAME> has earned <NEW.NAME> for killing <DREF1.TAG0.EVIL_EASTER_2018_MONSTERS_KILLED> monsters.
+ELSEIF (<REF1.TAG0.EVIL_EASTER_2018_MONSTERS_KILLED> == 750)
+	SERV.NEWITEM i_paragon_ethereal_mount_talisman
+	NEW.CONT <REF1.findlayer.layer_pack>
+	REF1.SYSMESSAGE Congratulations! You've earned <NEW.NAME> for killing <DREF1.TAG0.EVIL_EASTER_2018_MONSTERS_KILLED> monsters !
+	SERV.LOG <REF1.NAME> has earned <NEW.NAME> for killing <DREF1.TAG0.EVIL_EASTER_2018_MONSTERS_KILLED> monsters.
+ELSEIF (<REF1.TAG0.EVIL_EASTER_2018_MONSTERS_KILLED> == 1000)
+	SERV.NEWITEM i_evil_easter_2018_ethereal_mount_talisman
+	NEW.CONT <REF1.findlayer.layer_pack>
+	REF1.SYSMESSAGE Congratulations! You've earned <NEW.NAME> for killing <DREF1.TAG0.EVIL_EASTER_2018_MONSTERS_KILLED> monsters !
+	SERV.LOG <REF1.NAME> has earned <NEW.NAME> for killing <DREF1.TAG0.EVIL_EASTER_2018_MONSTERS_KILLED> monsters.
+ELSEIF (<REF1.TAG0.EVIL_EASTER_2018_MONSTERS_KILLED> == 1250)
+	SERV.NEWITEM i_evil_easter_2018_jin_baori
+	NEW.CONT <REF1.findlayer.layer_pack>
+	REF1.SYSMESSAGE Congratulations! You've earned <NEW.NAME> for killing <DREF1.TAG0.EVIL_EASTER_2018_MONSTERS_KILLED> monsters !
+	SERV.LOG <REF1.NAME> has earned <NEW.NAME> for killing <DREF1.TAG0.EVIL_EASTER_2018_MONSTERS_KILLED> monsters.
+ENDIF
+
+[EVENTS e_evil_easter_2018]
+ON=@Click
+	MESSAGE @<f_get_evil_easter_2018_text_color <COLOR>>,,1 [Evil Easter]
+
+ON=@DeathCorpse
+	ARGO.TAG.DISABLE_CUT 1
+
+ON=@Death
+//	IF (<ATTACKER>)
+//		FOR 0 <EVAL <ATTACKER> - 1>
+//			REF1 <ATTACKER.<DLOCAL._FOR>>
+//			IF (<REF1.ISPLAYER>)
+//				REF1.TAG0.EVIL_EASTER_2018_MONSTERS_KILLED += 1
+//				f_check_prizes_evil_easter_2018 <REF1.UID>
+//			ENDIF
+//		ENDFOR
+//	ENDIF
+
+	FORCONT <UID>
+		REMOVE
+	ENDFOR
+
+	LOCAL.CHANCE 300
+
+	IF (<STR> > 500)
+		LOCAL.CHANCE /= 4
+	ENDIF
+
+	IF !(<R<LOCAL.CHANCE>>)
+		SERV.NEWITEM i_evil_easter_2018_dye_tub
+		NEW.CONT <UID>
+		SERV.LOG New Evil Easter Event 2018 Item dropped: <NEW.NAME>
+	ENDIF
+
+	IF (!<R36>)
+		NEWITEM <EVAL {i_ethereal_special_mount_deed 3 i_panotrue_g 4 i_panotrue_b 4 i_panotrue_w 4 i_deed_shop_marble_small 1 i_deed_shop_stone_small 1 i_deed_villa_2story 1 i_deed_house_patio_sand 1 i_deed_cabin_log_2story 1 i_deed_house_3room_fence 1 i_Wizardry_ring 2 i_20life_necklace 2 i_20Stamina_necklace 2 i_20Mana_necklace 2 i_paragon_ethereal_mount_talisman 5 i_Titan_ring 4 i_15Stamina_necklace 4 i_Knowledge_ring 4 i_Speedy_ring 4 i_ethereal_mount_deed 7 i_treasure_map_lvl_5 20 I_X_RUNEBOOK 20 i_keg_glb1 20 i_keg_gmb1 20 i_keg_grf1 20 i_chaos_shield 40 i_order_shield 40 i_magic_mask_tribal 50 i_magic_mask_orc 50 i_magic_helm_orc 50 i_magic_mask_deer 50 i_magic_mask_bear 50 i_magic_mask_bear_polar 50 i_magic_mask_bear_black 50 i_power_scroll 60}>
+		NEW.ATTR &= ~attr_newbie
+		SERV.LOG New Evil Easter Event 2018 Item dropped: <NEW.NAME>
+		NEW.CONT <UID>
+	ENDIF
+
+	SERV.NEWITEM i_gold
+	NEW.AMOUNT <EVAL <BALANCEARGOLD <GRANAMOBS>> * 2>
+	NEW.CONT <UID>
+
+[EOF]

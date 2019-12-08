@@ -1,0 +1,322 @@
+[itemdef i_quest_ovo_pascoa]
+name=Easter Egg
+id=i_eggs_fresh
+weight=1
+
+on=@PickUp_Pack
+	if !<tag0.finded>
+		tag0.finded = 1
+		src.tag0.eastereggs += 1
+		src.say @15 Got an Easter Egg!!
+		src.smsg @,,1 You now have <src.dtag0.eastereggs> Easter Eggs!
+		serv.b @15 <src.name> got an Easter Egg! He has now <src.dtag0.eastereggs> Eggs.
+		timerf 1,remove
+		return 0
+	endif
+	timerf 1,remove
+return 1
+
+on=@PickUp_Ground
+	if !<tag0.finded>
+		tag0.finded = 1
+		src.tag0.eastereggs += 1
+		src.say @15 Got an Easter Egg!!
+		src.smsg @,,1 You now have <src.dtag0.eastereggs> Easter Eggs!
+		serv.b @15 <src.name> got an Easter Egg! He has now <src.dtag0.eastereggs> Eggs.
+		timerf 1,remove
+		return 0
+	endif
+	timerf 1,remove
+return 1
+
+on=@dclick
+    src.tag0.eastereggs += 1
+    src.say @15 Got an Easter Egg!!
+    src.smsg @,,1 You now have <src.dtag0.eastereggs> Easter Eggs!
+    serv.b @15 <src.name> got an Easter Egg! He has now <src.dtag0.eastereggs> Eggs.
+    remove
+    return 1
+
+on=@timer
+    return 1
+
+[ITEMDEF i_controle_pascoa]
+ID = i_beeswax
+NAME = Pedra de Controle Pascoa
+
+ON=@CREATE
+attr = 010
+tag.ovos = 0
+var.ovopascoanumber = 0
+timer = 1
+
+On=@click
+message @33 Ovos criados : <dtag0.ovos>
+message @33 VAR: <dvar.ovopascoanumber>
+
+ON=@TIMER
+f_timer_pascoa
+timer = 1800
+tag0.ovos ++
+return 1
+
+[ITEMDEF i_anuncio_pascoa]
+ID = i_beeswax
+NAME = Pedra de Anuncio Pascoa
+
+ON=@CREATE
+attr = 010
+timer = 1
+
+ON=@TIMER
+ref1 = 040060cd3
+SERV.B @31 Esta acontecendo uma busca aos ovos de pascoa. Ha <eval <serv.itemdef.i_quest_ovo_pascoa.instances>> ovos ativos. Para ver as pistas atuais digite .questpascoa !
+SERV.B @31 Tempo ate a proxima pista: <timeformat 0,<ref1.timer>>.
+timer = 180
+return 1
+
+[FUNCTION f_timer_pascoa]
+if (<var0.ovopascoanumber> >= 52)
+	f_anuncia_ovos_restantes 0
+	return 1
+endif
+doswitch <var0.ovopascoanumber>
+	local.place = 0400a312a
+	local.place = 0400032b9
+	local.place = 1358,1479,10
+	local.place = 4582,3562,30
+	local.place = 3687,2813,35
+	local.place = 0400791f9
+	local.place = 5694,3657
+	local.place = 1676,2983
+	local.place = 4514,3395
+	local.place = 040005bed
+	local.place = 1612,3531
+	local.place = 1475,3780
+	local.place = 2131,3988,3
+	local.place = 4417,3335
+	local.place = 2506,4022,3
+	local.place = 2801,3511
+	local.place = 1587,1435
+	local.place = 3554,2139,20
+	local.place = 6129,4082,15
+	local.place = 5209,3667,-2
+	local.place = 5686,3028,15
+	local.place = 5578,3018,25
+	local.place = 6115,3051,13
+	local.place = 6109,2487,49
+	local.place = 5178,2607,2
+	local.place = 4698,1115
+	local.place = 5807,1326,-1
+	local.place = 6068,2409,42
+	local.place = 04007711a
+	local.place = 1009,2668,5
+	local.place = 2183,1989
+	local.place = 1945,2093
+	local.place = 2565,887
+	local.place = 1628,3323
+	local.place = 4590,3285
+	local.place = 4653,3660,100
+	local.place = 1325,546,30
+	local.place = 1162,2207,41
+	local.place = 2077,681
+	local.place = 1676,435
+	local.place = 1609,3372
+	local.place = 2022,3382
+	local.place = 584,1645,-4
+	local.place = 380,1438,1
+	local.place = 349,1303
+	local.place = 6075,3319,12
+	local.place = 1732,1396
+	local.place = 1184,208,22
+	local.place = 775,745
+	local.place = 3568,1198
+	local.place =  2142,1358
+	local.place =  0400720f9
+enddo
+f_gera_ovo <local.place>
+return 1
+
+[FUNCTION f_gera_ovo]
+serv.newitem i_quest_ovo_pascoa
+new.attr = attr_move_always
+new.color = <r2,100>
+if (<argv> > 1)
+	new.p <args>
+	local.color = <new.color>
+	local.newovo = <new.uid>
+	local.y = <argv[1]>
+	local.z = <argv[2]>
+else
+	new.cont = <args>
+	local.color = <new.color>
+	local.newovo = <new.uid>
+	ref1 = <args>
+	local.y = <ref1.p.y>
+	local.z = <ref1.p.z>
+endif
+SERV.B @<local.color> Busca aos ovos: mais um ovo de pascoa foi revelado. Coordenadas ????,<dlocal.y>,<dlocal.z>.
+var.ovopascoanumber += 1
+f_anuncia_ovos_restantes <local.newovo>
+return 1
+
+[FUNCTION f_anuncia_ovos_restantes]
+if (<args> != 0)
+	if (<serv.itemdef.i_quest_ovo_pascoa.instances> > 1)
+		local.number = <eval <serv.itemdef.i_quest_ovo_pascoa.instances> - 1>
+		SERV.B @31 Ainda existem outros <dlocal.number> ovos ativos:
+		local.ct = 1
+		forinstances i_quest_ovo_pascoa
+			if (<uid> != <args>)
+				local.y = <topobj.p.y>
+				local.z = <topobj.p.z>
+				if (<topobj.p.type> == t_forest)
+					local.terreno = "floresta"
+				elif (<topobj.p.type> == t_water)
+					local.terreno = "agua"
+				elif (<topobj.p.type> == t_normal)
+					local.terreno = "terra ou construção."
+				elif (<topobj.p.type> == t_swamp)
+					local.terreno = "pântano."
+				elif (<topobj.p.type> == t_rock)
+					local.terreno = "pedra, areia ou mina."
+				elif (<topobj.p.type> == t_sand)
+					local.terreno = "areia ou deserto."
+				elif (<topobj.p.type> == t_dirt)
+					local.terreno = "plantação ou terra arável."
+				elif (<topobj.p.type> == t_grass)
+					local.terreno = "grama ou flores."
+				elif (<topobj.p.type> == t_jungle)
+					local.terreno = "selva (meio das arvores)."
+				else
+					local.terreno = <p.type>
+				endif
+				if <tag0.repeat>
+					SERV.B @<color> <local.ct>. Coordenadas ????,<dlocal.y>,<dlocal.z>. Terreno: <local.terreno>. <qval (<topobj> != <uid>)?Esta em um <topobj.name>.: Esta no chao.>
+					tag0.repeat += 1
+				else
+					SERV.B @<color> <local.ct>. Coordenadas ????,<dlocal.y>,<dlocal.z>. Terreno: <local.terreno>.
+					tag0.repeat += 1
+				endif
+				local.ct ++
+			endif
+		endfor
+	else
+	SERV.B @33 Nao ha outros ovos ativos.
+	endif
+else
+	if (<serv.itemdef.i_quest_ovo_pascoa.instances> >= 1)
+		local.number = <eval <serv.itemdef.i_quest_ovo_pascoa.instances>>
+		SERV.B @31 Ainda existem <dlocal.number> ovos de pascoa ativos:
+		local.ct = 1
+		forinstances i_quest_ovo_pascoa
+			if (<uid> != <args>)
+				local.y = <topobj.p.y>
+				local.z = <topobj.p.z>
+				if (<topobj.p.type> == t_forest)
+					local.terreno = "floresta"
+				elif (<topobj.p.type> == t_water)
+					local.terreno = "agua"
+				elif (<topobj.p.type> == t_normal)
+					local.terreno = "terra ou construção."
+				elif (<topobj.p.type> == t_swamp)
+					local.terreno = "pântano."
+				elif (<topobj.p.type> == t_rock)
+					local.terreno = "pedra, areia ou mina."
+				elif (<topobj.p.type> == t_sand)
+					local.terreno = "areia ou deserto."
+				elif (<topobj.p.type> == t_dirt)
+					local.terreno = "plantação ou terra arável."
+				elif (<topobj.p.type> == t_grass)
+					local.terreno = "grama ou flores."
+				elif (<topobj.p.type> == t_jungle)
+					local.terreno = "selva (meio das arvores)."
+				else
+					local.terreno = <p.type>
+				endif
+				if <tag0.repeat> >= 5
+					SERV.B @<color> <local.ct>. Coordenadas ????,<dlocal.y>,<dlocal.z>. Terreno: <local.terreno>. <qval (<topobj> != <uid>)?Esta em um <topobj.name>.: Esta no chao.>.
+					tag0.repeat += 1
+				elif <tag0.repeat>
+					SERV.B @<color> <local.ct>. Coordenadas ????,<dlocal.y>,<dlocal.z>. Terreno: <local.terreno>. <qval (<topobj> != <uid>)?Esta em um <topobj.name>.: Esta no chao.>
+					tag0.repeat += 1
+				else
+					SERV.B @<color> <local.ct>. Coordenadas ????,<dlocal.y>,<dlocal.z>. Terreno: <local.terreno>.
+					tag0.repeat += 1
+				endif
+				local.ct ++
+			endif
+		endfor
+	else
+	SERV.B @31 Nao ha mais ovos de pascoa ativos.
+	endif
+endif
+return 1
+
+// [PLEVEL 1]
+// questpascoa
+
+[FUNCTION questpascoa]
+	if (<serv.itemdef.i_quest_ovo_pascoa.instances> >= 1)
+		local.number = <eval <serv.itemdef.i_quest_ovo_pascoa.instances>>
+		smsg @31 Ainda existem <dlocal.number> ovos de pascoa ativos:
+		local.ct = 1
+		ref1 = <src.uid>
+		forinstances i_quest_ovo_pascoa
+			if (<uid> != <args>)
+				local.y = <topobj.p.y>
+				local.z = <topobj.p.z>
+				if (<topobj.p.type> == t_forest)
+					local.terreno = "floresta"
+				elif (<topobj.p.type> == t_water)
+					local.terreno = "agua"
+				elif (<topobj.p.type> == t_normal)
+					local.terreno = "terra ou construção."
+				elif (<topobj.p.type> == t_swamp)
+					local.terreno = "pântano."
+				elif (<topobj.p.type> == t_rock)
+					local.terreno = "pedra, areia ou mina."
+				elif (<topobj.p.type> == t_sand)
+					local.terreno = "areia ou deserto."
+				elif (<topobj.p.type> == t_dirt)
+					local.terreno = "plantação ou terra arável."
+				elif (<topobj.p.type> == t_grass)
+					local.terreno = "grama ou flores."
+				elif (<topobj.p.type> == t_jungle)
+					local.terreno = "selva (meio das arvores)."
+				else
+					local.terreno = <p.type>
+				endif
+				if <tag0.repeat> >= 2
+					ref1.SMSG @<color> <local.ct>. Coordenadas ????,<dlocal.y>,<dlocal.z>. Terreno: <local.terreno>. <qval (<topobj> != <uid>)?Esta em um <topobj.name>.: Esta no chao.>
+				elif <tag0.repeat>
+					ref1.SMSG @<color> <local.ct>. Coordenadas ????,<dlocal.y>,<dlocal.z>. Terreno: <local.terreno>.
+				else
+					ref1.SMSG @<color> <local.ct>. Coordenadas ????,<dlocal.y>,<dlocal.z>.
+				endif
+				local.ct ++
+			endif
+		endfor
+	else
+		smsg "@31,,1 Não há mais ovos de pascoa ativos."
+	endif
+	ref2 = 040060cd3
+	smsg "@,,1 <dref2.tag0.ovos> dos 52 ovos ja foram revelados."
+	smsg "@,,1 Tempo até a próxima pista: <timeformat 0,<ref2.timer>>"
+	return 1
+
+
+
+[FUNCTION rankpascoa]
+        for h <serv.accounts>
+                local.i=0
+                if (<serv.account.<eval <local.h> +-1>.chars>)
+                        for i <serv.account.<eval <local.h> +-1>.chars>
+                                ref1 <serv.account.<eval <local.h> +-1>.char.<eval <local.i> +-1>.uid>
+                                if <ref1.tag0.eastereggs>
+									src.smsg @,,1 <ref1.name> : <dref1.tag0.eastereggs> ovos.
+								endif
+                        endfor
+                endif
+        endfor
+return 1

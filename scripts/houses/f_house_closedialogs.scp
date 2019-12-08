@@ -1,0 +1,22 @@
+[FUNCTION f_house_closedialogs]
+if <isplayer>
+	if <isonline>
+		clearctags housing_view
+	endif
+endif
+dialogclose d_house_menu
+dialogclose d_house_menu_access
+dialogclose d_house_menu_options
+dialogclose d_house_menu_view
+dialogclose d_house_confirm_demolish
+dialogclose d_house_confirm_placement
+// adicionar gumps do sistema antigo 
+dialogclose d_house_private
+dialogclose d_house_colist
+dialogclose d_house_flist
+dialogclose d_house_rfriend_all
+dialogclose d_house_redeed
+dialogclose d_house_rcoowner_all
+dialogclose d_house_staff
+dialogclose d_house_removec
+dialogclose d_house_rfriend

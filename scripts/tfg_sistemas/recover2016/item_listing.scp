@@ -1,0 +1,140 @@
+[COMMENT script_tabela_recuperacao]
+CREATE TABLE `itens_para_recuperacao` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `loginconta` varchar(16) NOT NULL,
+  `uid` varchar(16) NOT NULL,
+  `origem` varchar(16) NOT NULL,
+  `baseid` varchar(255) NOT NULL,
+  `nome` varchar(255) NOT NULL,
+  `cor` varchar(16) NOT NULL,
+  `quantidade` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+[COMMENT script_tabela_itens_2017]
+CREATE TABLE `itens_recuperar_2017` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `loginconta` varchar(16) NOT NULL,
+  `baseid` varchar(255) NOT NULL,
+  `nome` varchar(255) NOT NULL,
+  `cor` varchar(16) NOT NULL,
+  `quantidade` int(11) NOT NULL,
+  `recuperado` tinyint(1) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+[COMMENT script_preenchimento_tabela]
+TRUNCATE itens_recuperar_2017;
+INSERT INTO itens_recuperar_2017 (loginconta, baseid, nome, cor, quantidade, recuperado) SELECT loginconta, baseid, nome, cor, LEAST(400000, SUM(quantidade)), 0 FROM itens_para_recuperacao where baseid = 'i_gold' group by loginconta, baseid, nome;
+INSERT INTO itens_recuperar_2017 (loginconta, baseid, nome, cor, quantidade, recuperado) SELECT loginconta, baseid, nome, cor, LEAST(100, SUM(quantidade)), 0 FROM itens_para_recuperacao where baseid = 'i_ingot_blackrock' group by loginconta, baseid, nome;
+INSERT INTO itens_recuperar_2017 (loginconta, baseid, nome, cor, quantidade, recuperado) SELECT loginconta, baseid, nome, cor, LEAST(200, SUM(quantidade)), 0 FROM itens_para_recuperacao where baseid = 'i_ingot_bloodrock' group by loginconta, baseid, nome;
+INSERT INTO itens_recuperar_2017 (loginconta, baseid, nome, cor, quantidade, recuperado) SELECT loginconta, baseid, nome, cor, LEAST(300, SUM(quantidade)), 0 FROM itens_para_recuperacao where baseid = 'i_ingot_verite' group by loginconta, baseid, nome;
+INSERT INTO itens_recuperar_2017 (loginconta, baseid, nome, cor, quantidade, recuperado) SELECT loginconta, baseid, nome, cor, LEAST(10, SUM(quantidade)), 0 FROM itens_para_recuperacao where baseid = 'i_panotrue_b' group by loginconta, baseid, nome;
+INSERT INTO itens_recuperar_2017 (loginconta, baseid, nome, cor, quantidade, recuperado) SELECT loginconta, baseid, nome, cor, LEAST(10, SUM(quantidade)), 0 FROM itens_para_recuperacao where baseid = 'i_panotrue_w' group by loginconta, baseid, nome;
+INSERT INTO itens_recuperar_2017 (loginconta, baseid, nome, cor, quantidade, recuperado) SELECT loginconta, baseid, nome, cor, LEAST(10, SUM(quantidade)), 0 FROM itens_para_recuperacao where baseid = 'i_panotrue_g' group by loginconta, baseid, nome;
+INSERT INTO itens_recuperar_2017 (loginconta, baseid, nome, cor, quantidade, recuperado) SELECT loginconta, baseid, nome, cor, LEAST(20, SUM(quantidade)), 0 FROM itens_para_recuperacao where baseid = 'i_except_War_fork' and nome not like '%evento%' group by loginconta, baseid;
+INSERT INTO itens_recuperar_2017 (loginconta, baseid, nome, cor, quantidade, recuperado) SELECT loginconta, baseid, nome, cor, LEAST(20, SUM(quantidade)), 0 FROM itens_para_recuperacao where baseid = 'i_except_kryss' and nome not like '%evento%' group by loginconta, baseid;
+INSERT INTO itens_recuperar_2017 (loginconta, baseid, nome, cor, quantidade, recuperado) SELECT loginconta, baseid, nome, cor, LEAST(20, SUM(quantidade)), 0 FROM itens_para_recuperacao where baseid = 'i_except_axe_exec' and nome not like '%evento%' group by loginconta, baseid;
+INSERT INTO itens_recuperar_2017 (loginconta, baseid, nome, cor, quantidade, recuperado) SELECT loginconta, baseid, nome, cor, LEAST(10, SUM(quantidade)), 0 FROM itens_para_recuperacao where baseid = 'i_bow_bloodrock' group by loginconta, baseid;
+INSERT INTO itens_recuperar_2017 (loginconta, baseid, nome, cor, quantidade, recuperado) SELECT loginconta, baseid, nome, cor, LEAST(5, SUM(quantidade)), 0 FROM itens_para_recuperacao where baseid = 'i_bow_blackrock' group by loginconta, baseid;
+INSERT INTO itens_recuperar_2017 (loginconta, baseid, nome, cor, quantidade, recuperado) SELECT loginconta, baseid, nome, cor, LEAST(1, SUM(quantidade)), 0 FROM itens_para_recuperacao where baseid like 'i_pet_%' and baseid != 'i_pet_vip' and nome not like '%Storm%' and nome not like '%Fire%' and nome not like '%Marine%' and cor != '00' and (nome like '% orn%' or nome like '% zostrich' or nome like '% oclock' or nome like '% mustang' or nome like '% horse' or nome like '% llama' or nome like '% lhama') group by loginconta, baseid, cor;
+INSERT INTO itens_recuperar_2017 (loginconta, baseid, nome, cor, quantidade, recuperado) SELECT loginconta, baseid, nome, cor, LEAST(4, SUM(quantidade)), 0 FROM itens_para_recuperacao where baseid = 'i_bloodrock_platemail_leggings' group by loginconta, baseid;
+INSERT INTO itens_recuperar_2017 (loginconta, baseid, nome, cor, quantidade, recuperado) SELECT loginconta, baseid, nome, cor, LEAST(4, SUM(quantidade)), 0 FROM itens_para_recuperacao where baseid = 'i_BLOODROCK_PLATEMAIL' group by loginconta, baseid;
+INSERT INTO itens_recuperar_2017 (loginconta, baseid, nome, cor, quantidade, recuperado) SELECT loginconta, baseid, nome, cor, LEAST(4, SUM(quantidade)), 0 FROM itens_para_recuperacao where baseid = 'i_BLOODROCK_female_PLATEMAIL' group by loginconta, baseid;
+INSERT INTO itens_recuperar_2017 (loginconta, baseid, nome, cor, quantidade, recuperado) SELECT loginconta, baseid, nome, cor, LEAST(4, SUM(quantidade)), 0 FROM itens_para_recuperacao where baseid = 'i_bloodrock_heater_shield' group by loginconta, baseid;
+INSERT INTO itens_recuperar_2017 (loginconta, baseid, nome, cor, quantidade, recuperado) SELECT loginconta, baseid, nome, cor, LEAST(2, SUM(quantidade)), 0 FROM itens_para_recuperacao where baseid = 'i_blackrock_platemail_leggings' group by loginconta, baseid;
+INSERT INTO itens_recuperar_2017 (loginconta, baseid, nome, cor, quantidade, recuperado) SELECT loginconta, baseid, nome, cor, LEAST(2, SUM(quantidade)), 0 FROM itens_para_recuperacao where baseid = 'i_blackrock_PLATEMAIL' group by loginconta, baseid;
+INSERT INTO itens_recuperar_2017 (loginconta, baseid, nome, cor, quantidade, recuperado) SELECT loginconta, baseid, nome, cor, LEAST(2, SUM(quantidade)), 0 FROM itens_para_recuperacao where baseid = 'i_blackrock_female_PLATEMAIL' group by loginconta, baseid;
+INSERT INTO itens_recuperar_2017 (loginconta, baseid, nome, cor, quantidade, recuperado) SELECT loginconta, baseid, nome, cor, LEAST(2, SUM(quantidade)), 0 FROM itens_para_recuperacao where baseid = 'i_blackrock_heater_shield' group by loginconta, baseid;
+INSERT INTO itens_recuperar_2017 (loginconta, baseid, nome, cor, quantidade, recuperado) SELECT loginconta, baseid, nome, cor, LEAST(20, SUM(quantidade)), 0 FROM itens_para_recuperacao where baseid = 'i_leather_leggings_Wyrm' group by loginconta, baseid;
+INSERT INTO itens_recuperar_2017 (loginconta, baseid, nome, cor, quantidade, recuperado) SELECT loginconta, baseid, nome, cor, LEAST(20, SUM(quantidade)), 0 FROM itens_para_recuperacao where baseid = 'i_leather_tunic_Wyrm' group by loginconta, baseid;
+INSERT INTO itens_recuperar_2017 (loginconta, baseid, nome, cor, quantidade, recuperado) SELECT loginconta, baseid, nome, cor, LEAST(20, SUM(quantidade)), 0 FROM itens_para_recuperacao where baseid = 'i_leather_gorget_Wyrm' group by loginconta, baseid;
+INSERT INTO itens_recuperar_2017 (loginconta, baseid, nome, cor, quantidade, recuperado) SELECT loginconta, baseid, nome, cor, LEAST(20, SUM(quantidade)), 0 FROM itens_para_recuperacao where baseid = 'i_leather_gloves_Wyrm' group by loginconta, baseid;
+INSERT INTO itens_recuperar_2017 (loginconta, baseid, nome, cor, quantidade, recuperado) SELECT loginconta, baseid, nome, cor, LEAST(20, SUM(quantidade)), 0 FROM itens_para_recuperacao where baseid = 'i_leather_sleeves_Wyrm' group by loginconta, baseid;
+INSERT INTO itens_recuperar_2017 (loginconta, baseid, nome, cor, quantidade, recuperado) SELECT loginconta, baseid, nome, cor, LEAST(750, SUM(quantidade)), 0 FROM itens_para_recuperacao where baseid = 'i_potion_life_boost_great' group by loginconta, baseid;
+INSERT INTO itens_recuperar_2017 (loginconta, baseid, nome, cor, quantidade, recuperado) SELECT loginconta, baseid, nome, cor, LEAST(750, SUM(quantidade)), 0 FROM itens_para_recuperacao where baseid = 'i_potion_mana_boost_great' group by loginconta, baseid;
+INSERT INTO itens_recuperar_2017 (loginconta, baseid, nome, cor, quantidade, recuperado) SELECT loginconta, baseid, nome, cor, LEAST(500, SUM(quantidade)), 0 FROM itens_para_recuperacao where baseid = 'i_potion_refilling_great' group by loginconta, baseid;
+INSERT INTO itens_recuperar_2017 (loginconta, baseid, nome, cor, quantidade, recuperado) SELECT loginconta, baseid, nome, cor, LEAST(500, SUM(quantidade)), 0 FROM itens_para_recuperacao where baseid = 'i_scroll_flamestrike' group by loginconta, baseid;
+INSERT INTO itens_recuperar_2017 (loginconta, baseid, nome, cor, quantidade, recuperado) SELECT loginconta, baseid, nome, cor, LEAST(20, SUM(quantidade)), 0 FROM itens_para_recuperacao where baseid = 'i_bless_robe' group by loginconta, baseid;
+INSERT INTO itens_recuperar_2017 (loginconta, baseid, nome, cor, quantidade, recuperado) SELECT loginconta, baseid, nome, cor, LEAST(5, SUM(quantidade)), 0 FROM itens_para_recuperacao where baseid = 'i_magic_mask_bear' and nome not like '%@%,,%' group by loginconta, baseid;
+INSERT INTO itens_recuperar_2017 (loginconta, baseid, nome, cor, quantidade, recuperado) SELECT loginconta, baseid, nome, cor, LEAST(5, SUM(quantidade)), 0 FROM itens_para_recuperacao where baseid = 'i_magic_mask_orc' group by loginconta, baseid;
+INSERT INTO itens_recuperar_2017 (loginconta, baseid, nome, cor, quantidade, recuperado) SELECT loginconta, baseid, nome, cor, LEAST(5, SUM(quantidade)), 0 FROM itens_para_recuperacao where baseid = 'i_magic_helm_orc' group by loginconta, baseid;
+INSERT INTO itens_recuperar_2017 (loginconta, baseid, nome, cor, quantidade, recuperado) SELECT loginconta, baseid, nome, cor, LEAST(5, SUM(quantidade)), 0 FROM itens_para_recuperacao where baseid = 'i_magic_mask' group by loginconta, baseid;
+INSERT INTO itens_recuperar_2017 (loginconta, baseid, nome, cor, quantidade, recuperado) SELECT loginconta, baseid, nome, cor, LEAST(5, SUM(quantidade)), 0 FROM itens_para_recuperacao where baseid = 'i_magic_mask_tribal' group by loginconta, baseid;
+INSERT INTO itens_recuperar_2017 (loginconta, baseid, nome, cor, quantidade, recuperado) SELECT loginconta, baseid, nome, cor, LEAST(20, SUM(quantidade)), 0 FROM itens_para_recuperacao where baseid = 'i_ghealsash' group by loginconta, baseid;
+INSERT INTO itens_recuperar_2017 (loginconta, baseid, nome, cor, quantidade, recuperado) SELECT loginconta, baseid, nome, cor, LEAST(1, SUM(quantidade)), 0 FROM itens_para_recuperacao where baseid = 'i_combat_robe' group by loginconta, baseid;
+INSERT INTO itens_recuperar_2017 (loginconta, baseid, nome, cor, quantidade, recuperado) SELECT loginconta, baseid, nome, cor, LEAST(1, SUM(quantidade)), 0 FROM itens_para_recuperacao where baseid = 'i_worker_robe' group by loginconta, baseid;
+UPDATE itens_recuperar_2017 SET nome = substr(nome, 1, locate('crafted', nome) - 2) WHERE nome like '%crafted by%';
+UPDATE itens_recuperar_2017 SET nome = substr(nome, locate('poisoned', nome) + 9) WHERE nome like '%poisoned%';
+
+[FUNCTION f_undress_robes]
+FORINSTANCES i_worker_robe
+	CONT=<TOPOBJ.FINDLAYER.layer_pack.UID>
+ENDFOR
+
+FORINSTANCES i_combat_robe
+	CONT=<TOPOBJ.FINDLAYER.layer_pack.UID>
+ENDFOR
+
+[FUNCTION f_list_items]
+SERV.LOG Listagem de itens iniciada.
+VAR.TOTAL_ITEMS_LISTED 0
+
+f_undress_robes
+
+DB.EXECUTE TRUNCATE itens_para_recuperacao
+DB.EXECUTE TRUNCATE itens_recuperar_2017
+
+FOR X 0 <EVAL <SERV.ACCOUNTS> - 1>
+    IF (<SERV.ACCOUNT.<dLOCAL.X>.CHARS> > 0)
+    	IF (<SERV.ACCOUNT.<dLOCAL.X>.PLEVEL> == 1)
+	        FOR Y 0 <EVAL <SERV.ACCOUNT.<dLOCAL.X>.CHARS> -1>
+	            REF1 = <SERV.ACCOUNT.<dLOCAL.X>.CHAR.<dLOCAL.Y>>
+	            REF1.f_list_items_chars <REF1.ACCOUNT>,<REF1.FINDLAYER.layer_pack.UID>
+	            REF1.f_list_items_chars <REF1.ACCOUNT>,<REF1.FINDLAYER.layer_bankbox.UID>
+	        ENDFOR
+	    ENDIF
+    ENDIF
+ENDFOR
+
+SERV.NEWNPC c_dog
+NEW.go Britain
+NEW.f_list_items_world
+NEW.REMOVE
+
+SERV.LOG Listagem de itens finalizada: <dVAR.TOTAL_ITEMS_LISTED>.
+VAR.TOTAL_ITEMS_LISTED
+
+[FUNCTION f_list_items_world]
+
+FORITEMS 9999
+	IF (<REGION.ISEVENT.r_house_private>)
+		REF1 <UID.<REGION.UID>.MORE1>
+		f_verify_items_world <REF1.ACCOUNT>,<UID>
+	ENDIF
+ENDFOR
+
+[function f_verify_items_world]
+IF (<TYPE> == t_container) || (<TYPE> == t_secure)
+	FORCONT <ARGV[1]> 0
+		f_verify_items_world <ARGV[0]>,<UID>
+	ENDFOR
+ELSE
+	DB.EXECUTE INSERT INTO itens_para_recuperacao (loginconta, uid, origem, baseid, nome, cor, quantidade) VALUES("<ARGV[0]>", "<UID>", "HOUSE","<BASEID>", "<NAME>", "<COLOR>", "<AMOUNT>")
+	VAR.TOTAL_ITEMS_LISTED += 1
+ENDIF
+
+
+[FUNCTION f_list_items_chars]
+IF (<ARGV[1]>)
+	FORCONT <ARGV[1]> 0
+		IF (<TYPE> == t_container) || (<TYPE> == t_secure)
+			f_list_items_chars <ARGV[0]>,<UID>
+		ELSE
+			DB.EXECUTE INSERT INTO itens_para_recuperacao (loginconta, uid, origem, baseid, nome, cor, quantidade) VALUES("<ARGV[0]>", "<UID>", "CHAR","<BASEID>", "<NAME>", "<COLOR>", "<AMOUNT>")
+			VAR.TOTAL_ITEMS_LISTED += 1
+		ENDIF
+	ENDFOR
+ENDIF
+
+[EOF]

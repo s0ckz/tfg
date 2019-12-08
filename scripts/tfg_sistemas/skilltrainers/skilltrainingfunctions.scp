@@ -1,0 +1,23 @@
+[function f_increase_trained_skill]
+//f_increase_trained_skill <dtag.skill>,<eval <dlocal.playerlevel>+1>
+
+local.skill <argv[0]>
+local.level <argv[1]>
+
+if (<local.level> < 8)
+    local.newskillvalue <eval (<dlocal.level>*50)+700> //ex.: level 3 = 15.0 + 70.0 = 85.0
+elif (<local.level> == 8)
+    local.newskillvalue <eval (<dlocal.level>*50)+750> //ex.: level 7 = 35.0 + 75.0 = 110.0
+else
+    src.sysmessage An error ocurred. Send a Page please. Tfg Staff.
+    s error SkillTrainingFunctions.scp
+    return 1
+endif
+
+src.<dlocal.skill> = <dlocal.newskillvalue>
+
+[function f_pintar_trainer_roupas]
+    src.findlayer.22.color <args>
+    src.findlayer.6.color <args>
+
+[EOF]

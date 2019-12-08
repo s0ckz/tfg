@@ -1,0 +1,75 @@
+[FUNCTION tmsg]
+  serv.newitem i_anuncia_EVENTO_geral
+  new.p 2341,541,1
+  new.tag.MINUTOS <ARGV[0]>
+  new.tag.MSG <ARGV[1]>
+  new.update
+SERV.B @31 Em <eval <ARGV[0]>> minutos:
+SERV.B @55 <ARGV[1]>
+return 1
+
+[ITEMDEF i_anuncia_evento_geral]
+ID=i_crystal_ball
+NAME=Timer MSG Evento [DO NOT REMOVE]
+WEIGHT=200
+TYPE=t_eq_script
+
+ON=@Create
+    ATTR=attr_decay|attr_invis
+	TIMER=60
+	TAG.MINUTOS=15
+
+ON=@TIMER
+tag.minutos -= 1
+SERV.B @31 Em <dtag.minutos> minutos:
+SERV.B @55 <TAG.MSG>
+	if (<tag0.minutos> < 1)
+		remove
+	else
+		timer = 60
+	endif
+RETURN 1
+
+
+
+[ITEMDEF i_anuncia_novallama]
+ID=i_crystal_ball
+NAME=Timer MSG Evento [DO NOT REMOVE]
+WEIGHT=200
+TYPE=t_eq_script
+
+ON=@Create
+    ATTR=attr_decay|attr_invis
+	TIMER=1800
+	TAG.HORAS=64
+
+ON=@TIMER
+tag.horas -= 1
+SERV.B @31 Novidade: o respawn de uma nova llama nunca vista em nosso mundo aparecera em <timeformat 0,<eval <tag.horas> * 1800>>!
+SERV.b @55 Siga nossa pagina Facebook para ter mais pistas sobre sua localizacao !
+TIMER = 1800
+RETURN 1
+
+
+
+[ITEMDEF i_anuncia_copa]
+ID=i_crystal_ball
+NAME=Timer MSG Evento [DO NOT REMOVE]
+WEIGHT=200
+TYPE=t_eq_script
+
+ON=@Create
+    ATTR=attr_decay|attr_invis
+	TIMER=1800
+
+ON=@TIMER
+SERV.B @91 Mega Evento na TFG: E hoje tem mais! Tem FFA e Quest Relampago valendo mais duas vagas na #CopaTFG. Encontro as 21h50 na Commerce Room para o FFA. A Quest comeca logo depois do FFA (cerca de 22h50).
+//SERV.B @91 Mega Evento na TFG: Hoje tem mais uma etapa das eliminatorias da #CopaTFG : Camp 1x1 valendo Cabeca de Chave. Nos encontramos as 21h50 na Commerce Room :)
+TIMER = 1800
+RETURN 1
+
+// [PLEVEL 1]
+// steam
+
+[FUNCTION steam]
+WEBLINK tinyurl.com/hug87ky

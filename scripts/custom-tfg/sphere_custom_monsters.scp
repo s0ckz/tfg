@@ -1,0 +1,4445 @@
+////////////////////////////////////////////////
+/////////////// Elder Daemon ///////////////////
+////////////////////////////////////////////////
+[DEFNAME elder_daemon_colors]
+color2	0806
+color3	0805
+color4	0787
+color5	078b
+color6	078a
+color7	0796
+color8	0794
+color9	0793
+color10	0800
+
+
+[CHARDEF c_m_daemon_elder]
+id=c_daemon_w_sword
+Name=Elder Daemon
+DAM=36,63
+ARMOR=25
+CAN=MT_WALK|MT_RUN|MT_FLY
+AVERSIONS=r_civilization
+MOVERATE=30
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	TAG.LEVEL 1
+	MAXHITS={3000 4000}
+	COLOR=0798
+	NPC=brain_dragon
+	STR={855 1000}
+	DEX={100 120}
+	MOVERATE=25
+	INT=120
+	PARRYING={55.0 65.0}
+	MAGERY=1.0
+	MAGICRESISTANCE={60.0 75.0}
+	TACTICS={80.0 82.0}
+	WRESTLING={87.0 89.0}
+	SWORDSMANSHIP={87.0 89.0}
+	FENCING={87.0 89.0}
+	MACEFIGHTING={87.0 89.0}
+	ARCHERY={87.0 89.0}
+	FAME={10000}
+	KARMA=-10000
+	//SPELLCIRCLE=3 5
+	ITEMNEWBIE=i_light_source
+
+
+ON=@DEATH
+	IF <TAG0.LEVEL> < 10
+		TAG.LEVEL +=1
+		STR += <R50,150>
+		MAXHITS += <R500,1500>
+		WRESTLING +=50
+		TACTICS +=50
+		SWORDSMANSHIP +=50
+		FENCING +=50
+		COLOR <DEF0.color<dTAG0.LEVEL>>
+		HITS <MAXHITS>
+		RETURN 1
+	ELSE
+		newitem i_gold_maker
+		new.p <p>
+		// NEWITEM i_powerscroll
+		// NEW.TAG.PSBONUS 5
+		// DORAND 20
+		// 	NEW.TAG.PSSKILL 0
+		// 	NEW.TAG.PSSKILL 1
+		// 	NEW.TAG.PSSKILL 2
+		// 	NEW.TAG.PSSKILL 5
+		// 	NEW.TAG.PSSKILL 7
+		// 	NEW.TAG.PSSKILL 16
+		// 	NEW.TAG.PSSKILL 17
+		// 	NEW.TAG.PSSKILL 21
+		// 	NEW.TAG.PSSKILL 25
+		// 	NEW.TAG.PSSKILL 26
+		// 	NEW.TAG.PSSKILL 27
+		// 	NEW.TAG.PSSKILL 31
+		// 	NEW.TAG.PSSKILL 34
+		// 	NEW.TAG.PSSKILL 35
+		// 	NEW.TAG.PSSKILL 39
+		// 	NEW.TAG.PSSKILL 41
+		// 	NEW.TAG.PSSKILL 40
+		// 	NEW.TAG.PSSKILL 42
+		// 	NEW.TAG.PSSKILL 43
+		// 	NEW.TAG.PSSKILL 46
+		// ENDDO
+	ENDIF
+		//NEW.CONT <UID>
+
+
+ON=@NPCRestock
+	ITEM=i_gold,{11000}
+	//ITEM=i_ingot_adamantium,{1 2}
+	//ITEM=t_vanquish_weapon, {1}
+
+
+
+///////////////////////////////////////////////////////////////////
+///////////////////// Savages /////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+
+[CHARDEF c_savage_rider]
+DEFNAME=c_savage_rider
+NAME=#NAMES_SAVAGE_MALE the Savage Rider
+ID=C_MAN
+CAN=MT_WALK|MT_FLY
+DESIRES=i_gold,e_notoriety
+AVERSIONS=t_TRAP,t_eerie_stuff
+DAM=29,34
+MOVERATE=10
+TSPEECH=spk_human_prime
+TSPEECH=spk_human_default
+
+CATEGORY=News
+SUBSECTION=Savages
+DESCRIPTION=Savage Rider
+
+ON=@Create
+TAG.LOOTPROPRIO 1
+COLOR=0
+STR={151 170}
+MAXHITS 500
+DEX={92 130}
+INT={51 65}
+
+FENCING={89.0 101.0}
+WRESTLING={72.5 95.0}
+TACTICS={72.5 95.0}
+MAGICRESISTANCE={72.5 95.0}
+
+NPC=brain_monster
+KARMA=-3000
+FAME=1000
+
+ITEMNEWBIE=i_hair_long
+ITEMNEWBIE=i_mt_ostard_zostrich
+COLOR 0795
+ITEMNEWBIE=i_tribal_spear
+ITEMNEWBIE=i_mask_blue
+ITEMNEWBIE=i_bone_arms
+ITEMNEWBIE=i_bone_leggings
+ITEMNEWBIE i_bone_chest
+
+ON=@NPCRestock
+ITEM=i_tribal_spear,R4
+ITEM=i_mask_blue,R40
+ITEM=i_gold,{700 1500}
+ITEM=c_savage_zos
+
+
+ON=@DEATH
+	IF !(<R50>)
+		NEWNPC c_savage_zos
+		NEW.P <P>
+		NEW.HOME <P>
+		NEW.HOMEDIST 6
+	ENDIF
+
+[CHARDEF c_savage_zos]
+ID=c_ostard_zostrich
+NAME=Savage Zostrich
+DAM=5,9
+ARMOR=15
+
+ON=@Create
+	COLOR=0795
+	NPC=brain_animal
+	MAXHITS={150 200}
+	STR={120 160}
+	DEX={110 255}
+	INT={16 30}
+	PARRYING={75.0 100.0}
+	MAGICRESISTANCE={65.0 120.0}
+	TACTICS={79.0 119.0}
+	WRESTLING={69.0 99.0}
+	TAMING=100.0
+	FAME=10
+	KARMA={1 99}
+
+[CHARDEF c_savage_shaman]
+DEFNAME=c_savage_shaman
+NAME=#NAMES_SAVAGE_FEMALE the Savage Shaman
+ID=C_WOMAN
+CAN=MT_WALK|MT_FLY
+DESIRES=i_gold,e_notoriety
+AVERSIONS=t_TRAP,t_eerie_stuff
+DAM=7,18
+TSPEECH=spk_human_prime
+TSPEECH=spk_human_default
+
+CATEGORY=News
+SUBSECTION=Savages
+DESCRIPTION=Savage Shaman
+
+ON=@EnvironChange
+KARMA=-3000
+
+ON=@Create
+TAG.LOOTPROPRIO 1
+COLOR=0
+STR={126 145}
+DEX={91 110}
+INT={161 185}
+
+WRESTLING={62.5 85.0}
+TACTICS={62.5 85.0}
+MAGICRESISTANCE={77.5 100.0}
+MAGERY={72.5 95.0}
+EVALUATINGINTEL={77.5 100.0}
+MEDITATION={77.5 100.0}
+
+NPC=brain_monster
+KARMA=-3000
+FAME=1000
+
+ITEMNEWBIE=i_spellbook
+MORE1=0ffffffff
+MORE2=0ffffffff
+ITEMNEWBIE=i_bone_arms
+ITEMNEWBIE=i_bone_leggings
+ITEMNEWBIE=i_bone_chest
+ITEMNEWBIE=i_mask_blue
+
+
+ON=@NPCRestock
+ITEM=i_gold,500
+ITEM=i_mask_blue,R60
+
+[CHARDEF c_savage_warrior_f]
+DEFNAME=c_savage_warrior_f
+NAME=#NAMES_SAVAGE_FEMALE the Savage Warrior
+ID=C_WOMAN
+CAN=MT_WALK|MT_FLY
+DESIRES=i_gold,e_notoriety
+AVERSIONS=t_TRAP,t_eerie_stuff
+DAM=23,27
+TSPEECH=spk_human_prime
+TSPEECH=spk_human_default
+
+CATEGORY=News
+SUBSECTION=Savages
+DESCRIPTION=Savage Warrior (Mulher)
+
+ON=@EnvironChange
+KARMA=-3000
+
+ON=@Create
+TAG.LOOTPROPRIO 1
+COLOR=0
+STR={96 115}
+DEX={86 105}
+INT={51 65}
+
+TACTICS={60.0 82.5}
+MAGICRESISTANCE={57.5 80.0}
+
+NPC=brain_monster
+KARMA=-3000
+FAME=1000
+
+ITEMNEWBIE=i_tribal_spear
+ITEMNEWBIE=i_mask_blue
+ITEMNEWBIE=i_bone_arms
+ITEMNEWBIE=i_bone_leggings
+ITEMNEWBIE i_bone_chest
+
+
+ON=@NPCRestock
+
+ITEM=i_tribal_spear,R10
+ITEM=I_mask_blue,R50
+ITEM=i_gold,640
+
+
+[CHARDEF c_savage_warrior]
+DEFNAME=c_savage_warrior
+NAME=#NAMES_SAVAGE_MALE the Savage Warrior
+ID=C_MAN
+CAN=MT_WALK|MT_FLY
+DESIRES=i_gold,e_notoriety
+AVERSIONS=t_TRAP,t_eerie_stuff
+DAM=23,27
+TSPEECH=spk_human_prime
+TSPEECH=spk_human_default
+
+CATEGORY=News
+SUBSECTION=Savages
+DESCRIPTION=Savage Warrior (Homen)
+
+ON=@EnvironChange
+KARMA=-3000
+
+ON=@Create
+COLOR=0
+STR={96 115}
+DEX={86 105}
+INT={51 65}
+
+TACTICS={60.0 82.5}
+MAGICRESISTANCE={57.5 80.0}
+
+NPC=brain_monster
+KARMA=-3000
+FAME=1000
+ITEMNEWBIE=i_tribal_spear
+ITEMNEWBIE=i_mask_blue
+ITEMNEWBIE=i_bone_arms
+ITEMNEWBIE=i_bone_leggings
+ITEMNEWBIE i_bone_chest
+
+
+ON=@NPCRestock
+
+ITEM=i_tribal_spear,R7
+ITEM=I_mask_blue,R50
+ITEM=i_gold,640
+
+///////////////////////////////////////////////////
+
+[ITEMDEF i_tribal_spear]
+ID=0f62
+NAME=Tribal Spear
+RESOURCES=12 i_ingot_iron
+TYPE=T_WEAPON_FENCE
+FLIP=1
+DAM=12,15
+SPEED=45
+SKILL=Fencing
+REQSTR=50
+TWOHANDS=Y
+WEIGHT=7
+SKILLMAKE=BLACKSMITHING 49.0
+
+
+CATEGORY=News
+SUBSECTION=Savage Items
+DESCRIPTION=Tribal Spear
+
+ON=@Create
+HITPOINTS={65 80}
+COLOR=02e1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+[SPEECH spk_quest_trinsic]
+on=*hello*
+ON=*ola*
+ON=*ajuda*
+ON=oi
+
+DORAND 3
+	SAY A filha de nosso rei foi sequestrada !! Precisamos resgata-la.
+	SAY Um grupo de mercenarios raptou Teresa !
+	SAY Para encontra-los precisamos seguir seus rastros
+ENDDO
+
+ON=Teresa
+
+SAY Teresa eh a filha do rei. A princesa de Nujel'm.
+
+
+on=*mercenario*
+ON=*rastro*
+ON=*sequestr*
+
+DORAND 3
+	SAY Sim !! Estes mercenarios nao sao tao espertos quanto pensam.
+	SAY Guardas de trinsic dizem ter encontrado um acampamento abandonado nos arredores da cidade.
+	SAY Pelo que me foi dito, este acampamento eh bem suspeito. Irei checar assim que possivel.
+ENDDO
+
+ON=*onde*
+ON=*trinsic*
+ON=*perto*
+
+SAY Tenho quase certeza que estes malditos estavam em trinsic.
+
+
+[CHARDEF c_h_quest_nujelm]
+NAME=Allison
+ID=C_MAN
+
+TSPEECH=spk_quest_trinsic
+
+ON=@Create
+FLAGS=000000005
+COLOR=colors_skin
+STR={61 75}
+DEX={71 85}
+INT={86 100}
+
+//SPELLCIRCLES=7-8
+
+NPC=brain_human
+TITLE=Quest Master
+ITEMNEWBIE=random_male_hair
+COLOR=colors_hair
+ITEMNEWBIE=random_facial_hair
+COLOR=match_hair
+ITEMNEWBIE=i_hat_wizards
+COLOR=0001
+ITEMNEWBIE=i_robe
+COLOR=0001
+ITEMNEWBIE=i_staff_black
+color=0026
+
+
+
+
+[FUNCTION CRIACADEIA]
+serv.newnpc c_h_jailed_man
+new.p <eval <ARGN1>> , <eval <ARGN2>>
+new.flags |= 05
+serv.newitem i_fence_iron
+new.p <eval <ARGN1> - 1> , <eval <ARGN2>>
+new.attr |=010
+serv.newitem i_fence_iron
+new.p <eval <ARGN1> - 1> , <eval <ARGN2> + 1>
+new.attr |=010
+serv.newitem i_fence_iron
+new.p <eval <ARGN1> + 1> , <eval <ARGN2>>
+new.attr |=010
+serv.newitem i_fence_iron
+new.p <eval <ARGN1> + 1> , <eval <ARGN2> + 1>
+new.attr |=010
+serv.newitem 0823
+new.p <eval <ARGN1> + 1> , <eval <ARGN2> - 1>
+new.attr |=010
+serv.newitem 0823
+new.p <eval <ARGN1>> , <eval <ARGN2> - 1>
+new.attr |=010
+serv.newitem 0823
+new.p <eval <ARGN1> + 1> , <eval <ARGN2> + 1>
+new.attr |=010
+serv.newitem i_porta_cadeia
+new.p <eval <ARGN1>> , <eval <ARGN2> + 1>
+new.attr |=010
+serv.newitem i_spawn_quest1
+new.p <eval <ARGN1> - 6> ,<eval <ARGN2> + 4>
+new.attr |=090
+SRC.UPDATE
+
+///////////////////////////////////////////
+//////// ITENS UTILIZADOS NAS QUESTS //////
+///////////////////////////////////////////
+
+[ITEMDEF i_npc_remover]
+NAME=Removedor de NPC
+type=t_eq_script
+ID=i_memory
+LAYER=layer_special
+
+ON=@CREATE
+TIMER=2
+TAG.LOOP=0
+
+ON=@TIMER
+TAG.LOOP=<TAG.LOOP>+1
+IF <TAG.LOOP>==2
+FORCHARS 10
+if !(<ISPLAYER>)
+REMOVE
+return 0
+ENDIF
+ENDFOR
+else
+SAY Muito obrigado mesmo ! Estou indo embora.
+ENDIF
+TIMER 2
+RETURN 1
+
+
+
+[ITEMDEF i_spawn_quest1]
+Name=Spawner da quest
+TYPE=t_spawn_char
+ID=i_worldgem_bit
+DISPID=i_worldgem_bit
+
+on=@create
+MORE1={c_h_guardiao_jail1,c_h_guardiao_jail2,c_h_guardiao_jail3}
+AMOUNT=7
+MOREP=0,1,6
+MORE2=01
+TIMER=1
+
+
+ON=@TIMER
+DORAND 3
+MORE1=c_h_guardiao_jail1
+MORE1=c_h_guardiao_jail2
+MORE1=c_h_guardiao_jail3
+ENDDO
+
+
+[ITEMDEF i_porta_cadeia]
+NAME=barred metal door
+ID=i_door_metal_bar
+TYPE=t_normal
+
+ON=@DCLICK
+RETURN 1
+
+
+[ITEMDEF i_chave_cadeia]
+NAME=Chave da cadeia
+id=i_key_gold
+type=t_normal
+
+ON=@create
+TIMER=500
+LINK=<UID>
+
+on=@DCLICK
+if <TIMER>==0
+REMOVE
+else
+TARGET Selecione a porta a ser aberta
+endif
+RETURN 1
+
+on=@TARGON_ITEM
+IF <SRC.TARG.BASEID>=i_porta_cadeia
+SRC.sysmessage Voce destrancou a porta da cadeia
+SRC.TARG.REMOVE
+SRC.ACT.REMOVE
+else
+SRC.SYSMESSAGE Esta chave nao serve ai.
+ENDIF
+return 1
+
+ON=@TIMER
+LINK.REMOVE
+RETURN 0
+
+
+/////////////////////////////////////////////
+////////// Personagens das Quests ///////////
+/////////////////////////////////////////////
+
+[CHARDEF c_h_jailed_man]
+DEFNAME=c_jailed_man
+NAME=Teresa
+ID=c_woman
+CAN=MT_FLY|MT_WALK|MT_RUN
+
+//TSPEECH=recompensa_1
+
+ON=@CREATE
+
+STR={300 450}
+DEX={150 300}
+INT={10 15}
+
+MAXHITS=9999
+MAXSTAM={1000 3000}
+
+
+SWORDSMANSHIP={100.0 130.0}
+FENCING={100.0 130.0}
+TACTICS={100.0 180.0}
+//POISONING={90.0 100.0}
+DETECTINGHIDDEN={90.0 100.0}
+MAGERY={0.0 1.0}
+
+TITLE=A Prisioneira
+NPC=brain_human
+KARMA=10000
+FAME=8000
+
+ITEMNEWBIE=i_pants_short
+COLOR=01bb
+
+
+ON=@DCLICK
+IF !(<SRC.TARG.TAG0.CLICKED> == 1)
+	FORITEMS 2
+		if <baseid>==i_porta_cadeia
+			DORAND 3
+				SRC.TARG.SAY Por favor, me ajude. Me tire daqui !!!
+				SRC.TARG.SAY Me salvem, nao aguento mais esta prisao.
+				SRC.TARG.SAY A chave esta com algum dos mercenarios. Me ajudem !!
+			ENDDO
+			RETURN 1
+		endif
+	ENDFOR
+	SRC.TARG.TAG.CLICKED=1
+	SRC.TARG.SAY Muito obrigada por me salvar !!
+	TIMERF 3, f_reward_nujelm <SRC.TARG.UID>, <SRC.UID>
+
+	FORITEMS 10
+		if (<id>==0821) || (<id>==01ea7)
+			REMOVE
+		endif
+	endfor
+endif
+RETURN 1
+
+
+ON=@DEATH
+
+SRC.ACT.MemoryFindType.(MEMORY_IPET|MEMORY_GUARD).LINK.KILLS=<SRC.ACT.MemoryFindType.(MEMORY_IPET|MEMORY_GUARD).LINK.KILLS>+1
+SRC.ACT.MemoryFindType.(MEMORY_IPET|MEMORY_GUARD).LINK.SYSMESSAGE Murderer !!!
+
+
+[FUNCTION f_reward_nujelm]
+TRY UID.<ARGV[0]>.SAY Aqui esta sua recompensa ! Meu pai lhe eh muito grato
+TRY UID.<ARGV[1]>.NEWGOLD 250000
+TRY UID.<ARGV[1]>.NEWITEM i_shadow_mace
+REF69 <ARGV[1]>
+NEW.CONT <REF69.UID>
+TRY UID.<ARGV[1]>.NEWITEM i_scroll_titanium
+REF69 <ARGV[1]>
+NEW.CONT <REF69.UID>
+TRY UID.<ARGV[0]>.REMOVE
+
+
+
+[CHARDEF c_h_guardiao_jail1]
+DEFNAME=c_guardiao_jail1
+NAME=#NAMES_HUMANMALE
+ID=c_man
+CAN=MT_FLY|MT_WALK|MT_RUN
+
+ON=@CREATE
+TAG.LOOTPROPRIO 1
+STR={300 450}
+DEX={150 300}
+INT={10 15}
+
+MAXHITS={1000 2000}
+MAXSTAM={1000 3000}
+
+
+SWORDSMANSHIP={100.0 130.0}
+FENCING={100.0 130.0}
+TACTICS={100.0 180.0}
+//POISONING={90.0 100.0}
+DETECTINGHIDDEN={90.0 100.0}
+MAGERY={0.0 1.0}
+
+TITLE=O Mercenario
+NPC=brain_monster
+KARMA=-10000
+FAME=8000
+
+ITEMNEWBIE=i_bardiche_vanq
+ITEMNEWBIE=i_skull_cap
+ITEMNEWBIE=i_robe
+COLOR=026
+
+on=@NPCRESTOCK
+ITEM=i_chave_cadeia, R15
+ITEM=i_gold,1000
+
+
+
+[CHARDEF c_h_guardiao_jail2]
+DEFNAME=c_guardiao_jail2
+NAME=#NAMES_HUMANMALE
+ID=c_man
+CAN=MT_FLY|MT_WALK|MT_RUN
+
+ON=@CREATE
+TAG.LOOTPROPRIO 1
+STR={300 450}
+DEX={150 300}
+INT={10 15}
+
+MAXHITS={1000 2000}
+MAXSTAM={1000 3000}
+
+
+SWORDSMANSHIP={100.0 130.0}
+FENCING={100.0 130.0}
+TACTICS={100.0 180.0}
+//POISONING={90.0 100.0}
+DETECTINGHIDDEN={90.0 100.0}
+MAGERY={0.0 1.0}
+
+TITLE=O Mercenario
+NPC=brain_monster
+KARMA=-10000
+FAME=8000
+
+ITEMNEWBIE=i_spear_vanq
+ITEMNEWBIE=i_bandana
+ITEMNEWBIE=i_robe
+COLOR=043
+
+on=@NPCRESTOCK
+ITEM=i_chave_cadeia, R15
+ITEM=i_gold,1000
+
+
+[CHARDEF c_h_guardiao_jail3]
+DEFNAME=c_guardiao_jail3
+NAME=#NAMES_HUMANMALE
+ID=c_man
+CAN=MT_FLY|MT_WALK|MT_RUN
+
+ON=@CREATE
+TAG.LOOTPROPRIO 1
+STR={300 450}
+DEX={150 300}
+INT={10 15}
+
+MAXHITS={1000 2000}
+MAXSTAM={1000 3000}
+
+
+SWORDSMANSHIP={100.0 130.0}
+FENCING={100.0 130.0}
+TACTICS={100.0 180.0}
+//POISONING={90.0 100.0}
+DETECTINGHIDDEN={90.0 100.0}
+MAGERY={0.0 1.0}
+
+TITLE=O Mercenario
+NPC=brain_monster
+KARMA=-10000
+FAME=8000
+
+ITEMNEWBIE=i_halberd_vanq
+ITEMNEWBIE=i_bandana
+ITEMNEWBIE=i_robe
+COLOR=073
+
+
+on=@NPCRESTOCK
+ITEM=i_chave_cadeia,R15
+ITEM=i_gold,1000
+
+
+
+
+
+
+
+
+
+
+//////////////// LWW //////////////////////
+
+
+[CHARDEF c_lww]
+NAME=White Wyrm
+ID=0c
+SOUND=snd_MONSTER_DRAGON1
+icon=020d6
+DAM=40 50
+ARMOR=30
+
+//TEVENTS=e_timeblock
+ON=@CREATE
+TAG.LOOTPROPRIO 1
+COLOR=0481
+
+STR=2600
+DEX=1500
+INT=3000
+
+PARRYING=365.0 280.0
+//MAGICRESISTANCE=265.0 280.0
+TACTICS=365.0 390.0
+WRESTLING=365.0 380.0
+//MAGERY=500.0 600.0
+
+FAME=10000
+KARMA=-10000
+NPC=brain_monster
+//NPC=brain_dragon
+
+ON=@NPCRESTOCK
+
+ITEM=i_gold,{22500 30000}
+//ITEM=05686
+//ITEM=i_lww_trophy
+ITEM=i_hides_wyrm,60
+//ITEM=rareloot_ssh,R20
+ITEM=I_REAG_DRAGON_BLOOD,30
+
+
+
+[ITEMDEF i_lww_trophy]
+//Estatua e white wyrm
+NAME=White Wyrm Trophy
+ID=020D6
+WEIGHT=4
+
+ON=@CREATE
+	COLOR=0481
+	TYPE=t_normal
+
+ON=@DCLICK
+IF <CONT.ID> > 0
+SRC.SYSMESSAGE you cant turn it on where it is.
+return=1
+endif
+
+IF <MORE2> == 1
+TIMER=-1
+SRC.SYSMESSAGE=sounds off
+MORE2=0
+RETURN=1
+ENDIF
+
+IF <MORE2> == 0
+TIMER=1
+SRC.SYSMESSAGE=sounds on
+MORE2=1
+RETURN=1
+ELSE
+
+RETURN=1
+ENDIF
+
+ON=@TIMER
+
+IF <MORE2> == 0
+TIMER=-1
+ENDIF
+
+IF <MORE2> == 1
+TIMER=RAND(10)
+DORAND 9
+SFX 0246
+SFX 016B
+SFX 0166
+SFX 016C
+SFX 016F
+SFX 016A
+SFX 016D
+SFX 0169
+SFX 016E
+ENDDO
+RETURN=1
+ELSE
+
+TIMER=-1
+RETURN=1
+ENDIF
+
+
+
+
+//////////////////////// Dragao de Fogo ////////////////////////////
+[CHARDEF c_m_info_dfogo]
+id=c_dragon_red
+Name=Dragao de Fogo
+DAM=46,83
+ARMOR=50
+CAN=MT_WALK|MT_RUN|MT_FLY
+AVERSIONS=r_civilization
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	MAXHITS=6500
+	COLOR=077a
+	NPC=brain_dragon
+	STR={600 700}
+	DEX={800 900}
+	INT={1500 1700}
+	PARRYING={55.0 65.0}
+	MAGERY=100.0
+	MAGICRESISTANCE={60.0 75.0}
+	TACTICS={80.0 100.0}
+	WRESTLING={70.0 100.0}
+	FAME={1000 6000}
+	KARMA={-4000 -4999}
+	//SPELLCIRCLE=3 5
+	ITEMNEWBIE=i_light_source
+	ITEMNEWBIE=i_spellbook
+	ADDSPELL=s_magic_arrow
+	ADDSPELL=s_fireball
+	ADDSPELL=s_fire_field
+	ADDSPELL=s_explosion
+	ADDSPELL=s_flamestrike
+	ADDSPELL=s_meteor_swarm
+	ADDSPELL=s_fire_bolt
+
+
+ON=@Death
+	NEWITEM=i_fx_explode
+	act.TYPE=T_EXPLOSION
+	act.ATTR=ATTR_MOVE_NEVER | ATTR_DECAY
+	act.LINK=<uid>
+	act.morex=10 // damage
+	act.morey=090 // wFlags DAMAGE_GENERAL
+	act.morez=2 // iDist
+	act.p=<p>
+	act.TIMERD=1 // immediate decay
+
+[TEMPLATE loot_dfogo]
+//CONTAINER=i_backpack
+	ITEM=i_bless_robe
+	ITEM=i_magic_mask
+	ITEM=i_mage_robe
+	ITEM=i_mask_elder_polar
+	ITEM=i_mask_orc
+        ITEM={ RANDOM_WEAPON_POWER 1 0 2 }
+	ITEM=i_gold,{42000 65000},{ 4 5 }
+
+
+
+
+
+///////////////////////// Align Monsters (Chaos) / (Order)
+
+[CHARDEF c_m_chaos_daemon]
+id=c_balron
+Name=Chaos Daemon
+DAM=46,83
+ARMOR=50
+CAN=MT_WALK|MT_RUN|MT_FLY
+AVERSIONS=r_civilization
+MOVERATE=20
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	MAXHITS={10000 15000}
+	COLOR=0f9c
+	NPC=brain_dragon
+	STR={1000 1100}
+	DEX={800 900}
+	MOVERATE=20
+	INT=1
+	PARRYING={55.0 65.0}
+	MAGERY=1.0
+	MAGICRESISTANCE={60.0 75.0}
+	TACTICS={99.0 100.0}
+	WRESTLING={99.0 100.0}
+	FAME={10000}
+	KARMA=-10000
+	//SPELLCIRCLE=3 5
+	ITEMNEWBIE=i_light_source
+
+ON=@NPCRestock
+	ITEM=i_gold,{25000 30000}
+	ITEM=i_scroll_chaos,R15
+
+
+[CHARDEF c_m_order_daemon]
+id=c_balron
+Name=Order Daemon
+DAM=46,83
+ARMOR=50
+CAN=MT_WALK|MT_RUN|MT_FLY
+AVERSIONS=r_civilization
+MOVERATE=20
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	MAXHITS={10000 15000}
+	COLOR=0b96
+	NPC=brain_dragon
+	STR={1000 1100}
+	DEX={800 900}
+	MOVERATE=20
+	INT=1
+	PARRYING={55.0 65.0}
+	MAGERY=1.0
+	MAGICRESISTANCE={60.0 75.0}
+	TACTICS={99.0 100.0}
+	WRESTLING={99.0 100.0}
+	FAME={10000}
+	KARMA=-10000
+	//SPELLCIRCLE=3 5
+	ITEMNEWBIE=i_light_source
+
+ON=@NPCRestock
+	ITEM=i_gold,{25000 30000}
+	ITEM=i_scroll_order,R15
+
+
+
+
+//////////////////////////////// PRISMAS //////////////////////////////////
+
+[CHARDEF c_m_prisma_daemon]
+Name=Daemon Prisma
+id=c_daemon_w_sword
+DAM=46,83
+ARMOR=20
+CAN=MT_WALK|MT_RUN|MT_FLY
+AVERSIONS=r_civilization
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	MAXHITS={20000 25000}
+	COLOR=colors_all
+	NPC=brain_dragon
+	STR={500 650}
+	DEX={800 900}
+	INT=150
+	PARRYING={55.0 65.0}
+	MAGERY=6.0
+	MAGICRESISTANCE={60.0 75.0}
+	TACTICS={80.0 100.0}
+	WRESTLING={70.0 100.0}
+	FAME={10000}
+	KARMA=-10000
+	//SPELLCIRCLE=3 5
+	ITEMNEWBIE=i_light_source
+	ITEMNEWBIE=i_spellbook
+	ADDSPELL=s_magic_arrow
+	ADDSPELL=s_fireball
+	ADDSPELL=s_fire_field
+	ADDSPELL=s_explosion
+	ADDSPELL=s_flamestrike
+	ADDSPELL=s_meteor_swarm
+	ADDSPELL=s_fire_bolt
+	EVENTS=+E_ANTIBOW
+
+ON=@GetHit
+	TAG.LAST_HIT_TIME <SERV.TIME>
+
+ON=@NPCRestock
+	ITEM=loot_prisma_new
+
+ON=@Death
+	NEWITEM=i_fx_explode
+	act.TYPE=T_EXPLOSION
+	act.ATTR=ATTR_MOVE_NEVER | ATTR_DECAY
+	act.LINK=<uid>
+	act.morex=10 // damage
+	act.morey=090 // wFlags DAMAGE_GENERAL
+	act.morez=2 // iDist
+	act.p=<p>
+	act.TIMERD=1 // immediate decay
+
+[TEMPLATE loot_prisma_new]
+	ITEM=i_gold,{25000 50000}
+	ITEM=i_reag_daemon_bone, {2 6}
+	ITEM=random_reagent, {5 12}
+	ITEM=random_reagent, {5 12}
+	ITEM={i_panotrue_w 1 i_panotrue_b 1 i_panotrue_g 1},R3
+	ITEM=i_magic_gem,R12
+	ITEM=i_treasure_map_lvl_5,R8
+
+
+[CHARDEF c_m_prisma_dragon]
+Name=Dragon Prisma
+id=c_dragon_red
+DAM=46,83
+ARMOR=20
+CAN=MT_WALK|MT_RUN|MT_FLY
+AVERSIONS=r_civilization
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	MAXHITS={20000 25000}
+	COLOR=colors_all
+	NPC=brain_dragon
+	STR={500 650}
+	DEX={800 900}
+	INT=150
+	PARRYING={55.0 65.0}
+	MAGERY=6.0
+	MAGICRESISTANCE={60.0 75.0}
+	TACTICS={80.0 100.0}
+	WRESTLING={70.0 100.0}
+	FAME={10000}
+	KARMA=-10000
+	//SPELLCIRCLE=3 5
+	ITEMNEWBIE=i_light_source
+	ITEMNEWBIE=i_spellbook
+	ADDSPELL=s_magic_arrow
+	ADDSPELL=s_fireball
+	ADDSPELL=s_fire_field
+	ADDSPELL=s_explosion
+	ADDSPELL=s_flamestrike
+	ADDSPELL=s_meteor_swarm
+	ADDSPELL=s_fire_bolt
+	EVENTS=+E_ANTIBOW
+
+ON=@GetHit
+	TAG.LAST_HIT_TIME <SERV.TIME>
+
+ON=@NPCRestock
+	ITEM=loot_prisma_new
+
+ON=@Death
+	NEWITEM=i_fx_explode
+	act.TYPE=T_EXPLOSION
+	act.ATTR=ATTR_MOVE_NEVER | ATTR_DECAY
+	act.LINK=<uid>
+	act.morex=10 // damage
+	act.morey=090 // wFlags DAMAGE_GENERAL
+	act.morez=2 // iDist
+	act.p=<p>
+	act.TIMERD=1 // immediate decay
+
+[CHARDEF c_m_prisma_w]
+id=c_daemon_w_sword
+Name=Prisma Lord
+DAM=46,83
+ARMOR=20
+CAN=MT_WALK|MT_RUN|MT_FLY
+AVERSIONS=r_civilization
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	MAXHITS={3500 4000}
+	COLOR=0481
+	NPC=brain_dragon
+	STR={500 650}
+	DEX={800 900}
+	INT=150
+	PARRYING={55.0 65.0}
+	MAGERY=6.0
+	MAGICRESISTANCE={60.0 75.0}
+	TACTICS={80.0 100.0}
+	WRESTLING={70.0 100.0}
+	FAME={10000}
+	KARMA=-10000
+	//SPELLCIRCLE=3 5
+	ITEMNEWBIE=i_light_source
+	ITEMNEWBIE=i_spellbook
+	ADDSPELL=s_magic_arrow
+	ADDSPELL=s_fireball
+	ADDSPELL=s_fire_field
+	ADDSPELL=s_explosion
+	ADDSPELL=s_flamestrike
+	ADDSPELL=s_meteor_swarm
+	ADDSPELL=s_fire_bolt
+	EVENTS=+E_ANTIBOW
+
+ON=@NPCRestock
+	ITEM=loot_prismaw
+
+ON=@Death
+	NEWITEM=i_fx_explode
+	act.TYPE=T_EXPLOSION
+	act.ATTR=ATTR_MOVE_NEVER | ATTR_DECAY
+	act.LINK=<uid>
+	act.morex=10 // damage
+	act.morey=090 // wFlags DAMAGE_GENERAL
+	act.morez=2 // iDist
+	act.p=<p>
+	act.TIMERD=1 // immediate decay
+
+ON=@DeathCorpse
+	IF !(<SRC.ISEVENT.e_city_invasion_monsters>)
+		SERV.NEWITEM i_panotrue_w
+		NEW.TAG.BOUND_CHANCE 4
+		NEW.CONT <ARGO.UID>
+	ENDIF
+
+	FORCHARS 8
+		IF !(<SRC.ISEVENT.e_city_invasion_monsters>) && (<ISEVENT.e_weekly_pvm_single_champion>) && !(<R3>)
+			SERV.NEWITEM i_panotrue_w
+			NEW.TAG.BOUND_CHANCE 3
+			NEW.CONT <ARGO.UID>
+		ENDIF
+	ENDFOR
+
+[TEMPLATE loot_prismaw]
+	ITEM=i_gold,{20000 22000}
+	ITEM=i_statuette_prisma_w,R35
+
+[ITEMDEF i_panotrue_w]
+ID=i_cloth
+name=True White Cloth
+VALUE=10000
+TEVENTS=t_drop_loggable
+
+on=@create
+color=0481
+IF (<SRC>)
+	SERV.LOG <name> created <uid>. Amount <Amount> by <src.uid> <src.name>
+ENDIF
+
+ON=@PickUp_Pack
+	IF (<CONT.TYPE> == t_corpse) && (<TAG0.BOUND_CHANCE>)
+		IF (<R10> < <TAG0.BOUND_CHANCE>)
+			SERV.NEWITEM i_bound_panotrue_w <AMOUNT>
+			NEW.CONT <SRC.FINDLAYER.layer_pack.UID>
+
+			TIMERF 0, REMOVE
+		ENDIF
+	ENDIF
+
+	TAG.BOUND_CHANCE
+
+[ITEMDEF i_bound_panotrue_w]
+ID=i_cloth
+name=True White Cloth
+VALUE=10000
+TEVENTS=t_drop_loggable
+WEIGHT=0
+
+on=@create
+color=0481
+attr attr_newbie
+events +t_restricted_bound_item
+IF (<SRC>)
+	SERV.LOG <name> created <uid>. Amount <Amount> by <src.uid> <src.name>
+ENDIF
+
+
+[CHARDEF c_m_prisma_b]
+id=c_daemon_w_sword
+Name=Prisma Lord
+DAM=46,83
+ARMOR=20
+CAN=MT_WALK|MT_RUN|MT_FLY
+AVERSIONS=r_civilization
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	MAXHITS={3500 4000}
+	COLOR=01
+	NPC=brain_dragon
+	STR={700 850}
+	DEX={800 900}
+	INT=150
+	PARRYING={95.0 105.0}
+	MAGERY=6.0
+	MAGICRESISTANCE={60.0 75.0}
+	TACTICS={90.0 100.0}
+	WRESTLING={99.0 100.0}
+	FAME={1000 6000}
+	KARMA=-10000
+	//SPELLCIRCLE=3 5
+	ITEMNEWBIE=i_light_source
+	ITEMNEWBIE=i_spellbook
+	ADDSPELL=s_magic_arrow
+	ADDSPELL=s_fireball
+	ADDSPELL=s_fire_field
+	ADDSPELL=s_explosion
+	ADDSPELL=s_flamestrike
+	ADDSPELL=s_meteor_swarm
+	ADDSPELL=s_fire_bolt
+	EVENTS=+E_ANTIBOW
+
+ON=@NPCRestock
+	ITEM=loot_prismab
+
+ON=@Death
+	NEWITEM=i_fx_explode
+	act.TYPE=T_EXPLOSION
+	act.ATTR=ATTR_MOVE_NEVER | ATTR_DECAY
+	act.LINK=<uid>
+	act.morex=10 // damage
+	act.morey=090 // wFlags DAMAGE_GENERAL
+	act.morez=2 // iDist
+	act.p=<p>
+	act.TIMERD=1 // immediate decay
+
+ON=@DeathCorpse
+	IF !(<SRC.ISEVENT.e_city_invasion_monsters>)
+		SERV.NEWITEM i_panotrue_b
+		NEW.TAG.BOUND_CHANCE 4
+		NEW.CONT <ARGO.UID>
+	ENDIF
+
+	FORCHARS 8
+		IF !(<SRC.ISEVENT.e_city_invasion_monsters>) && (<ISEVENT.e_weekly_pvm_single_champion>) && !(<R3>)
+			SERV.NEWITEM i_panotrue_b
+			NEW.TAG.BOUND_CHANCE 3
+			NEW.CONT <ARGO.UID>
+		ENDIF
+	ENDFOR
+
+[TEMPLATE loot_prismab]
+	ITEM=i_gold,{20000 22000}
+	ITEM=i_statuette_prisma_b,R35
+
+[ITEMDEF i_panotrue_b]
+ID=i_cloth
+name=True Black Cloth
+VALUE=10000
+TEVENTS=t_drop_loggable
+
+on=@create
+color=01
+IF (<SRC>)
+	SERV.LOG <name> created <uid>. Amount <Amount> by <src.uid> <src.name>
+ENDIF
+
+ON=@PickUp_Pack
+	IF (<CONT.TYPE> == t_corpse) && (<TAG0.BOUND_CHANCE>)
+		IF (<R10> < <TAG0.BOUND_CHANCE>)
+			SERV.NEWITEM i_bound_panotrue_b <AMOUNT>
+			NEW.CONT <SRC.FINDLAYER.layer_pack.UID>
+
+			TIMERF 0, REMOVE
+		ENDIF
+	ENDIF
+
+	TAG.BOUND_CHANCE
+
+[ITEMDEF i_bound_panotrue_b]
+ID=i_cloth
+name=True Black Cloth
+VALUE=10000
+TEVENTS=t_drop_loggable
+WEIGHT=0
+
+on=@create
+color=01
+attr attr_newbie
+events +t_restricted_bound_item
+IF (<SRC>)
+	SERV.LOG <name> created <uid>. Amount <Amount> by <src.uid> <src.name>
+ENDIF
+
+[CHARDEF c_m_prisma_g]
+id=c_daemon_w_sword
+Name=Prisma Lord
+DAM=46,83
+ARMOR=30
+CAN=MT_WALK|MT_RUN|MT_FLY
+AVERSIONS=r_civilization
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	MAXHITS={3500 4000}
+	COLOR=0482
+	NPC=brain_dragon
+	STR={700 750}
+	DEX={800 900}
+	INT=199
+	PARRYING={55.0 65.0}
+	MAGERY=1.0
+	MAGICRESISTANCE={60.0 75.0}
+	TACTICS={80.0 100.0}
+	WRESTLING={70.0 100.0}
+	FAME={1000 6000}
+	KARMA=-10000
+	//SPELLCIRCLE=3 5
+	ITEMNEWBIE=i_light_source
+	ITEMNEWBIE=i_spellbook
+	ADDSPELL=s_magic_arrow
+	ADDSPELL=s_fireball
+	ADDSPELL=s_fire_field
+	ADDSPELL=s_explosion
+	ADDSPELL=s_flamestrike
+	ADDSPELL=s_meteor_swarm
+	ADDSPELL=s_fire_bolt
+	EVENTS=+E_ANTIBOW
+
+ON=@NPCRestock
+	ITEM=loot_prismag
+
+ON=@Death
+	NEWITEM=i_fx_explode
+	act.TYPE=T_EXPLOSION
+	act.ATTR=ATTR_MOVE_NEVER | ATTR_DECAY
+	act.LINK=<uid>
+	act.morex=10 // damage
+	act.morey=090 // wFlags DAMAGE_GENERAL
+	act.morez=2 // iDist
+	act.p=<p>
+	act.TIMERD=1 // immediate decay
+
+ON=@DeathCorpse
+	IF !(<SRC.ISEVENT.e_city_invasion_monsters>)
+		SERV.NEWITEM i_panotrue_g
+		NEW.TAG.BOUND_CHANCE 4
+		NEW.CONT <ARGO.UID>
+	ENDIF
+
+	FORCHARS 8
+		IF !(<SRC.ISEVENT.e_city_invasion_monsters>) && (<ISEVENT.e_weekly_pvm_single_champion>) && !(<R3>)
+			SERV.NEWITEM i_panotrue_g
+			NEW.TAG.BOUND_CHANCE 3
+			NEW.CONT <ARGO.UID>
+		ENDIF
+	ENDFOR
+
+[TEMPLATE loot_prismag]
+	ITEM=i_gold,{20000 22000}
+	ITEM=i_statuette_prisma_g,R35
+
+[ITEMDEF i_panotrue_g]
+ID=i_cloth
+name=True Gray Cloth
+VALUE=10000
+TEVENTS=t_drop_loggable
+
+on=@create
+color=0482
+IF (<SRC>)
+	SERV.LOG <name> created <uid>. Amount <Amount> by <src.uid> <src.name>
+ENDIF
+
+ON=@PickUp_Pack
+	IF (<CONT.TYPE> == t_corpse) && (<TAG0.BOUND_CHANCE>)
+		IF (<R10> < <TAG0.BOUND_CHANCE>)
+			SERV.NEWITEM i_bound_panotrue_g <AMOUNT>
+			NEW.CONT <SRC.FINDLAYER.layer_pack.UID>
+
+			TIMERF 0, REMOVE
+		ENDIF
+	ENDIF
+
+	TAG.BOUND_CHANCE
+
+[ITEMDEF i_bound_panotrue_g]
+ID=i_cloth
+name=True Gray Cloth
+VALUE=10000
+TEVENTS=t_drop_loggable
+WEIGHT=0
+
+on=@create
+color=0482
+attr attr_newbie
+events +t_restricted_bound_item
+IF (<SRC>)
+	SERV.LOG <name> created <uid>. Amount <Amount> by <src.uid> <src.name>
+ENDIF
+
+
+/////////////////////////////////////////////// BLACK LORD///////////////////////////////////////
+
+[CHARDEF c_black_lord]
+DEFNAME=npc_black_evento
+ID=C_MAN
+NAME=#NAMES_DREAD_LORD the Black Lord
+SOUND=snd_HUMAN_M_DIE_01
+
+DAM=60,80
+ARMOR=70
+
+//DESIRES=i_gold,e_notoriety
+AVERSIONS=t_TRAP,t_eerie_stuff
+//ALIGNMENT=EVIL
+
+TSPEECH=spk_human_prime
+TSPEECH=jobMageEvil
+TSPEECH=spk_needs
+TSPEECH=spk_rehello
+TSPEECH=spk_human_default
+
+ON=@Create
+COLOR=colors_skin
+STR=600
+DEX=3000
+INT=1500
+MAXHITS=2500
+
+TAG.LOOTPROPRIO 1
+
+PARRYING=110.0
+SWORDSMANSHIP=110.0
+WRESTLING=110.0
+MAGICRESISTANCE=99.0
+TACTICS=100.0
+//POISONING=95.0
+DETECTINGHIDDEN={90.0 100.0}
+
+NPC=brain_monster
+
+FAME=9999
+KARMA=-9999
+
+ITEMNEWBIE=random_male_hair
+COLOR=colors_hair
+ITEMNEWBIE=random_facial_hair
+COLOR=match_hair
+
+
+	ITEMNEWBIE=0471a
+	ITEMNEWBIE=04718
+	ITEMNEWBIE=04716
+	ITEMNEWBIE=04719
+	ITEMNEWBIE=04717
+	ITEMNEWBIE=04715
+
+	COLOR=0455
+	COLOR=0455
+	ITEMNEWBIE=i_CAPE
+	COLOR=07a1
+	ITEMNEWBIE=i_SASH
+	COLOR=07a1
+	ITEMNEWBIE=i_apron_half
+	COLOR=07a1
+
+
+ON=@NPCRestock
+	ITEM=loot_npc
+
+
+[TEMPLATE loot_npc]
+ITEM=i_gold,{12000 31550}
+ITEM={ 0471a 1 04718 1 04716 1 04719 1 04717 1 04715 1 }
+
+
+CATEGORY=IMerlin's Monsters
+SUBSECTION=Dread Lords
+DESCRIPTION=Blackrock Dread Lord
+
+
+
+/////////////////////////////////////// ELEKTRA //////////////////////////////////////
+
+[CHARDEF c_h_antrax]
+DEFNAME=antrax_evento
+NAME=Antrax
+ID=C_WOMAN
+DAM=6,10
+//ARMOR=
+DESIRES=e_notoriety
+//ALIGNMENT=EVIL
+CAN=MT_WALK|MT_FLY|MT_FEMALE
+
+
+ON=@Create
+COLOR=045e
+STR=400
+DEX=400
+INT=30
+TAG.LOOTPROPRIO 1
+MAXHITS=6500
+WRESTLING=110.0
+MAGICRESISTANCE=110.0
+MAGERY=0.0
+TACTICS=110.0
+PARRYING=110.0
+ANATOMY=110.0
+MACEFIGHTING=110.0
+NPC=11
+KARMA={-10000 -10000}
+FAME=10000
+itemnewbie=i_MYTHERIL_PLATEMAIL
+itemnewbie=i_MYTHERIL_PLATEMAIL_ARMS
+itemnewbie=i_MYTHERIL_PLATEMAIL_leggings
+color=07a1
+itemnewbie=i_mask_orc
+COLOR=07a1
+itemnewbie=i_MYTHERIL_PLATEMAIL_GORGET
+itemnewbie=i_bone_gloves
+color=0bb4
+itemnewbie=i_shield_chaos
+color=0799
+Itemnewbie=i_axe_war
+color=07a1
+item=i_mt_horse_brown_dk
+COLOR=0b9f
+ITEMNEWBIE=i_hair_PONYTAIL
+COLOR=0597
+ITEMNEWBIE=i_robe
+COLOr=0001
+
+
+
+//////////////// OGRE EVENTOS//////////////////////////////////////
+
+[CHARDEF c_m_ogre_evento]
+NAME=Especial Ogre
+ID=c_OGRE
+SOUND=snd_MONSTER_OGRE1
+ICON=i_pet_OGRE_2
+DAM=46,83
+ARMOR=50
+RESOURCES=
+//ALIGNMENT=EVIL
+CAN=MT_WALK
+FOODTYPE=15 t_meat_raw
+//SHELTER==r_forests,r_mountains
+DESIRES=C_OGRE
+AVERSIONS=r_civilization
+
+
+ON=@Create
+	COLOR={0bb7 0bb9}
+	STR={500 700}
+	MAXHITS=3000
+	DEX={1000 2000}
+	MAXSTAM=3000
+	INT=2000
+	MAXMANA=500
+	PARRYING=95.0
+	MAGICRESISTANCE=99.0
+	TACTICS=90.0
+	WRESTLING={100.0 150.0}
+	NPC=BRAIN_MONSTER
+	TAG.LOOTPROPRIO 1
+	FAME=-5000
+	KARMA=-7000
+
+
+//////////////////////////////////////////////////////////////////
+
+
+[CHARDEF c_elder_fire_elem]
+ID=c_elem_fire
+NAME=Elder Fire Elemental
+DAM=32,40
+ARMOR=40
+CAN=MT_WALK|MT_FLY|MT_USEHANDS|MT_RUN|MT_FIRE_IMMUNE
+ON=@Create
+	STR={1200 1450}
+	MAXHITS=2500
+	DEX={180 250}
+	INT=2000
+	PARRYING={95.0 125.0}
+	MAGERY=350.0
+	MAGICRESISTANCE={99.0 100.0}
+	TACTICS={100.0 130.0}
+	WRESTLING={110.0 150.0}
+	NPC=brain_monster
+	FAME={8000 9500}
+	KARMA={-6000 -6999}
+	TAG.LOOTPROPRIO 1
+	COLOR 07f7
+
+ON=@SPELLEFFECT
+IF <ARGN>==49
+SRC.SYSMESSAGE Chain Lightning eh inutil contra este monstro.
+RETURN 1
+ENDIF
+
+
+ON=@SKILLSTART
+FORCHARS 50
+IF <UID>==c_elem_fire
+LOCAL.COUNT +=1
+ENDIF
+ENDFOR
+IF <dLOCAL.COUNT> < 5
+IF RAND(8)==1
+NEWNPC c_elem_fire
+NEW.P <P>
+NEW.HOME <P>
+NEW.HOMEDIST 5
+ENDIF
+ENDIF
+
+ON=@NPCRESTOCK
+ITEM=i_gold,{12000 18000}
+//ITEM=i_fire_longsword,R10
+ITEM=i_scroll_flamestrike,{20 34}
+
+
+
+[ITEMDEF i_fire_longsword]
+ID=i_sword_long
+NAME=Fire LongSword
+SPEED=79
+DAM=39,46
+SKILL=Swordsmanship
+TWOHANDS=N
+WEIGHT=4
+VALUE=400
+
+ON=@CREATE
+COLOR 02b
+HITPOINTS 200
+
+ON=@DAMAGE
+IF RAND(4)==1
+SRC.EFFECT 3,03709,20,20,1
+IF ( (<SRC.REGION.FLAGS>&02000) || (<SRC.REGION.FLAGS>&08000) )
+RETURN 1
+ELSE
+SRC.DAMAGE {10 15}, 02, <CONT.UID>
+ENDIF
+ENDIF
+
+
+
+
+[CHARDEF C_h_Ice_mage]
+ID=c_man
+NAME=Ice Warlock
+DAM=20,25
+ARMOR=45
+CAN=MT_WALK|MT_FLY|MT_USEHANDS
+
+
+ON=@Create
+	STR={450 500}
+	MAXHITS=800
+	DEX={180 250}
+	INT=2000
+	PARRYING={95.0 125.0}
+	MAGERY=200.0
+	MAGICRESISTANCE={99.0 100.0}
+	TACTICS={100.0 130.0}
+	WRESTLING={110.0 150.0}
+	NPC=brain_monster
+	FAME={8000 9500}
+	KARMA={-6000 -6999}
+        tag.lootproprio 1
+
+
+ON=@NPCRESTOCK
+	ITEM=i_mt_ostard_zostrich
+	COLOR 0481
+        item=i_gold,1000
+	ITEMNEWBIE i_robe
+	COLOR 0481
+	NAME Ice Robe
+	ITEMNEWBIE i_hat_wizards
+	COLOR 0481
+	NAME Ice Wizard's Hat
+
+
+ON=@SKILLSTART
+FINDLAYER.25.MORE2 <UID>
+
+ON=@DEATH
+FINDLAYER.25.REMOVE
+
+
+[CHARDEF C_h_Ice_soldier]
+ID=c_man
+NAME=Ice Soldier
+DAM=20,25
+ARMOR=45
+CAN=MT_WALK|MT_FLY|MT_USEHANDS
+
+
+ON=@Create
+	STR={1200 1450}
+	MAXHITS=2500
+	DEX={180 250}
+	INT=2
+	PARRYING={95.0 125.0}
+	MAGERY=0.0
+	MAGICRESISTANCE={99.0 100.0}
+	TACTICS={100.0 130.0}
+	FENCING={110.0 150.0}
+	NPC=brain_monster
+	FAME={8000 9500}
+	KARMA={-6000 -6999}
+
+
+
+ON=@NPCRESTOCK
+	ITEMNEWBIE i_robe
+	COLOR 0481
+	NAME Ice Robe
+	ITEMNEWBIE i_platemail_chest
+	COLOR 0481
+	NAME Ice Plate
+	ITEMNEWBIE i_platemail_leggings
+	COLOR 0481
+	NAME Ice Plate
+	ITEMNEWBIE i_platemail_Gloves
+	COLOR 0481
+	NAME Ice Plate
+	ITEMNEWBIE i_platemail_gauntlets
+	COLOR 0481
+	NAME Ice Plate
+	ITEMNEWBIE i_platemail_helm
+	COLOR 0481
+	NAME Ice Plate
+	ITEMNEWBIE i_platemail_GORGET
+	COLOR 0481
+	NAME Ice Plate
+	ITEMNEWBIE i_Except_war_Fork
+	COLOR 0481
+	NAME Ice War Fork
+	ITEM i_mt_horse_gray
+	COLOR 0481
+	MORE2 <UID>
+
+
+ON=@SKILLSTART
+FINDLAYER.25.MORE2 <UID>
+
+
+
+ON=@DEATH
+FINDLAYER.25.REMOVE
+NEWNPC c_mustang_snow
+NEW.P <P>
+
+
+////////////////////////////////////
+// Poison Monsters (Poison Bow) ///
+////////////////////////////////////
+
+[CHARDEF c_m_dragon_wyrm_Poison]
+//DEFNAME2=C_M_WYRM
+NAME=Poison Wyrm
+ID=c_DRAGON_GREEN
+SOUND=snd_MONSTER_DRAGON1
+ICON=i_pet_dragon
+DAM=18,50
+ARMOR=40
+RESOURCES=20 i_ribs_raw,50 i_hides_wyrm,8 i_reag_dragon_blood
+CAN=MT_WALK|MT_FLY
+FOODTYPE=80 t_meat_raw
+DESIRES=i_gold
+AVERSIONS=r_civilization,r_water
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	COLOR=0795
+	STR={900 1150}
+	MAXHITS=3000
+	DEX={180 250}
+	INT={400 600}
+	PARRYING={95.0 125.0}
+	MAGERY=100.0
+	MAGICRESISTANCE={99.0 100.0}
+	TACTICS={100.0 130.0}
+	WRESTLING={110.0 150.0}
+	NPC=brain_dragon
+	FAME={8000 9500}
+	KARMA={-6000 -6999}
+
+ON=@NPCRESTOCK
+
+ITEM=i_gold,17000
+////item=i_arrow_poison,80
+
+ON=@HIT
+IF <R2>==1
+SRC.FINDID.I_poison_effect.remove
+SERV.NEWITEM i_poison_effect
+NEW.more2 4
+NEW.MORE 8
+NEW.TAG.POISONTIMER 2
+NEW.TAG.ATTACKER <UID>
+NEW.CONT <SRC.UID>
+NEW.TRIGGER @EQUIP
+NEW.TIMER 2
+ENDIF
+
+
+[CHARDEF c_m_balron_Poison]
+NAME=Poison Balron
+ID=c_balron
+SOUND=snd_MONSTER_DRAGON1
+ICON=i_pet_dragon
+CAN=MT_WALK|MT_FLY|MT_RUN
+DAM=25,60
+ARMOR=37
+RESOURCES=20 i_ribs_raw
+CAN=MT_WALK|MT_FLY
+FOODTYPE=80 t_meat_raw
+DESIRES=i_gold
+AVERSIONS=r_civilization,r_water
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	COLOR=0795
+	STR={800 1050}
+	MAXHITS=2800
+	DEX={180 250}
+	INT=15
+	PARRYING={85.0 115.0}
+	MAGERY=100.0
+	MAGICRESISTANCE={89.0 100.0}
+	TACTICS={90.0 120.0}
+	WRESTLING={100.0 140.0}
+	NPC=brain_dragon
+	FAME={8000 9500}
+	KARMA={-6000 -6999}
+
+
+ON=@NPCRESTOCK
+
+ITEM=i_gold,15000
+////item=i_arrow_poison,70
+
+ON=@HIT
+IF <R2>==1
+SRC.FINDID.I_poison_effect.remove
+SERV.NEWITEM i_poison_effect
+NEW.more2 4
+NEW.MORE 8
+NEW.TAG.POISONTIMER 3
+NEW.TAG.ATTACKER <UID>
+NEW.CONT <SRC.UID>
+NEW.TRIGGER @EQUIP
+NEW.TIMER 2
+ENDIF
+
+
+[CHARDEF c_m_fiend_Poison]
+NAME=Poison Fiend
+ID=c_daemon_w_sword
+SOUND=snd_MONSTER_DRAGON1
+ICON=i_pet_dragon
+CAN=MT_WALK|MT_FLY|MT_RUN
+DAM=25,60
+ARMOR=37
+RESOURCES=20 i_ribs_raw
+CAN=MT_WALK|MT_FLY
+FOODTYPE=80 t_meat_raw
+DESIRES=i_gold
+AVERSIONS=r_civilization,r_water
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	COLOR=0795
+	STR={730 900}
+	MAXHITS=2600
+	DEX={180 250}
+	INT=500
+	PARRYING={85.0 115.0}
+	MAGERY=128.0
+	MAGICRESISTANCE={89.0 100.0}
+	TACTICS={90.0 120.0}
+	WRESTLING={100.0 140.0}
+	NPC=brain_monster
+	FAME={8000 9500}
+	KARMA={-6000 -6999}
+
+
+ON=@NPCRESTOCK
+ITEM=i_gold,12000
+//item=i_arrow_poison,60
+
+ON=@HIT
+IF <R4>==1
+SRC.FINDID.I_poison_effect.remove
+SERV.NEWITEM i_poison_effect
+NEW.more2 4
+NEW.MORE 7
+NEW.TAG.POISONTIMER 3
+NEW.TAG.ATTACKER <UID>
+NEW.CONT <SRC.UID>
+NEW.TRIGGER @EQUIP
+NEW.TIMER 2
+ENDIF
+
+
+[CHARDEF c_m_dragon_Poison]
+NAME=Poison Dragon
+ID=c_DRAGON_RED
+SOUND=snd_MONSTER_DRAGON1
+ICON=i_pet_dragon
+CAN=MT_WALK|MT_FLY|MT_RUN
+DAM=25,60
+ARMOR=37
+RESOURCES=20 i_ribs_raw,50 i_hides_dragon, 8 i_reag_dragon_blood
+CAN=MT_WALK|MT_FLY
+FOODTYPE=80 t_meat_raw
+DESIRES=i_gold
+AVERSIONS=r_civilization,r_water
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	COLOR=0795
+	STR={750 900}
+	MAXHITS=2400
+	DEX={180 250}
+	INT={880 1000}
+	PARRYING={85.0 115.0}
+	MAGERY=128.0
+	MAGICRESISTANCE={89.0 100.0}
+	TACTICS={90.0 120.0}
+	WRESTLING={100.0 140.0}
+	NPC=brain_dragon
+	FAME={8000 9500}
+	KARMA={-6000 -6999}
+ON=@NPCRESTOCK
+ITEM=i_gold,12000
+//item=i_arrow_poison,60
+
+ON=@HIT
+IF <R5>==1
+SRC.FINDID.I_poison_effect.remove
+SERV.NEWITEM i_poison_effect
+NEW.more2 4
+NEW.MORE 5
+NEW.TAG.POISONTIMER 4
+NEW.TAG.ATTACKER <UID>
+NEW.CONT <SRC.UID>
+NEW.TRIGGER @EQUIP
+NEW.TIMER 2
+ENDIF
+
+
+[CHARDEF c_m_drake_Poison]
+ID=c_DRAGON_SMALL_BLACK
+NAME=Poison Drake
+SOUND=snd_MONSTER_DRAGON1
+ICON=i_pet_dragon
+DAM=25,60
+ARMOR=35
+RESOURCES=20 i_ribs_raw,50 i_hides_drake,5 i_reag_dragon_blood
+CAN=MT_WALK|MT_FLY
+FOODTYPE=80 t_meat_raw
+DESIRES=i_gold
+AVERSIONS=r_civilization,r_water
+
+
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	COLOR=0795
+	STR={500 800}
+	MAXHITS=1800
+	DEX={400 550}
+	INT={1 10}
+	PARRYING={75.0 110.0}
+	MAGICRESISTANCE={190.0 280.0}
+	TACTICS={85.0 99.0}
+	WRESTLING={75.0 100.0}
+	NPC=brain_dragon
+	FAME={2000 6000}
+	KARMA=-5000
+
+ON=@NPCRESTOCK
+//item=i_arrow_poison,50
+
+ON=@HIT
+IF <R2>==1
+SRC.FINDID.I_poison_effect.remove
+SERV.NEWITEM i_poison_effect
+NEW.more2 3
+NEW.MORE 8
+NEW.TAG.POISONTIMER 3
+NEW.TAG.ATTACKER <UID>
+NEW.CONT <SRC.UID>
+NEW.TRIGGER @EQUIP
+NEW.TIMER 2
+ENDIF
+
+
+[CHARDEF c_m_ogre_lord_Poison]
+NAME=Poison Ogre Lord
+ID=c_OGRE
+SOUND=snd_MONSTER_OGRE1
+ICON=i_pet_OGRE_2
+DAM=25,60
+ARMOR=35
+RESOURCES=10 i_ribs_raw, 50 i_hides_ogre
+//ALIGNMENT=EVIL
+CAN=MT_WALK
+FOODTYPE=15 t_meat_raw
+//SHELTER==r_forests,r_mountains
+DESIRES=C_OGRE
+AVERSIONS=r_civilization
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	COLOR=0795
+	STR={970 1100}
+	DEX={80 90}
+	INT={46 70}
+	MAXHITS=1700
+	PARRYING={75.0 85.0}
+	MAGICRESISTANCE={65.0 80.0}
+	TACTICS={90.0 100.0}
+	WRESTLING={90.0 100.0}
+	NPC=BRAIN_MONSTER
+	FAME={100 2000}
+	KARMA={-4000 -4999}
+
+
+ON=@NPCRESTOCK
+ITEM=i_gold,7100
+//item=i_arrow_poison,40
+
+ON=@HIT
+IF <R4>==1
+SRC.FINDID.I_poison_effect.remove
+SERV.NEWITEM i_poison_effect
+NEW.more2 3
+NEW.MORE 7
+NEW.TAG.POISONTIMER 3
+NEW.TAG.ATTACKER <UID>
+NEW.CONT <SRC.UID>
+NEW.TRIGGER @EQUIP
+NEW.TIMER 2
+ENDIF
+
+
+[CHARDEF c_scorpion_giant_Poison]
+NAME=Poison Giant Scorpion
+ID=c_scorpion_giant
+SOUND=snd_ANIMALS_SNAKE1
+ICON=i_pet_SNAKE
+DAM=26,53
+ARMOR=30
+RESOURCES=1 i_ribs_raw
+//ALIGNMENT=EVIL
+CAN=MT_WALK
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	COLOR=0795
+	STR={600 700}
+	DEX={210 335}
+	INT={21 40}
+	MAGICRESISTANCE={25.0 40.0}
+	TACTICS={80.0 100.0}
+	WRESTLING={80.0 100.0}
+	NPC=BRAIN_MONSTER
+	FAME={100 2000}
+	KARMA={-4000 -4999}
+
+
+ON=@NPCRESTOCK
+ITEM=i_gold,5100
+//item=i_arrow_poison,30
+
+ON=@HIT
+IF <R5>==1
+SRC.FINDID.I_poison_effect.remove
+SERV.NEWITEM i_poison_effect
+NEW.more2 3
+NEW.MORE 5
+NEW.TAG.POISONTIMER 4
+NEW.TAG.ATTACKER <UID>
+NEW.CONT <SRC.UID>
+NEW.TRIGGER @EQUIP
+NEW.TIMER 2
+ENDIF
+
+
+[CHARDEF c_liche_Poison]
+NAME=Poison Liche
+ID=c_liche
+SOUND=snd_ANIMALS_SNAKE1
+ICON=i_pet_SNAKE
+DAM=26,53
+ARMOR=30
+RESOURCES=1 i_ribs_raw
+//ALIGNMENT=EVIL
+CAN=MT_WALK
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	COLOR=0795
+	STR={360 460}
+	DEX={210 335}
+	INT={21 40}
+	MAGICRESISTANCE={25.0 40.0}
+	TACTICS={80.0 100.0}
+	WRESTLING={80.0 100.0}
+	NPC=BRAIN_MONSTER
+	FAME={100 2000}
+	KARMA={-4000 -4999}
+
+ON=@NPCRESTOCK
+ITEM=i_gold,4100
+//item=i_arrow_poison,25
+
+ON=@HIT
+IF <R2>==1
+SRC.FINDID.I_poison_effect.remove
+SERV.NEWITEM i_poison_effect
+NEW.more2 2
+NEW.MORE 8
+NEW.TAG.POISONTIMER 3
+NEW.TAG.ATTACKER <UID>
+NEW.CONT <SRC.UID>
+NEW.TRIGGER @EQUIP
+NEW.TIMER 2
+ENDIF
+
+
+[CHARDEF c_gargoyle_Poison]
+ID=c_gargoyle
+NAME=Poison Gargoyle
+SOUND=snd_MONSTER_LZRDMN1
+ICON=i_pet_GARG
+ANIM=078c7f
+DAM=21,35
+ARMOR=35
+RESOURCES=6 i_ribs_raw
+CAN=MT_WALK|MT_RUN|MT_USEHANDS
+FOODTYPE=15 t_meat_raw
+//SHELTER=r_dungeon,r_swamp
+DESIRES=i_gold,c_LIZARDMAN
+AVERSIONS=e_carnivores3
+
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	COLOR=0795
+	NPC=brain_monster
+	FAME={300 1000}
+	KARMA={-2000 -2999}
+	//ALIGNMENT=EVIL
+	STR={410 440}
+	DEX={210 335}
+	INT={36 60}
+	PARRYING={75.0 95.0}
+	MagicResistance={35.0 80.0}
+	TACTICS={85.0 100.0}
+	WRESTLING={70.0 100.0}
+
+ON=@NPCRESTOCK
+ITEM=i_gold,3000
+//item=i_arrow_poison,20
+
+ON=@HIT
+IF <R4>==1
+SRC.FINDID.I_poison_effect.remove
+SERV.NEWITEM i_poison_effect
+NEW.more2 2
+NEW.MORE 7
+NEW.TAG.POISONTIMER 3
+NEW.TAG.ATTACKER <UID>
+NEW.CONT <SRC.UID>
+NEW.TRIGGER @EQUIP
+NEW.TIMER 2
+ENDIF
+
+[CHARDEF c_lizardman_Poison]
+ID=021
+NAME=Poison Lizard Man
+SOUND=snd_MONSTER_LZRDMN1
+ICON=i_pet_LIZMAN
+ANIM=078c7f
+DAM=21,35
+ARMOR=35
+RESOURCES=6 i_ribs_raw
+CAN=MT_WALK|MT_RUN|MT_USEHANDS
+FOODTYPE=15 t_meat_raw
+//SHELTER=r_dungeon,r_swamp
+DESIRES=i_gold,c_LIZARDMAN
+AVERSIONS=e_carnivores3
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	COLOR=0795
+	NPC=brain_monster
+	FAME={300 1000}
+	KARMA={-2000 -2999}
+	//ALIGNMENT=EVIL
+	STR={300 340}
+	DEX={210 335}
+	INT={36 60}
+	PARRYING={75.0 95.0}
+	MagicResistance={35.0 80.0}
+	TACTICS={85.0 100.0}
+	WRESTLING={70.0 100.0}
+
+ON=@NPCRESTOCK
+ITEM=i_gold,2300
+//item=i_arrow_poison,10
+
+ON=@HIT
+IF <R5>==1
+SRC.FINDID.I_poison_effect.remove
+SERV.NEWITEM i_poison_effect
+NEW.more2 2
+NEW.MORE 5
+NEW.TAG.POISONTIMER 4
+NEW.TAG.ATTACKER <UID>
+NEW.CONT <SRC.UID>
+NEW.TRIGGER @EQUIP
+NEW.TIMER 2
+ENDIF
+
+
+
+[CHARDEF c_ratman_Poison]
+ID=c_ratman_w_sword
+NAME=Poison Rat Man
+SOUND=snd_MONSTER_RATMAN1
+ICON=i_pet_RATMAN
+ANIM=078c7f
+DAM=15,26
+ARMOR=34
+RESOURCES=6 i_ribs_raw
+CAN=MT_WALK|MT_RUN|MT_USEHANDS
+FOODTYPE=15 t_meat_raw,i_cheese_wheel
+//SHELTER=r_caves,r_dungeon,r_swamp,r_desert
+DESIRES=c_ratman,c_ratman_w_sword,c_ratman_w_mace
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	NPC=brain_monster
+	COLOR=0795
+	STR={230 260}
+	DEX={181 300}
+	INT={36 60}
+	SWORDSMANSHIP={70.0 90.0}
+	PARRYING={60.0 80.0}
+	MAGICRESISTANCE={35.0 60.0}
+	TACTICS={70.0 95.0}
+	WRESTLING={70.0 95.0}
+	FAME={100 300}
+	KARMA={-2000 -2999}
+	//ALIGNMENT=EVIL
+
+
+ON=@NPCRESTOCK
+ITEM=i_gold,1800
+//item=i_arrow_poison,5
+
+ON=@HIT
+IF <R2>==1
+SRC.FINDID.I_poison_effect.remove
+SERV.NEWITEM i_poison_effect
+NEW.more2 1
+NEW.MORE 8
+NEW.TAG.POISONTIMER 3
+NEW.TAG.ATTACKER <UID>
+NEW.CONT <SRC.UID>
+NEW.TRIGGER @EQUIP
+NEW.TIMER 2
+ENDIF
+
+
+
+[CHARDEF c_headless_Poison]
+ID=c_headless
+NAME=Poison Headless
+SOUND=snd_MONSTER_RATMAN1
+ICON=i_pet_RATMAN
+ANIM=078c7f
+DAM=15,26
+ARMOR=34
+RESOURCES=6 i_ribs_raw
+CAN=MT_WALK|MT_RUN|MT_USEHANDS
+FOODTYPE=15 t_meat_raw,i_cheese_wheel
+//SHELTER=r_caves,r_dungeon,r_swamp,r_desert
+DESIRES=c_ratman,c_ratman_w_sword,c_ratman_w_mace
+
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	NPC=brain_monster
+	COLOR=0795
+	STR={130 160}
+	DEX={181 300}
+	INT={36 60}
+	SWORDSMANSHIP={70.0 90.0}
+	PARRYING={60.0 80.0}
+	MAGICRESISTANCE={35.0 60.0}
+	TACTICS={70.0 95.0}
+	WRESTLING={70.0 95.0}
+	FAME={100 300}
+	KARMA={-2000 -2999}
+	//ALIGNMENT=EVIL
+
+
+ON=@NPCRESTOCK
+ITEM=i_gold,1300
+//item=i_arrow_poison,2
+
+ON=@HIT
+IF <R4>==1
+SRC.FINDID.I_poison_effect.remove
+SERV.NEWITEM i_poison_effect
+NEW.more2 1
+NEW.MORE 7
+NEW.TAG.POISONTIMER 3
+NEW.TAG.ATTACKER <UID>
+NEW.CONT <SRC.UID>
+NEW.TRIGGER @EQUIP
+NEW.TIMER 2
+ENDIF
+
+
+[CHARDEF c_ooze_Poison]
+ID=c_slime
+NAME=Poison Ooze
+SOUND=snd_MONSTER_RATMAN1
+ICON=i_pet_slime
+ANIM=078c7f
+DAM=12,14
+ARMOR=34
+MOVERATE=40
+RESOURCES=6 i_ribs_raw
+CAN=MT_WALK|MT_RUN|MT_USEHANDS
+FOODTYPE=15 t_meat_raw,i_cheese_wheel
+//SHELTER=r_caves,r_dungeon,r_swamp,r_desert
+DESIRES=c_ratman,c_ratman_w_sword,c_ratman_w_mace
+
+
+ON=@Create
+    TAG.LOOTPROPRIO 1
+    NPC=brain_monster
+    COLOR=0795
+    STR={130 160}
+    DEX={181 300}
+    INT={36 60}
+    SWORDSMANSHIP={70.0 90.0}
+    PARRYING={60.0 80.0}
+    MAGICRESISTANCE={35.0 60.0}
+    TACTICS={70.0 95.0}
+    WRESTLING={70.0 95.0}
+    FAME={100 300}
+    KARMA={-2000 -2999}
+    //ALIGNMENT=EVIL
+
+
+ON=@HIT
+IF <R5>==1
+SRC.FINDID.I_poison_effect.remove
+SERV.NEWITEM i_poison_effect
+NEW.more2 1
+NEW.MORE 5
+NEW.TAG.POISONTIMER 4
+NEW.TAG.ATTACKER <UID>
+NEW.CONT <SRC.UID>
+NEW.TRIGGER @EQUIP
+NEW.TIMER 2
+ENDIF
+
+
+ON=@NPCRESTOCK
+ITEM=i_gold,800
+//item=i_arrow_poison
+
+
+////////////////////////////////////
+// Blood Monsters (Blood Weapon) ///
+////////////////////////////////////
+
+[CHARDEF c_m_dragon_wyrm_Blood]
+//DEFNAME2=C_M_WYRM
+NAME=Blood Wyrm
+ID=c_DRAGON_GREEN
+SOUND=snd_MONSTER_DRAGON1
+ICON=i_pet_dragon
+DAM=25,60
+ARMOR=60
+RESOURCES=20 i_ribs_raw,50 i_hides_wyrm,8 i_reag_dragon_blood
+CAN=MT_WALK|MT_FLY
+FOODTYPE=80 t_meat_raw
+DESIRES=i_gold
+AVERSIONS=r_civilization,r_water
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	COLOR=021
+	STR={900 1150}
+	MAXHITS=3000
+	DEX={180 250}
+	INT={400 600}
+	PARRYING={95.0 125.0}
+	MAGERY=100.0
+	MAGICRESISTANCE={99.0 100.0}
+	TACTICS={100.0 130.0}
+	WRESTLING={110.0 150.0}
+	NPC=brain_dragon
+	FAME={8000 9500}
+	KARMA={-6000 -6999}
+	EVENTS +E_ANTIBOW
+
+ON=@NPCRESTOCK
+
+ITEM=i_gold,{15000 16000}
+//ITEM=i_blood_kryss,R4
+ITEM=I_REAG_DRAGON_BLOOD,{20 25}
+ITEM=i_reag_daemon_bone,{25 35}
+ITEM=I_REAG_DRAGON_BLOOD,15
+ITEM=I_ARROW,{160 200}
+ITEM=T_TREAS_MAPS_1a4,R10
+
+[CHARDEF c_m_balron_Blood]
+NAME=Blood Balron
+ID=c_balron
+SOUND=snd_MONSTER_DRAGON1
+ICON=i_pet_dragon
+CAN=MT_WALK|MT_FLY|MT_RUN
+DAM=25,60
+ARMOR=55
+RESOURCES=20 i_ribs_raw
+CAN=MT_WALK|MT_FLY
+FOODTYPE=80 t_meat_raw
+DESIRES=i_gold
+AVERSIONS=r_civilization,r_water
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	COLOR=021
+	STR={800 1050}
+	MAXHITS=2800
+	DEX={180 250}
+	INT=15
+	PARRYING={85.0 115.0}
+	MAGERY=100.0
+	MAGICRESISTANCE={89.0 100.0}
+	TACTICS={90.0 120.0}
+	WRESTLING={100.0 140.0}
+	NPC=brain_monster
+	FAME={8000 9500}
+	KARMA={-6000 -6999}
+	EVENTS +E_ANTIBOW
+
+ON=@NPCRESTOCK
+
+ITEM=i_gold,7000
+ITEM=I_ARROW,{50 70}
+//ITEM=i_blood_halberd,R4
+
+[CHARDEF c_m_fiend_Blood]
+NAME=Blood Fiend
+ID=c_daemon_w_sword
+SOUND=snd_MONSTER_DRAGON1
+ICON=i_pet_dragon
+CAN=MT_WALK|MT_FLY|MT_RUN
+DAM=25,60
+ARMOR=55
+RESOURCES=20 i_ribs_raw
+CAN=MT_WALK|MT_FLY
+FOODTYPE=80 t_meat_raw
+DESIRES=i_gold
+AVERSIONS=r_civilization,r_water
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	COLOR=021
+	STR={730 900}
+	MAXHITS=2600
+	DEX={180 250}
+	INT=500
+	PARRYING={85.0 115.0}
+	MAGERY=128.0
+	MAGICRESISTANCE={89.0 100.0}
+	TACTICS={90.0 120.0}
+	WRESTLING={100.0 140.0}
+	NPC=brain_monster
+	FAME={8000 9500}
+	KARMA={-6000 -6999}
+
+
+ON=@NPCRESTOCK
+ITEM=i_gold,6000
+ITEM=i_blood_katana,R4
+
+
+[CHARDEF c_m_dragon_Blood]
+NAME=Blood Dragon
+ID=c_DRAGON_RED
+SOUND=snd_MONSTER_DRAGON1
+ICON=i_pet_dragon
+CAN=MT_WALK|MT_FLY|MT_RUN
+DAM=25,60
+ARMOR=55
+RESOURCES=20 i_ribs_raw,50 i_hides_dragon, 8 i_reag_dragon_blood
+CAN=MT_WALK|MT_FLY
+FOODTYPE=80 t_meat_raw
+DESIRES=i_gold
+AVERSIONS=r_civilization,r_water
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	COLOR=021
+	STR={750 900}
+	MAXHITS=2400
+	DEX={180 250}
+	INT={880 1000}
+	PARRYING={85.0 115.0}
+	MAGERY=128.0
+	MAGICRESISTANCE={89.0 100.0}
+	TACTICS={90.0 120.0}
+	WRESTLING={100.0 140.0}
+	NPC=brain_dragon
+	FAME={8000 9500}
+	KARMA={-6000 -6999}
+
+ON=@NPCRESTOCK
+ITEM=i_gold,{12000 13000}
+ITEM=i_reag_daemon_bone,{15 25}
+ITEM=I_REAG_DRAGON_BLOOD,15
+ITEM=T_TREAS_MAPS_1a4,R14
+ITEM=I_ARROW,{120 160}
+
+
+[CHARDEF c_m_drake_Blood]
+ID=c_DRAGON_SMALL_BLACK
+NAME=Blood Drake
+SOUND=snd_MONSTER_DRAGON1
+ICON=i_pet_dragon
+DAM=25,60
+ARMOR=50
+RESOURCES=20 i_ribs_raw,50 i_hides_drake,5 i_reag_dragon_blood
+CAN=MT_WALK|MT_FLY
+FOODTYPE=80 t_meat_raw
+DESIRES=i_gold
+AVERSIONS=r_civilization,r_water
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	COLOR=021
+	STR={500 800}
+	MAXHITS=1800
+	DEX={400 550}
+	INT={1 10}
+	PARRYING={75.0 110.0}
+	MAGICRESISTANCE={190.0 280.0}
+	TACTICS={85.0 99.0}
+	WRESTLING={75.0 100.0}
+	NPC=brain_dragon
+	FAME={2000 6000}
+	KARMA=-5000
+
+ON=@NPCRESTOCK
+ITEM=i_gold,10000
+ITEM=i_reag_daemon_bone,{5 15}
+ITEM=I_REAG_DRAGON_BLOOD,10
+ITEM=T_TREAS_MAPS_1a4,R18
+ITEM=I_ARROW,{80 120}
+
+
+[CHARDEF c_m_ogre_lord_Blood]
+NAME=Blood Ogre Lord
+ID=c_OGRE
+SOUND=snd_MONSTER_OGRE1
+ICON=i_pet_OGRE_2
+DAM=25,60
+ARMOR=50
+RESOURCES=10 i_ribs_raw, 50 i_hides_ogre
+//ALIGNMENT=EVIL
+CAN=MT_WALK
+FOODTYPE=15 t_meat_raw
+//SHELTER==r_forests,r_mountains
+DESIRES=C_OGRE
+AVERSIONS=r_civilization
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	COLOR=021
+	STR={970 1100}
+	DEX={80 90}
+	INT={46 70}
+	MAXHITS=1700
+	PARRYING={75.0 85.0}
+	MAGICRESISTANCE={65.0 80.0}
+	TACTICS={90.0 100.0}
+	WRESTLING={90.0 100.0}
+	NPC=BRAIN_MONSTER
+	FAME={100 2000}
+	KARMA={-4000 -4999}
+
+
+ON=@NPCRESTOCK
+ITEM=i_gold,{3100 5500}
+//ITEM=T_TREAS_MAPS_1a4,R8
+
+[CHARDEF c_scorpion_giant_Blood]
+NAME=Blood Giant Scorpion
+ID=c_scorpion_giant
+SOUND=snd_ANIMALS_SNAKE1
+ICON=i_pet_SNAKE
+DAM=26,53
+ARMOR=30
+RESOURCES=1 i_ribs_raw
+//ALIGNMENT=EVIL
+CAN=MT_WALK
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	COLOR=021
+	STR={600 700}
+	DEX={210 335}
+	INT={21 40}
+	MAGICRESISTANCE={25.0 40.0}
+	TACTICS={80.0 100.0}
+	WRESTLING={80.0 100.0}
+	NPC=BRAIN_MONSTER
+	FAME={100 2000}
+	KARMA={-4000 -4999}
+
+
+ON=@NPCRESTOCK
+ITEM=i_gold,1100
+
+[CHARDEF c_liche_Blood]
+NAME=Blood Liche
+ID=c_liche
+SOUND=snd_ANIMALS_SNAKE1
+ICON=i_pet_SNAKE
+DAM=26,53
+ARMOR=30
+RESOURCES=1 i_ribs_raw
+//ALIGNMENT=EVIL
+CAN=MT_WALK
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	COLOR=021
+	STR={360 460}
+	DEX={210 335}
+	INT={21 40}
+	MAGICRESISTANCE={25.0 40.0}
+	TACTICS={80.0 100.0}
+	WRESTLING={80.0 100.0}
+	NPC=BRAIN_MONSTER
+	FAME={100 2000}
+	KARMA={-4000 -4999}
+
+ON=@NPCRESTOCK
+ITEM=i_gold,{1500 2100}
+
+[CHARDEF c_gargoyle_Blood]
+ID=c_gargoyle
+NAME=Blood Gargoyle
+SOUND=snd_MONSTER_LZRDMN1
+ICON=i_pet_GARG
+ANIM=078c7f
+DAM=21,35
+ARMOR=35
+RESOURCES=6 i_ribs_raw
+CAN=MT_WALK|MT_RUN|MT_USEHANDS
+FOODTYPE=15 t_meat_raw
+//SHELTER=r_dungeon,r_swamp
+DESIRES=i_gold,c_LIZARDMAN
+AVERSIONS=e_carnivores3
+
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	COLOR=021
+	NPC=brain_monster
+	FAME={300 1000}
+	KARMA={-2000 -2999}
+	//ALIGNMENT=EVIL
+	STR={410 440}
+	DEX={210 335}
+	INT={36 60}
+	PARRYING={75.0 95.0}
+	MagicResistance={35.0 80.0}
+	TACTICS={85.0 100.0}
+	WRESTLING={70.0 100.0}
+
+ON=@NPCRESTOCK
+ITEM=i_gold,1000
+ITEM=i_blood_hammer_war,R4
+
+
+[CHARDEF c_lizardman_Blood]
+ID=021
+NAME=Blood Lizard Man
+SOUND=snd_MONSTER_LZRDMN1
+ICON=i_pet_LIZMAN
+ANIM=078c7f
+DAM=21,35
+ARMOR=35
+RESOURCES=6 i_ribs_raw
+CAN=MT_WALK|MT_RUN|MT_USEHANDS
+FOODTYPE=15 t_meat_raw
+//SHELTER=r_dungeon,r_swamp
+DESIRES=i_gold,c_LIZARDMAN
+AVERSIONS=e_carnivores3
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	COLOR=021
+	NPC=brain_monster
+	FAME={300 1000}
+	KARMA={-2000 -2999}
+	//ALIGNMENT=EVIL
+	STR={300 340}
+	DEX={210 335}
+	INT={36 60}
+	PARRYING={75.0 95.0}
+	MagicResistance={35.0 80.0}
+	TACTICS={85.0 100.0}
+	WRESTLING={70.0 100.0}
+
+ON=@NPCRESTOCK
+ITEM=i_gold,800
+ITEM=i_blood_spear,R4
+
+[CHARDEF c_ratman_Blood]
+ID=c_ratman_w_sword
+NAME=Blood Rat Man
+SOUND=snd_MONSTER_RATMAN1
+ICON=i_pet_RATMAN
+ANIM=078c7f
+DAM=15,26
+ARMOR=34
+RESOURCES=6 i_ribs_raw
+CAN=MT_WALK|MT_RUN|MT_USEHANDS
+FOODTYPE=15 t_meat_raw,i_cheese_wheel
+//SHELTER=r_caves,r_dungeon,r_swamp,r_desert
+DESIRES=c_ratman,c_ratman_w_sword,c_ratman_w_mace
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	NPC=brain_monster
+	COLOR=021
+	STR={230 260}
+	DEX={181 300}
+	INT={36 60}
+	SWORDSMANSHIP={70.0 90.0}
+	PARRYING={60.0 80.0}
+	MAGICRESISTANCE={35.0 60.0}
+	TACTICS={70.0 95.0}
+	WRESTLING={70.0 95.0}
+	FAME={100 300}
+	KARMA={-2000 -2999}
+	//ALIGNMENT=EVIL
+
+
+ON=@NPCRESTOCK
+ITEM=i_gold,800
+ITEM=i_blood_scimitar,R4
+
+
+
+[CHARDEF c_headless_Blood]
+ID=c_headless
+NAME=Blood Headless
+SOUND=snd_MONSTER_RATMAN1
+ICON=i_pet_RATMAN
+ANIM=078c7f
+DAM=15,26
+ARMOR=34
+RESOURCES=6 i_ribs_raw
+CAN=MT_WALK|MT_RUN|MT_USEHANDS
+FOODTYPE=15 t_meat_raw,i_cheese_wheel
+//SHELTER=r_caves,r_dungeon,r_swamp,r_desert
+DESIRES=c_ratman,c_ratman_w_sword,c_ratman_w_mace
+
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	NPC=brain_monster
+	COLOR=021
+	STR={130 160}
+	DEX={181 300}
+	INT={36 60}
+	SWORDSMANSHIP={70.0 90.0}
+	PARRYING={60.0 80.0}
+	MAGICRESISTANCE={35.0 60.0}
+	TACTICS={70.0 95.0}
+	WRESTLING={70.0 95.0}
+	FAME={100 300}
+	KARMA={-2000 -2999}
+	//ALIGNMENT=EVIL
+
+
+ON=@NPCRESTOCK
+ITEM=i_gold,800
+ITEM=i_blood_longsword,R4
+
+[CHARDEF c_ooze_Blood]
+ID=c_slime
+NAME=Blood Ooze
+SOUND=snd_MONSTER_RATMAN1
+ICON=i_pet_slime
+ANIM=078c7f
+DAM=15,26
+ARMOR=34
+RESOURCES=6 i_ribs_raw
+CAN=MT_WALK|MT_RUN|MT_USEHANDS
+FOODTYPE=15 t_meat_raw,i_cheese_wheel
+//SHELTER=r_caves,r_dungeon,r_swamp,r_desert
+DESIRES=c_ratman,c_ratman_w_sword,c_ratman_w_mace
+
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	NPC=brain_monster
+	COLOR=021
+	STR={130 160}
+	DEX={181 300}
+	INT={36 60}
+	SWORDSMANSHIP={70.0 90.0}
+	PARRYING={60.0 80.0}
+	MAGICRESISTANCE={35.0 60.0}
+	TACTICS={70.0 95.0}
+	WRESTLING={70.0 95.0}
+	FAME={100 300}
+	KARMA={-2000 -2999}
+	//ALIGNMENT=EVIL
+
+
+ON=@NPCRESTOCK
+ITEM=i_gold,800
+ITEM=i_blood_pitchfork,R4
+
+
+//////////////////////////////////////
+/// Silver Monster (sliver weapon) ///
+//////////////////////////////////////
+
+[CHARDEF c_m_dragon_wyrm_Silver]
+//DEFNAME2=C_M_WYRM
+NAME=Silver Wyrm
+ID=c_DRAGON_GREEN
+SOUND=snd_MONSTER_DRAGON1
+ICON=i_pet_dragon
+DAM=20,50
+ARMOR=50
+RESOURCES=20 i_ribs_raw,40 i_hides_wyrm,8 i_reag_dragon_blood
+CAN=MT_WALK|MT_FLY
+FOODTYPE=80 t_meat_raw
+DESIRES=i_gold
+AVERSIONS=r_civilization,r_water
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	COLOR=color_o_silver
+	STR={750 1050}
+	MAXHITS=2700
+	DEX={180 250}
+	INT={400 600}
+	PARRYING={95.0 115.0}
+	MAGERY=100.0
+	MAGICRESISTANCE={99.0 100.0}
+	TACTICS={100.0 110.0}
+	WRESTLING={105.0 120.0}
+	NPC=brain_dragon
+	FAME={8000 9500}
+	KARMA={-6000 -6999}
+	EVENTS=+E_ANTIBOW
+
+ON=@NPCRESTOCK
+ITEM=i_gold,{10000 13000}
+ITEM=I_REAG_DRAGON_BLOOD,10
+
+[CHARDEF c_m_balron_silver]
+NAME=Silver Balron
+ID=c_balron
+SOUND=snd_MONSTER_DRAGON1
+ICON=i_pet_dragon
+CAN=MT_WALK|MT_FLY|MT_RUN
+DAM=46,83
+ARMOR=55
+RESOURCES=20 i_ribs_raw
+CAN=MT_WALK|MT_FLY
+FOODTYPE=80 t_meat_raw
+DESIRES=i_gold
+AVERSIONS=r_civilization,r_water
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	COLOR=color_o_silver
+	STR={800 1000}
+	MAXHITS=2500
+	DEX={180 250}
+	INT=15
+	PARRYING={85.0 115.0}
+	MAGERY=100.0
+	MAGICRESISTANCE={89.0 100.0}
+	TACTICS={90.0 120.0}
+	WRESTLING={100.0 140.0}
+	NPC=brain_monster
+	FAME={8000 9500}
+	KARMA={-6000 -6999}
+	EVENTS=+E_ANTIBOW
+
+
+ON=@NPCRESTOCK
+ITEM=i_gold,5000
+
+[CHARDEF c_m_fiend_silver]
+NAME=Silver Fiend
+ID=c_daemon_w_sword
+SOUND=snd_MONSTER_DRAGON1
+ICON=i_pet_dragon
+CAN=MT_WALK|MT_FLY|MT_RUN
+DAM=46,83
+ARMOR=55
+RESOURCES=20 i_ribs_raw
+CAN=MT_WALK|MT_FLY
+FOODTYPE=80 t_meat_raw
+DESIRES=i_gold
+AVERSIONS=r_civilization,r_water
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	COLOR=color_o_silver
+	STR={650 750}
+	MAXHITS=2000
+	DEX={180 250}
+	INT=400
+	PARRYING={85.0 115.0}
+	MAGERY=100.0
+	MAGICRESISTANCE={89.0 100.0}
+	TACTICS={90.0 120.0}
+	WRESTLING={100.0 140.0}
+	NPC=brain_monster
+	FAME={8000 9500}
+	KARMA={-6000 -6999}
+	EVENTS=+E_ANTIBOW
+
+
+ON=@NPCRESTOCK
+ITEM=i_gold,5000
+
+[CHARDEF c_m_dragon_Silver]
+NAME=Silver Dragon
+ID=c_DRAGON_RED
+SOUND=snd_MONSTER_DRAGON1
+ICON=i_pet_dragon
+CAN=MT_WALK|MT_FLY|MT_RUN
+DAM=20,50
+ARMOR=45
+RESOURCES=20 i_ribs_raw,40 i_hides_dragon,5 i_reag_dragon_blood
+CAN=MT_WALK|MT_FLY
+FOODTYPE=80 t_meat_raw
+DESIRES=i_gold
+AVERSIONS=r_civilization,r_water
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	COLOR=color_o_silver
+	STR={700 900}
+	MAXHITS=1900
+	DEX={180 250}
+	INT={350 480}
+	PARRYING={85.0 105.0}
+	MAGERY=100.0
+	MAGICRESISTANCE={89.0 100.0}
+	TACTICS={90.0 110.0}
+	WRESTLING={90.0 130.0}
+	NPC=brain_dragon
+	FAME={8000 9500}
+	KARMA={-6000 -6999}
+	EVENTS=+E_ANTIBOW
+
+ON=@NPCRESTOCK
+ITEM=i_gold,{10000 10900}
+ITEM=I_REAG_DRAGON_BLOOD,10
+
+[CHARDEF c_m_drake_Silver]
+ID=c_DRAGON_SMALL_BLACK
+NAME=Silver Drake
+SOUND=snd_MONSTER_DRAGON1
+ICON=i_pet_dragon
+DAM=20,50
+ARMOR=40
+RESOURCES=20 i_ribs_raw,40 i_hides_drake,5 i_reag_dragon_blood
+CAN=MT_WALK|MT_FLY
+FOODTYPE=80 t_meat_raw
+DESIRES=i_gold
+AVERSIONS=r_civilization,r_water
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	COLOR=color_o_silver
+	STR={650 750}
+	MAXHITS=1500
+	DEX={400 550}
+	INT={1 10}
+	PARRYING={75.0 110.0}
+	MAGICRESISTANCE={190.0 280.0}
+	TACTICS={85.0 99.0}
+	WRESTLING={75.0 100.0}
+	NPC=brain_dragon
+	FAME={2000 6000}
+	KARMA=-5000
+	EVENTS=+E_ANTIBOW
+
+ON=@NPCRESTOCK
+ITEM=i_gold,7000
+ITEM=I_REAG_DRAGON_BLOOD,10
+
+[CHARDEF c_m_ogre_lord_Silver]
+NAME=Silver Ogre Lord
+ID=c_OGRE
+SOUND=snd_MONSTER_OGRE1
+ICON=i_pet_OGRE_2
+DAM=20,50
+ARMOR=40
+RESOURCES=10 i_ribs_raw, 40 i_hides_ogre
+//ALIGNMENT=EVIL
+CAN=MT_WALK
+FOODTYPE=15 t_meat_raw
+//SHELTER==r_forests,r_mountains
+DESIRES=C_OGRE
+AVERSIONS=r_civilization
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	COLOR=color_o_silver
+	STR={870 1000}
+	DEX={80 90}
+	INT={46 70}
+	PARRYING={75.0 85.0}
+	MAGICRESISTANCE={65.0 80.0}
+	TACTICS={90.0 100.0}
+	WRESTLING={90.0 100.0}
+	NPC=BRAIN_MONSTER
+	FAME={100 2000}
+	KARMA={-4000 -4999}
+	EVENTS=+E_ANTIBOW
+
+ON=@NPCRESTOCK
+ITEM=i_gold,2500
+ITEM=i_silver_axe_exec,R4
+
+
+[CHARDEF c_scorpion_giant_Silver]
+NAME=Silver Giant Scorpion
+ID=c_scorpion_giant
+SOUND=snd_ANIMALS_SNAKE1
+ICON=i_pet_SNAKE
+DAM=20,40
+ARMOR=25
+RESOURCES=1 i_ribs_raw
+//ALIGNMENT=EVIL
+CAN=MT_WALK
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	COLOR=color_o_silver
+	STR={460 560}
+	DEX={210 335}
+	INT={21 40}
+	MAGICRESISTANCE={25.0 40.0}
+	TACTICS={80.0 100.0}
+	WRESTLING={80.0 100.0}
+	NPC=BRAIN_MONSTER
+	FAME={100 2000}
+	KARMA={-4000 -4999}
+
+
+ON=@NPCRESTOCK
+ITEM=i_gold,2000
+ITEM=i_silver_bardiche,R4
+
+
+
+
+
+[CHARDEF c_liche_Silver]
+NAME=Silver Liche
+ID=c_liche
+SOUND=snd_ANIMALS_SNAKE1
+ICON=i_pet_SNAKE
+DAM=20,40
+ARMOR=25
+RESOURCES=1 i_ribs_raw
+//ALIGNMENT=EVIL
+CAN=MT_WALK
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	COLOR=color_o_silver
+	STR={410 460}
+	DEX={210 335}
+	INT={21 40}
+	MAGICRESISTANCE={25.0 40.0}
+	TACTICS={80.0 100.0}
+	WRESTLING={80.0 100.0}
+	NPC=BRAIN_MONSTER
+	FAME={100 2000}
+	KARMA={-4000 -4999}
+
+
+ON=@NPCRESTOCK
+ITEM=i_gold,1200
+ITEM=i_silver_axe_Battle_large,R4
+
+
+[CHARDEF c_gargoyle_silver]
+ID=c_gargoyle
+NAME=Silver Gargoyle
+SOUND=snd_MONSTER_LZRDMN1
+ICON=i_pet_GARG
+ANIM=078c7f
+DAM=21,35
+ARMOR=35
+RESOURCES=6 i_ribs_raw
+CAN=MT_WALK|MT_RUN|MT_USEHANDS
+FOODTYPE=15 t_meat_raw
+//SHELTER=r_dungeon,r_swamp
+DESIRES=i_gold,c_LIZARDMAN
+AVERSIONS=e_carnivores3
+
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	COLOR=color_o_silver
+	NPC=brain_monster
+	FAME={300 1000}
+	KARMA={-2000 -2999}
+	//ALIGNMENT=EVIL
+	STR={370 400}
+	DEX={210 335}
+	INT={36 60}
+	PARRYING={75.0 95.0}
+	MagicResistance={35.0 80.0}
+	TACTICS={85.0 100.0}
+	WRESTLING={70.0 100.0}
+
+ON=@NPCRESTOCK
+ITEM=i_gold,1500
+
+[CHARDEF c_lizardman_Silver]
+ID=021
+NAME=Silver Lizard Man
+SOUND=snd_MONSTER_LZRDMN1
+ICON=i_pet_LIZMAN
+ANIM=078c7f
+DAM=17,29
+ARMOR=26
+RESOURCES=6 i_ribs_raw
+CAN=MT_WALK|MT_RUN|MT_USEHANDS
+FOODTYPE=15 t_meat_raw
+//SHELTER=r_dungeon,r_swamp
+DESIRES=i_gold,c_LIZARDMAN
+AVERSIONS=e_carnivores3
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	COLOR=color_o_silver
+	NPC=brain_monster
+	FAME={300 1000}
+	KARMA={-2000 -2999}
+	//ALIGNMENT=EVIL
+	STR={250 280}
+	DEX={210 335}
+	INT={36 60}
+	PARRYING={75.0 95.0}
+	MagicResistance={35.0 80.0}
+	TACTICS={85.0 100.0}
+	WRESTLING={70.0 100.0}
+
+ON=@NPCRESTOCK
+ITEM=i_gold,1000
+
+[CHARDEF c_ratman_Silver]
+ID=c_ratman_w_sword
+NAME=Silver Rat Man
+SOUND=snd_MONSTER_RATMAN1
+ICON=i_pet_RATMAN
+ANIM=078c7f
+DAM=12,20
+ARMOR=27
+RESOURCES=6 i_ribs_raw
+CAN=MT_WALK|MT_RUN|MT_USEHANDS
+FOODTYPE=15 t_meat_raw,i_cheese_wheel
+//SHELTER=r_caves,r_dungeon,r_swamp,r_desert
+DESIRES=c_ratman,c_ratman_w_sword,c_ratman_w_mace
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	NPC=brain_monster
+	COLOR=color_o_silver
+	STR={210 240}
+	DEX={181 300}
+	INT={36 60}
+	SWORDSMANSHIP={70.0 90.0}
+	PARRYING={60.0 80.0}
+	MAGICRESISTANCE={35.0 60.0}
+	TACTICS={70.0 95.0}
+	WRESTLING={70.0 95.0}
+	FAME={100 300}
+	KARMA={-2000 -2999}
+	//ALIGNMENT=EVIL
+ON=@NPCRESTOCK
+ITEM=i_gold,1000
+
+[CHARDEF c_headless_silver]
+ID=c_headless
+NAME=Silver Headless
+SOUND=snd_MONSTER_RATMAN1
+ICON=i_pet_RATMAN
+ANIM=078c7f
+DAM=15,26
+ARMOR=34
+RESOURCES=6 i_ribs_raw
+CAN=MT_WALK|MT_RUN|MT_USEHANDS
+FOODTYPE=15 t_meat_raw,i_cheese_wheel
+//SHELTER=r_caves,r_dungeon,r_swamp,r_desert
+DESIRES=c_ratman,c_ratman_w_sword,c_ratman_w_mace
+
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	NPC=brain_monster
+	COLOR=color_o_silver
+	STR={130 160}
+	DEX={181 300}
+	INT={36 60}
+	SWORDSMANSHIP={70.0 90.0}
+	PARRYING={60.0 80.0}
+	MAGICRESISTANCE={35.0 60.0}
+	TACTICS={70.0 95.0}
+	WRESTLING={70.0 95.0}
+	FAME={100 300}
+	KARMA={-2000 -2999}
+	//ALIGNMENT=EVIL
+
+ON=@NPCRESTOCK
+ITEM=i_gold,900
+
+[CHARDEF c_ooze_silver]
+ID=c_slime
+NAME=Silver Ooze
+SOUND=snd_MONSTER_RATMAN1
+ICON=i_pet_slime
+ANIM=078c7f
+DAM=15,26
+ARMOR=34
+RESOURCES=6 i_ribs_raw
+CAN=MT_WALK|MT_RUN|MT_USEHANDS
+FOODTYPE=15 t_meat_raw,i_cheese_wheel
+//SHELTER=r_caves,r_dungeon,r_swamp,r_desert
+DESIRES=c_ratman,c_ratman_w_sword,c_ratman_w_mace
+
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	NPC=brain_monster
+	COLOR=color_o_silver
+	STR={130 160}
+	DEX={181 300}
+	INT={36 60}
+	SWORDSMANSHIP={70.0 90.0}
+	PARRYING={60.0 80.0}
+	MAGICRESISTANCE={35.0 60.0}
+	TACTICS={70.0 95.0}
+	WRESTLING={70.0 95.0}
+	FAME={100 300}
+	KARMA={-2000 -2999}
+	//ALIGNMENT=EVIL
+
+ON=@NPCRESTOCK
+ITEM=i_gold,500
+
+/////////////////////////////////////////
+///////// Weak Monsters /////////////////
+/////////////////////////////////////////
+
+[CHARDEF c_m_dragon_wyrm_weak]
+//DEFNAME2=C_M_WYRM
+NAME=Weak Wyrm
+ID=c_DRAGON_GREEN
+SOUND=snd_MONSTER_DRAGON1
+ICON=i_pet_dragon
+DAM=15
+ARMOR=40
+RESOURCES=20 i_ribs_raw,10 i_hides_wyrm,8 i_reag_dragon_blood
+CAN=MT_WALK|MT_FLY
+FOODTYPE=80 t_meat_raw
+DESIRES=i_gold
+AVERSIONS=r_civilization,r_water
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	STR=160
+	DEX=85
+	INT=45
+	PARRYING={95.0 115.0}
+	MAGERY=80.0
+	MAGICRESISTANCE={99.0 100.0}
+	TACTICS={100.0 110.0}
+	WRESTLING={105.0 120.0}
+	NPC=brain_dragon
+	FAME={8000 9500}
+	KARMA={-6000 -6999}
+
+ON=@NPCRESTOCK
+ITEM=i_gold,1800
+
+[CHARDEF c_m_balron_weak]
+NAME=Weak Balron
+ID=c_balron
+SOUND=snd_MONSTER_DRAGON1
+ICON=i_pet_dragon
+CAN=MT_WALK|MT_FLY|MT_RUN
+DAM=10
+ARMOR=20
+RESOURCES=20 i_ribs_raw
+CAN=MT_WALK|MT_FLY
+FOODTYPE=80 t_meat_raw
+DESIRES=i_gold
+AVERSIONS=r_civilization,r_water
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+
+	STR=170
+	DEX=151
+	INT=15
+	PARRYING={85.0 115.0}
+	MAGERY=80.0
+	MAGICRESISTANCE={89.0 100.0}
+	TACTICS={90.0 120.0}
+	WRESTLING={100.0 140.0}
+	NPC=brain_dragon
+	FAME={8000 9500}
+	KARMA={-6000 -6999}
+
+
+ON=@NPCRESTOCK
+ITEM=i_gold,1300
+
+[CHARDEF c_m_fiend_weak]
+NAME=Weak Fiend
+ID=c_daemon_w_sword
+SOUND=snd_MONSTER_DRAGON1
+ICON=i_pet_dragon
+CAN=MT_WALK|MT_FLY|MT_RUN
+DAM=10
+ARMOR=20
+RESOURCES=20 i_ribs_raw
+CAN=MT_WALK|MT_FLY
+FOODTYPE=80 t_meat_raw
+DESIRES=i_gold
+AVERSIONS=r_civilization,r_water
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+
+	STR=150
+	MAXHITS=2400
+	DEX=45
+	INT=125
+	PARRYING={85.0 115.0}
+	MAGERY=80.0
+	MAGICRESISTANCE={89.0 100.0}
+	TACTICS={90.0 120.0}
+	WRESTLING={100.0 140.0}
+	NPC=brain_dragon
+	FAME={8000 9500}
+	KARMA={-6000 -6999}
+
+
+ON=@NPCRESTOCK
+ITEM=i_gold,1250
+
+
+
+
+[CHARDEF c_m_dragon_weak]
+NAME=Weak Dragon
+ID=c_DRAGON_RED
+SOUND=snd_MONSTER_DRAGON1
+ICON=i_pet_dragon
+CAN=MT_WALK|MT_FLY|MT_RUN
+DAM=10
+ARMOR=20
+RESOURCES=20 i_ribs_raw,10 i_hides_dragon,5 i_reag_dragon_blood
+CAN=MT_WALK|MT_FLY
+FOODTYPE=80 t_meat_raw
+DESIRES=i_gold
+AVERSIONS=r_civilization,r_water
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+
+	STR=160
+	DEX=50
+	INT=120
+	PARRYING={85.0 105.0}
+	MAGERY=80.0
+	MAGICRESISTANCE={89.0 100.0}
+	TACTICS={90.0 110.0}
+	WRESTLING={90.0 130.0}
+	NPC=brain_dragon
+	FAME={8000 9500}
+	KARMA={-6000 -6999}
+
+ON=@NPCRESTOCK
+ITEM=i_gold,1200
+
+[CHARDEF c_m_drake_weak]
+ID=c_DRAGON_SMALL_BLACK
+NAME=Weak Drake
+SOUND=snd_MONSTER_DRAGON1
+ICON=i_pet_dragon
+DAM=8
+ARMOR=20
+RESOURCES=20 i_ribs_raw,10 i_hides_drake,5 i_reag_dragon_blood
+CAN=MT_WALK|MT_FLY
+FOODTYPE=80 t_meat_raw
+DESIRES=i_gold
+AVERSIONS=r_civilization,r_water
+
+
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+
+	STR=130
+	DEX=110
+	INT=20
+	PARRYING={75.0 110.0}
+	MAGICRESISTANCE={190.0 280.0}
+	TACTICS={85.0 99.0}
+	WRESTLING={75.0 100.0}
+	NPC=brain_dragon
+	FAME={2000 6000}
+	KARMA=-5000
+
+
+ON=@NPCRESTOCK
+ITEM=i_gold,950
+
+
+[CHARDEF c_m_ogre_lord_weak]
+NAME=Weak Ogre Lord
+ID=c_OGRE
+SOUND=snd_MONSTER_OGRE1
+ICON=i_pet_OGRE_2
+DAM=4,10
+ARMOR=20
+RESOURCES=10 i_ribs_raw, 10 i_hides_ogre
+//ALIGNMENT=EVIL
+CAN=MT_WALK
+FOODTYPE=15 t_meat_raw
+//SHELTER==r_forests,r_mountains
+DESIRES=C_OGRE
+AVERSIONS=r_civilization
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+
+	STR=150
+	DEX=40
+	INT=10
+	PARRYING={75.0 85.0}
+	MAGICRESISTANCE={65.0 80.0}
+	TACTICS={90.0 100.0}
+	WRESTLING={90.0 100.0}
+	NPC=BRAIN_MONSTER
+	FAME={100 2000}
+	KARMA={-4000 -4999}
+
+
+ON=@NPCRESTOCK
+ITEM=i_gold,490
+
+
+[CHARDEF c_scorpion_giant_weak]
+NAME=Weak Giant Scorpion
+ID=c_scorpion_giant
+SOUND=snd_ANIMALS_SNAKE1
+ICON=i_pet_SNAKE
+DAM=9
+ARMOR=15
+RESOURCES=1 i_ribs_raw
+//ALIGNMENT=EVIL
+CAN=MT_WALK
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+
+	STR=120
+	DEX=20
+	INT=110
+	MAGICRESISTANCE={25.0 40.0}
+	TACTICS={80.0 100.0}
+	WRESTLING={80.0 100.0}
+	NPC=BRAIN_MONSTER
+	FAME={100 2000}
+	KARMA={-4000 -4999}
+
+
+ON=@NPCRESTOCK
+ITEM=i_gold,530
+
+
+
+
+
+[CHARDEF c_liche_weak]
+NAME=Weak Liche
+ID=c_liche
+SOUND=snd_ANIMALS_SNAKE1
+ICON=i_pet_SNAKE
+DAM=12
+ARMOR=15
+RESOURCES=1 i_ribs_raw
+//ALIGNMENT=EVIL
+CAN=MT_WALK
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+
+	STR=70
+	DEX=40
+	INT=120
+	MAGICRESISTANCE={25.0 40.0}
+	TACTICS={80.0 100.0}
+	WRESTLING={80.0 100.0}
+	NPC=BRAIN_MONSTER
+	FAME={100 2000}
+	KARMA={-4000 -4999}
+
+
+ON=@NPCRESTOCK
+ITEM=i_gold,100
+
+
+[CHARDEF c_gargoyle_weak]
+ID=c_gargoyle
+NAME=Weak Gargoyle
+SOUND=snd_MONSTER_LZRDMN1
+ICON=i_pet_GARG
+ANIM=078c7f
+DAM=8
+ARMOR=15
+RESOURCES=6 i_ribs_raw
+CAN=MT_WALK|MT_RUN|MT_USEHANDS
+FOODTYPE=15 t_meat_raw
+//SHELTER=r_dungeon,r_swamp
+DESIRES=i_gold,c_LIZARDMAN
+AVERSIONS=e_carnivores3
+
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+
+	NPC=brain_monster
+	FAME={300 1000}
+	KARMA={-2000 -2999}
+	//ALIGNMENT=EVIL
+	STR=50
+	DEX=50
+	INT=50
+	PARRYING={75.0 95.0}
+	MagicResistance={35.0 80.0}
+	TACTICS={85.0 100.0}
+	WRESTLING={70.0 100.0}
+
+ON=@NPCRESTOCK
+ITEM=i_gold,100
+
+
+
+[CHARDEF c_lizardman_weak]
+ID=021
+NAME=Weak Lizard Man
+SOUND=snd_MONSTER_LZRDMN1
+ICON=i_pet_LIZMAN
+ANIM=078c7f
+DAM=13
+ARMOR=10
+RESOURCES=6 i_ribs_raw
+CAN=MT_WALK|MT_RUN|MT_USEHANDS
+FOODTYPE=15 t_meat_raw
+//SHELTER=r_dungeon,r_swamp
+DESIRES=i_gold,c_LIZARDMAN
+AVERSIONS=e_carnivores3
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+
+	NPC=brain_monster
+	FAME={300 1000}
+	KARMA={-2000 -2999}
+	//ALIGNMENT=EVIL
+	STR=45
+	DEX=20
+	INT=20
+	PARRYING={75.0 95.0}
+	MagicResistance={35.0 80.0}
+	TACTICS={85.0 100.0}
+	WRESTLING={70.0 100.0}
+
+ON=@NPCRESTOCK
+ITEM=i_gold,70
+
+[CHARDEF c_ratman_weak]
+ID=c_ratman_w_sword
+NAME=Weak Rat Man
+SOUND=snd_MONSTER_RATMAN1
+ICON=i_pet_RATMAN
+ANIM=078c7f
+DAM=7
+ARMOR=5
+RESOURCES=6 i_ribs_raw
+CAN=MT_WALK|MT_RUN|MT_USEHANDS
+FOODTYPE=15 t_meat_raw,i_cheese_wheel
+//SHELTER=r_caves,r_dungeon,r_swamp,r_desert
+DESIRES=c_ratman,c_ratman_w_sword,c_ratman_w_mace
+
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	NPC=brain_monster
+
+	STR=40
+	DEX=20
+	INT=20
+	SWORDSMANSHIP={70.0 90.0}
+	PARRYING={60.0 80.0}
+	MAGICRESISTANCE={35.0 60.0}
+	TACTICS={70.0 95.0}
+	WRESTLING={70.0 95.0}
+	FAME={100 300}
+	KARMA={-2000 -2999}
+	//ALIGNMENT=EVIL
+ON=@NPCRESTOCK
+ITEM=i_gold,80
+
+///////////////////////////////////////////
+////////// Dark Monsters (daemon bone) ////
+///////////////////////////////////////////
+
+[CHARDEF c_m_dragon_wyrm_Dark]
+//DEFNAME2=C_M_WYRM
+NAME=Dark Wyrm
+ID=c_DRAGON_GREEN
+SOUND=snd_MONSTER_DRAGON1
+ICON=i_pet_dragon
+DAM=20,44
+ARMOR=40
+RESOURCES=20 i_ribs_raw,30 i_hides_wyrm,8 i_reag_dragon_blood
+CAN=MT_WALK|MT_FLY
+FOODTYPE=80 t_meat_raw
+DESIRES=i_gold
+AVERSIONS=r_civilization,r_water
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	COLOR=0902
+	STR={1100 1250}
+	MAXHITS=4500
+	DEX={180 250}
+	INT={880 1000}
+	PARRYING={85.0 105.0}
+	MAGERY=158.0
+	MAGICRESISTANCE={99.0 100.0}
+	TACTICS={100.0 110.0}
+	WRESTLING={100.0 110.0}
+	NPC=brain_dragon
+	FAME={8000 9500}
+	KARMA={-6000 -6999}
+	EVENTS=+E_ANTIBOW
+
+ON=@NPCRESTOCK
+ITEM=i_gold,{17000 21000}
+ITEM=i_reag_daemon_bone,{20 24}
+ITEM=I_REAG_DRAGON_BLOOD,{15 25}
+//ITEM=T_TREAS_MAPS_1a4,R8
+
+[CHARDEF c_m_balron_Dark]
+NAME=Dark Balron
+ID=c_balron
+SOUND=snd_MONSTER_DRAGON1
+ICON=i_pet_dragon
+CAN=MT_WALK|MT_FLY|MT_RUN
+DAM=17,44
+ARMOR=35
+RESOURCES=20 i_ribs_raw
+CAN=MT_WALK|MT_FLY
+FOODTYPE=80 t_meat_raw
+DESIRES=i_gold
+AVERSIONS=r_civilization,r_water
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	COLOR=0902
+	STR={900 1400}
+	MAXHITS=2300
+	DEX={180 250}
+	INT={600 700}
+	PARRYING={85.0 100.0}
+	MAGERY=9.0
+	MAGICRESISTANCE={89.0 100.0}
+	TACTICS={90.0 100.0}
+	WRESTLING={100.0 120.0}
+	NPC=brain_dragon
+	FAME={8000 9500}
+	KARMA={-6000 -6999}
+	EVENTS=+E_ANTIBOW
+
+ON=@NPCRESTOCK
+ITEM=i_gold,{7000 10000}
+ITEM=i_reag_daemon_bone,{14 17}
+//ITEM=T_TREAS_MAPS_1a4,R11
+
+[CHARDEF c_m_fiend_Dark]
+NAME=Dark Fiend
+ID=c_daemon_w_sword
+SOUND=snd_MONSTER_DRAGON1
+ICON=i_pet_daemon
+CAN=MT_WALK|MT_FLY|MT_RUN
+DAM=17,44
+ARMOR=35
+RESOURCES=20 i_ribs_raw
+CAN=MT_WALK|MT_FLY
+FOODTYPE=80 t_meat_raw
+DESIRES=i_gold
+AVERSIONS=r_civilization,r_water
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	COLOR=0902
+	STR={900 1200}
+	MAXHITS=1700
+	DEX={180 250}
+	INT={600 700}
+	PARRYING={85.0 100.0}
+	MAGERY=128.0
+	MAGICRESISTANCE={89.0 100.0}
+	TACTICS={90.0 100.0}
+	WRESTLING={100.0 120.0}
+	NPC=brain_dragon
+	FAME={8000 9500}
+	KARMA={-6000 -6999}
+	EVENTS=+E_ANTIBOW
+
+
+ON=@NPCRESTOCK
+ITEM=i_gold,{5500 8000}
+ITEM=i_reag_daemon_bone,{11 14}
+//ITEM=T_TREAS_MAPS_1a4,R12
+
+[CHARDEF c_m_dragon_Dark]
+NAME=Dark Dragon
+ID=c_DRAGON_RED
+SOUND=snd_MONSTER_DRAGON1
+ICON=i_pet_dragon
+CAN=MT_WALK|MT_FLY|MT_RUN
+DAM=17,44
+ARMOR=35
+RESOURCES=20 i_ribs_raw,30 i_hides_dragon,9 i_reag_dragon_blood
+CAN=MT_WALK|MT_FLY
+FOODTYPE=80 t_meat_raw
+DESIRES=i_gold
+AVERSIONS=r_civilization,r_water
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	COLOR=0902
+	STR={900 1100}
+	MAXHITS=2000
+	DEX={180 250}
+	INT={600 700}
+	PARRYING={85.0 100.0}
+	MAGERY=128.0
+	MAGICRESISTANCE={89.0 100.0}
+	TACTICS={90.0 100.0}
+	WRESTLING={100.0 120.0}
+	NPC=brain_dragon
+	FAME={8000 9500}
+	KARMA={-6000 -6999}
+
+ON=@NPCRESTOCK
+ITEM=i_gold,6000
+ITEM=i_reag_daemon_bone,{7 8}
+//ITEM=T_TREAS_MAPS_1a4,R12
+
+[CHARDEF c_m_drake_Dark]
+ID=c_DRAGON_SMALL_BLACK
+NAME=Dark Drake
+SOUND=snd_MONSTER_DRAGON1
+ICON=i_pet_dragon
+DAM=17,44
+ARMOR=30
+RESOURCES=20 i_ribs_raw,30 i_hides_drake,5 i_reag_dragon_blood
+CAN=MT_WALK|MT_FLY
+FOODTYPE=80 t_meat_raw
+DESIRES=i_gold
+AVERSIONS=r_civilization,r_water
+
+
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	COLOR=0902
+	STR={600 700}
+	MAXHITS=1200
+	DEX={400 550}
+	INT={1 10}
+	PARRYING={75.0 110.0}
+	MAGICRESISTANCE={190.0 280.0}
+	TACTICS={85.0 99.0}
+	WRESTLING={75.0 100.0}
+	NPC=brain_dragon
+	FAME={2000 6000}
+	KARMA=-5000
+
+ON=@NPCRESTOCK
+ITEM=i_gold,4000
+ITEM=i_reag_daemon_bone,{5 6}
+//ITEM=T_TREAS_MAPS_1a4,R12
+
+[CHARDEF c_m_ogre_lord_Dark]
+NAME=Dark Ogre Lord
+ID=c_OGRE
+SOUND=snd_MONSTER_OGRE1
+ICON=i_pet_OGRE_2
+DAM=26,63
+ARMOR=30
+RESOURCES=10 i_ribs_raw, 30 i_hides_ogre
+//ALIGNMENT=EVIL
+CAN=MT_WALK
+FOODTYPE=15 t_meat_raw
+//SHELTER==r_forests,r_mountains
+DESIRES=C_OGRE
+AVERSIONS=r_civilization
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	COLOR=0902
+	STR={870 1000}
+	DEX={80 90}
+	INT={46 70}
+	PARRYING={75.0 85.0}
+	MAGICRESISTANCE={65.0 80.0}
+	TACTICS={90.0 100.0}
+	WRESTLING={90.0 100.0}
+	NPC=BRAIN_MONSTER
+	FAME={100 2000}
+	KARMA={-4000 -4999}
+	//ITEM=T_TREAS_MAPS_1a4,R15
+
+ON=@NPCRESTOCK
+ITEM=i_gold,4600
+ITEM=i_reag_daemon_bone,{2 3}
+
+[CHARDEF c_zombie_Dark]
+ID=c_zombie
+NAME=Dark Zombie
+SOUND=snd_MONSTER_RATMAN1
+ICON=i_pet_RATMAN
+ANIM=078c7f
+DAM=10,16
+ARMOR=20
+RESOURCES=6 i_ribs_raw
+CAN=MT_WALK|MT_RUN|MT_USEHANDS
+FOODTYPE=15 t_meat_raw,i_cheese_wheel
+//SHELTER=r_caves,r_dungeon,r_swamp,r_desert
+DESIRES=c_ratman,c_ratman_w_sword,c_ratman_w_mace
+TEVENTS=e_monster_of_the_month,e_undead
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	NPC=brain_monster
+	COLOR=0902
+	STR={110 140}
+	DEX={181 300}
+	INT={36 60}
+	SWORDSMANSHIP={70.0 90.0}
+	PARRYING={60.0 80.0}
+	MAGICRESISTANCE={35.0 60.0}
+	TACTICS={70.0 95.0}
+	WRESTLING={70.0 95.0}
+	FAME={100 300}
+	KARMA={-2000 -2999}
+	//ALIGNMENT=EVIL
+
+ON=@NPCRESTOCK
+ITEM=i_gold,700
+ITEM=i_reag_daemon_bone,1
+
+
+/////////////////////////////////////////////////// CRYSTAL ICE ELEMENTAL ////////////////////////
+
+[chardef 300a]
+defname=c_crystal_ice_elemental
+NAME=Crystal Ice Elemental
+SOUND=snd_monster_harpy1
+ICON=i_pet_crystalelemental
+DAM=19,27
+RESDISPDNID=c_elem_air
+RESLEVEL=3
+RESDISPDNHUE=55
+ARMOR=20
+CAN=MT_USEHANDS|MT_WALK|MT_RUN
+DESIRES=i_gold,e_notoriety,e_horses,c_man,c_woman,t_corpse
+CATEGORY=New Monsters
+SUBSECTION=AOS
+DESCRIPTION=Crystal Ice Elemental
+
+ON=@Create
+	color=0bac
+	NPC=brain_monster
+	FAME={100 3000}
+	KARMA={-5000 -6999}
+	STR={100 150}
+	MAXHITS={300 400}
+	INT=230
+	DEX={70 110}
+	MAGICRESISTANCE={70.0 80.0}
+	TACTICS=70.0
+	WRESTLING=70.0
+	MAGERY=100.0
+	ITEMNEWBIE=i_spellbook
+	ADDCIRCLE 8,1
+
+
+ON=@NpcRestock
+	ITEM=i_reag_nightshade,{3 7}
+	ITEM=i_gold,{195 245}
+	ITEM=random_jewel
+
+////////////////////////////////////////////// ICE ANTS //////////////////////////////////////////////
+
+[chardef 783a]
+defname=c_ice_ant_queen
+name=Ice Solen Queen
+SOUND=snd_fire_1
+ICON=i_pet_fireant_queen
+ARMOR=36
+DAM=26,39
+CAN=MT_WALK|MT_USEHANDS|MT_RUN
+MOVERATE=75
+FOODTYPE=1 t_meat_raw
+DESIRES=i_gold,e_notoriety,e_horses,c_man,c_woman
+RESDISPDNID=c_man
+RESLEVEL=2
+RESDISPDNHUE=0ad
+CATEGORY=New Monsters
+SUBSECTION=LBR
+DESCRIPTION=Ice Solen Queen
+
+ON=@Create
+	color=0bac
+	NPC=brain_monster
+	FAME=4500
+	KARMA=-4500
+	STR={296 320}
+	MAXHITS={151 162}
+	INT={76 100}
+	DEX={121 145}
+	MAGICRESISTANCE=70.0
+	TACTICS=90.0
+	WRESTLING=90.0
+
+ON=@NpcRestock
+	ITEM=i_gold,{300 400}
+
+ON=@GetHit
+	IF !(<R10>)
+		SERV.NEWNPC C_FIRE_ANT_WORKER
+		NEW.P=<P>
+		NEW.HOME=<NEW.P>
+		NEW.HOMEDIST=7
+		NEW.REMOVETIMER 120
+	endif
+
+[chardef 781a]
+defname=c_ice_ant_worker
+name=Ice Solen Worker
+SOUND=snd_fire_1
+ICON=i_pet_fireant_worker
+ARMOR=25
+DAM=8,12
+CAN=MT_WALK|MT_RUN|MT_USEHANDS
+FOODTYPE=1 t_meat_raw
+DESIRES=i_gold,e_notoriety,e_horses,c_man,c_woman
+RESDISPDNID=c_man
+RESLEVEL=2
+RESDISPDNHUE=0ad
+CATEGORY=New Monsters
+SUBSECTION=LBR
+DESCRIPTION=Ice Solen Worker
+
+ON=@Create
+	color=0bac
+	NPC=brain_monster
+	FAME=1500
+	KARMA=-1500
+	STR={96 120}
+	MAXHITS={58 72}
+	INT={36 60}
+	DEX={81 105}
+	MAGICRESISTANCE=600
+	TACTICS=650
+	WRESTLING=600
+
+ON=@NpcRestock
+	ITEM=i_gold,{125 175}
+
+[chardef 782a]
+defname=c_ice_ant_warrior
+name=Ice Solen Warrior
+SOUND=snd_fire_1
+ICON=i_pet_fireant_warrior
+ARMOR=35
+DAM=11,33
+CAN=MT_WALK|MT_RUN|MT_USEHANDS
+FOODTYPE=1 t_meat_raw
+DESIRES=i_gold,e_notoriety,e_horses,c_man,c_woman
+RESDISPDNID=c_man
+RESLEVEL=2
+RESDISPDNHUE=0ad
+CATEGORY=New Monsters
+SUBSECTION=LBR
+DESCRIPTION=Ice Solen Warrior
+
+ON=@Create
+	color=0bac
+	NPC=brain_monster
+	FAME=3000
+	KARMA=-3000
+	STR={196 220}
+	MAXHITS={96 107}
+	INT={36 60}
+	DEX={101 125}
+	MAGICRESISTANCE=600
+	TACTICS=800
+	WRESTLING=800
+
+ON=@NpcRestock
+	ITEM=i_gold,{250 350}
+
+
+
+[chardef c_titan_Stone]
+ID=035
+NAME=Stone Titan
+SOUND=snd_MONSTER_TROLL1
+icon=020d6
+
+//TEVENTS=e_timeblock
+
+DAM=4 15
+ARMOR=35
+
+ON=@CREATE
+
+COLOR=0387
+STR=450
+DEX=65
+INT=20
+
+PARRYING=65.0 80.0
+MAGICRESISTANCE=65.0 80.0
+TACTICS=98.0 99.0
+WRESTLING=90.0 99.0
+
+FAME=4000 6000
+KARMA=-3000 -4000
+NPC=brain_monster
+
+[CHARDEF c_m_white_wyrm]
+id=c_dragon_red
+Name=White Wyrm
+DAM=120,150
+ARMOR=50
+CAN=MT_WALK|MT_RUN
+MOVERATE=80
+AVERSIONS=r_civilization
+
+ON=@Create
+	TAG.LIFES 1
+	TAG.LOOTPROPRIO 1
+	TAG.FROST_EFFECT_IMMUNE 1
+	MAXHITS=20000
+	COLOR=0481
+	STR={1000 1100}
+	DEX={150}
+	INT={1500 1700}
+	PARRYING={55.0 65.0}
+	MAGERY=500.0
+	MAGICRESISTANCE={200.0}
+	TACTICS={150.0}
+	WRESTLING={150.0}
+	FAME={9000 9500}
+	KARMA={-4000 -4999}
+	//SPELLCIRCLE=3 5
+	NPC=BRAIN_DRAGON
+	EVENTS +E_ANTI_RANGED_ATTACK
+	EVENTS +e_poison_immune
+
+ON=@Click
+	IF (<TAG0.LIFES>)
+		MESSAGE @,,1 [Extra Lifes: <DTAG.LIFES>]
+	ENDIF
+
+ON=@GetHit
+	IF (<TAG0.LIFES> > 0) && (<HITS> < 500)
+		NEWITEM=i_fx_SPARKLE
+		act.ATTR=ATTR_MOVE_NEVER | ATTR_DECAY
+		act.LINK=<uid>
+		act.morex=10 // damage
+		act.morey=090 // wFlags DAMAGE_GENERAL
+		act.morez=2 // iDist
+		act.p=<p>
+		act.TIMERD=250 // immediate decay
+
+		serv.newnpc c_lady_of_snow
+		new.invul 1
+		NEW.KARMA=0
+		NEW.NPC=BRAIN_ANIMAL
+		new.p <p>
+		new.homedist 1
+		new.update
+		ref1 = <new.uid>
+		ref1.timerf 10,say @38 DONT WORRY MY BELOVED CREATURE, EVERYTHING SHALL BE FINE!
+		ref1.timerf 20,say @61 YOUR POWER HAS BEEN RESTABLISHED
+		ref1.timerf 23,say @38 KILL THEM ALL!
+		ref1.timerf 25,remove
+
+		INVUL 1
+		ACTION 065
+		TIMERF 0,ACTION 065
+		TIMERF 25,HITS <MAXHITS>
+		TIMERF 25,TAG.LIFES <EVAL <TAG.LIFES> - 1>
+		TIMERF 25,INVUL 0
+		TIMERF 25,SAY @21 IT IS TIME TO TASTE MY TRUE POWER!
+		TIMERF 25,ACTION SKILL_WRESTLING
+		NAME Enhanced White Wyrm
+	ENDIF
+
+
+ON=@NPCRestock
+	ITEM=i_gold,{60000 65000}
+	ITEM=i_gold,{60000 65000}
+	ITEM=i_gold,{60000 65000}
+	ITEM=I_POWER_SCROLL
+	ITEM=I_POWER_SCROLL
+	ITEM=I_POWER_SCROLL,R5
+	ITEM=I_POWER_SCROLL,R5
+	ITEM=I_BUFFER_SCROLL,R5
+	ITEM=random_value_whitewyrm
+	ITEM=random_value_whitewyrm2
+	ITEM=random_rare_whitewyrm,R3
+
+
+ON=@Death
+	NEWITEM=i_fx_explode
+	act.TYPE=T_EXPLOSION
+	act.ATTR=ATTR_MOVE_NEVER | ATTR_DECAY
+	act.LINK=<uid>
+	act.morex=10 // damage
+	act.morey=090 // wFlags DAMAGE_GENERAL
+	act.morez=2 // iDist
+	act.p=<p>
+	act.TIMERD=1 // immediate decay
+
+[CHARDEF c_szavetra]
+ID=c_abyss_lord
+name=Szavetra
+SOUND=snd_monster_daemon1
+ICON=i_pet_wailingbanshee
+DAM=60,80
+ARMOR=40
+RESOURCES=15 i_ribs_raw,10 i_hide
+CAN=MT_WALK|MT_RUN|MT_USEHANDS|MT_EQUIP
+FOODTYPE=40 t_meat_raw
+DESIRES=i_gold,e_notoriety,e_horses,c_man,c_woman
+AVERSIONS=e_carnivores3
+RESDISPDNID=c_woman
+RESLEVEL=2
+RESDISPDNHUE=33
+CATEGORY=New Monsters
+SUBSECTION=LBR
+DESCRIPTION=Szavetra
+MOVERATE=80
+
+ON=@Create
+	color=084c
+	NPC=brain_monster
+	FAME={100 3000}
+	KARMA={-5000 -6999}
+	STR={200 300}
+	MAXHITS={4500 5500}
+	INT={130 200}
+	DEX={150 200}
+	PARRYING={60.0 95.0}
+	MAGICRESISTANCE={50.0 70.0}
+	TACTICS=70.0
+	WRESTLING={65.0 80.0}
+	MAGERY=1000
+	EVENTS +E_POISON_IMMUNE
+	EVENTS +E_MAGE_SPELL_ATTACK
+	TAG.FROST_EFFECT_IMMUNE 1
+	TAG.LOOTPROPRIO 1
+	TAG.HITS 3000
+
+ON=@NpcRestock
+	ITEM=random_reagents,{50 100}
+	ITEM=random_reagents,{50 100}
+	ITEM=i_gold,{60001 65000}
+	ITEM=random_map2_4,R6
+	ITEM={rareloot_alchemy 100 rareloot_alchemy2 100 rareloot_alchemy3 100 rareloot_torture 25 rareloot_broken_furniture 25 i_szavetra_nightmare 1 i_magic_gem 1},R2
+
+ON=@Death
+	IF (<EVAL <SERV.TIME> - <VAR0.LAST_SZAVETRA_NIGHTMARE_DROP>> > 25920000) && !(<R4>)
+		VAR.LAST_SZAVETRA_NIGHTMARE_DROP <SERV.TIME>
+
+		SERV.LOG Creating a new Szavetra Nightmare.
+		SERV.NEWITEM i_szavetra_nightmare
+		NEW.CONT <UID>
+	ENDIF
+
+[ITEMDEF i_szavetra_nightmare]
+ID=i_pet_horse_tan
+NAME=Szavetra Nightmare
+TYPE=t_figurine
+TDATA3=c_szavetra_nightmare
+VALUE=500
+
+ON=@Create
+	COLOR=07a0
+
+[CHARDEF c_szavetra_nightmare]
+ID=c_horse_tan
+NAME=Szavetra's Nightmare
+DAM=20,25
+ARMOR=15
+
+ON=@Create
+	COLOR=07a0
+	NPC=brain_animal
+	STR={320 360}
+	MAXHITS=1000
+	DEX={110 255}
+	INT={16 30}
+	PARRYING={75.0 100.0}
+	MAGICRESISTANCE={65.0 120.0}
+	TACTICS={79.0 119.0}
+	WRESTLING={69.0 99.0}
+	TAMING=105.0
+	FAME=10
+	KARMA={-10000}
+
+[CHARDEF c_m_artic_ogre]
+DEFNAME=c_m_artic_ogre
+NAME=Arctic Ogre Lord
+ID=c_OGRE
+SOUND=snd_MONSTER_OGRE1
+ICON=i_pet_OGRE_2
+DAM=70,80
+ARMOR=25
+RESOURCES=10 i_ribs_raw, 30 i_hides_ogre
+//ALIGNMENT=EVIL
+CAN=MT_WALK|MT_RUN
+MOVERATE=100
+FOODTYPE=15 t_meat_raw
+//SHELTER==r_forests,r_mountains
+DESIRES=C_OGRE
+AVERSIONS=r_civilization
+
+ON=@Create
+	COLOR=0481
+	TAG.LOOTPROPRIO 1
+	STR={2500 3000}
+	DEX={200 220}
+	INT={46 70}
+	MAXHITS={30000 32000}
+	PARRYING={75.0 85.0}
+	MAGICRESISTANCE={100.0}
+	TACTICS={100.0}
+	WRESTLING={100.0}
+	NPC=BRAIN_MONSTER
+	FAME={9000 9900}
+	KARMA={-9000 -9999}
+	EVENTS +e_poison_immune
+
+ON=@NPCRESTOCK
+	ITEM=i_gold,{65000}
+	ITEM=i_gold,{60000 65000}
+	ITEM=random_value_artic_ogre,R2
+	ITEM=random_value_artic_ogre,R3
+	ITEM=random_minor_artic_ogre
+	ITEM=random_minor_artic_ogre
+	ITEM=random_rare_arctic_ogre,R3
+
+ON=@Death
+	IF (<EVAL <SERV.TIME> - <VAR0.LAST_ARCTIC_OGRE_FACE_DROP>> > 25920000) && !(<R4>)
+		VAR.LAST_ARCTIC_OGRE_FACE_DROP <SERV.TIME>
+
+		SERV.LOG Creating a new Arctic Ogre Face.
+		SERV.NEWITEM i_artic_ogre_face
+		NEW.CONT <UID>
+	ENDIF
+
+[ITEMDEF i_artic_ogre_face]
+NAME=Beast of Slaughter
+ID=027c4
+WEIGHT=1
+TYPE=t_armor
+WEIGHT=6
+FLIP=1
+ARMOR=180
+REQSTR=90
+VALUE=150
+
+ON=@CREATE
+	HITPOINTS=200
+	COLOR=0480
+
+ON=@DropOn_Item
+	IF (<ARGO.TYPE> != t_corpse)
+		ATTR <ATTR> | ATTR_NEWBIE
+  	ENDIF
+
+ON=@EQUIP
+	ATTR <ATTR> | ATTR_NEWBIE
+	SRC.MODSTR += 6
+	SRC.MODINT += 6
+	SRC.MODDEX += 6
+
+ON=@UNEQUIP
+	SRC.MODSTR -= 6
+	SRC.MODINT -= 6
+	SRC.MODDEX -= 6
+
+[ITEMDEF 027c4]
+DEFNAME=i_ninja_plate_mempo
+NAME=Plate Mempo
+type=t_armor
+ARMOR=100
+
+[FUNCTION f_reset_hourly_prisma]
+VAR.SPAWN_HOURLY_PRISMA 1
+
+FORINSTANCES c_m_prisma_dragon
+	IF (<EVAL <SERV.TIME> - <TAG0.SPAWN_TIME>> >= 72000) && (<EVAL <SERV.TIME> - <TAG0.LAST_HIT_TIME>> >= 1200)
+		SERV.LOG Removing decayed <NAME> at <P>.
+		REMOVE
+	ENDIF
+ENDFOR
+
+FORINSTANCES c_m_prisma_daemon
+	IF (<EVAL <SERV.TIME> - <TAG0.SPAWN_TIME>> >= 72000) && (<EVAL <SERV.TIME> - <TAG0.LAST_HIT_TIME>> >= 1200)
+		SERV.LOG Removing decayed <NAME> at <P>.
+		REMOVE
+	ENDIF
+ENDFOR
+
+[FUNCTION f_spawn_hourly_prisma]
+IF (<VAR0.SPAWN_HOURLY_PRISMA>)
+	LOCAL.PARAGON_HOUR = <DVAR0.PARAGON_HOUR_<f_paragon_hour>>
+	LOCAL.POI_LOCATION <f_get_random_location <DEF.PARAPOI_<DLOCAL.PARAGON_HOUR>>>
+
+	SERV.NEWNPC <EVAL {c_m_prisma_dragon 1 c_m_prisma_daemon 1}>
+	NEW.P <LOCAL.POI_LOCATION>
+	NEW.HOME <NEW.P>
+	NEW.TAG.SPAWN_TIME <SERV.TIME>
+	NEW.HOMEDIST 6
+	NEW.UPDATE
+
+	SERV.LOG Spawning <NEW.NAME> at <NEW.P> - (<NEW.REGION.NAME>) - POI.
+
+	VAR.SPAWN_HOURLY_PRISMA
+ENDIF
+
+[EOF]

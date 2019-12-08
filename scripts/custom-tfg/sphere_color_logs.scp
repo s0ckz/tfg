@@ -1,0 +1,56 @@
+[DEFNAME logs_colors]
+color_o_cedar 0736
+color_o_mahogany 064e
+color_o_hard_maple 0755
+color_o_hickory 0723
+
+[ITEMDEF i_dark_log]
+ID=i_log
+NAME=Dark Log
+
+ON=@CREATE
+	COLOR 0455
+	
+[ITEMDEF i_cedar_log]
+ID=i_log
+NAME=Cedar Log
+
+ON=@CREATE
+	COLOR color_o_cedar
+	
+[ITEMDEF i_mahogany_log]
+ID=i_log
+NAME=Mahogany Log
+
+ON=@CREATE
+	COLOR color_o_mahogany
+	
+[ITEMDEF i_hard_maple_log]
+ID=i_log
+NAME=Hard Maple Log
+
+ON=@CREATE
+	COLOR color_o_hard_maple
+	
+[ITEMDEF i_elven_log]
+ID=i_log
+NAME=Elven Log
+
+ON=@CREATE
+	COLOR 00
+	
+[ITEMDEF i_Hickory_log]
+ID=i_log
+NAME=Hickory Log
+
+ON=@CREATE
+	COLOR color_o_hickory
+	
+//[ITEMDEF i_storm_log]/
+//ID=i_log
+//NAME=Storm Log
+//ON=@CREATE
+//	COLOR 0132
+//
+
+[eof]

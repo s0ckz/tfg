@@ -1,0 +1,3513 @@
+[PLEVEL 1]
+ZERARKILLS
+Minhaguild
+stats
+showuid
+statsfix
+buffer
+Paragons
+epshop
+
+[FUNCTION kick_all]
+FORCLIENTS 6144
+	IF (!<ISGM>)
+		disconnect
+	END
+ENDFOR
+
+[FUNCTION f_shuffle_paragon_pois]
+for 1 12
+	var0.paragon_hour_<dlocal._for> += 1
+	if <var0.paragon_hour_<dlocal._for>> > 12
+		var0.paragon_hour_<dlocal._for> == 1
+	endif
+endfor
+
+[function f_find_paragon]
+forchars 8000
+	if !(<isplayer>)
+		if (<isevent.e_paragon>)
+			if (<src.isgm>)
+				src.sysmessage @,,1 <p>
+			endif
+			return <p>
+		endif
+	endif
+endfor
+
+[function Paragons]
+src.dialog d_paragon_poi
+
+[DIALOG d_paragon_poi]
+0,0
+page 0
+resizepic 66 31 9270 361 424
+text 133 59 52 0
+gumppic 351 349 5608
+tilepichue 362 307 8408 2595
+text 190 82 915 1
+text 85 144 915 2
+text 84 120 915 3
+text 85 168 915 4
+text 85 192 915 5
+text 85 216 915 6
+text 85 240 915 7
+text 85 264 915 8
+text 85 288 915 9
+text 85 312 915 10
+text 85 336 915 11
+text 85 360 915 12
+text 85 384 915 13
+text 82 420 915 14
+text 181 144 915 15
+text 181 168 915 16
+text 181 192 915 17
+text 181 216 915 18
+text 181 240 915 19
+text 181 264 915 20
+text 181 288 915 21
+text 181 312 915 22
+text 181 336 915 23
+text 181 360 915 24
+text 181 384 915 25
+text 181 120 915 26
+button 348 414 247 248 1 0 0
+
+[DIALOG d_paragon_poi text]
+Paragon Point of Interest Schedule
+Changes at 21pm
+1h & 13h
+0h & 12h
+2h & 14h
+3h & 15h
+4h & 16h
+5h & 17h
+6h & 18h
+7h & 19h
+8h & 20h
+9h & 21h
+10h & 22h
+11h & 23h
+The Fifteen Gems Shard
+<def.parapoi_name_<dvar0.paragon_hour_1>>
+<def.parapoi_name_<dvar0.paragon_hour_2>>
+<def.parapoi_name_<dvar0.paragon_hour_3>>
+<def.parapoi_name_<dvar0.paragon_hour_4>>
+<def.parapoi_name_<dvar0.paragon_hour_5>>
+<def.parapoi_name_<dvar0.paragon_hour_6>>
+<def.parapoi_name_<dvar0.paragon_hour_7>>
+<def.parapoi_name_<dvar0.paragon_hour_8>>
+<def.parapoi_name_<dvar0.paragon_hour_9>>
+<def.parapoi_name_<dvar0.paragon_hour_10>>
+<def.parapoi_name_<dvar0.paragon_hour_11>>
+<def.parapoi_name_<dvar0.paragon_hour_12>>
+
+[DIALOG d_paragon_poi button]
+ON=0
+// Button 1
+//
+
+[FUNCTION mute]
+targetf f_mute_who
+SYSMESSAGE Mute who ?
+
+[FUNCTION f_mute_who]
+TRY UID.<ARGO.UID>.TAG.MUTE 1
+TRY UID.<ARGO.UID>.SYSMESSAGE You have been muted !
+
+[FUNCTION unmute]
+targetf f_unmute_who
+SYSMESSAGE Unmute who ?
+
+[FUNCTION f_unmute_who]
+TRY UID.<ARGO.UID>.TAG.MUTE
+TRY UID.<ARGO.UID>.SYSMESSAGE You have been unmuted !
+
+[function gmb]
+
+if <body> == c_man
+src.body=c_man_gm
+//src.plot2=08
+src.resend
+return 1
+endif
+
+if <body> == c_woman
+src.body=c_man_gm
+//src.plot2=08
+src.resend
+return 1
+endif
+
+if <body> == c_man_gm
+src.body=<src.obody>
+//src.plot2=0
+src.resend
+return 1
+endif
+
+
+[FUNCTION clone]
+targetf f_clone_main
+SYSMESSAGE Selecione o Original.
+
+
+
+[FUNCTION f_clone_main]
+targetf f_clone_cloned <ARGO.UID>
+SYSMESSAGE Agora selecione o Clone.
+
+
+[FUNCTION f_clone_cloned]
+REF69 <ARGO.UID>
+FOR 50
+TRY REF69.<dLOCAL._FOR> <UID.<ARGS>.<dLOCAL._FOR>>
+ENDFOR
+REF69.BODY <UID.<ARGS>.BODY>
+REF69.OBODY <UID.<ARGS>.OBODY>
+REF69.COLOR <UID.<ARGS>.COLOR>
+REF69.OSKIN <UID.<ARGS>.OSKIN>
+REF69.STR <UID.<ARGS>.STR>
+REF69.DEX <UID.<ARGS>.DEX>
+REF69.INT <UID.<ARGS>.INT>
+REF69.HITS <UID.<ARGS>.HITS>
+REF69.STAM <UID.<ARGS>.STAM>
+REF69.MANA <UID.<ARGS>.MANA>
+
+
+FOR 24
+TRY REF69.FINDLAYER.<dLOCAL._FOR>.REMOVE
+IF (<UID.<ARGS>.FINDLAYER.<dLOCAL._FOR>.UID>)
+SERV.NEWDUPE <UID.<ARGS>.FINDLAYER.<dLOCAL._FOR>.UID>
+REF69.EQUIP <NEW.UID>
+ENDIF
+ENDFOR
+
+TRY REF69.FINDLAYER.layer_Bankbox.REMOVE
+SERV.NEWDUPE <UID.<ARGS>.FINDLAYER.layer_bankbox.UID>
+REF69.EQUIP <NEW.UID>
+
+TRY REF69.FINDLAYER.25.REMOVE
+IF (<UID.<ARGS>.FLAGS>&statf_onhorse)
+SERV.NEWITEM <UID.<ARGS>.FINDLAYER.layer_horse.BASEID>
+NEW.DISPID <UID.<ARGS>.FINDLAYER.layer_horse.DISPID>
+NEW.COLOR <UID.<ARGS>.FINDLAYER.layer_horse.COLOR>
+NEW.NAME <UID.<ARGS>.FINDLAYER.layer_horse.NAME>
+REF69.EQUIP <NEW.UID>
+ENDIF
+
+
+SYSMESSAGE Personagem clonado com sucesso.
+
+[function f_list_epshop_points]
+for x 0 <eval <serv.accounts> - 1>
+    if (<serv.account.<dlocal.x>.chars> > 0)
+        for y 0 <eval <serv.account.<dlocal.x>.chars> -1>
+            ref1 = <serv.account.<dlocal.x>.char.<dlocal.y>>
+
+            if (<ref1.TAG0.eventpoints>)
+                serv.log <ref1.account> / <ref1.name> has <dref1.TAG0.eventpoints> points.
+            endif
+        endfor
+    endif
+endfor
+return 1
+
+[function f_reset_stats]
+for x 0 <eval <serv.accounts> - 1>
+    if (<serv.account.<dlocal.x>.chars> > 0)
+        for y 0 <eval <serv.account.<dlocal.x>.chars> -1>
+            ref1 = <serv.account.<dlocal.x>.char.<dlocal.y>>
+            ref1.deaths = 0
+            ref1.kills = 0
+            ref1.fame = 0
+            ref1.karma = 0
+        endfor
+    endif
+endfor
+return 1
+
+[function f_removehouses]
+forinstances i_sign_brass
+ref2 = <uid>
+    if (<link.type> == t_multi) && (<link.region.isevent.r_house_private>)
+        ref1 = <link.uid>
+            foritems 50
+                if ((<uid> == <ref1>) || (<uid> == <ref2>))
+                    s casa
+                else
+                    if (<region.uid> == <ref1.uid>)
+                        if <region.isevent.r_house_private>
+                            remove
+                        endif
+                    endif
+                endif
+            endfor
+        ref1.remove
+    endif
+endfor
+return 1
+
+[function ismurderer]
+ref1 <uid.<args>>
+if (<ref1.kills> > 0)
+	return 1
+else
+	return 0
+endif
+
+[function testreset]
+ref2 = <uid>
+    if (<link.type> == t_multi) && (<link.region.isevent.r_house_private>)
+        ref1 = <link.uid>
+            foritems 50
+                if ((<uid> == <ref1>) || (<uid> == <ref2>))
+                    s 1
+                else
+                    say EU <region.uid> == <ref1.uid>
+                    if (<region.uid> == <ref1.uid>)
+                        say IF1
+                        if <region.isevent.r_house_private>
+                            say if2
+                            remove
+                        endif
+                    endif
+                endif
+            endfor
+        ref1.remove
+    endif
+
+[function f_check_worker_skills]
+FILE.DELETEFILE skillprob.txt
+for x 0 <eval <serv.accounts> - 1>
+   if (<serv.account.<dlocal.x>.chars> > 0)
+       for y 0 <eval <serv.account.<dlocal.x>.chars> -1>
+           ref1 = <serv.account.<dlocal.x>.char.<dlocal.y>>
+	  		if !(<ref1.isgm>)
+			  for <def.work_min> <def.work_max>
+			  		local.skill <ref1.<def.work<dlocal._for>>>
+					if (<dlocal.skill> > 950) && (<local._for> != 1) && (<local._for> != 2) && (<local._for> != 6) && (<local._for> != 7) && (<local._for> != 9) && (<local._for> != 11) && (<local._for> != 12) && (<local._for> != 13)
+						serv.writefile skillprob.txt Player <ref1.name> (<ref1.account>) com skill <SERV.SKILL.<def.work<dlocal._for>>.NAME> <dlocal.skill>.
+						ref1.<def.work<dlocal._for>> 950
+					endif
+				endfor
+			endif
+       endfor
+   endif
+endfor
+
+
+[function buffer]
+if <var.conta_<account.dtag.global>.orebuffer>
+	src.sysmessage @,,1 Mining Buffer: <dvar0.conta_<account.dtag.global>.orebuffer>/<eval <def.Buffer_inicial_ores>> (<eval (100 * <var.conta_<account.dtag.global>.orebuffer>) / <def.Buffer_inicial_ores>>%)
+else
+	src.sysmessage @,,1 Mining Buffer: vazio
+endif
+
+if <var.conta_<account.dtag.global>.orebufferreduction>
+	src.sysmessage @10,,1 (ECONOMIZOU) Mining Buffer: <dvar.conta_<account.dtag.global>.orebufferreduction> pts.
+endif
+
+if <var0.buffervip<account.dtag0.global>>
+	src.sysmessage @91,,1 (VIP) Mining Buffer: + <dvar0.buffervip<account.dtag0.global>> pts.
+endif
+
+if <var.conta_<account.dtag.global>.fishbuffer>
+	src.sysmessage @,,1 Fishing Buffer: <dvar0.conta_<account.dtag.global>.fishbuffer>/<eval <def.Buffer_inicial_fishes>> (<eval (100 * <var.conta_<account.dtag.global>.fishbuffer>) / <def.Buffer_inicial_fishes>>%)
+else
+	src.sysmessage @,,1 Fishing Buffer: vazio
+endif
+
+if <var.conta_<account.dtag.global>.fishbufferreduction>
+	src.sysmessage @10,,1 (ECONOMIZOU) Fishing Buffer: <dvar.conta_<account.dtag.global>.fishbufferreduction> pts.
+endif
+
+if <var.conta_<account.dtag.global>.logbuffer>
+	src.sysmessage @,,1 Lumberjacking Buffer: <dvar0.conta_<account.dtag.global>.logbuffer>/<eval <def.Buffer_inicial_logs>> (<eval (100 * <var.conta_<account.dtag.global>.logbuffer>) / <def.Buffer_inicial_logs>>%)
+else
+	src.sysmessage @,,1 Lumberjacking Buffer: vazio
+endif
+
+if <var.conta_<account.dtag.global>.logbufferreduction>
+	src.sysmessage @10,,1 (ECONOMIZOU) Lumberjacking Buffer: <dvar.conta_<account.dtag.global>.logbufferreduction> pts.
+endif
+
+[FUNCTION remove_all_instances]
+IF (<ARGV> != 1)
+	RETURN 1
+ENDIF
+
+FORINSTANCES <ARGV[0]>
+	DESTROY 1
+ENDFOR
+
+[FUNCTION list_colored_weapons]
+f_list_colored_weapons i_except_War_fork
+f_list_colored_weapons i_except_kryss
+f_list_colored_weapons i_except_axe_exec
+f_list_colored_weapons i_except_sword_Viking
+f_list_colored_weapons i_except_halberd
+f_list_colored_weapons i_except_bardiche
+f_list_colored_weapons i_except_Staff_black
+f_list_colored_weapons i_except_shepherds_crook
+f_list_colored_weapons i_except_mace_war
+f_list_colored_weapons i_except_war_hammer
+
+[FUNCTION f_list_colored_weapons]
+IF (<ARGV> != 1)
+	RETURN 1
+ENDIF
+
+FORINSTANCES <ARGV[0]>
+	IF (<ISEVENT.t_poisoned_weapon>) && !(<TAG0.POISONLEVEL>) && (<COLOR>)
+		SERV.LOG <UID> <NAME> <COLOR>
+	ENDIF
+ENDFOR
+
+[FUNCTION find_fs]
+FORINSTANCES i_scroll_flamestrike
+	IF (<AMOUNT> > 9000)
+		SERV.LOG <UID> <AMOUNT> <TOPOBJ.NAME> <TOPOBJ.P>.
+	ENDIF
+ENDFOR
+
+[FUNCTION f_fix_trough_water]
+FORINSTANCES i_trough_water
+	CAN= <SERV.ITEMDEF.<BASEID>.CAN>
+ENDFOR
+
+[FUNCTION f_fix_true_robe_armor]
+IF (<ARGV> != 1)
+	RETURN 1
+ENDIF
+
+FORINSTANCES <ARGV[0]>
+	SERV.LOG Fixing <UID> / <NAME> damage from <ARMOR> to <SERV.ITEMDEF.<BASEID>.ARMOR>.
+	ARMOR = <SERV.ITEMDEF.<BASEID>.ARMOR>
+ENDFOR
+
+[FUNCTION f_fix_true_robes_armor]
+f_fix_true_robe_armor i_true_black_robe
+f_fix_true_robe_armor i_true_gray_robe
+f_fix_true_robe_armor i_robe_true_white
+
+[FUNCTION f_fix_magic_weapons]
+f_fix_weapons_damage i_Ruin_viking
+f_fix_weapons_damage i_Ruin_halberd
+f_fix_weapons_damage i_Ruin_bardiche
+f_fix_weapons_damage i_Ruin_war_fork
+f_fix_weapons_damage i_Ruin_mace_war
+f_fix_weapons_damage i_Ruin_axe_war
+f_fix_weapons_damage i_ruin_pitchfork
+f_fix_weapons_damage i_ruin_axe_exec
+f_fix_weapons_damage i_ruin_axe_battle
+f_fix_weapons_damage i_ruin_axe
+f_fix_weapons_damage i_ruin_Crossbow
+f_fix_weapons_damage i_ruin_katana
+f_fix_weapons_damage i_ruin_kryss
+f_fix_weapons_damage i_ruin_Bow
+f_fix_weapons_damage i_Might_viking
+f_fix_weapons_damage i_Might_halberd
+f_fix_weapons_damage i_Might_bardiche
+f_fix_weapons_damage i_Might_war_fork
+f_fix_weapons_damage i_Might_mace_war
+f_fix_weapons_damage i_Might_axe_war
+f_fix_weapons_damage i_Might_pitchfork
+f_fix_weapons_damage i_Might_axe_exec
+f_fix_weapons_damage i_might_axe_battle
+f_fix_weapons_damage i_Might_axe
+f_fix_weapons_damage i_Might_Crossbow
+f_fix_weapons_damage i_Might_katana
+f_fix_weapons_damage i_Might_kryss
+f_fix_weapons_damage i_might_Bow
+f_fix_weapons_damage i_Force_viking
+f_fix_weapons_damage i_Force_halberd
+f_fix_weapons_damage i_Force_bardiche
+f_fix_weapons_damage i_Force_war_fork
+f_fix_weapons_damage i_Force_mace_war
+f_fix_weapons_damage i_Force_axe_war
+f_fix_weapons_damage i_Force_pitchfork
+f_fix_weapons_damage i_Force_axe_exec
+f_fix_weapons_damage i_force_axe_battle
+f_fix_weapons_damage i_Force_axe
+f_fix_weapons_damage i_Force_Crossbow
+f_fix_weapons_damage i_Force_katana
+f_fix_weapons_damage i_Force_kryss
+f_fix_weapons_damage i_force_Bow
+f_fix_weapons_damage i_Power_viking
+f_fix_weapons_damage i_Power_halberd
+f_fix_weapons_damage i_Power_bardiche
+f_fix_weapons_damage i_Power_war_fork
+f_fix_weapons_damage i_Power_mace_war
+f_fix_weapons_damage i_Power_axe_war
+f_fix_weapons_damage i_Power_pitchfork
+f_fix_weapons_damage i_Power_axe_exec
+f_fix_weapons_damage i_power_axe_battle
+f_fix_weapons_damage i_Power_axe
+f_fix_weapons_damage i_Power_Crossbow
+f_fix_weapons_damage i_Power_katana
+f_fix_weapons_damage i_Power_kryss
+f_fix_weapons_damage i_power_Bow
+f_fix_weapons_damage i_Vanquish_viking
+f_fix_weapons_damage i_Vanquish_halberd
+f_fix_weapons_damage i_Vanquish_bardiche
+f_fix_weapons_damage i_Vanquish_war_fork
+f_fix_weapons_damage i_Vanquish_mace_war
+f_fix_weapons_damage i_Vanquish_axe_war
+f_fix_weapons_damage i_Vanquish_pitchfork
+f_fix_weapons_damage i_Vanquish_axe_exec
+f_fix_weapons_damage i_Vanquish_axe_battle
+f_fix_weapons_damage i_Vanquish_axe
+f_fix_weapons_damage i_Vanquish_Crossbow
+f_fix_weapons_damage i_Vanquish_Bow
+f_fix_weapons_damage i_Vanquish_katana
+f_fix_weapons_damage i_Vanquish_kryss
+
+[FUNCTION f_fix_weapons_damage]
+IF (<ARGV> != 1)
+	RETURN 1
+ENDIF
+
+FORINSTANCES <ARGV[0]>
+	IF (STRMATCH(t_weapon*, <TYPE>))
+		IF (STRCMPI("<DAM>", "<SERV.ITEMDEF.<BASEID>.DAM>"))
+			SERV.LOG Fixing <UID> / <NAME> damage from <DAM> to <SERV.ITEMDEF.<BASEID>.DAM>.
+			DAM = <SERV.ITEMDEF.<BASEID>.DAM>
+		ENDIF
+	ENDIF
+ENDFOR
+
+[function f_reset_spawns]
+local.npcsremovidos 0
+forchars 9999
+	if !(<isplayer>) && (<flags>&statf_saveparity) && (<spawnitem>)
+		uid.<spawnitem>.timer 5
+		remove
+		local.npcsremovidos ++
+	if !(<isplayer>) && (<flags>&statf_spawned)
+		uid.<spawnitem>.timer 5
+		remove
+		local.npcsremovidos ++
+	endif
+endfor
+src.smsg @,,1 <dlocal.npcsremovidos> npcs removidos.
+
+[function f_reset_spawns1]
+local.npcreset 0
+forinstances i_worldgem_bit
+	IF !(<cont>)
+		uid.<uid>.dclick
+		local.npcreset ++
+	endif
+endfor
+s <dlocal.npcreset> dlick
+
+[function f_return_ihits]
+ref1 <uid.<argv[0]>> //item
+ref2 <uid.<argv[1]>> //creator
+
+local.dam <ref1.dam.hi>
+local.speed <ref1.speed>
+local.quality <ref1.quality>
+local.armslore <ref2.armslore>
+
+if !(<local.quality>) || !(<local.armslore>)
+	local.quality = <R140,200>
+	local.armslore = 1000
+endif
+
+ref1.hits <eval ((<local.dam>*<local.speed>)/25)> + <eval (<local.quality>*<local.quality>)/1000> + <eval (<local.armslore>*<local.armslore>)/25000>
+ref1.maxhits <ref1.hits>
+
+[function statsfix]
+if !(<src.isgm>)
+	if (<ctag0.statsfixed>)
+		smsg @,,1 Espere alguns segundos para executar esse comando novamente.
+		return 1
+	endif
+endif
+
+REF1=<UID>
+FORCONT <UID> 0
+	IF (<BASEID> == i_rune_agility) || (<BASEID> == i_rune_archprotection) || (<BASEID> == i_rune_bless) || (<BASEID> == i_rune_clumsy) || (<BASEID> == i_rune_protection) || (<BASEID> == i_rune_strength) || (<BASEID> == i_rune_weaken)
+		REMOVE
+	endif
+endfor
+
+// garantir que nao bugue ao tirar
+REF1.MODSTR=200
+REF1.MODDEX=200
+REF1.MODINT=200
+
+//unequipall
+for 1 24
+	if (<dlocal._For> != 21)
+		ref1.tag0.unequipall_layer_<dlocal._for> = <ref1.findlayer(<dlocal._for>).uid>
+		ref1.findlayer(<dlocal._for>).cont = <ref1.findlayer(layer_pack).uid>
+	endif
+endfor
+
+REF1.MODSTR=0
+REF1.MODDEX=0
+REF1.MODINT=0
+
+IF <REF1.STR> > 100
+   REF1.STR=100
+ENDIF
+IF <REF1.DEX> > 100
+   REF1.DEX=100
+ENDIF
+IF <REF1.INT> > 100
+   REF1.INT=100
+ENDIF
+
+//reequip
+for 1 24
+	if (<dlocal._for> != 21)
+		if (<ref1.tag0.unequipall_layer_<dlocal._for>>)
+			ref1.equip <ref1.tag0.unequipall_layer_<dlocal._for>>
+		endif
+
+		ref1.tag0.unequipall_layer_<dlocal._for>
+	endif
+endfor
+
+if !(<src.isgm>)
+	ctag.statsfixed 1
+	timerf 5, ctag0.statsfixed
+endif
+
+[DEFNAME DEF_RESOURCES]
+DEF_RES_0 i_ore_iron
+DEF_RES_1 i_ore_ceramic
+DEF_RES_2 i_ore_rusty
+DEF_RES_3 i_ore_old_copper
+DEF_RES_4 i_ore_dull_copper
+DEF_RES_5 i_ore_copper
+DEF_RES_6 i_ore_bronze
+DEF_RES_7 i_ore_shadow
+DEF_RES_8 i_ore_agapite
+DEF_RES_9 i_ore_rose
+DEF_RES_10 i_ore_silver
+DEF_RES_11 i_ore_valorite
+DEF_RES_12 i_ore_verite
+DEF_RES_13 i_ore_gold
+DEF_RES_14 i_ore_bloodrock
+DEF_RES_15 i_ore_blackrock
+DEF_RES_16 i_ore_mytheril
+DEF_RES_17 i_ore_order
+DEF_RES_18 i_ore_chaos
+DEF_RES_19 i_ore_adamantium
+
+DEF_RES_20 i_ingot_iron
+DEF_RES_21 i_ingot_ceramic
+DEF_RES_22 i_ingot_rusty
+DEF_RES_23 i_ingot_old_copper
+DEF_RES_24 i_ingot_dull_copper
+DEF_RES_25 i_ingot_copper
+DEF_RES_26 i_ingot_bronze
+DEF_RES_27 i_ingot_shadow
+DEF_RES_28 i_ingot_agapite
+DEF_RES_29 i_ingot_rose
+DEF_RES_30 i_ingot_silver
+DEF_RES_31 i_ingot_valorite
+DEF_RES_32 i_ingot_verite
+DEF_RES_33 i_ingot_gold
+DEF_RES_34 i_ingot_bloodrock
+DEF_RES_35 i_ingot_blackrock
+DEF_RES_36 i_ingot_mytheril
+DEF_RES_37 i_ingot_chaos
+DEF_RES_38 i_ingot_order
+DEF_RES_39 i_ingot_orderr
+DEF_RES_40 i_ingot_adamantium
+
+DEF_RES_41 i_log
+DEF_RES_42 i_dark_log
+
+DEF_RES_43 i_cloth
+DEF_RES_44 i_bandage
+
+
+[Function contarresources]
+FOR 0 44
+	SERV.WRITEFILE Resources.txt <DEF.DEF_RES_<dlocal._For>>: <<DEF.DEF_RES_<DLOCAL._FOR>>.INSTANCES>
+	LOCAL.AMOUNT 0
+	FORINSTANCES <DEF.DEF_RES_<DLOCAL._FOR>>
+		LOCAL.AMOUNT += <EVAL <AMOUNT>>
+	ENDFOR
+	SERV.WRITEFILE Resources.txt <dlocal.Amount>
+ENDFOR
+
+[Function contapanos]
+local.panosamt 0
+FORINSTANCES i_panotrue_g
+	SERV.WRITEFILe Panos.txt True Gray: Cont: <TOPOBJ.name>, em coord: <MOREP>, com qtd: <AMOUNT>
+	local.panosamt += <amount>
+endfor
+SERV.WRITEFILE Panos.txt True Gray: <dlocal.panosamt>
+
+local.panosamt 0
+FORINSTANCES i_panotrue_b
+	SERV.WRITEFILe Panos.txt True Black: Cont: <TOPOBJ.name>, em coord: <MOREP>, com qtd: <AMOUNT>
+	local.panosamt += <amount>
+endfor
+SERV.WRITEFILE Panos.txt True Black: <dlocal.panosamt>
+
+local.panosamt 0
+FORINSTANCES i_panotrue_w
+	SERV.WRITEFILe Panos.txt True White: Cont: <TOPOBJ.name>, em coord: <MOREP>, com qtd: <AMOUNT>
+	local.panosamt += <amount>
+endfor
+SERV.WRITEFILE Panos.txt True White: <dlocal.panosamt>
+
+[FUNCTION Ankhs]
+FORINSTANCES i_ankh
+	TYPE t_shrine
+	SERV.LOG @<P>
+ENDFOR
+
+[PLEVEL 2]
+GOPONTE
+GOSH
+GOCEMITA
+
+[function GOPONTE]
+SRC.F_GO 1383,1749,1
+
+[FUNCTION GOSH]
+SRC.F_GO 3010,3371,15
+
+[FUNCTION GOCEMITA]
+SRC.F_GO 1383,1489,10
+
+[FUNCTION testinst]
+ref1 = <uid>
+FORINSTANCES c_zombie
+	local.ct ++
+	ref1.sysmessage <name> <p>
+ENDFOR
+sysmessage <dlocal.ct>
+
+[FUNCTION F_PROCURA_ITEMNB]
+SERV.WRITEFILE FIX_NBSITENS.txt -------------------- <SERV.RTIME> ------------------------------
+LOCAL.FFF <SERV.MAXLOOPTIMES>
+SERV.MAXLOOPTIMES 65000
+FORINSTANCES <ARGS>
+	IF (<ATTR>&ATTR_NEWBIE) || (<attr>&attr_move_never)
+		IF (<CONT>) && (<attr>&attr_move_never)
+			IF (<TOPOBJ.ISPLAYER>)
+				SERV.WRITEFILE FIX_NBSITENS.txt <NAME> (<UID>) em <P> no player <TOPOBJ.NAME> (CONTAINER: <CONT>) (<attr> move never)
+			ENDIF
+		ELIF (<CONT>)
+			IF (<TOPOBJ.ISPLAYER>)
+				SERV.WRITEFILE FIX_NBSITENS.txt <NAME> (<UID>) em <P> no player <TOPOBJ.NAME> (CONTAINER: <CONT>)
+			ENDIF
+		ELIF (<ATTR>&ATTR_NEWBIE)
+				SERV.WRITEFILE FIX_NBSITENS.txt <NAME> (<UID>) em <P>
+			endif
+		ENDIF
+	ENDIF
+ENDFOR
+SERV.MAXLOOPTIMES <LOCAL.FFF>
+
+[FUNCTION F_APLICA_DLOG]
+REF1 <UID.<ARGS>>
+IF <ARGO.TOPOBJ> != <SRC>
+	SRC.SYSMESSAGE @,,1 O kit deve estar em sua bag/bank.
+	RETURN 1
+ENDIF
+IF (<ARGO.BASEID> == I_ADV_ALCHEMY)
+		IF (<ARGO.DTAG0.USAGE> >= 40)
+			IF (<REF1.AMOUNT> >= 40)
+				ARGO.TAG.USAGE 0
+				ARGO.COLOR 0455
+				REF1.AMOUNT -= 40
+				IF <REF1.AMOUNT> <= 0
+					REF1.REMOVE
+				ENDIF
+				SRC.SYSMESSAGE @,,1 You have recharged your kit.
+				RETURN 1
+			ELSE
+				SRC.SYSMESSAGE @,,1 The adv kit needs 40 dark logs to work again.
+				RETURN 1
+			ENDIF
+		ELSE
+			SRC.SYSMESSAGE @,,1 This kit doesnt need dark logs, yet..you can use it <EVAL 40-<ARGO.DTAG0.USAGE>> more times.
+			RETURN 1
+		ENDIF
+ELSE
+	SRC.SYSMESSAGE Esse item nao precisa de logs.
+endif
+
+[FUNCTION f_fix_resp_times]
+LOCAL.COUNT 0
+FORINSTANCES i_worldgem_bit
+	IF (STRMATCH(*Covetous Level*, <REGION.NAME>))
+		MOREP=5,15,10
+		LOCAL.COUNT += 1
+	ENDIF
+ENDFOR
+
+SERV.LOG Fixed <DLOCAL.COUNT> respawn times.
+
+[FUNCTION F_FIX_RESP]
+local.fff <serv.MaxLoopTimes>
+serv.MaxLoopTimes 65000
+FORINSTANCES I_WORLDGEM_BIT
+	IF (<type>==t_spawn_char) && !(<CONT>)
+		IF (STRMATCH(*c_sheep_*,<MORE1>))
+				SERV.WRITEFILE FIX_RESP.TXT ------- <serv.rtime> -----
+	  	 		SERV.WRITEFILE FIX_RESP.TXT Respawn de <SERV.CHARDEF.<MORE1>.NAME> (<UID>) (<MORE1>) com min (<eval <morex>>) e max (<eval <morey>>). Em <P>.
+				MOREX 640
+				morey 740
+				morez 6
+				SERV.WRITEFILE FIX_RESP.TXT Respawn (<UID>) ajustado para min (<eval <morex>>) e max (<eval <morey>>). Em <P>.
+	 	ENDIF
+ 	ENDIF
+ENDFOR
+serv.MaxLoopTimes <local.fff>
+
+[FUNCTION ISEXCEPT]
+IF (<BASEID> == I_EXCEPT_WAR_FORK) || (<BASEID> == I_EXCEPT_KRYSS)
+	RETURN 1 //FENCING, PB DE STAM
+ELIF (<BASEID> == I_EXCEPT_AXE_EXEC) || (<BASEID> == I_EXCEPT_SWORD_VIKING) || (<BASEID> == I_EXCEPT_HALBARD) || (<BASEID> == I_EXCEPT_BARDICHE)
+	RETURN 2 //SWORD PB DE MANA
+ELSE
+	RETURN 0 //NENHUM
+ENDIF
+
+[FUNCTION FIXPLATES]
+REF1 <UID>
+LOCAL.COUNT 0
+FORINSTANCES <ARGS>
+ REF2 <UID>
+ IF (<REF2.CONT>)
+  REF3 <REF2.CONT>
+  SERV.NEWITEM <ARGS>
+	local.count ++
+  NEW.CONT <REF3>
+  IF (<REF2.CONT.ISITEM>)
+   NEW.CONTP <REF2.CONTP>
+  ENDIF
+ ELSE
+  SERV.NEWITEM <ARGS>
+  NEW.P <REF2.P>
+  NEW.NAME <REF2.NAME>
+	local.count ++
+ ENDIF
+ REF2.REMOVE
+ENDFOR
+SRC.SYSMESSAGE <dlocal.count> <args> corrigidas.
+
+[FUNCTION FIXALLPLATES]
+FIXPLATES I_<ARGS>_PLATEMAIL
+FIXPLATES I_<ARGS>_FEMALE_PLATEMAIL
+FIXPLATES I_<ARGS>_PLATEMAIL_LEGGINGS
+FIXPLATES I_<ARGS>_PLATEMAIL_ARMS
+FIXPLATES I_<ARGS>_PLATEMAIL_GAUNTLETS
+FIXPLATES I_<ARGS>_PLATEMAIL_GORGET
+FIXPLATES I_<ARGS>_PLATE_HELM
+FIXPLATES I_<ARGS>_CLOSED_HELM
+FIXPLATES I_<ARGS>_HELMET
+FIXPLATES I_<ARGS>_BASCINET
+FIXPLATES I_<ARGS>_NOSE_HELM
+FIXPLATES I_<ARGS>_BUCKLER_SHIELD
+FIXPLATES I_<ARGS>_HEATER_SHIELD
+FIXPLATES I_<ARGS>_METAL_SHIELD
+
+
+[FUNCTION F_FIXNBTOOLS]
+local.count 0
+FORINSTANCES <ARGS>
+	if <attr>&Attr_newbie
+		local.count ++
+		ATTR &= ~ATTR_NEWBIE
+	endif
+ENDFOR
+Src.sysmessage <dlocal.count> <args> alteradas
+
+[FUNCTION F_EVALTEST]
+SRC.SYSMESSAGE <EVAL 14000000/((<SRC.MACEFIGHTING>*<SRC.MACEFIGHTING>)+100000>
+SRC.SYSMESSAGE <EVAL (<MACEFIGHTING>*<MACEFIGHTING>)+100000>
+
+[FUNCTION F_ADAMANTIUMCOR]
+local.count 0
+FORINSTANCES <ARGS>
+	local.count ++
+	COLOR COLOR_O_ADAMANTIUM
+ENDFOR
+Src.sysmessage <dlocal.count> <args> alteradas
+
+[FUNCTION f_automatic_quests]
+f_desert_llama_quest
+
+[FUNCTION f_desert_llama_quest]
+if (<serv.rtime.format %H> > 17) && (<serv.rtime.format %H> < 21) && !(<var.desertllamaquest>)
+local.remainhours = <eval 20 - <serv.rtime.format %H>>
+local.remainminutes = <eval <eval <local.remainhours>*60> + <eval 60 - <serv.rtime.format %M>>>
+local.timer = <eval <r5,<local.remainminutes>>*60>
+ref1 = 0400a63fa
+ref2 = 05b58c
+ref1.timerf <local.timer>,f_create_desert_llama
+ref1.timerf <eval <local.remainminutes>*60>,f_desert_llama_quest_clear
+var.desertllamaquest = 1
+SERV.B @01be Desert Llama ira nascer em <eval <dLOCAL.TIMER>/60> minutos
+endif
+
+[FUNCTION f_create_desert_llama]
+timer = 1
+serv.b @31 ATENCAO: uma Desert Llama acaba de nascer!
+serv.writefile Llama.txt Llama nasceu <serv.rtime>
+
+[FUNCTION f_desert_llama_quest_clear]
+var.desertllamaquest = 0
+
+
+[FUNCTION f_gchangealign]
+FORINSTANCES <ARGS>
+	ALIGN 0
+ENDFOR
+
+[FUNCTION GOLDDOSCARA]
+local.fff <serv.MaxLoopTimes>
+serv.MaxLoopTimes 65000
+serv.writefile  logs/GoldDosCara.txt  -------------------INICIO (<serv.rtime>)-------------------------
+FORPLAYERS 9999
+local.check 0
+local.checks 0
+IF <GOLD> > 100000
+ serv.writefile logs/GoldDosCara.txt <name>(<account>) (<uid>) - <Gold> GPS
+ ENDIF
+if (<eval (<gold>+<dlocal.check>)-<tag0.gold>> > 500000) && (<tag0.gold>>0)
+ serv.writefile logs/DiferencaAlta.txt <name>(<account>) (<uid>) - <eval (<gold>+<dlocal.check>)-<tag0.gold>> em <serv.rtime>
+endif
+tag.gold <eval <gold>+<dlocal.check>>
+ENDFOR
+serv.writefile  logs/GoldDosCara.txt  -------------------FIM (<serv.rtime>)-------------------------
+serv.MaxLoopTimes <local.fff>
+
+[function f_amzchk]
+return <STRSUB 0 5 <ACCOUNT.LASTIP>>
+
+[FUNCTION ZERARKILLS]
+IF (<ISEMPTY <SRC.TAG.Killszeradas>>)
+	SRC.MENU M_ZERAKILLS
+ELSE
+	SRC.SYSMESSAGE Kills ja zeradas. Para zerar novamente use o menu de help e pague suas kills.
+ENDIF
+
+[FUNCTION ISINSHIP]
+RETURN <QVAL (<region.flags>&040)?1:0>
+
+[FUNCTION ISNPC]
+IF <isitem>
+	return 0
+endif
+RETURN <QVAL <ISPLAYER>?0:1>
+
+[MENU M_ZERAKILLS]
+Tem certeza que deseja zerar suas <Src.kills> kills?
+
+ON=0 Sim
+	SRC.KILLS = 0
+	SRC.SYSMESSAGE Kills zeradas.
+	SRC.TAG.KILLSZERADAS = 1
+ON=0 Nao
+	SRC.SYSMESSAGE Operacao Cancelada.
+
+[FUNCTION checkgold]
+if <args>
+local.fff <serv.MaxLoopTimes>
+serv.MaxLoopTimes 65000
+FORPLAYERS 99999
+	if <gold>><dargs>
+		serv.allclients s <name> tem mais de <args>(<gold>) gold
+	endif
+ENDFOR
+serv.MaxLoopTimes <local.fff>
+endif
+
+[FUNCTION arrayshow]
+RETURN <ARGV[<EVAL <ARGV[0]> + 1>]>
+
+[FUNCTION BLOCKACCSANTIGAS]
+local.fff <serv.MaxLoopTimes>
+serv.MaxLoopTimes 65000
+FORPLAYERS 8000
+	IF !(STRMATCH(*2016*,<ACCOUNT.LASTCONNECTDATE>))
+		ACCOUNT.BLOCK 1
+	ENDIF
+ENDFOR
+SERV.MAXLOOPTIMES <LOCAL.FFF>
+
+[FUNCTION IpChecker]
+IF (STRMATCH("<ACCOUNT.LASTIP>", "18.231.107.93"))
+	SERV.LOG <ACCOUNT.NAME> / <NAME> logged using the Amazon Tunnel !
+	SYSMESSAGE @079C Voce esta usando o Tunel via Amazon da TFG!
+ENDIF
+
+IF (STRMATCH("<ACCOUNT.LASTIP>", "191.252.192.151"))
+	SERV.LOG <ACCOUNT.NAME> / <NAME> logged using the Locaweb Tunnel !
+	SYSMESSAGE @079C Voce esta usando o Tunel 2 da TFG!
+ENDIF
+
+LOCAL.LIMIT 2
+
+IF (<TAG0.IpcheckBP> == 1)
+	LOCAL.LIMIT 4
+ENDIF
+
+IF !(STRCMPI(127.0.0.1,<ACCOUNT.LASTIP>))
+	RETURN 1
+ENDIF
+
+IF (<ACCOUNT.TAG0.TUNNEL>)
+	RETURN 1
+ENDIF
+
+IF !(STRCMPI(celio123,<ACCOUNT.NAME>)) || !(STRCMPI(alba,<ACCOUNT.NAME>)) || !(STRCMPI(cross,<ACCOUNT.NAME>)) || !(STRCMPI(faelsc,<ACCOUNT.NAME>)) || !(STRCMPI(renzoclide,<ACCOUNT.NAME>)) || !(STRCMPI(buzina,<ACCOUNT.NAME>)) || !(STRCMPI(arnbr2205,<ACCOUNT.NAME>)) || (STRMATCH(derocha*,<ACCOUNT.NAME>)) || (STRMATCH(s0ckz*,<ACCOUNT.NAME>)) || (STRMATCH(kbra*,<ACCOUNT.NAME>)) || (STRMATCH(fmagnago*,<ACCOUNT.NAME>)) || (STRMATCH(mascote*,<ACCOUNT.NAME>)) || (STRMATCH(oryx*,<ACCOUNT.NAME>)) || (STRMATCH(tetezu*,<ACCOUNT.NAME>)) || (STRMATCH(cannabis*,<ACCOUNT.NAME>)) || (STRMATCH(gabrielpe2*,<ACCOUNT.NAME>)) || (STRMATCH(igor,<ACCOUNT.NAME>)) || (STRMATCH(eduh,<ACCOUNT.NAME>)) || (STRMATCH(bleq,<ACCOUNT.NAME>)) || (STRMATCH(gokupoa,<ACCOUNT.NAME>)) || (STRMATCH(venonstaff,<ACCOUNT.NAME>)) || (STRMATCH(abduzido,<ACCOUNT.NAME>)) || (STRMATCH(milka,<ACCOUNT.NAME>)) || (STRMATCH(dansozza,<ACCOUNT.NAME>)) || (STRMATCH(danilosozza2,<ACCOUNT.NAME>)) || (STRMATCH(danilosozza,<ACCOUNT.NAME>)) || (STRMATCH(srdms,<ACCOUNT.NAME>)) || (STRMATCH(kleber1,<ACCOUNT.NAME>)) || (STRMATCH(cachaca,<ACCOUNT.NAME>)) || (STRMATCH(cachaca1,<ACCOUNT.NAME>)) || (STRMATCH(kinhod,<ACCOUNT.NAME>)) || (STRMATCH(hunt,<ACCOUNT.NAME>)) || (STRMATCH(tfg.hunt,<ACCOUNT.NAME>)) || (STRMATCH(tfg.leite,<ACCOUNT.NAME>)) || (STRMATCH(mindfreak,<ACCOUNT.NAME>)) || (STRMATCH(bolsomito,<ACCOUNT.NAME>)) || (STRMATCH(rodrig0,<ACCOUNT.NAME>)) || (STRMATCH(rodrigu,<ACCOUNT.NAME>))
+	RETURN 1
+ENDIF
+
+FOR C 0 <EVAL <SERV.CLIENTS>-1>
+ IF (STRMATCH("<ACCOUNT.LASTIP>","<SERV.CLIENT.<dLOCAL.C>.ACCOUNT.LASTIP>"))
+  LOCAL.CNT <EVAL <LOCAL.CNT>+1>
+  IF (<LOCAL.CNT> > <LOCAL.LIMIT>)
+   SYSMESSAGE @079C VOCE JA POSSUI <dLOCAL.LIMIT> PERSONAGENS LOGADOS!
+   SYSMESSAGE @079C VOCE SERA DESCONECTADO EM 2 SEGUNDOS.
+   TIMERF 2, TRYSRV DISCONNECT
+   return 1
+  ENDIF
+ ENDIF
+ENDIF
+
+[FUNCTION BLOCKASTAFF]
+local.fff <serv.MaxLoopTimes>
+serv.MaxLoopTimes 65000
+FORPLAYERS 8000
+	IF <ISGM> == 1
+		SYSMESSAGE BLOCK
+		ACCOUNT.BLOCK 1
+		ACCOUNT.PASSWORD tfgtfg
+	ENDIF
+ENDFOR
+SERV.MAXLOOPTIMES <LOCAL.FFF>
+
+[FUNCTION totalgolds]
+local.fff <serv.MaxLoopTimes>
+serv.MaxLoopTimes 0
+FORINSTANCES i_gold
+	LOCAL.COUNT += <AMOUNT>
+	if <topobj.isplayer>
+		LOCAL.COUNT2 += <AMOUNT>
+	endif
+ENDFOR
+SERV.WRITEFILE logs/Totalgoldmundo.txt <dLOCAL.COUNT>(em player: <dLOCAL.COUNT2>) Gps em <serv.rtime>
+serv.allclients s <dLOCAL.COUNT>(em player: <dLOCAL.COUNT2>) Gps
+serv.MaxLoopTimes <local.fff>
+
+[FUNCTION name_check]
+ref1=<src>
+for x 0 <eval <serv.accounts> -1>
+	for y 0 <eval <serv.account.<dlocal.x>.chars> -1>
+		ref2 = <serv.account.<dlocal.x>.char.<dlocal.y>>
+		if <ref1> != <ref2>
+ 			if !(strcmpi(<ref1.name>,<ref2.name>))
+  				serv.log NAMECHECK on <SRC.account>
+   				ref1.timerf 2, namechange
+  				RETURN 1
+  			endif
+		endif
+	endfor
+endfor
+
+[function namechange]
+src.flags=(<src.flags>|040000)
+src.tag0.badname=1
+src.sysmessage @32,,1 O nome escolhido ja esta sendo utilizado
+src.sysmessage @,,1 Voce ficara paralizado ate escolher um novo nome.
+src.sdialog d_name_change
+return 1
+
+[Dialog d_name_change]
+150,220
+nomove
+noclose
+page 0 // Basic layout
+gumppictiled 0 0 310 150 0a40
+checkertrans 1 1 308 148
+dtext 85 10 90 This name is not available
+dtext 80 30 90 Please choose a new name
+gumppic 20 50 1143 0
+dtextentry 30 52 150 50 0 0
+dtext 200 120 90 Confirm
+button 250 120 0fa5 0fa7 1 0 1
+
+[Dialog d_name_change BUTTON]
+ON=1
+	if strregex(^[aA-zZ]+$,<argtxt[0]>)
+		local.length=<argtxt[0]>
+		if (<eval strlen(<local.length>)> < 3) || (<eval strlen(<local.length>)> > 16)
+			src.sysmessage @32,,1 Invalid name
+			src.sysmessage @,,1 Valid names must me 3 - 16 characters in length
+			src.sdialog d_name_change
+			return 1
+		else
+			for x 0 <eval <serv.accounts> -1>
+				for y 0 <eval <account.chars> -1>
+					ref2 = <serv.account.<dlocal.x>.char.<dlocal.y>>
+					if !(strcmpi(<argtxt[0]>,<ref2.name>)) && !(<src>==<ref2>)
+        					src.namechange
+						return 1
+					endif
+				endfor
+			endfor
+			src.name <argtxt[0]>
+			src.account.chatname <argtxt[0]>
+			src.flags=(<src.flags>& ~040000)
+			src.sysmessage @,,1 Your name is now <src.name>
+			src.tag0.badname=
+			return 1
+		endif
+	else
+		src.sysmessage @32,,1 Invalid name
+		src.sysmessage @,,1 Names may only contain letters a - z
+		src.sdialog d_name_change
+		return 1
+	endif
+
+[function checkbaufix]
+Local.peso <weight>
+forchars 3
+IF !(<uid>==<argv[0]>) && (<eval <uid.<argv[0]>.weight>+<local.peso>> <4100)
+try uid.<argv[1]>.cont <uid.<argv[0]>.findlayer(21)>
+try uid.<argv[0]>.sysmessage You can't drop itens near chars
+return 1
+endif
+endfor
+
+[function Quantosmultis]
+FORITEMS 9999
+if (<isamulti>)
+LOCAL.ITEMCOUNT += 1
+ENDIF
+ENDFOR
+src.sysmessage ENCONTRADO <dLocal.itemcount> Multis
+
+[FUNCTION removercasaseitensdelas]
+FORITEMS 9999
+IF (<ISAPLAYERHOUSE>)
+	LOCAL.UID = <UID>
+	FORITEMS 150
+		IF (<REGION.UID>==<UID.<LOCAL.UID>.REGION.UID>) || (<TYPE> == T_SECURE)
+			LOCAL.ITEMCOUNT += 1
+			REMOVE
+		ENDIF
+	ENDFOR
+	LOCAL.HOUSECOUNT += 1
+	UID.<LOCAL.UID>.REMOVE
+ENDIF
+ENDFOR
+SRC.SYSMESSAGE <dLOCAL.ITEMCOUNT> itens removidos. <dLOCAL.HOUSECOUNT> casas removidas.
+
+[FUNCTION REMOVERBANKS]
+FORinstances i_bankbox
+	IF <TOPOBJ.ISPLAYER>
+		REMOVE
+		LOCAL.ITEMCOUNT += 1
+	ENDIF
+ENDFOR
+serv.writefile reset.txt <dLOCAL.ITEMCOUNT> BankBoxes removidas
+
+[function delcoisas]
+FORPLAYERS 6144
+	FINDLAYER.25.REMOVE
+endfor
+
+[FUNCTION MINHAGUILD]
+if <SRC.findlayer.30> && (<UID.<SRC.FINDLAYER.30.LINK>.TYPE> == T_STONE_GUILD)
+	SRC.sysmessage @0bb2,,1 Sua guild está em <SRC.FINDLAYER.30.MOREP>
+else
+	SRC.sysmessage Voce nao possui guild
+ENDIF
+
+[FUNCTION NOTBUILDABLE]
+IF (<SRC.ISGM>)
+RETURN 0
+ENDIF
+LOCAL.AREA=<HVAL <DEF.AREA_<SERV.ITEMDEF.<MORE1>.DEFNAME>>+1>
+SERV.NEWITEM=i_gold
+NEW.P=<ARGS>
+IF (<NEW.REGION.FLAGS>&region_flag_nobuilding) || (<NEW.isneartype t_rock <LOCAL.AREA>>) || (<NEW.ISNEARTYPE t_spawn_char <LOCAL.AREA>>) || (<NEW.ISNEARTYPE T_TREE <LOCAL.AREA>>) || (<NEW.isneartype t_water <LOCAL.AREA>>) || (<NEW.isneartype t_wall <LOCAL.AREA>>) || (<NEW.isneartype t_door <HVAL <LOCAL.AREA>+2>>) || (<NEW.isneartype t_door_locked <HVAL <LOCAL.AREA>+2>>) || !(<SRC.TARGP.ISNEARTYPE T_GRASS>)
+NEW.REMOVE
+RETURN 1
+ELSE
+FOR 8
+NEW.P=<ARGS>
+DOSWITCH <EVAL <LOCAL._FOR>-1>
+NEW.MOVE <LOCAL.AREA>
+NEW.MOVE -<LOCAL.AREA>
+NEW.MOVE 0,<LOCAL.AREA>
+NEW.MOVE 0,-<LOCAL.AREA>
+NEW.MOVE <LOCAL.AREA>,<LOCAL.AREA>
+NEW.MOVE <LOCAL.AREA>,-<LOCAL.AREA>
+NEW.MOVE -<LOCAL.AREA>,<LOCAL.AREA>
+NEW.MOVE -<LOCAL.AREA>,-<LOCAL.AREA>
+ENDDO
+IF (<UID.<NEW.REGION.UID>.TYPE>==t_multi)
+NEW.REMOVE
+RETURN 1
+ENDIF
+ENDFOR
+ENDIF
+NEW.REMOVE
+RETURN 0
+
+[FUNCTION ARRAY]
+RETURN <ARGV[<ARGV [<EVAL <ARGV>-1>]>]>
+
+[FUNCTION CARRAY]
+FOR 0 <EVAL <ARGV>-3>
+TRY LOCAL.CARRAY<EVAL <LOCAL._FOR>> <ARGV[<EVAL <LOCAL._FOR>>]>
+ENDFOR
+TRY LOCAL.CARRAY<EVAL <ARGV[<EVAL <ARGV>-2>]>> <ARGV[<EVAL <ARGV>-1>]>
+LOCAL.MONTAR <LOCAL.CARRAY0>,
+FOR 1 <EVAL <ARGV>-3>
+LOCAL.MONTAR .= <LOCAL.CARRAY<EVAL <LOCAL._FOR>>>,
+ENDFOR
+LOCAL.CARRAY <LOCAL.MONTAR>
+
+[FUNCTION consumegold]
+	IF (<TOTALGOLD> < <ARGN1>)
+		RETURN 1
+	ENDIF
+	BOUNCE <FINDLAYER.layer_dragging>
+	LOCAL.AMOUNT=<ARGN1>
+
+	WHILE (<LOCAL.AMOUNT>)
+		IF (0<FINDLAYER.21.FINDID.i_gold>)
+			LOCAL.GOLD=<FINDLAYER.21.FINDID.i_gold.amount>
+			IF (<HVAL <LOCAL.AMOUNT>-<LOCAL.GOLD>> < 0)
+				FINDLAYER.21.FINDID.i_gold.AMOUNT -= <LOCAL.AMOUNT>
+				LOCAL.AMOUNT=0
+			ELSE
+				FINDLAYER.21.FINDID.i_gold.remove
+				LOCAL.AMOUNT -= <LOCAL.GOLD>
+			ENDIF
+		ELIF (0<FINDLAYER.29.FINDID.i_gold>)
+			LOCAL.GOLD=<FINDLAYER.29.FINDID.i_gold.amount>
+			IF (<HVAL <LOCAL.AMOUNT>-<LOCAL.GOLD>> < 0)
+				FINDLAYER.29.FINDID.i_gold.AMOUNT -= <LOCAL.AMOUNT>
+				LOCAL.AMOUNT=0
+			ELSE
+				FINDLAYER.29.FINDID.i_gold.remove
+				LOCAL.AMOUNT -= <LOCAL.GOLD>
+			ENDIF
+		ENDIF
+	ENDWHILE
+	UPDATE
+
+///////////////////////////////
+
+[FUNCTION tel]
+TARGETFG targ_tel
+
+[FUNCTION targ_tel]
+F_GO <TARGP>
+TARGETFG targ_tel
+
+///////////////////////////////
+
+[FUNCTION rtime.year]
+return <serv.rtime.format %Y>
+
+[FUNCTION rtime.month]
+return <serv.rtime.format %m>
+
+[FUNCTION rtime.day]
+return <serv.rtime.format %d>
+
+[FUNCTION rtime.hour]
+return <serv.rtime.format %H>
+
+[FUNCTION rtime.minute]
+return <serv.rtime.format %M>
+
+[FUNCTION rtime.second]
+return <serv.rtime.format %S>
+
+///////////////////////
+
+[function totalgold]
+RETURN <eval <rescount i_gold>+<findlayer.29.rescount i_gold>>
+
+///////////////////
+[function r]
+serv.resync
+return 0
+
+
+[FUNCTION stats]
+SYSMESSAGE Voce tem <FAME> de fame.
+SYSMESSAGE Voce tem <KARMA> de karma.
+SYSMESSAGE Voce tem <KILLS> kills.
+
+[FUNCTION isplayer]
+IF (<ISITEM>)
+RETURN 0
+ENDIF
+RETURN <QVAL <NPC> ? 0:1>
+
+[FUNCTION isamulti]
+IF ((<TYPE>==T_MULTI)
+RETURN 1
+ELSE
+RETURN 0
+ENDIF
+
+[FUNCTION ISAPLAYERHOUSE]
+IF (<ISAMULTI>)
+	IF (<UID.<MORE1>.ISPLAYER>)
+		RETURN 1
+	ELSE
+		RETURN 0
+	ENDIF
+ELSE
+	RETURN 0
+ENDIF
+/////////////////
+
+[FUNCTION static]
+IF !(<ISEMPTY <ARGS>>)
+TARGETFG static_ <args>
+SYSMESSAGE Aonde criar <SERV.ITEMDEF.<ARGS>.NAME>?
+ENDIF
+
+[function static_]
+serv.newitem <args>
+new.p=<targp>
+IF (<NEW.TYPE>==t_multi)
+NEW.MULTICREATE
+ENDIF
+new.attr |= attr_move_never
+new.timer -1
+act=<new>
+
+//////////////
+
+[FUNCTION abrirgate]
+SERV.NEWITEM i_moongate_blue
+NEW.NAME Moongate
+BOUNCE <NEW>
+IF (<ISEMPTY <ARGS>>)
+	NEW.MOREP=<P>
+ELSE
+	NEW.MOREP=<ARGS>
+ENDIF
+NEW.COLOR=colors_all
+NEW.ATTR=attr_static
+
+////////////
+
+[function find]
+if !(<isempty <args>>)
+	serv.allclients find_test <args>
+endif
+
+[function find_test]
+IF (STRMATCH(<strsub 0 <HVAL strlen(<args>)> <NAME>>*,<ARGS>))
+	src.F_GO <p>
+ENDIF
+
+[FUNCTION findacc]
+if !(<isempty <args>>)
+	SERV.ALLCLIENTS find_find <ARGS>
+endif
+
+[FUNCTION find_find]
+IF (STRMATCH(<strsub 0 <HVAL strlen(<args>)> <ACCOUNT>>*,<ARGS>))
+	SRC.F_GO <P>
+ENDIF
+
+[function findip]
+if !(<isempty <args>>)
+	serv.allclients find_test_ip <args>
+endif
+
+[function find_test_ip]
+IF (STRMATCH(<strsub 0 <HVAL strlen(<args>)> <ACCOUNT.LASTIP>>*,<ARGS>))
+	src.F_GO <p>
+ENDIF
+
+//////////////
+
+
+[function XPASS]
+ACCOUNT.PASSWORD = <ARGS>
+
+[FUNCTION GSPW]
+LOCAL.1 = 1675,2984,1
+LOCAL.2 = 636,1485,1
+LOCAL.3 = 3340,572
+LOCAL.4 = 5821,51,23
+LOCAL.5 = 1903,2085,10
+LOCAL.6 = 5316,748,-19
+LOCAL.7 = 1195,3617,1
+LOCAL.8 = 1184,3601,1
+LOCAL.9 = 1182,3616,1
+LOCAL.10 = 2194,1395
+LOCAL.11 = 1749,3437,3
+LOCAL.12 = 475,1654
+LOCAL.13 = 5828,360
+LOCAL.14 = 2694,668
+LOCAL.15 = 1594,2154,5
+LOCAL.16 = 5146,623,-50
+LOCAL.17 = 1608,3372
+LOCAL.18 = 3385,2648,36
+LOCAL.19 = 5739,2977,32
+LOCAL.20 = 5718,57,6
+LOCAL.21 = 5452,2973,30
+LOCAL.22 = 5661,304
+LOCAL.23 = 5283,2307,60
+LOCAL.24 = 5414,3047,35
+LOCAL.25 = 1451,3608,1
+LOCAL.26 = 5683,202,-3
+LOCAL.27 = 4215,3717
+LOCAL.28 = 1472,2506,5
+LOCAL.29 = 5832,431,2
+LOCAL.30 = 6057,1470,5
+LOCAL.31 = 1428,2042
+LOCAL.32 = 5724,1292,1
+LOCAL.33 = 5752,434,80
+LOCAL.34 = 5396,849,45
+LOCAL.35 = 856,1541,1
+LOCAL.36 = 1829,2418
+LOCAL.37 = 5695,3644,20
+LOCAL.38 = 5238,2345,5
+LOCAL.39 = 78,149
+LOCAL.40 = 5230,3416
+LOCAL.41 = 6101,3467,-1
+LOCAL.42 = 5217,3198,19
+LOCAL.43 = 5355,4034,47
+LOCAL.44 = 5590,3917
+LOCAL.45 = 6087,3042,14
+LOCAL.46 = 210,1477,1
+LOCAL.47 = 936,1184,1
+LOCAL.48 = 886,648,1
+IF <ISEMPTY <SRC.CTAG0.GSPW>>
+	SRC.CTAG.GSPW 1
+ENDIF
+
+IF <SRC.CTAG0.GSPW> >= 49
+	SRC.CTAG.GSPW 1
+	SRC.SYSMESSAGE @0bb1,,1 Repetindo
+ENDIF
+
+SRC.F_GO <LOCAL.<SRC.dCtag0.gspw>>
+SRC.CTAG.GSPW += 1
+
+[FUNCTION LOGSPAWNS]
+local.fff <serv.MaxLoopTimes>
+serv.MaxLoopTimes 65000
+FORINSTANCES I_WORLDGEM_BIT
+	IF (STRMATCH(*<ARGS>*,<MORE1>))
+		VAR.LOGSPAWNS += 1
+		SERV.WRITEFILE SPAWNS.TXT LOCAL.<dVAR.LOGSPAWNS> = <p>
+		//FORITEMS 20
+		//	IF <BASEID> == I_WORLDGEM_BIT
+		//	SERV.WRITEFILE SPAWNS.TXT CERCADO POR <MORE1> COM <MOREP> EM <P>
+		//	ENDIF
+		//ENDFOR
+	ENDIF
+ENDFOR
+serv.MaxLoopTimes <local.fff>
+
+
+[function gonext]
+IF (0<CTAG.NEXTCLI> > <HVAL <SERV.CLIENTS>-1>) || !(<ISEMPTY <ARGS>>)
+CTAG.NEXTCLI
+ENDIF
+GOCLI 0<CTAG.NEXTCLI>
+CTAG.NEXTCLI=<HVAL 0<CTAG.NEXTCLI>+1>
+
+////////////
+
+[FUNCTION GETMEMBERLIST]
+IF (<member.count>)
+LOCAL.MEMBERLIST=<member.0.name>,
+FOR <member.count>
+IF !(<member.<HVAL <local._for>>>)
+RETURN <local.memberlist>
+ELSE
+LOCAL.MEMBERLIST .= <member.<HVAL <local._for>>.name>,
+ENDIF
+ENDFOR
+ENDIF
+
+[FUNCTION GETALLIGNMENT]
+IF !(<more1>)
+RETURN Neutral
+ELSEIF (<more1>==1)
+RETURN Order
+ELSEIF (<more1>==2)
+RETURN Chaos
+ENDIF
+
+[FUNCTION GETMASTER]
+IF !(0<MASTERUID>)
+REMOVE
+RETURN [nenhum]
+ELSE
+RETURN <MASTER>
+ENDIF
+
+////////////////
+
+[function isfood]
+IF (<type>==t_fruit) || (<type>==t_grain) || (<type>==t_meat_raw) || (<type>==t_food_raw) || (<type>==t_food)
+return 1
+else
+return 0
+ENDIF
+
+[function removeboat]
+IF !(0<argn2>)
+LOCAL.TRANSFER=0
+ELSE
+LOCAL.TRANSFER=<argn2>
+ENDIF
+FORCHARMEMORYTYPE 0100
+IF (<LINK.TYPE>==t_ship)
+IF (<LINK>==<ARGN1>)
+IF !(<LOCAL.TRANSFER>)
+LINK.REMOVE
+REMOVE
+RETURN 1
+ENDIF
+CONT=<LOCAL.TRANSFER>
+ENDIF
+ENDIF
+ENDFOR
+
+[FUNCTION barcos]
+IF !(<memoryfindtype.0100>)
+return 0
+ENDIF
+LOCAL.BARCOS=0
+LOCAL.TMP=<REF69>
+REF69=<UID>
+FORCHARMEMORYTYPE 0100
+IF (<LINK.TYPE>==t_ship)
+IF (<LINK.MORE1>==<REF69>)
+LOCAL.BARCOS += 1
+ENDIF
+ENDIF
+ENDFOR
+return <eval <local.barcos>>
+
+/////////////////////
+
+[function removercasa]
+IF !(0<argn2>)
+LOCAL.TRANSFER=0
+ELSE
+LOCAL.TRANSFER=<argn2>
+ENDIF
+FORCHARMEMORYTYPE 0100
+IF (<LINK.TYPE>==t_multi)
+IF (<LINK>==<ARGN1>)
+IF !(<LOCAL.TRANSFER>)
+LINK.REMOVE
+REMOVE
+RETURN 1
+ENDIF
+LINK.MORE1=<LOCAL.TRANSFER>
+CONT=<LOCAL.TRANSFER>
+ENDIF
+ENDIF
+ENDFOR
+
+//////////////////////
+
+[function totalgold_2]
+local.player=<eval <rescount i_gold>+<findlayer.29.rescount i_gold>>
+FORCHARMEMORYTYPE 0100
+IF (<LINK.TYPE>==t_multi) || (<LINK.TYPE>==t_ship)
+LINK.TOTALGOLD_HOUSE
+ENDIF
+ENDFOR
+LOCAL.GOLD_HOUSE=<VAR0.GOLD_HOUSE>
+VAR.GOLD_HOUSE=
+RETURN <EVAL <LOCAL.PLAYER>+<LOCAL.GOLD_HOUSE>>
+
+[function TOTALGOLD_HOUSE]
+LOCAL.UID=<UID>
+FORITEMS <DEF.AREA_<BASEID>>
+IF (<REGION.UID>==<LOCAL.UID>)
+IF (<TYPE>==t_container)
+var0.gold_house += <rescount i_gold>
+ELIF (<BASEID>=i_gold)
+var0.gold_house += <amount>
+ENDIF
+ENDIF
+ENDFOR
+
+//////////////
+
+[function disc]
+TRYSRV DISCONNECT
+
+[function kickp]
+TRYSRV KICK
+
+///////////////////////
+
+[FUNCTION ISINBANK]
+LOCAL.PUR=<UID>
+FORCONT <UID.<ARGN1>.FINDLAYER.29> 9999
+IF (<UID>==<LOCAL.PUR>)
+RETURN 1
+ENDIF
+ENDFOR
+RETURN 0
+
+/////////////////////////////
+
+[FUNCTION closealldialogs]
+if <dialoglist.count> == 0
+	return 1
+endif
+
+for <eval <dialoglist.count>-1> 0
+	dialogclose <dialoglist.<dlocal._for>.id>
+endfor
+///////////////
+
+[FUNCTION USECHECKS]
+TRYSRC <UID> UID.<ARGS>.USINGCHECKS
+IF (<VAR0.OK>)
+VAR.OK=
+RETURN 1
+ENDIF
+VAR.OK=
+RETURN 0
+
+[FUNCTION USINGCHECKS]
+IF (<DISTANCE> > 13) || !(<CANSEELOS>)
+VAR.OK=0
+ELSE
+VAR.OK=1
+ENDIF
+
+/////////////////
+
+[function REMOVEALLMEMS]
+IF (0<MEMORYFINDTYPE.<ARGS>>)
+WHILE (0<MEMORYFINDTYPE.<ARGS>>)
+TRY MEMORYFINDTYPE.<ARGS>.REMOVE
+ENDWHILE
+ENDIF
+
+[function equipall]
+equipweapon
+equiparmor
+
+[function unequipall]
+FOR 24
+	IF (<LOCAL._FOR>!=11) && (<LOCAL._FOR>!=15) && (<LOCAL._FOR>!=16) && (<LOCAL._FOR>!=18) && (<LOCAL._FOR>!=21)
+		IF (<FINDLAYER.<LOCAL._FOR>>)
+			IF !(<ARGN1>)
+				UNEQUIP <FINDLAYER.<LOCAL._FOR>>
+			ELSE
+				TRY FINDLAYER.<LOCAL._FOR>.CONT=<ARGN1>
+			ENDIF
+		ENDIF
+	ENDIF
+ENDFOR
+IF (<FINDLAYER.31>)
+	UNEQUIP <FINDLAYER.31>
+ENDIF
+
+////////////////////
+
+[FUNCTION OPENDOORS]
+FORITEMS <ARGN1>
+IF (<TYPE>==t_door)
+IF (<Z>==<ARGN2>)
+TIMERD=1
+ENDIF
+ENDIF
+ENDFOR
+
+//////////////
+
+[FUNCTION SPELLCIRCLE]
+IF (<ARGN> <= 8)
+RETURN 1
+ELIF (<ARGN> <= 16)
+RETURN 2
+ELIF (<ARGN> <= 24)
+RETURN 3
+ELIF (<ARGN> <= 32)
+RETURN 4
+ELIF (<ARGN> <= 40)
+RETURN 5
+ELIF (<ARGN> <= 48)
+RETURN 6
+ELIF (<ARGN> <= 56)
+RETURN 7
+ELIF (<ARGN> <= 64)
+RETURN 8
+ENDIF
+
+//////////////////
+[FUNCTION LOGSKILLS]
+
+local.fff <serv.MaxLoopTimes>
+serv.MaxLoopTimes 65000
+SERV.WRITEFILE LOGS/SKILLSUM.TXT ------- INICIO DO LOG DE <SERV.RTIME> -------------------------------
+FORPLAYERS 8000
+	IF <skilltotal> > 35000
+		SERV.WRITEFILE LOGS/SKILLSUM.TXT <NAME> (ACC: <ACCOUNT>) Tem <FVAL <SKILLTOTAL>> de SkillBase e <ACCOUNT.TOTALCONNECTTIME> Minutos jogados
+	ENDIF
+ENDFOR
+SERV.MAXLOOPTIMES <LOCAL.FFF>
+
+
+
+[FUNCTION FIXSTATUS_1]
+src.smsg @,,1 Checking stats...
+FOR L 1 24
+ IF (<LOCAL.L> != 21)
+  IF <FINDLAYER.<dLOCAL.L>>
+   LOCAL.L_<dLOCAL.L> <FINDLAYER.<dLOCAL.L>>
+   FINDLAYER.<dLOCAL.L>.UNEQUIP
+  ENDIF
+ ENDIF
+ENDFOR
+IF <STR> > 100
+ STR 100
+ENDIF
+IF <INT> > 100
+ INT 100
+ENDIF
+IF <DEX> > 100
+ DEX 100
+ENDIF
+MODDEX = 0
+MODINT = 0
+MODSTR = 0
+FOR S 0 54
+	IF ((<EVAL <SRC.<dLOCAL.S>>>) > 1000)
+		SRC.<dLOCAL.S> = 1000
+		SERV.LOG <SRC.NAME> SKILL <SERV.SKILL.<dLOCAL.S>.NAME> FIXED
+	ENDIF
+ENDFOR
+FOR L 1 24
+ IF (<LOCAL.L_<dLOCAL.L>>)
+  EQUIP <LOCAL.L_<dLOCAL.L>>
+ ENDIF
+ENDFOR
+SERV.LOG <account> FIXED STATUS
+src.smsg @,,1 Checking Done.
+
+[FUNCTION WARMODE]
+IF (<FLAGS>&statf_war) && !(0<ARGN1>)
+FLAGS &= ~statf_war
+IF (<ISPLAYER>) && (<ISONLINE>)
+SENDPACKET 072 00 00 32 00
+ENDIF
+ELIF !(<FLAGS>&statf_war) && (0<ARGN1>)
+FLAGS |= statf_war
+IF (<ISPLAYER>) && (<ISONLINE>)
+SENDPACKET 072 01 00 32 00
+ENDIF
+ENDIF
+
+////////////////////////
+
+[FUNCTION isnewbie]
+IF (<SKILLTOTAL> > 400.0) || (0<ACCOUNT.TOTALCONNECTTIME> > 10000)
+RETURN 0
+ELSE
+RETURN 1
+ENDIF
+
+/////////////////////////
+
+[FUNCTION totalpks]
+VAR.TOTALPKS=0
+SERV.ALLCLIENTS totalpks_
+LOCAL.PKS=<VAR.TOTALPKS>
+VAR.TOTALPKS=
+RETURN <EVAL <LOCAL.PKS>>
+
+[FUNCTION totalpks_]
+IF (<ISPK>)
+VAR0.TOTALPKS += 1
+ENDIF
+
+[FUNCTION totalapks]
+VAR.TOTALAPKS=0
+SERV.ALLCLIENTS totalapks_
+LOCAL.APKS=<VAR.TOTALAPKS>
+VAR.TOTALAPKS=
+RETURN <EVAL <LOCAL.APKS>>
+
+[FUNCTION totalapks_]
+IF !(<ISPK>)
+VAR0.TOTALAPKS += 1
+ENDIF
+
+////////////////////
+
+[FUNCTION mapname]
+IF !(<MAP>)
+RETURN Felluca
+ELIF (<MAP>==1)
+RETURN Trammel
+ELIF (<MAP>==2)
+RETURN Illshenar
+ELIF (<MAP>==3)
+RETURN Malas
+ENDIF
+
+[FUNCTION JATEMCOMESSENOME]
+FOR 0 <HVAL <SERV.ACCOUNTS>-1>
+	IF (<SERV.ACCOUNT.<LOCAL._FOR>.CHARS>)
+		FOR x 0 <HVAL <SERV.ACCOUNT.<LOCAL._FOR>.CHARS>-1>
+			IF (<SERV.ACCOUNT.<LOCAL._FOR>.CHAR.<LOCAL.x>>!=<UID>)
+				IF !(STRCMPI(<SERV.ACCOUNT.<LOCAL._FOR>.CHAR.<LOCAL.x>.NAME>,<ARGS>))
+					RETURN 1
+				ENDIF
+			ENDIF
+		ENDFOR
+	ENDIF
+ENDFOR
+RETURN 0
+
+[FUNCTION DUNGLOCATION]
+DORAND 6
+P=<eval {5313 5326}>,<eval {577 625}>
+P=<eval {5394 5592}>,<eval {1954 2028}>
+P=<eval {5388 5512}>,<eval {662 754}>
+P=<eval {5134 5163}>,<eval {798 870}>
+P=<eval {5914 5990}>,<eval {147 238}>
+P=<eval {5515 5621}>,<eval {15 119}>
+ENDDO
+LOCAL.TMP2=<NEW>
+LOCAL.TMP=<REF69>
+SERV.NEWNPC C_ZOMBIE
+NEW.REMOVEFROMVIEW
+NEW.FLAGS |= STATF_INVISIBLE
+NEW.P=<P>
+NEW.FIX
+REF69=<region.uid>
+IF (<REF69.type>==t_multi)
+NEW.REMOVE
+NEW=<LOCAL.TMP2>
+REF69=<LOCAL.TMP>
+DUNGLOCATION
+RETURN 1
+ELIF (<region.flags>&region_flag_guarded) || (<region.flags>&region_flag_safe) || (<isneartype t_rock>) || (<isneartype t_tree>) || (<isneartype t_door>) || (<isneartype t_wall>) || (<isneartype t_water>) || (<isneartype t_multi 10>) || (<p.terrain>==0244)
+NEW.REMOVE
+NEW=<LOCAL.TMP2>
+REF69=<LOCAL.TMP>
+DUNGLOCATION
+RETURN 1
+ENDIF
+FIX
+NEW.REMOVE
+NEW=<LOCAL.TMP2>
+REF69=<LOCAL.TMP>
+
+[FUNCTION RANDLOCATION]
+DORAND 5
+P=<eval {112 2800}>,<eval {232 3992}>
+P=<eval {112 2800}>,<eval {232 3992}>
+P=<eval {112 2800}>,<eval {232 3992}>
+P=<eval {1824 3504}>,<eval {0 1500}>
+P=<eval {112 2800}>,<eval {232 3992}>
+ENDDO
+LOCAL.TMP2=<NEW>
+LOCAL.TMP=<REF69>
+SERV.NEWNPC C_ZOMBIE
+NEW.REMOVEFROMVIEW
+NEW.FLAGS |= STATF_INVISIBLE
+NEW.P=<P>
+NEW.FIX
+REF69=<region.uid>
+IF (<REF69.type>==t_multi)
+NEW.REMOVE
+NEW=<LOCAL.TMP2>
+REF69=<LOCAL.TMP>
+RANDLOCATION
+RETURN 1
+ELIF (<region.flags>&region_flag_guarded) || (<region.flags>&region_flag_safe) || (<NEW.ISSTUCK>)
+NEW.REMOVE
+NEW=<LOCAL.TMP2>
+REF69=<LOCAL.TMP>
+RANDLOCATION
+RETURN 1
+ENDIF
+FIX
+NEW.REMOVE
+NEW=<LOCAL.TMP2>
+REF69=<LOCAL.TMP>
+
+///////////////////////////
+
+[FUNCTION TEXTLEN]
+RETURN <EVAL STRLEN(<ARGS>)>
+
+//////////////////////////
+
+[FUNCTION MININGCHEST]
+SERV.NEWITEM i_chest_metal
+NEW.P=<ARGS>
+NEW.ATTR=ATTR_STATIC|ATTR_DECAY
+NEW.TIMER=30
+LOCAL.NEW=<NEW>
+DORAND 9
+SERV.NEWITEM i_gold,<HVAL {100 1000}>,<LOCAL.NEW>
+SERV.NEWITEM i_ore_shadow,<HVAL {5 10}>,<LOCAL.NEW>
+SERV.NEWITEM i_ore_agapite,<HVAL {5 10}>,<LOCAL.NEW>
+SERV.NEWITEM i_ore_agapite,<HVAL {5 10}>,<LOCAL.NEW>
+SERV.NEWITEM tm_bag_of_magic,1,<LOCAL.NEW>
+SERV.NEWITEM random_bowtype_ruin,1,<LOCAL.NEW>
+SERV.NEWITEM random_fencingtype_ruin,1,<LOCAL.NEW>
+SERV.NEWITEM random_axetype_ruin,1,<LOCAL.NEW>
+SERV.NEWITEM 101620,1,<LOCAL.NEW>
+ENDDO
+
+////////////////////
+
+[function f_lootback]
+FORCONT <uid> 0
+src.bounce <uid>
+ENDFOR
+src.equipall
+
+////////////////////
+
+[function wiki]
+SRC.SYSMESSAGE Voce esta sendo direcionado para nossa Wiki.
+src.timerf 2,weblink https:\\github.com/s0ckz/tfg/wiki
+
+[function site]
+weblink=http:\\www.tfg.com.br
+
+//////////////////
+
+[function add_timer_act]
+IF !(<isempty <argv[0]>>)
+IF !(<isempty <argv[1]>>)
+IF (<isnum <argv[0]>>)
+serv.newitem=i_gold
+new.events=t_command_caller
+new.attr=attr_invis|attr_decay
+new.timer=<argv[0]>
+new.tag.command=<argv[1]>
+IF (<ARGO.UID>)
+new.p=<argo.p>
+new.link=<argo.uid>
+ELSE
+new.p=<p>
+new.link=<uid>
+ENDIF
+new.removefromview
+ENDIF
+ENDIF
+ENDIF
+
+[typedef t_command_caller]
+ON=@Timer
+try LINK.<tag.command>
+remove
+return 1
+
+////////////////////////
+
+[FUNCTION RANDMAGICITEM]
+LOCAL.FIRSNEW=<NEW>
+DORAND 22
+SERV.NEWITEM {i_double_blade 1 i_lance 1 i_scyth 1 i_bone_harvester 1 i_scepter 1 i_bladed_staff 1 i_pike 1 i_double_bladed_staff 1 i_nodachi 1 i_daicho 1 i_sai 1 i_tekagi 1 i_horseman_bow 1 i_composite_bow 1 i_yumi 1 i_bokuto 1}
+SERV.NEWITEM RANDOM_WEAPON
+SERV.NEWITEM {i_elven_composite_longbow 1 i_magical_shortbow 1 i_Elven_Spellblade 1 i_sword_Assassin_Spike 1 i_sword_leafblade 1 i_sword_warcleaver 1 i_elven_Machete 1 i_Ornate_Axe 1 i_Radiant_Scimitar 1 i_Rune_Blade 1 i_mace_diamondmace 1 i_mace_Wildstaff 1}
+SERV.NEWITEM RANDOM_WEAPON
+SERV.NEWITEM {i_dragon_platemail 1 i_dragon_helm 1 i_male_kimono 1 i_female_kimono 1}
+SERV.NEWITEM {i_double_blade 1 i_lance 1 i_scyth 1 i_bone_harvester 1 i_scepter 1 i_bladed_staff 1 i_pike 1 i_double_bladed_staff 1 i_nodachi 1 i_daicho 1 i_sai 1 i_tekagi 1 i_horseman_bow 1 i_composite_bow 1 i_yumi 1 i_bokuto 1}
+SERV.NEWITEM RANDOM_WEAPON
+SERV.NEWITEM {i_elven_composite_longbow 1 i_magical_shortbow 1 i_Elven_Spellblade 1 i_sword_Assassin_Spike 1 i_sword_leafblade 1 i_sword_warcleaver 1 i_elven_Machete 1 i_Ornate_Axe 1 i_Radiant_Scimitar 1 i_Rune_Blade 1 i_mace_diamondmace 1 i_mace_Wildstaff 1}
+SERV.NEWITEM RANDOM_WEAPON
+SERV.NEWITEM {i_double_blade 1 i_lance 1 i_scyth 1 i_bone_harvester 1 i_scepter 1 i_bladed_staff 1 i_pike 1 i_double_bladed_staff 1 i_nodachi 1 i_daicho 1 i_sai 1 i_tekagi 1 i_horseman_bow 1 i_composite_bow 1 i_yumi 1 i_bokuto 1}
+SERV.NEWITEM RANDOM_PLATEMAIL_DEFENSE
+SERV.NEWITEM {i_dragon_platemail 1 i_dragon_helm 1 i_male_kimono 1 i_female_kimono 1}
+SERV.NEWITEM RANDOM_PLATEMAIL_GUARDING
+SERV.NEWITEM {i_elven_composite_longbow 1 i_magical_shortbow 1 i_Elven_Spellblade 1 i_sword_Assassin_Spike 1 i_sword_leafblade 1 i_sword_warcleaver 1 i_elven_Machete 1 i_Ornate_Axe 1 i_Radiant_Scimitar 1 i_Rune_Blade 1 i_mace_diamondmace 1 i_mace_Wildstaff 1}
+SERV.NEWITEM RANDOM_WEAPON
+SERV.NEWITEM RANDOM_PLATEMAIL_HARDENING
+SERV.NEWITEM {i_elven_composite_longbow 1 i_magical_shortbow 1 i_Elven_Spellblade 1 i_sword_Assassin_Spike 1 i_sword_leafblade 1 i_sword_warcleaver 1 i_elven_Machete 1 i_Ornate_Axe 1 i_Radiant_Scimitar 1 i_Rune_Blade 1 i_mace_diamondmace 1 i_mace_Wildstaff 1}
+SERV.NEWITEM RANDOM_PLATEMAIL_FORTIFICATION
+SERV.NEWITEM RANDOM_PLATEMAIL_INVULNERABILITY
+SERV.NEWITEM {i_double_blade 1 i_lance 1 i_scyth 1 i_bone_harvester 1 i_scepter 1 i_bladed_staff 1 i_pike 1 i_double_bladed_staff 1 i_nodachi 1 i_daicho 1 i_sai 1 i_tekagi 1 i_horseman_bow 1 i_composite_bow 1 i_yumi 1 i_bokuto 1}
+SERV.NEWITEM RANDOM_WEAPON
+SERV.NEWITEM {i_double_blade 1 i_lance 1 i_scyth 1 i_bone_harvester 1 i_scepter 1 i_bladed_staff 1 i_pike 1 i_double_bladed_staff 1 i_nodachi 1 i_daicho 1 i_sai 1 i_tekagi 1 i_horseman_bow 1 i_composite_bow 1 i_yumi 1 i_bokuto 1}
+ENDDO
+LOCAL.NEW=<NEW>
+IF (<NEW.TYPE>==T_CONTAINER)
+NEW=<NEW.FINDCONT.0.UID>
+ENDIF
+NEW.EVENTS +T_PROPRIEDADES
+IF (STRMATCH(*t_weapon*,<NEW.TYPE>))
+IF !(<R20>)
+NEW.SETSLAYER
+ENDIF
+IF !(<R3>)
+NEW.TAG.DAMINCREASE=<R2,30>
+ENDIF
+IF !(<R3>)
+NEW.TAG.SWINGINCREASE=<R2,30>
+ENDIF
+IF !(<R2>)
+NEW.TAG.HITCHANCEINCREASE=<R1,20>
+ENDIF
+IF !(<R5>)
+NEW.TAG.LIFELEECH=<R2,40>
+ENDIF
+IF !(<R5>)
+NEW.TAG.STAMLEECH=<R2,40>
+ENDIF
+IF !(<R5>)
+NEW.TAG.MANALEECH=<R2,40>
+ENDIF
+IF !(<R6>)
+NEW.TAG.HITDISPEL=1
+ENDIF
+IF !(<R6>)
+NEW.TAG.HITFIREBALL=<R2,40>
+ENDIF
+IF !(<R6>)
+NEW.TAG.HITHARM=<R2,40>
+ENDIF
+IF !(<R6>)
+NEW.TAG.HITLIGHTNING=<R2,40>
+ENDIF
+IF !(<R6>)
+NEW.TAG.MAGICARROW=<R2,40>
+ENDIF
+IF (<NEW.TYPE>==T_WEAPON_BOW) || (<NEW.TYPE>==T_WEAPON_XBOW)
+IF !(<R6>)
+NEW.TAG.BALANCED=1
+ENDIF
+ENDIF
+ELSE (STRMATCH(*t_armor*,<NEW.TYPE>))
+NEW.TAG.DAMAGERETURN=<R1,15>
+ELSE (<NEW.TYPE>==t_shield)
+NEW.TAG.HITCHANCEDECREASE=<R3,10>
+ENDIF
+IF !(<R5>)
+NEW.EVENTS +T_LUCK_ITEM
+NEW.TAG.LUCK=<R1,100>
+ENDIF
+NEW=<LOCAL.NEW>
+IF !(<ISITEM>)
+BOUNCE <NEW>
+ELSE
+NEW.CONT=<UID>
+ENDIF
+NEW=<LOCAL.FIRSNEW>
+
+//////////////////////////
+
+[FUNCTION guildlogo]
+IF (STRMATCH(<ASC http:>*,<ASC <ARGS>>))
+SRC.SYSMESSAGE Sem http://
+ELSE
+REF69=<GUILD>
+IF (<REF69.BASEID>==I_GUILDSTONE)
+IF (<REF69.MASTERUID>==<SRC>)
+REF69.TAG.LOGO=<ARGS>
+ENDIF
+ENDIF
+ENDIF
+
+[FUNCTION GUILDIMG]
+IF (<ISEMPTY <TAG.LOGO>>)
+RETURN img263.echo.cx/img263/6233/guildsemlogo1ek.jpg
+ELSE
+RETURN <TAG0.LOGO>
+ENDIF
+
+[FUNCTION GETGUILD]
+IF (<ISGM>)
+RETURN Staff
+ELSEIF (<flags>&statf_incognito) || !(<guild>)
+RETURN [nenhuma]
+ELSE
+RETURN <guild.name>
+ENDIF
+
+[FUNCTION GETTOWN]
+IF (<ISGM>)
+RETURN Staff
+ELSEIF (<flags>&statf_incognito) || !(<memoryfindtype.memory_town>)
+RETURN [nenhuma]
+ELSE
+RETURN <memoryfindtype.memory_town.link.name>
+ENDIF
+
+[FUNCTION GETRACE]
+IF (<ISGM>)
+RETURN Deus
+ELIF (<findid.i_rune_incognito>) || !(<tag0.race>)
+RETURN [nenhuma]
+ELIF (<TAG0.RACE>==1)
+RETURN Humano
+ELIF (<TAG0.RACE>==2)
+RETURN Elfo
+ELIF (<TAG0.RACE>==3)
+RETURN Vampiro
+ELIF (<TAG0.RACE>==4)
+RETURN Anao
+ELIF (<TAG0.RACE>==5)
+RETURN Drow
+ELIF (<TAG0.RACE>==6)
+RETURN Sprite
+ELIF (<TAG0.RACE>==7)
+RETURN High Elf
+ENDIF
+
+///////////////////
+
+[FUNCTION moveback]
+DOSWITCH <DIR>
+BEGIN
+IF (<CANMOVE S>)
+MOVE S
+ENDIF
+END
+BEGIN
+IF (<CANMOVE SW>)
+MOVE SW
+ENDIF
+END
+BEGIN
+IF (<CANMOVE W>)
+MOVE W
+ENDIF
+END
+BEGIN
+IF (<CANMOVE NW>)
+MOVE NW
+ENDIF
+END
+BEGIN
+IF (<CANMOVE N>)
+MOVE N
+ENDIF
+END
+BEGIN
+IF (<CANMOVE NE>)
+MOVE NE
+ENDIF
+END
+BEGIN
+IF (<CANMOVE E>)
+MOVE E
+ENDIF
+END
+BEGIN
+IF (<CANMOVE SE>)
+MOVE SE
+ENDIF
+END
+BEGIN
+IF (<CANMOVE S>)
+MOVE S
+ENDIF
+END
+ENDDO
+
+///////////////////
+
+[FUNCTION ispk]
+IF (<NPC>)
+IF (<KARMA> < -2000)
+RETURN 1
+ELSE
+RETURN 0
+ENDIF
+ENDIF
+IF !(<KARMA> > -8001) || (<KILLS> > <SERV.MURDERMINCOUNT>)
+RETURN 1
+ENDIF
+RETURN 0
+
+/////////////////////
+
+[FUNCTION dialog_up]
+TRYSRC <UID> SRC.SDIALOG <ARGS>
+
+//////////////////
+
+[FUNCTION listen]
+IF !(<ISEMPTY <ARGS>>)
+HEARALL <ARGS>
+ELSE
+RETURN <HEARALL>
+ENDIF
+
+////////////////////
+
+[FUNCTION ISBADSTR]
+IF (<STRPOS 0 41 <ARGS>>!=-1) || (<ISEMPTY <ARGS>>) || (STRMATCH(*<ASC [[]>*,<ASC <ARGS>>)) || (STRMATCH(*<ASC ]>*,<ASC <ARGS>>)) || (STRMATCH(*<ASC [(]>*,<ASC <ARGS>>))) || (STRMATCH(*<ASC ->*,<ASC <ARGS>>)) || (STRMATCH(*<ASC [}`>?�;:^%$*�!<#._~|=+&/�{]>*,<ASC <ARGS>>)) || (STRMATCH(*<ASC @>*,<ASC <ARGS>>))
+RETURN 1
+ELSE
+RETURN 0
+ENDIF
+
+///////////////////
+
+
+
+[function showuid]
+targetf showuid_
+
+[function showuid_]
+sysmessage @88 O uid de <argo.name> e <argo.uid>
+
+/////////////
+
+[function ISINMULTI]
+IF (<ISEMPTY <ARGS>>)
+RETURN 1
+ENDIF
+IF (<ISGM>)
+return 0
+ENDIF
+serv.newitem=i_gold
+new.attr=attr_invis
+new.p=<args>
+IF (<UID.<NEW.REGION.UID>.TYPE>==t_multi)
+NEW.REMOVE
+return 1
+ELSE
+new.remove
+return 0
+ENDIF
+
+/////////////////////
+
+[function becriminal]
+IF !(<iscriminal>)
+IF !(<findid.i_criminal_timer>)
+CRIMINAL
+flags |= statf_criminal
+serv.newitem i_criminal_timer
+equip <new>
+sysmessage Criminal!
+ENDIF
+ENDIF
+
+[itemdef i_criminal_timer]
+id=i_memory
+type=t_eq_script
+name=Criminal Timer
+
+on=@create
+timer = 720
+
+on=@timer
+topobj.criminal 0
+topobj.flags = <topobj.flags>& ~statf_criminal
+remove
+return 0
+
+[FUNCTION iscriminal]
+IF (<ISPLAYER>)
+	IF (<FLAGS>&statf_criminal) || (<karma> <= -2000)
+		RETURN 1
+	ELSE
+		RETURN 0
+	ENDIF
+ENDIF
+
+IF ((<FLAGS>&statf_criminal) || (<karma> <= 0)) && (<NPC>!=brain_human)
+	RETURN 1
+ELSE
+	RETURN 0
+ENDIF
+
+/////////////
+
+[FUNCTION itemeffect]
+SERV.NEWNPC c_man
+NEW.REMOVEFROMVIEW
+NEW.P <P>
+NEW.FLAGS statf_invisible
+NEW.UPDATE
+NEW.EFFECT <ARGS>
+NEW.REMOVE
+
+//////////////
+
+[FUNCTION fountains]
+IF !(<memoryfindtype.0100>)
+return 0
+ENDIF
+LOCAL.FOUNTAINS=0
+FORCHARMEMORYTYPE MEMORY_GUARD
+IF (STRMATCH(i_multi_fount_*,<LINK.BASEID>))
+LOCAL.FOUNTAINS += 1
+ENDIF
+ENDFOR
+RETURN <EVAL <LOCAL.FOUNTAINS>>
+
+////////////
+
+[FUNCTION writeacctag]
+TRY ACCOUNT.TAG.<ARGS>
+
+/////////////
+
+[FUNCTION nukeid]
+VAR.NUKEIDARG=<ARGS>
+NUKE f_nukeid
+
+[FUNCTION f_nukeid]
+IF (<BASEID>==<VAR.NUKEIDARG>)
+REMOVE
+ENDIF
+
+[FUNCTION recordhp]
+RETURN <eval <var0.clirecord>>
+
+///////////////////
+
+[FUNCTION killspk]
+IF !(0<ARGN>)
+RETURN <LEVEL>
+ELSE
+LEVEL=<ARGN>
+ENDIF
+
+///////////////////
+
+[FUNCTION guildname]
+RETURN <GETGUILD>
+
+[FUNCTION FOLLOW]
+SRC.SYSMESSAGE  Follow: on - Use war mode to stop following
+SERV.NEWITEM i_eq_followSrc
+NEW.LINK=<UID>
+NEW.TIMER=2
+SRC.EQUIP <NEW>
+
+[FUNCTION pushp]
+TAG0.MAXP += 1
+TRY TAG.P<eval <TAG.MAXP>> <P>
+SYSMESSAGE Position <EVAL <TAG.MAXP>> saved.
+
+[FUNCTION popp]
+IF !(<TAG0.MAXP>)
+SYSMESSAGE No positions saved.
+RETURN 1
+ENDIF
+
+F_GO <TAG0.P<EVAL <TAG0.MAXP>>>
+SYSMESSAGE You went to Position <EVAL <TAG0.MAXP>>.
+TRY TAG.P<EVAL <TAG.MAXP>>
+
+IF (<TAG0.MAXP> > 1)
+TAG0.MAXP -= 1
+ELSE
+TAG.MAXP
+ENDIF
+
+///////////////////////////
+
+[FUNCTION shipfix]
+LOCAL.LEFTOK=0
+LOCAL.TMP=<REF69>
+REF69=<UID>
+FORITEMS 18
+IF (<TYPE>==t_ship_plank) && (<REGION.UID>==<REF69>)
+DCLICK
+ENDIF
+ENDFOR
+IF (<REF69.BASEID>==i_multi_ship_small_n) || (<REF69.BASEID>==i_multi_ship_dragon_small_n)
+LOCAL.HATCH 0 -4 0
+LOCAL.TILLERMAN 1 4 0
+LOCAL.LEFTSIDE -2 0 0
+LOCAL.RIGHTSIDE 2 0 0
+ELIF (<REF69.BASEID>==i_multi_ship_small_w) || (<REF69.BASEID>==i_multi_ship_dragon_small_w)
+LOCAL.HATCH -4 0 0
+LOCAL.TILLERMAN 4 0 0
+LOCAL.LEFTSIDE 0 2 0
+LOCAL.RIGHTSIDE 0 -2 0
+ELIF (<REF69.BASEID>==i_multi_ship_small_s) || (<REF69.BASEID>==i_multi_ship_dragon_small_s)
+LOCAL.HATCH 0 4 0
+LOCAL.TILLERMAN 0 -4 0
+LOCAL.LEFTSIDE 2 0 0
+LOCAL.RIGHTSIDE -2 0 0
+ELIF (<REF69.BASEID>==i_multi_ship_small_e) || (<REF69.BASEID>==i_multi_ship_dragon_small_e)
+LOCAL.HATCH 4 0 0
+LOCAL.TILLERMAN -4 0 0
+LOCAL.LEFTSIDE 0 -2 0
+LOCAL.RIGHTSIDE 0 2 0
+ELIF (<REF69.BASEID>==i_multi_ship_medium_n) || (<REF69.BASEID>==i_multi_ship_dragon_medium_n)
+LOCAL.HATCH 0 -4 0
+LOCAL.TILLERMAN 1 5 0
+LOCAL.LEFTSIDE -2 0 0
+LOCAL.RIGHTSIDE 2 0 0
+ELIF (<REF69.BASEID>==i_multi_ship_medium_w) || (<REF69.BASEID>==i_multi_ship_dragon_medium_w)
+LOCAL.HATCH -4 0 0
+LOCAL.TILLERMAN 5 0 0
+LOCAL.LEFTSIDE 0 2 0
+LOCAL.RIGHTSIDE 0 -2 0
+ELIF (<REF69.BASEID>==i_multi_ship_medium_s) || (<REF69.BASEID>==i_multi_ship_dragon_medium_s)
+LOCAL.HATCH 0 4 0
+LOCAL.TILLERMAN 0 -5 0
+LOCAL.LEFTSIDE 2 0 0
+LOCAL.RIGHTSIDE -2 0 0
+ELIF (<REF69.BASEID>==i_multi_ship_medium_e) || (<REF69.BASEID>==i_multi_ship_dragon_medium_e)
+LOCAL.HATCH 4 0 0
+LOCAL.TILLERMAN -5 0 0
+LOCAL.LEFTSIDE 0 -2 0
+LOCAL.RIGHTSIDE 0 2 0
+// Long Ships
+ELIF (<REF69.BASEID>==i_multi_ship_long_n) || (<REF69.BASEID>==i_multi_ship_dragon_long_n)
+LOCAL.HATCH 0 -5 0
+LOCAL.TILLERMAN 1 5 0
+LOCAL.LEFTSIDE -2 -1 0
+LOCAL.RIGHTSIDE 2 -1 0
+ELIF (<REF69.BASEID>==i_multi_ship_long_w) || (<REF69.BASEID>==i_multi_ship_dragon_long_w)
+LOCAL.HATCH -5 0 0
+LOCAL.TILLERMAN 5 0 0
+LOCAL.LEFTSIDE -1 2 0
+LOCAL.RIGHTSIDE -1 -2 0
+ELIF (<REF69.BASEID>==i_multi_ship_long_s) || (<REF69.BASEID>==i_multi_ship_dragon_long_s)
+LOCAL.HATCH 0 5 0
+LOCAL.TILLERMAN 0 -5 0
+LOCAL.LEFTSIDE 2 1 0
+LOCAL.RIGHTSIDE -2 1 0
+ELIF (<REF69.BASEID>==i_multi_ship_long_e) || (<REF69.BASEID>==i_multi_ship_dragon_long_e)
+LOCAL.HATCH 5 0 0
+LOCAL.TILLERMAN -5 0 0
+LOCAL.LEFTSIDE 1 -2 0
+LOCAL.RIGHTSIDE 1 2 0
+ENDIF
+FORITEMS 18
+IF (<BASEID>==i_ship_hatch_e) && (<REGION.UID>==<REF69>)
+IF !(<LINK.MORE2>) || (<LINK.MORE2>==01) || (<LINK.MORE2>==02) //N
+DISPID 03eae
+ELIF (<LINK.MORE2>==02020000) || (<LINK.MORE2>==02020001) || (<LINK.MORE2>==02020002) // E
+DISPID i_ship_hatch_e
+ELIF (<LINK.MORE2>==04040000) || (<LINK.MORE2>==04040001) || (<LINK.MORE2>==04040002) // S
+DISPID 03eb9
+ELIF (<LINK.MORE2>==06060000) || (<LINK.MORE2>==06060001) || (<LINK.MORE2>==06060002) // W
+DISPID 03e93
+ENDIF
+P=<LINK.P>
+MOVE=<LOCAL.HATCH>
+ENDIF
+IF (<REGION.UID>==<REF69>) && (<TYPE>==t_ship_tiller)
+IF !(<LINK.MORE2>) || (<LINK.MORE2>==01) || (<LINK.MORE2>==02) // N
+DISPID 03e4e
+ELIF (<LINK.MORE2>==02020000) || (<LINK.MORE2>==02020001) || (<LINK.MORE2>==02020002) // E
+DISPID 03e55
+ELIF (<LINK.MORE2>==04040000) || (<LINK.MORE2>==04040001) || (<LINK.MORE2>==04040002) // S
+DISPID 03e4b
+ELIF (<LINK.MORE2>==06060000) || (<LINK.MORE2>==06060001) || (<LINK.MORE2>==06060002) // W
+DISPID 03e50
+ENDIF
+P=<LINK.P>
+MOVE <LOCAL.TILLERMAN>
+ENDIF
+IF (<REGION.UID>==<REF69>) && (<UID>!=<LOCAL.LEFTSIDEUID>) && (<id>==03eb2) || (<ID>==03e85) || (<ID>==03ed4)
+IF (<TYPE>==t_ship_plank) && (<REGION.UID>==<REF69>)
+DCLICK
+ENDIF
+IF !(<LINK.MORE2>) || (<LINK.MORE2>==01) || (<LINK.MORE2>==02) // N
+ID=03eb2
+ELIF (<LINK.MORE2>==02020000) || (<LINK.MORE2>==02020001) || (<LINK.MORE2>==02020002) // E
+ID=03e85
+ELIF (<LINK.MORE2>==04040000) || (<LINK.MORE2>==04040001) || (<LINK.MORE2>==04040002) // S
+ID=03eb2
+ELIF (<LINK.MORE2>==06060000) || (<LINK.MORE2>==06060001) || (<LINK.MORE2>==06060002) // W
+ID=03e85
+ENDIF
+P=<LINK.P>
+MOVE <LOCAL.RIGHTSIDE>
+LOCAL.RIGHTSIDEUID=<UID>
+TIMER -1
+UPDATE
+ENDIF
+IF (<REGION.UID>==<REF69>) && (<UID>!=<LOCAL.RIGHTSIDEUID>) && (<ID>==03eb1) || (<ID>==03e8a) || (<ID>==03ed4)
+IF (<TYPE>==t_ship_plank) && (<REGION.UID>==<REF69>)
+DCLICK
+ENDIF
+IF !(<LINK.MORE2>) || (<LINK.MORE2>==01) || (<LINK.MORE2>==02) // N
+ID=03eb1
+ELIF (<LINK.MORE2>==02020000) || (<LINK.MORE2>==02020001) || (<LINK.MORE2>==02020002) // E
+ID=03e8a
+ELIF (<LINK.MORE2>==04040000) || (<LINK.MORE2>==04040001) || (<LINK.MORE2>==04040002) // S
+ID=03eb1
+ELIF (<LINK.MORE2>==06060000) || (<LINK.MORE2>==06060001) || (<LINK.MORE2>==06060002) // W
+ID=03e8a
+ENDIF
+P=<LINK.P>
+MOVE <LOCAL.LEFTSIDE>
+LOCAL.LEFTSIDEUID=<UID>
+TIMER -1
+UPDATE
+ENDIF
+ENDFOR
+REF69=<local.tmp>
+
+////////////////////////
+
+[FUNCTION GRAFICODAFUNCAO]
+DIALOG D_GRAFICODAFUNCAO 1 <ARGV[0]>,<ARGV[1]>,<ARGV[2]>,<ARGV[3]>,<ARGV[4]>,<ARGV[5]>,<ARGV[6]>
+//potencia,inicio,fim,b,multiplicador de x,+ ou -?,multiplicador de x�
+
+[DIALOG D_GRAFICODAFUNCAO]
+200,130
+SRC.CLOSEALLDIALOGS
+PAGE 0
+RESIZEPIC 20 20 2600 450 490
+CHECKERTRANS 20 20 450 490
+FOR x <ARGV[1]> <ARGV[2]>
+LOCAL.Y=<EVAL ((<ARGV[6]>*(<LOCAL.X>@<ARGV[0]>))<ARGV[5]>(<ARGV[4]>*<LOCAL.X>))<ARGV[3]>>
+gumppic <EVAL (<LOCAL.X>*10)+90> <EVAL ((<LOCAL.Y>*-1)*10)+320> 0938
+dtext 290 <EVAL (<LOCAL.X>*20)+160> 55 P(<EVAL <LOCAL.X>>,<EVAL <LOCAL.Y>>)
+ENDFOR
+dtext 290 50 33 F(x) = <ARGV[6]>x@<ARGV[0]><ARGV[5]><ARGV[4]>x<ARGV[3]>
+
+///////////////////////////////
+
+[FUNCTION WRITEFILE]
+IF (<ARGV> == 0)
+	RETURN 1
+ENDIF
+
+IF !(<FILE.INUSE>)
+FILE.MODE.APPEND=1
+IF (<FILE.OPEN <STRARG <ARGS>>>)
+FILE.WRITELINE <STREAT <ARGS>>
+ENDIF
+FILE.CLOSE
+ENDIF
+
+
+
+
+///////////////////////////
+
+[FUNCTION EHNUM]
+IF (STRMATCH(0*,<ARGV[0]>))
+RETURN 1
+ELSE
+RETURN 0
+ENDIF
+
+[FUNCTION localizedtextsgeneral]
+local.body=0ff
+local.hue=<argv[0]>
+local.font=<argv[1]>
+local.cliloc=<argv[2]>
+IF (<eval strlen(<local.tempname>)> > 30)
+local.tempname=<StrSub 0 29 <local.tempname>>
+ENDIF
+local.name=<asc <local.tempname>>
+FOR x 1 <eval 30 - strlen(<local.tempname>)>
+local.name .= " 00"
+ENDFOR
+local.lenght=49
+
+IF (<ARGV> > 3)
+local.lenght=46
+FOR x 3 <eval <ARGV>-1>
+local.arguments .= " 09 00"
+local.lenght += 2
+FOR o 0 <EVAL ((strlen(<ARGV[<dlocal.x>]>))-1)>
+local.lenght += 2
+IF !(<ISEMPTY <STRSUB <LOCAL.o> 1 <ARGV[<dlocal.x>]>>>)
+local.arguments .= " <ASC <STRSUB <LOCAL.o> 1 <ARGV[<dlocal.x>]>>> 00"
+ELSE
+local.arguments .= " 020 00"
+ENDIF
+ENDFOR
+ENDFOR
+local.arguments=<strsub 7 0 <local.arguments>>
+ENDIF
+
+[FUNCTION sysmessageloc]
+IF (<ISPLAYER>)
+IF (<SRC.ISONLINE>)
+local.id=0ffff
+local.tempname=Server
+CALL localizedtextsgeneral <ARGS>
+SENDPACKET 0c1 W<local.lenght> D<local.id> W<local.body> 00 W<local.hue> W<local.font> D<local.cliloc> <local.name> <local.arguments>
+ENDIF
+ENDIF
+
+////////////////////////
+
+[FUNCTION sayloc]
+IF (<SRC.ISPLAYER>)
+IF (<SRC.ISONLINE>)
+local.id=<UID>
+local.tempname=<NAME>
+CALL localizedtextsgeneral <ARGS>
+SRC.SENDPACKET 0c1 W<local.lenght> D<local.id> W<local.body> 00 W<local.hue> W<local.font> D<local.cliloc> <local.name> <local.arguments>
+ENDIF
+ENDIF
+
+////////////////////////
+
+[FUNCTION emoteloc]
+IF (<SRC.ISPLAYER>)
+IF (<SRC.ISONLINE>)
+local.id=<UID>
+local.tempname=<NAME>
+CALL localizedtextsgeneral <ARGS>
+local.hue=33
+SRC.SENDPACKET 0c1 W<local.lenght> D<local.id> W<local.body> 02 W<local.hue> W<local.font> D<local.cliloc> <local.name> <local.arguments>
+ENDIF
+ENDIF
+
+////////////////////////
+
+[FUNCTION messageloc]
+IF (<SRC.ISPLAYER>)
+IF (<SRC.ISONLINE>)
+local.id=<UID>
+local.tempname=Server
+CALL localizedtextsgeneral <ARGS>
+SRC.SENDPACKET 0c1 W<local.lenght> D<local.id> W<local.body> 06 W<local.hue> W<local.font> D<local.cliloc> <local.name> <local.arguments>
+ENDIF
+ENDIF
+
+//////////////////////////
+
+[FUNCTION TRANSFERGUILD]
+targetf transferguild_f <uid>
+src.sysmessage Who do you wish to transfer the guild to?
+
+[FUNCTION transferguild_f]
+
+REF69=<ARGO.UID>
+if (<REF69.ISITEM>)
+src.sysmessage You cannot transfer a guild to that.
+return 1
+endif
+if !(<REF69.NPC>==0)
+src.sysmessage You cannot transfer a guild to that.
+return 1
+endif
+if !(<src.memoryfindtype.memory_guild.link.uid>==<args>)
+src.sysmessage You are not in that guild.
+return 1
+endif
+if !(<REF69.memoryfindtype.memory_guild.link.uid>==<args>)
+src.sysmessage That player is not a member of the guild.
+return 1
+endif
+TRY uid.<args>.masteruid <REF69.uid>
+src.sysmessage You have transfered the guild to <REF69.name>.
+REF69.sysmessage You are now the master of <uid.<args>.name>.
+
+//////////////////////////
+
+// Fixa runas de buff que deram pau do Sphere 56b pro 56d
+
+[FUNCTION f_fix_rune_buffs]
+// colocar aqui o que vai rodar a cada dia
+FORPLAYERS 9999
+	REF1=<UID>
+	FORCONT <UID> 0
+		IF (<BASEID> == i_rune_agility) || (<BASEID> == i_rune_archprotection) || (<BASEID> == i_rune_bless) || (<BASEID> == i_rune_clumsy) || (<BASEID> == i_rune_protection) || (<BASEID> == i_rune_strength) || (<BASEID> == i_rune_weaken)
+			serv.WRITEFILE logs/fix-buffs.txt (<serv.rtime>) Corrigindo buffs de runas de <REF1.NAME> - <BASEID>.
+			REMOVE
+
+			// garantir que nao bugue ao tirar
+			REF1.MODSTR=0
+			REF1.MODDEX=0
+			REF1.MODINT=0
+
+			//unequipall
+			for 1 24
+				if (<dlocal._For> != 21)
+					REF1.FINDLAYER(<dlocal._for>).CONT = <REF1.FINDLAYER(layer_pack).UID>
+				endif
+			endfor
+
+			REF1.MODSTR=0
+			REF1.MODDEX=0
+			REF1.MODINT=0
+
+			IF <REF1.STR> > 100
+			   REF1.STR=100
+			ENDIF
+
+			IF <REF1.DEX> > 100
+			   REF1.DEX=100
+			ENDIF
+
+			IF <REF1.INT> > 100
+			   REF1.INT=100
+			ENDIF
+		ENDIF
+	ENDFOR
+ENDFOR
+
+[FUNCTION f_get_char_account_uid]
+IF (<ARGV> != 1)
+	RETURN 0
+ENDIF
+
+IF (STRMATCH(*.*, "<ARGV[0]>"))
+	FOR X 0 <EVAL <SERV.ACCOUNTS> - 1>
+		IF !(STRCMPi("<SERV.ACCOUNT.<dLOCAL.X>.NAME>", "<ARGV[0]>")
+			IF (<SERV.ACCOUNT.<dLOCAL.X>.CHARS> > 0)
+				RETURN <SERV.ACCOUNT.<dLOCAL.X>.CHAR.0.UID>
+			ELSE
+				RETURN 0
+			ENDIF
+		ENDIF
+	ENDFOR
+ELSE
+	IF (<SERV.ACCOUNT.<ARGV[0]>.CHARS> > 0)
+		RETURN <SERV.ACCOUNT.<ARGV[0]>.CHAR.0.UID>
+	ENDIF
+ENDIF
+
+RETURN 0
+
+[FUNCTION resetarzerarkills]
+for x 0 <eval <serv.accounts> - 1>
+	if (<serv.account.<dlocal.x>.chars> > 0)
+    	for y 0 <eval <serv.account.<dlocal.x>.chars> -1>
+			ref1 = <serv.account.<dlocal.x>.char.<dlocal.y>>
+			ref1.TAG.Killszeradas
+		endfor
+	endif
+endfor
+
+
+//////////////////////////
+
+[FUNCTION f_scheduler_minutely]
+//IF (!<R12>)
+//	LOCAL.BAU = 1
+//	SERV.LOG <VAR0.bau_puzzle_lock<dLOCAL.BAU>>
+//	WHILE (<VAR0.bau_puzzle_lock<dLOCAL.BAU>> != 0)
+//		IF (<UID.<VAR0.bau_puzzle_lock<dLOCAL.BAU>>.COUNT> > 0)
+//			SERV.ALLCLIENTS SYSMESSAGE @0bb7,,1 Existe um bau de puzzle carregado ! Por que nao tentar a sorte ?
+//			BREAK
+//		ENDIF
+//		LOCAL.BAU ++
+//	ENDWHILE
+//ENDIF
+
+// IF !(<R6>)
+// 	f_halloween_2019_announce_hint
+// ENDIF
+
+IF (<VAR0.SPAWN_HOURLY_PRISMA>) && (!(<R30>) || (<serv.rtime.format %M> >= 55))
+	f_spawn_hourly_prisma
+ENDIF
+
+[FUNCTION f_scheduler_hourly]
+// colocar aqui o que vai rodar a cada hora
+VendorCheck
+
+// bau de puzzle
+// IF (<serv.rtime.format %H> == 19)
+// 	FOR 1 2
+// 		UID.<VAR0.BAU_PUZZLE_LOCK<DLOCAL._FOR>>.ATTR <ATTR> | attr_invis
+// 	ENDFOR
+//
+// 	SERV.B @0790 Um bau magico sera recarregado em 3 minutos!
+// 	REF1 = <VAR0.bau_puzzle_lock<EVAL <r1,2>>>
+// 	REF1.TIMERF 180,recarrega_puzzle_lock
+// ENDIF
+
+// ore guardian knights
+if (<serv.rtime.format %H> == 15)
+	spawn_ore_guardian_knight <f_get_world_random_location>
+endif
+
+// bichos diarios
+IF (<serv.rtime.format %H> == 20)
+//	start_halloween_2019_invasion
+
+	LOCAL.PARAGON 0
+
+	DORAND 3
+		LOCAL.EVENT_LOCATION 2299,1201,0  // Cove
+		LOCAL.EVENT_LOCATION 3021,3394,15 // Serpent's Hold
+		LOCAL.EVENT_LOCATION 1350,1754,20 // Ponte Britain
+	ENDDO
+
+	IF (<serv.rtime.format %w> == 0) || (<serv.rtime.format %w> == 2) || (<serv.rtime.format %w> == 4)
+		LOCAL.PARAGON 1
+
+		IF !(<R2>)
+			new_elder_blood_elemental_event 180,<LOCAL.EVENT_LOCATION>
+		ELSE
+			new_elder_golden_elemental_event 180,<LOCAL.EVENT_LOCATION>
+		ENDIF
+	ENDIF
+
+	novoprismaevento 180,<LOCAL.EVENT_LOCATION>,<LOCAL.PARAGON>
+ENDIF
+
+//IF (<serv.rtime.format %H> == 0)
+//	f_stop_city_invasion
+// ENDIF
+
+IF (<serv.rtime.format %H> == 21) && (<serv.rtime.format %w> == 1)
+	add_rust_dragon 1350,1754,20
+ENDIF
+
+IF (<serv.rtime.format %H> == 16)
+	IF (<serv.rtime.format %w> == 0) || (<serv.rtime.format %w> == 1) || (<serv.rtime.format %w> == 5)
+		NOVOCTF 6,0,0,1,1,<VAR0.PREMIO_CTF>,6,1,1200,1
+	ELSEIF (<serv.rtime.format %w> == 3) || (<serv.rtime.format %w> == 6)
+		f_start_paintball 3
+	ENDIF
+ENDIF
+
+// camps pvm/pvp
+IF (<serv.rtime.format %H> == 22) && ((<serv.rtime.format %w> == 0) || (<serv.rtime.format %w> == 2) || (<serv.rtime.format %w> == 4))
+	IF (<serv.rtime.format %w> == 2)
+		SERV.LOG Resetting pvm damage.
+		FOR X 0 <EVAL <SERV.ACCOUNTS> - 1>
+			IF (<SERV.ACCOUNT.<DLOCAL.X>.CHARS> > 0)
+		    	FOR Y 0 <EVAL <SERV.ACCOUNT.<DLOCAL.X>.CHARS> -1>
+					REF1 = <SERV.ACCOUNT.<DLOCAL.X>.CHAR.<DLOCAL.Y>>
+					REF1.TAG.PVM_DAMAGE
+				ENDFOR
+			ENDIF
+		ENDFOR
+	ELSEIF (<serv.rtime.format %w> == 0)
+		SERV.LOG Computing pvm damage.
+		f_compute_event_ranking Weekly PVM Event - <SERV.RTIME %d/%m/%y>,PVM_DAMAGE
+	ENDIF
+
+	novomine1x1 16
+ENDIF
+
+IF (<serv.rtime.format %H> == 22) && ((<serv.rtime.format %w> == 1) || (<serv.rtime.format %w> == 3) || (<serv.rtime.format %w> == 6))
+	novomine1x1 8,2
+ENDIF
+
+f_reset_respawns_poi
+
+f_reset_hourly_prisma
+
+f_spawn_hourly_mounts
+
+uid.010575d.findlayer.layer_beard.color 0bb2
+
+// f_show_carnival_bum
+
+// f_halloween_2019_spawn_pumpkin
+
+// f_halloween_2019_spawn_witch
+
+// f_carnival_2019_spawn_horde_daemon
+
+// power hour = 00 (21h + 3h)
+
+// ctf / x1 / ffa = 01 (22h + 3h)
+
+[FUNCTION f_scheduler_daily]
+// colocar aqui o que vai rodar a cada dia
+
+f_reset_all_buffers
+
+f_shuffle_paragon_pois
+
+FORINSTANCES i_champion_idol
+	TAG.ACTIVATABLE = 1
+ENDFOR
+
+IF (<DEF.SKILL_TEACHER_QUEST_ENABLED>)
+	f_respawn_all_skill_teachers
+ENDIF
+
+remove_random_spawn_mounts
+
+remove_fishes
+
+[FUNCTION f_reset_all_buffers]
+for x 0 <eval <serv.accounts> - 1>
+	if (<serv.account.<dlocal.x>.chars> > 0)
+    	for y 0 <eval <serv.account.<dlocal.x>.chars> -1>
+			ref1 = <serv.account.<dlocal.x>.char.<dlocal.y>>
+			ref1.f_reiniciar_buffs
+
+			// resetting vote
+			ref1.TAG.votouhoje
+		endfor
+	endif
+endfor
+
+[DEFNAME DEF_SCHEDULER]
+DEF_SCHEDULER_DAILY_RUN_HOUR = 21
+
+[ITEMDEF i_scheduler]
+ID=i_crystal_ball
+NAME=Scheduler [DO NOT REMOVE]
+WEIGHT=200
+TYPE=t_eq_script
+
+ON=@Create
+	LOCAL.SCHEDULERS = 0
+
+	FORINSTANCES i_scheduler
+		LOCAL.SCHEDULERS += 1
+	ENDFOR
+
+	IF (<LOCAL.SCHEDULERS> > 1)
+		SRC.SYSMESSAGE Only one scheduler allowed.
+		REMOVE
+		RETURN 1
+	ENDIF
+
+    ATTR=attr_decay|attr_move_never|attr_invis
+    TIMER=60
+
+ON=@Timer
+	f_scheduler_minutely
+
+	LOCAL.HOUR = <SERV.RTIME.FORMAT %H>
+
+	IF (<TAG0.LATEST_HOUR_TRIGGERED> != <LOCAL.HOUR>)
+		IF (<LOCAL.HOUR> == DEF_SCHEDULER_DAILY_RUN_HOUR)
+			f_scheduler_daily
+		ENDIF
+
+		f_scheduler_hourly
+	ENDIF
+
+    TAG.LATEST_HOUR_TRIGGERED = <LOCAL.HOUR>
+    TIMER = 60
+
+    RETURN 1
+
+[FUNCTION f_verify_scheduler]
+LOCAL.SCHEDULERS = 0
+
+FORINSTANCES i_scheduler
+	LOCAL.SCHEDULERS += 1
+ENDFOR
+
+IF !(<LOCAL.SCHEDULERS>)
+	SERV.NEWITEM i_scheduler
+	NEW.P = 5516,1090
+ENDIF
+
+// uid.0d77ae.f_inside_private_house
+// uid.048c3b.f_inside_private_house
+
+[FUNCTION f_is_spell_area_los_house]
+IF (<ARGV> != 2)
+	RETURN 0
+ELSE
+	REF1 <ARGV[0]>
+	REF2 <ARGV[1]>
+
+	IF (<UID.<REF1.REGION.UID>.TYPE> == t_multi_custom) || (<UID.<REF2.REGION.UID>.TYPE> == t_multi_custom)
+		RETURN <REF1.CANSEELOS <REF2.UID>>
+	ENDIF
+
+	IF ((<REF1.REGION.ISEVENT.r_house_private>) && !(<REF2.REGION.ISEVENT.r_house_private>)) || (!(<REF1.REGION.ISEVENT.r_house_private>) && (<REF2.REGION.ISEVENT.r_house_private>))
+		RETURN <REF1.CANSEELOS <REF2.UID>>
+	ELSEIF (<REF1.REGION.ISEVENT.r_house_private>) && (<REF2.REGION.ISEVENT.r_house_private>)
+		IF (<REF1.REGION.UID> != <REF2.REGION.UID>)
+			RETURN <REF1.CANSEELOS <REF2.UID>>
+		ELSEIF ((<REF1.f_inside_private_house>) && !(<REF2.f_inside_private_house>)) || (!(<REF1.f_inside_private_house>) && (<REF2.f_inside_private_house>))
+			RETURN <REF1.CANSEELOS <REF2.UID>>
+		ELSE
+			RETURN 1
+		ENDIF
+	ELSE
+		RETURN 1
+	ENDIF
+ENDIF
+
+[FUNCTION f_inside_private_house]
+IF (<REGION.ISEVENT.r_house_private>)
+		RETURN <TAG0.INSIDE_PRIVATE_HOUSE>
+	ENDIF
+ENDIF
+
+RETURN 0
+
+// TODO: remove tag later
+[FUNCTION f_is_in_event]
+IF !(<ARGV>)
+	RETURN 1
+ENDIF
+
+REF1 <ARGS>
+
+RETURN (<REF1.ISEVENT.e_paintball_wait>) || (<REF1.ISEVENT.e_paintball_event>) || (<REF1.ISEVENT.e_ctf>) || (<REF1.ISEVENT.e_evento_ffa_espera>) || (<REF1.ISEVENT.e_evento_ffa>) || (<REF1.ISEVENT.e_evento_cm_espera>) || (<REF1.ISEVENT.e_evento_campmine>)
+
+[FUNCTION f_remove_mr_spawngems]
+LOCAL.COUNT 0
+FORINSTANCES i_worldgem_bit
+	IF (STRMATCH(mr_*,<MORE1>))
+		LOCAL.COUNT += 1
+		REMOVE
+	ENDIF
+ENDFOR
+SERV.LOG <DLOCAL.COUNT>
+
+[FUNCTION f_reset_all_respawns]
+LOCAL.COUNT 0
+FORINSTANCES i_worldgem_bit
+	IF !(STRMATCH(mr_*,<MORE1>))
+		LOCAL.COUNT += 1
+		FORCERESTART
+	ENDIF
+ENDFOR
+SERV.LOG Total reseted: <DLOCAL.COUNT>
+ENDFOR
+
+[FUNCTION f_stop_all_respawns_by_region]
+IF !(<ARGV>)
+        RETURN
+ENDIF
+
+LOCAL.COUNT 0
+FORINSTANCES i_worldgem_bit
+        IF (STRMATCH(<ARGS>*,<REGION.NAME>))
+                LOCAL.COUNT += 1
+                STOP
+        ENDIF
+ENDFOR
+SERV.LOG Total stopped: <DLOCAL.COUNT>
+ENDFOR
+
+[FUNCTION f_reset_all_respawns_by_defname]
+IF !(<ARGV>)
+	RETURN
+ENDIF
+
+LOCAL.COUNT 0
+FORINSTANCES i_worldgem_bit
+        IF !(STRCMPI(<ARGS>,<MORE1>))
+                LOCAL.COUNT += 1
+                FORCERESTART
+        ENDIF
+ENDFOR
+SERV.LOG Total reseted: <DLOCAL.COUNT>
+ENDFOR
+
+[FUNCTION f_stone_all]
+FORCLIENTS 6144
+	STONE 1
+ENDFOR
+
+[FUNCTION f_unstone_all]
+FORPLAYERS 6144
+        STONE 0
+ENDFOR
+
+[FUNCTION f_disconnect_all]
+FORCLIENTS 6144
+	DISCONNECT
+ENDFOR
+
+[FUNCTION f_remove_npcs]
+IF (<ARGV> != 2)
+	SRC.SYSMESSAGE Syntax: f_remove_npcs [range] [id]
+	RETURN 1
+ENDIF
+
+LOCAL.RANGE <ARGV[0]>
+LOCAL.BASE_ID <ARGV[1]>
+
+FORCHARS <LOCAL.RANGE>
+	IF (<BASEID> == <LOCAL.BASE_ID>)
+		SERV.LOG Removing <BASEID> <NAME> <P>
+		REMOVE
+	ENDIF
+ENDFOR
+
+[FUNCTION f_give_deed_ethereal_mount]
+SERV.NEWITEM i_ethereal_mount_deed
+NEW.CONT <SERV.ACCOUNT.<ARGS>.CHAR.0.FINDLAYER.layer_pack>
+
+[FUNCTION f_check_field_location]
+IF (<REGION.SAFE>)
+	REMOVE
+ENDIF
+
+[FUNCTION dupe_shuffle]
+TARGETF f_dupe_shuffle <ARGS>
+
+[FUNCTION f_dupe_shuffle]
+IF (<ARGV> != 1)
+	SRC.SYSMESSAGE @,,1 You must inform the number of loots.
+ELSEIF !(<ARGO.ISITEM>)
+	SRC.SYSMESSAGE @,,1 This function must be used on items only.
+ELSE
+	f_dupe_shuffle_uid <ARGO.UID>,<ARGV[0]>
+ENDIF
+
+[FUNCTION f_dupe_shuffle_uid]
+IF (<ARGV> != 2)
+	RETURN 1
+ENDIF
+
+REF1 <ARGV[0]>
+LOCAL.COUNT <ARGV[1]>
+
+IF !(<REF1.ISITEM>)
+	RETURN 1
+ENDIF
+
+SERV.NEWITEM i_chest_metal
+NEW.CONT <SRC.FINDLAYER.layer_pack>
+
+REF2 <NEW.UID>
+
+FOR 1 <LOCAL.COUNT>
+	SERV.NEWITEM i_bag
+	NEW.CONT <REF2.UID>
+	REF3 <NEW.UID>
+
+	FORCONT <REF1.UID> 10
+		SERV.NEWDUPE <UID>
+		NEW.CONT <REF3.UID>
+	ENDFOR
+ENDFOR
+
+[FUNCTION list_items_world]
+IF (<ARGV> != 4)
+	RETURN 1
+ENDIF
+
+FILE.DELETEFILE list.txt
+SERV.WRITEFILE list.txt [FUNCTION f_tmp_create_items_world]
+
+f_list_items_world <ARGS>
+
+[FUNCTION f_list_items_world]
+IF (<ARGV> != 4)
+	RETURN 1
+ENDIF
+
+SRC.GO <ARGV[0]>,<ARGV[1]>
+
+FORITEMS 300
+	IF (<P.X> >= <ARGV[0]>) && (<P.X> <= <ARGV[2]>) && (<P.Y> >= <ARGV[1]>) && (<P.Y> <= <ARGV[3]>) && (<BASEID> != i_sentenced_house_area)
+		SERV.WRITEFILE list.txt SERV.NEWITEM <BASEID>
+		SERV.WRITEFILE list.txt NEW.AMOUNT <AMOUNT>
+		SERV.WRITEFILE list.txt NEW.NAME <NAME>
+		SERV.WRITEFILE list.txt NEW.COLOR <COLOR>
+		SERV.WRITEFILE list.txt NEW.P <P>
+		SERV.WRITEFILE list.txt NEW.DISPID <DISPID>
+		SERV.WRITEFILE list.txt NEW.ATTR <ATTR>
+	ENDIF
+ENDFOR
+
+[FUNCTION list_items_container]
+IF (<ARGV> != 1)
+	RETURN 1
+ENDIF
+
+FILE.DELETEFILE list.txt
+SERV.WRITEFILE list.txt [FUNCTION f_tmp_create_items_container]
+SERV.WRITEFILE list.txt SERV.NEWITEM i_chest_metal
+SERV.WRITEFILE list.txt NEW.CONT <DEF.L1>UID.0511FC.FINDLAYER.layer_pack<DEF.R1>
+SERV.WRITEFILE list.txt REF1 <DEF.L1>NEW.UID<DEF.R1>
+
+f_list_items_container <ARGV[0]>
+
+[FUNCTION f_list_items_container]
+IF (<ARGV[0]>)
+	FORCONT <ARGV[0]> 0
+		IF (<TYPE> == t_container) || (<TYPE> == t_secure) || (<TYPE> == t_keyring)
+			f_list_items_container <UID>
+		ELSE
+			SERV.WRITEFILE list.txt SERV.NEWITEM <BASEID>
+			SERV.WRITEFILE list.txt NEW.ATTR <ATTR>
+			SERV.WRITEFILE list.txt NEW.AMOUNT <AMOUNT>
+			SERV.WRITEFILE list.txt NEW.NAME <NAME>
+			SERV.WRITEFILE list.txt NEW.COLOR <COLOR>
+			IF (<LINK>)
+				IF (<LINK> != 04fffffff)
+					SERV.WRITEFILE list.txt NEW.LINK <LINK>
+				ENDIF
+			ENDIF
+			IF (<MORE1>)
+				SERV.WRITEFILE list.txt NEW.MORE1 <MORE1>
+			ENDIF
+			IF (<MORE2>)
+				SERV.WRITEFILE list.txt NEW.MORE2 <MORE2>
+			ENDIF
+
+			LOCAL.COUNT <EVAL <TAGCOUNT> - 1>
+
+			IF (<LOCAL.COUNT> > 0)
+				FOR 0 <LOCAL.COUNT>
+					SERV.WRITEFILE list.txt NEW.TAG.<TAGAT.<LOCAL._FOR>.KEY> <TAGAT.<LOCAL._FOR>.VAL>
+				ENDFOR
+			ENDIF
+
+			SERV.WRITEFILE list.txt NEW.CONT <DEF.L1>REF1.UID<DEF.R1>
+		ENDIF
+	ENDFOR
+ENDIF
+
+[FUNCTION stone_arena]
+SRC.GO ARENA 1X1
+FORCLIENTS 60
+	IF (<SRC.UID> != <UID>) && (!STRCMPI("<REGION.NAME>", "Arena 1x1"))
+		STONE <ARGS>
+	ENDIF
+ENDFOR
+
+[FUNCTION f_fill_region_events_pvp_ranking]
+SERV.NEWNPC c_dog
+DB.QUERY "SELECT id, location_coordinates FROM pvp_ranking WHERE location_events = ''"
+FOR 0 <EVAL <DB.ROW.NUMROWS> - 1>
+	LOCAL.ID "<DB.ROW.<DLOCAL._FOR>.id>"
+	LOCAL.LOCATION_COORDINATES "<DB.ROW.<DLOCAL._FOR>.location_coordinates>"
+	NEW.P <LOCAL.LOCATION_COORDINATES>
+	DB.EXECUTE "UPDATE pvp_ranking SET location_events = '<NEW.REGION.EVENTS>' WHERE id = <DLOCAL.ID>"
+ENDFOR
+
+[FUNCTION train_all]
+TARGETF f_train_all
+
+[FUNCTION f_train_all]
+IF !(<ARGO.ISPLAYER>)
+	SRC.SYSMESSAGE @,,1 This function must be used on players only.
+ELSE
+	f_train_all_char_uid <ARGO.UID>
+ENDIF
+
+[FUNCTION f_train_all_char_uid]
+IF (<ARGV> != 1)
+	RETURN 1
+ENDIF
+
+REF1 <ARGV[0]>
+
+IF !(<REF1.ISPLAYER>)
+	RETURN 1
+ENDIF
+
+IF (<REF1.FLAGS> & statf_stone) || (<REF1.ACCOUNT.JAIL>) || (<REF1.ACCOUNT.BLOCK>)
+	RETURN 1
+ENDIF
+
+LOCAL.COST 0
+
+FOR 0 46
+	IF (<REF1.<DLOCAL._FOR>> < <SERV.NPCTRAINMAX>)
+		LOCAL.COST += <EVAL <SERV.NPCTRAINMAX> - <REF1.<DLOCAL._FOR>>>
+		REF1.<DLOCAL._FOR> <SERV.NPCTRAINMAX>
+	ENDIF
+ENDFOR
+
+REF1.GOLD -= <LOCAL.COST>
+
+[FUNCTION all_combats]
+TARGETF f_all_combats
+
+[FUNCTION f_all_combats]
+IF !(<ARGO.ISPLAYER>)
+	SRC.SYSMESSAGE @,,1 This function must be used on players only.
+ELSE
+	f_all_combats_char_uid <ARGO.UID>
+ENDIF
+
+[FUNCTION f_all_combats_char_uid]
+IF (<ARGV> != 1)
+	RETURN 1
+ENDIF
+
+REF1 <ARGV[0]>
+
+IF !(<REF1.ISPLAYER>)
+	RETURN 1
+ENDIF
+
+IF (<REF1.FLAGS> & statf_stone) || (<REF1.ACCOUNT.JAIL>) || (<REF1.ACCOUNT.BLOCK>)
+	RETURN 1
+ENDIF
+
+REF1.STR = 100
+REF1.INT = 100
+REF1.DEX = 100
+
+REF1.HITS = 100
+REF1.STAM = 100
+REF1.MANA = 100
+
+REF1.ANATOMY = 1000
+REF1.ANIMALLORE = 1000
+REF1.ITEMID = 1000
+REF1.ARMSLORE = 1000
+REF1.EVALUATINGINTEL = 1000
+REF1.HEALING = 1000
+REF1.HIDING = 1000
+REF1.MAGERY = 1000
+REF1.TACTICS = 1000
+REF1.ARCHERY = 1000
+REF1.PARRYING = 1000
+REF1.TRACKING = 1000
+REF1.SWORDSMANSHIP = 1000
+REF1.MACEFIGHTING = 1000
+REF1.FENCING = 1000
+REF1.WRESTLING = 1000
+REF1.MEDITATION = 1000
+REF1.STEALTH = 1000
+
+SERV.NEWITEM i_spellbook
+NEW.MORE1 0ffffffff
+NEW.MORE2 0ffffffff
+NEW.CONT <REF1.FINDLAYER.layer_pack>
+
+[FUNCTION split_date]
+LOCAL.DAY <ARGV[2]>
+LOCAL.MONTH <ARGV[1]>
+LOCAL.YEAR <ARGV[0]>
+
+[FUNCTION remove_fishes]
+remove_fish i_fish_big_1
+remove_fish i_fish_big_2
+remove_fish i_fish_big_3
+remove_fish i_fish_big_4
+
+[FUNCTION remove_fish]
+IF (<ARGV> != 1)
+	RETURN 1
+ENDIF
+
+LOCAL.COUNT 0
+
+FORINSTANCES <ARGV[0]>
+	IF (<UID> == <TOPOBJ>) && !(<ATTR> & attr_move_never)
+		IF (<UID.<REGION.UID>.TYPE> != t_ship) && (<UID.<REGION.UID>.TYPE> != t_multi)
+			IF (<P.TYPE> == t_water)
+				LOCAL.COUNT += 1
+				REMOVE
+			ELSE
+				LOCAL.STATICS <SERV.MAP(<P.X>,<P.Y>).STATICS>
+
+				IF (<LOCAL.STATICS> == 0)
+					SERV.LOG Ignored fish to remove: <P>
+				ENDIF
+
+				FOR 0 <EVAL <LOCAL.STATICS> - 1>
+					IF (<SERV.MAP(<P.X>,<P.Y>).STATICS.<LOCAL._FOR>.TYPE> == t_water)
+						LOCAL.COUNT += 1
+						REMOVE
+					ELSE
+						SERV.LOG Ignored fish to remove: <P>
+					ENDIF
+				ENDFOR
+			ENDIF
+		ELSE
+			LOCAL.PLAYERS_NEARBY 0
+
+			FORCLIENTS 10
+				LOCAL.PLAYERS_NEARBY 1
+				BREAK
+			ENDFOR
+
+			IF !(<LOCAL.PLAYERS_NEARBY>)
+				LOCAL.COUNT += 1
+				REMOVE
+			ENDIF
+		ENDIF
+
+	ENDIF
+ENDFOR
+
+SERV.LOG Removed <DLOCAL.COUNT> items of type <ARGV[0]>.
+
+[FUNCTION spawn_stats]
+IF (<ARGV> == 0)
+	SERV.LOG Syntax: .spawn_stats [CHARDEF, ...]
+	RETURN 1
+ENDIF
+
+LOCAL.MINUTE_AVG 0
+LOCAL.MOBS_COUNT 0
+LOCAL.COUNT 0
+
+FOR 0 <EVAL <ARGV> - 1>
+	IF !(<SERV.CHARDEF.<ARGV[<LOCAL._FOR>]>>)
+		SERV.LOG CHARDEF <ARGV[<LOCAL._FOR>]> not found.
+		RETURN 1
+	ENDIF
+ENDFOR
+
+LOCAL.HITS 0
+
+FOR 0 <EVAL <ARGV> - 1>
+	SERV.NEWNPC <ARGV[<LOCAL._FOR>]>
+	LOCAL.HITS += <NEW.HITS>
+	NEW.REMOVE
+ENDFOR
+
+FORINSTANCES i_worldgem_bit
+	FOR 0 <EVAL <ARGV> - 1>
+		IF (<MORE1> == <ARGV[<LOCAL._FOR>]>)
+			LOCAL.MOBS_COUNT += <AMOUNT>
+			LOCAL.COUNT += 1
+
+			LOCAL.MIN <arrayshow 0,<MOREP>>
+			LOCAL.MAX <arrayshow 1,<MOREP>>
+
+			LOCAL.MINUTE_AVG += <EVAL (<DLOCAL.MAX> + <DLOCAL.MIN>) / 2>
+		ENDIF
+	ENDIF
+ENDFOR
+
+// 45000 = average pvmer damage
+LOCAL.RATE <EVAL 45000 / (<LOCAL.HITS> / <ARGV>)>
+LOCAL.MONSTERS_HOUR <EVAL 3600 / (((<LOCAL.MINUTE_AVG> * 60) / <LOCAL.COUNT>) / <LOCAL.MOBS_COUNT>)>
+SERV.LOG <DLOCAL.RATE> <DLOCAL.MONSTERS_HOUR>
+
+IF (<DLOCAL.RATE> >= <DLOCAL.MONSTERS_HOUR>)
+	LOCAL.AVERAGE_RATE <EVAL <DLOCAL.MONSTERS_HOUR>>
+ELSE
+	LOCAL.AVERAGE_RATE <DLOCAL.RATE>
+ENDIF
+
+SERV.LOG Total mobs count: <DLOCAL.MOBS_COUNT>
+SERV.LOG Life average: <EVAL <LOCAL.HITS> / <ARGV>>
+SERV.LOG Average seconds time to respawn one mob: <EVAL ((<LOCAL.MINUTE_AVG> * 60) / <LOCAL.COUNT>) / <LOCAL.MOBS_COUNT>>
+SERV.LOG Expected monster of the month rate: <EVAL <LOCAL.AVERAGE_RATE> / 3>
+
+[FUNCTION f_tmp_create_items_container]
+SERV.NEWITEM i_chest_metal
+NEW.CONT <UID.0511FC.FINDLAYER.layer_pack>
+REF1 <NEW.UID>
+SERV.NEWITEM i_power_bow
+NEW.ATTR 020
+NEW.AMOUNT 1
+NEW.NAME Bow of Power
+NEW.COLOR 0a272
+NEW.MORE1 0770015
+NEW.CONT <REF1.UID>
+SERV.NEWITEM i_power_axe_exec
+NEW.ATTR 020
+NEW.AMOUNT 1
+NEW.NAME Executioner's Axe of Power
+NEW.COLOR 0a272
+NEW.MORE1 0720072
+NEW.CONT <REF1.UID>
+SERV.NEWITEM i_vanquish_bardiche
+NEW.ATTR 020
+NEW.AMOUNT 1
+NEW.NAME Greater Poisoned Bardiche of Vanquish
+NEW.COLOR 0a20
+NEW.MORE1 06c0026
+NEW.MORE2 0a
+NEW.TAG.origname Bardiche of Vanquish
+NEW.TAG.poisonlevel 03
+NEW.TAG.poisontimer 05
+NEW.CONT <REF1.UID>
+SERV.NEWITEM i_power_axe_battle
+NEW.ATTR 020
+NEW.AMOUNT 1
+NEW.NAME Deadly Poisoned Battle Axe of Power
+NEW.COLOR 0a272
+NEW.MORE1 06d0061
+NEW.MORE2 06
+NEW.TAG.origname Battle Axe of Power
+NEW.TAG.poisonlevel 04
+NEW.TAG.poisontimer 03
+NEW.CONT <REF1.UID>
+SERV.NEWITEM i_power_war_fork
+NEW.ATTR 020
+NEW.AMOUNT 1
+NEW.NAME War Fork of Power
+NEW.COLOR 0a272
+NEW.MORE1 0710071
+NEW.CONT <REF1.UID>
+SERV.NEWITEM i_vanquish_axe
+NEW.ATTR 020
+NEW.AMOUNT 1
+NEW.NAME Greater Poisoned Axe of Vanquish
+NEW.COLOR 0a20
+NEW.MORE1 06e0062
+NEW.MORE2 0a
+NEW.TAG.origname Axe of Vanquish
+NEW.TAG.poisonlevel 03
+NEW.TAG.poisontimer 05
+NEW.CONT <REF1.UID>
+SERV.NEWITEM i_vanquish_axe
+NEW.ATTR 020
+NEW.AMOUNT 1
+NEW.NAME Greater Poisoned Axe of Vanquish
+NEW.COLOR 0a20
+NEW.MORE1 0710031
+NEW.MORE2 0a
+NEW.TAG.origname Axe of Vanquish
+NEW.TAG.poisonlevel 03
+NEW.TAG.poisontimer 05
+NEW.CONT <REF1.UID>
+SERV.NEWITEM i_vanquish_bardiche
+NEW.ATTR 020
+NEW.AMOUNT 1
+NEW.NAME Greater Poisoned Bardiche of Vanquish
+NEW.COLOR 0a20
+NEW.MORE1 069005e
+NEW.MORE2 0a
+NEW.TAG.origname Bardiche of Vanquish
+NEW.TAG.poisonlevel 03
+NEW.TAG.poisontimer 05
+NEW.CONT <REF1.UID>
+SERV.NEWITEM i_power_axe_battle
+NEW.ATTR 020
+NEW.AMOUNT 1
+NEW.NAME Greater Poisoned Battle Axe of Power
+NEW.COLOR 0a272
+NEW.MORE1 0700070
+NEW.MORE2 0a
+NEW.TAG.origname Battle Axe of Power
+NEW.TAG.poisonlevel 03
+NEW.TAG.poisontimer 05
+NEW.CONT <REF1.UID>
+SERV.NEWITEM i_power_pitchfork
+NEW.ATTR 020
+NEW.AMOUNT 1
+NEW.NAME Pitchfork of Power
+NEW.COLOR 0a272
+NEW.MORE1 06c0068
+NEW.CONT <REF1.UID>
+SERV.NEWITEM i_power_kryss
+NEW.ATTR 020
+NEW.AMOUNT 1
+NEW.NAME Greater Poisoned Kryss of Power
+NEW.COLOR 0a272
+NEW.MORE1 06e006c
+NEW.MORE2 0a
+NEW.TAG.origname Kryss of Power
+NEW.TAG.poisonlevel 03
+NEW.TAG.poisontimer 05
+NEW.CONT <REF1.UID>
+SERV.NEWITEM i_power_axe
+NEW.ATTR 020
+NEW.AMOUNT 1
+NEW.NAME Axe of Power
+NEW.COLOR 0a272
+NEW.MORE1 0740071
+NEW.CONT <REF1.UID>
+
+[EOF]

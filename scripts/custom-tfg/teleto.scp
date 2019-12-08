@@ -1,0 +1,32 @@
+
+[function teleto]
+TARGETF TELETO_TARG
+SYSMESSAGE @04a3 Quem voce quer mover?
+ 
+[function teleto_targ]
+TARGETFG TELETO_TARG2 <ARGO.UID>
+SYSMESSAGE Para onde mover <ARGO.NAME>?
+ 
+[function teleto_targ2]
+IF (<ARGO.ISPLAYER>)
+TARGETFG TELETO_TARG2 <ARGO.UID>
+SYSMESSAGE Para onde mover <ARGO.NAME>?
+ELSE
+TRY UID.<ARGN1>.F_GO <TARGP>
+ENDIF
+
+[ITEMDEF i_gate_OCCLO_C]
+ID=0f6c
+WEIGHT=1
+TYPE=t_normal
+NAME=Occlo
+
+ON=@Create
+  attr 010
+  color 0799
+  
+ON=@Step
+	SRC.GO <R3649,3654>,<R2577,2628>
+
+
+[EOF]

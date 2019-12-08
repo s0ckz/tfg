@@ -1,0 +1,1264 @@
+// ****************************************************************************
+// SPHERE by : Menasoft �1997-2000
+// www.sphereserver.com
+// All SPHERE script files and formats are copyright Menasoft & Partners.
+// This file may be freely edited for personal use, but may not be distributed
+// in whole or in part, in any format without express written permission from
+// Menasoft & Partners.  All donations and contributions
+// become the property of Menasoft & Partners.
+// ****************************************************************************
+// FILE LAST UPDATED: Monday, April 9, 2001
+// House Menu System v6.0e created by Vaticus
+
+VERSION=0.99c
+
+
+///////////////////////////////////////////////////////////////
+/////////////////// Private Houses ////////////////////////////
+///////////////////////////////////////////////////////////////
+
+[COMMENT script_house_decay]
+CREATE TABLE `house_decayed_items` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `account` varchar(16) NOT NULL,
+  `baseid` varchar(255) NOT NULL,
+  `attributes` text NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+[FUNCTION spktst]
+SYSMESSAGE <ASC lalala>
+SYSMESSAGE <hval STRLEN(lalala)>
+SYSMESSAGE <hval (STRLEN(<ASC lalala>) - STRLEN(lalala))>
+
+
+[FUNCTION HOUSEITEMS]
+//REF69 <UID>
+//FORITEMS 50
+//	IF <REGION.UID>==<REF69.UID>
+//		IF !(<TYPE>==t_multi) && !(<TYPE>==t_door) && !(<TYPE>==t_sign_gump) && !(<TYPE>==t_door_locked)
+//			IF (<TYPE>==t_container) || (<TYPE>==t_container_locked) || (<TYPE>==t_secure)
+//				LOCAL.COUNT +=<FCOUNT>
+//			ENDIF
+//			LOCAL.COUNT +=1
+//		ENDIF
+//	ENDIF
+//ENDFOR
+//RETURN <dLOCAL.COUNT>
+return 1
+
+
+
+
+[DIALOG d_house_private]               // INFO
+0,0                                    // Position
+resizepic 100 100 2600 400 300         // Curved Grey background
+page 0                                 // Page 0
+resizepic 116 165 5100 369 25          // Square Grey box
+button 150 366 247 248 1 0 0           // Okay, button 0
+gumppic 230 65 100                     // Top Sign Gump
+dcroppedtext 250 105 105 20 46 <LINK.NAME>      // Sign Gump Name
+dtext 125 168 0481 INFO                       // Info
+button 170 169 5209 5003 0 1 1         // Opens Info
+dtext 230 168 0481 FRIENDS                     // Friends
+button 310 169 5209 5003 0 2 2         // Opens Friends
+dtext 375 168 0481 OPTIONS                       // Options
+button 455 169 5209 5003 0 3 3         // Opens Options
+page 1                                 // Page 1
+// dtext 245 205 0794 Owned by                     // Owner Text
+// dtext 320 205 0793 <UID.<MORE1>.NAME>                       // Owner Name
+dtext 140 240 026 Number of locked down items:                     // Lock Down
+dtext 357 240 021 <dTAG0.LOCKS> out of <eval <VALUE>/5000>                       // Lock Down #
+dtext 140 260 026 Number of secure containers:                    // Secure Items
+dtext 350 260 021 <dTAG0.SECURES> out of <eval <VALUE>/10000>                       // Secure Items #
+dtext 245 365 044 Change this house's name                   // Change Name
+dtext 140 280 026 Maximum items storage:
+dtext 350 280 021 <HOUSEITEMS> out of <eval <VALUE>/400>                       // Secure Items #
+button 425 365 2714 2715 1 1 4         // Name Change
+page 2                                 // Page 2
+dtext 153 194 0794 List of Co-Owners               // Coowner Text
+button 125 194 2714 2714 1 2 5         // List Coowner B
+dtext 340 194 0794 List of Friends                   // Friends Text
+button 310 194 2714 2714 1 2 6         // List Friends B
+dtext 153 216 0c1 Add a Co-Owner                 // Coowner Text
+button 125 216 2714 2714 1 2 7         // Add Coowner B
+dtext 340 216 0c1 Add a Friend                   // Friends Text
+button 310 216 2714 2714 1 2 8         // Add Friend B
+dtext 153 238 026 Remove a CO-Owner                    // Remove Text C
+button 125 238 2714 2714 1 2 9         // Remove Coowner B
+dtext 340 238 026 Remove a Friend                    // Remove Text F
+button 310 238 2714 2714 1 2 10        // Remove Friends B
+dtext 340 260 0480 Clear Friends list                   // Clear List Text
+button 310 260 2714 2714 1 2 11        // Clear List B
+dtext 153 260 0480 Clear Co-owners list                  // Clear List Co Text
+button 125 260 2714 2714 1 2 21        // Clear List Co B
+page 3                                 // Page 3
+dtext 185 195 0799 Transfer ownership of the house                // Transfer Text
+button 155 195 2714 2714 1 3 16        // Transfer Button
+dtext 185 245 0799 Demolish the house                   // Demolish Text
+button 155 245 2714 2714 1 3 17        // Demolish Button
+dtext 185 295 0799 Make a copy of the house key (30.000 gps)                    // New keys Text
+button 155 295 2714 2714 1 3 18        // New keys Button
+
+
+[DIALOG d_house_private BUTTON]
+ONBUTTON=0
+
+ONBUTTON=4
+
+SRC.SYSMESSAGE To change your houses name, use your house key on the sign.
+DIALOG d_house_private
+
+
+ONBUTTON=5
+
+DIALOG d_house_colist
+
+
+ONBUTTON=6
+
+DIALOG d_house_flist
+
+
+ONBUTTON=7
+
+IF (<SRC.UID> == <MORE>)
+	TARGETF f_coown <UID>
+	SRC.SYSMESSAGE Target the person you wish to name a co-owner of your household.
+ELSE
+	SRC.SYSMESSAGE Only the house owner may add co-owners.
+	DIALOG d_house_private
+ENDIF
+
+
+ONBUTTON=8
+IF (<SRC.UID> == <MORE>) || (<TAG0.CO1UID> == <SRC.UID>) || (<TAG0.CO2UID> == <SRC.UID>) || (<TAG0.CO3UID> == <SRC.UID>) || (<TAG0.CO4UID> == <SRC.UID>) || (<TAG0.CO5UID> == <SRC.UID>) || (<TAG0.CO6UID> == <SRC.UID>) || (<TAG0.CO7UID> == <SRC.UID>) || (<TAG0.CO8UID> == <SRC.UID>)
+	TARGETF f_friends <UID>
+	SRC.SYSMESSAGE Target the person you wish to name a friend of your household.
+ELSE
+	SRC.SYSMESSAGE Only house owner and co-owners may add friends.
+	DIALOG d_house_private
+ENDIF
+
+
+ONBUTTON=9
+IF (<SRC.UID> == <MORE>)
+	DIALOG d_house_removec
+ELSE
+	SRC.SYSMESSAGE Only the house owner may remove co-owners.
+	DIALOG d_house_private
+ENDIF
+
+ONBUTTON=10
+
+IF (<SRC.UID> == <MORE>) || (<TAG0.CO1UID> == <SRC.UID>) || (<TAG0.CO2UID> == <SRC.UID>) || (<TAG0.CO3UID> == <SRC.UID>) || (<TAG0.CO4UID> == <SRC.UID>) || (<TAG0.CO5UID> == <SRC.UID>) || (<TAG0.CO6UID> == <SRC.UID>) || (<TAG0.CO7UID> == <SRC.UID>) || (<TAG0.CO8UID> == <SRC.UID>)
+	DIALOG d_house_rfriend
+ELSE
+	SRC.SYSMESSAGE Only house owners may remove friends.
+	DIALOG d_house_private
+ENDIF
+
+ONBUTTON=11
+
+IF (<SRC.UID> == <MORE>) || (<TAG0.CO1UID> == <SRC.UID>) || (<TAG0.CO2UID> == <SRC.UID>) || (<TAG0.CO3UID> == <SRC.UID>) || (<TAG0.CO4UID> == <SRC.UID>) || (<TAG0.CO5UID> == <SRC.UID>) || (<TAG0.CO6UID> == <SRC.UID>) || (<TAG0.CO7UID> == <SRC.UID>) || (<TAG0.CO8UID> == <SRC.UID>)
+	DIALOG d_house_rfriend_all
+ELSE
+	SRC.SYSMESSAGE Only the house owner may remove friends.
+	DIALOG d_house_private
+ENDIF
+
+ONBUTTON=16
+IF (<TAG0.REMOVED> == 1)
+	SRC.SYSMESSAGE This house is already removed.
+	REMOVE
+	RETURN 1
+ENDIF
+
+IF !(<SRC.UID> == <MORE>)
+	SRC.SYSMESSAGE Only the owner may transfer ownership of this house.
+	DIALOG d_house_private
+	RETURN 1
+ELSEIF (<SRC.REGION.FLAGS> == 01092) || (<SRC.REGION.FLAGS> == 01192)
+	SRC.SYSMESSAGE You can only do this from outside the building.
+	DIALOG d_house_private
+	RETURN 1
+ELSE
+	SRC.SYSMESSAGE @03b2 Target the person to whom you wish to give this house.
+	SRC.TARGETF f_house_transfer <UID>
+ENDIF
+
+ONBUTTON=17
+if <uid>
+	if <link.f_housing_getaccess <src>> >= <def.housing.access_owner>
+		if <f_isnewhouse> && !<src.isgm> && !<tag0.sentenced>
+			src.sysmessage "@,,1 Esta casa possui apenas <timeformat 0, <eval <f_isnewhouse> / 10>> e só poderá ser demolida após 3 dias."
+			return 0
+		elif (<link.distance <src>> > 2) && !<src.isgm>
+			src.sysmessage "@,,1 Você precisa estar bem próximo da placa da casa para demolir."
+			return 0
+		endif
+		src.f_house_closedialogs
+		dialog d_house_confirm_demolish
+	else
+		src.sysmessage "@,,1 Você não tem permissão para fazer isso."
+	endif
+else
+	src.sysmessage "@,,1 Esta casa nao existe mais."
+endif
+return 1
+// SRC.SYSMESSAGE Desativado temporariamente.
+// return 1
+// IF (<SRC.UID> == <MORE>)
+// 	DIALOG d_house_redeed
+//
+// ELSE
+//	SRC.SYSMESSAGE Only the owner may use this option.
+// 	DIALOG d_house_private
+// ENDIF
+
+ONBUTTON=18
+IF (<SRC.UID> == <MORE>)
+	IF (<SRC.BANKBALANCE> >= 30000)
+		SRC.GOLD -= 30000
+		SRC.SYSMESSAGE You get a copy of the key
+		SERV.NEWITEM i_key_copper
+		NEW.MORE1 <UID>
+		NEW.LINK <UID>
+		NEW.CONT <SRC.UID>
+		NEW.ATTR 04
+		DIALOG d_house_private
+	ELSE
+		SRC.SYSMESSAGE Voce nao tem a quantia necessaria de dinheiro para fazer a copia da chave.
+		DIALOG d_house_private
+	ENDIF
+ELSE
+	SRC.SYSMESSAGE Only the owner may get a copy of key.
+	DIALOG d_house_private
+ENDIF
+
+
+ONBUTTON=21
+
+IF (<SRC.UID> == <MORE>)
+	DIALOG d_house_rcoowner_all
+ELSE
+	SRC.SYSMESSAGE Only the house owner may remove co-owners.
+	DIALOG d_house_private
+ENDIF
+
+[FUNCTION fix_house_tiles]
+SERV.NEWNPC c_dog
+NEW.go Britain
+NEW.f_fix_house_tiles
+NEW.REMOVE
+
+[FUNCTION f_fix_house_tiles]
+FORINSTANCES i_tile_house_entrance
+	REMOVE
+ENDFOR
+
+FORINSTANCES i_tile_house_exit
+	REMOVE
+ENDFOR
+
+FORINSTANCES i_tile_house_fence_entrance
+	REMOVE
+ENDFOR
+
+FORITEMS 9999
+	IF (STRMATCH(*r_house_private*,<TEVENTS>))
+		IF (!<f_house_contains_tiles>)
+			SERV.LOG <NAME> nao tem as tiles.
+		ELSE
+			LOCAL.HOUSE_UID <UID>
+
+			FOR 0 <EVAL <COMP> - 1>
+				IF (<SERV.ITEMDEF.<COMP.<dLOCAL._FOR>.ID>.DEFNAME> == i_tile_house_entrance) || (<SERV.ITEMDEF.<COMP.<dLOCAL._FOR>.ID>.DEFNAME> == i_tile_house_exit) || (<SERV.ITEMDEF.<COMP.<dLOCAL._FOR>.ID>.DEFNAME> == i_tile_house_fence_entrance)
+					LOCAL.X <P.X> + <COMP.<dLOCAL._FOR>.DX>
+					LOCAL.Y <P.Y> + <COMP.<dLOCAL._FOR>.DY>
+					LOCAL.Z <P.Z> + <COMP.<dLOCAL._FOR>.DZ>
+
+					SERV.NEWITEM <SERV.ITEMDEF.<COMP.<dLOCAL._FOR>.ID>.DEFNAME>
+					NEW.LINK <dLOCAL.HOUSE_UID>
+					NEW.P <dLOCAL.X>,<dLOCAL.Y>,<dLOCAL.Z>
+				ENDIF
+			ENDFOR
+		ENDIF
+	ENDIF
+ENDFOR
+
+[FUNCTION f_house_contains_tiles]
+FOR 0 <EVAL <COMP> - 1>
+	IF (<SERV.ITEMDEF.<COMP.<dLOCAL._FOR>.ID>.DEFNAME> == i_tile_house_entrance) || (<SERV.ITEMDEF.<COMP.<dLOCAL._FOR>.ID>.DEFNAME> == i_tile_house_exit) || (<SERV.ITEMDEF.<COMP.<dLOCAL._FOR>.ID>.DEFNAME> == i_tile_house_fence_entrance)
+		RETURN 1
+	ENDIF
+ENDFOR
+
+RETURN 0
+
+[FUNCTION f_house_transfer]
+IF (<ARGO.ISPLAYER>)
+	IF (<ARGO.UID>==<SRC.UID>) && !(<ARGO.ISGM>)
+		SRC.SYSMESSAGE @,,1 You cannot transfer a house to yourself, silly.
+		RETURN 1
+	ENDIF
+
+	IF !(<ARGO.F_HOUSING_CAN_ADD_HOUSE>) && (<SRC.ACCOUNT.TAG0.GLOBAL> != <ARGO.ACCOUNT.TAG0.GLOBAL>) && (!<ARGO.ISGM>)
+		SRC.SYSMESSAGE @,,1 <ARGO.NAME> already have a house!
+		RETURN 1
+	ENDIF
+
+	REF1 <ARGS>
+	LOCAL.HOUSE_MEMORY_UID 0
+
+	FORCHARMEMORYTYPE memory_guard
+		IF (<LINK> != <LINK.UID>)
+			SERV.LOG Removing memory <UID> pointing to invalid <LINK>.
+			TIMERF 1,REMOVE
+		ELSEIF (<LINK> == <REF1.UID>)
+			LOCAL.HOUSE_MEMORY_UID <UID>
+		ENDIF
+	ENDFOR
+
+	SERV.LOG <SRC.NAME> transferred his house (<REF1.UID> / <REF1.NAME>) to <ARGO.NAME>. Guard Memory UID: <LOCAL.HOUSE_MEMORY_UID>.
+
+	DB.EXECUTE "UPDATE casa SET UidOwner = '<DARGO.UID>', IdContaPainel = '<DARGO.ACCOUNT.TAG0.GLOBAL>' WHERE UidCasa = '<DREF1.UID>'"
+
+	ARGO.EQUIP <LOCAL.HOUSE_MEMORY_UID>
+	UID.<LOCAL.HOUSE_MEMORY_UID>.COLOR memory_guard
+
+	REF1.MORE=<ARGO.UID>
+	REF1.TAG.GLOBAL=<ARGO.ACCOUNT.TAG0.GLOBAL>
+	SRC.SYSMESSAGE @03b2 You transferred the house to <ARGO.NAME>.
+	TRY UID.<ARGO.UID>.SYSMESSAGE @03b2 <SRC.NAME> has transferred his house to you.
+ENDIF
+
+
+[DIALOG d_house_staff]                 // Staff Control
+0,0                                    // Position
+resizepic 100 100 2600 400 300         // Curved Grey background
+page 0                                 // Page 0
+resizepic 116 165 5100 369 25          // Square Grey box
+button 150 366 247 248 1 0 0           // Okay, button 0
+gumppic 230 65 100                     // Top Sign Gump
+dcroppedtext 250 105 105 20 46 <LINK.NAME>      // Sign Gump Name
+dtext 125 168 0481 INFO                       // Info
+button 170 169 5209 5003 0 1 1         // Opens Info
+dtext 230 168 0481 FRIENDS                     // Friends
+button 310 169 5209 5003 0 2 2         // Opens Friends
+dtext 375 168 0481 OPTIONS                       // Options
+button 455 169 5209 5003 0 3 3         // Opens Options
+page 1                                 // Page 1
+dtext 200 200 0481 Owned by:                   // Owner Text
+dtext 280 200 0481 <UID.<MORE1>.NAME>                      // Owner Name
+dtext 200 220 0481 Account of:                   // Account Text
+dtext 280 220 0481 <UID.<MORE1>.ACCOUNT>                     // Account Name
+dtext 230 365 0481 House Location:
+dtext 350 365 0481 <P>
+dtext 140 240 026 Number of locked down items:                     // Lock Down
+dtext 357 240 021 <dTAG0.LOCKS> out of <eval <VALUE>/5000>                       // Lock Down #
+dtext 140 260 026 Number of secure containers:                    // Secure Items
+dtext 350 260 021 <dTAG0.SECURES> out of <eval <VALUE>/10000>                       // Secure Items #
+dtext 140 280 026 Maximum items storage:
+dtext 350 280 021 <HOUSEITEMS> out of <eval <VALUE>/400>                       // Secure Items #
+page 2                                 // Page 2
+dtext 153 194 0794 List of Co-owners               // Coowner Text
+button 125 194 2714 2714 1 2 5         // List Coowner B
+dtext 340 194 0794 List of Friends                   // Friends Text
+button 310 194 2714 2714 1 2 6         // List Friends B
+dtext 153 216 0c1 Add a Co-owner                 // Coowner Text
+button 125 216 2714 2714 1 2 7         // Add Coowner B
+dtext 340 216 0c1 Add a Friend                   // Friends Text
+button 310 216 2714 2714 1 2 8         // Add Friend B
+dtext 153 238 026 Remove a Co-owner                    // Remove Text C
+button 125 238 2714 2714 1 2 9         // Remove Coowner B
+dtext 340 238 026 Remove a Friend                    // Remove Text F
+button 310 238 2714 2714 1 2 10        // Remove Friends B
+dtext 340 260 0480 Clear Friends list                   // Clear List Text
+button 310 260 2714 2714 1 2 11        // Clear List B
+dtext 153 260 0480 Clear Co-owners list                  // Clear List Co Text
+button 125 260 2714 2714 1 2 21        // Clear List Co B
+page 3                                 // Page 3
+dtext 185 195 0799 Transfer ownership of the house                // Transfer Text
+button 155 195 2714 2714 1 3 16        // Transfer Button
+dtext 185 245 0799 Demolish the house & get a deed back                    // Demolish Text
+button 155 245 2714 2714 1 3 17        // Demolish Button
+dtext 185 295 0799 Make a copy of house key                    // Change Locks T
+button 155 295 2714 2714 1 3 18        // Change Locks B
+
+
+[DIALOG d_house_staff BUTTON]
+ONBUTTON=0
+
+ONBUTTON=5
+
+DIALOG d_house_colist
+
+ONBUTTON=6
+
+DIALOG d_house_flist
+
+ONBUTTON=7
+
+
+TARGETF f_coown <UID>
+SRC.SYSMESSAGE Target the person you wish to name a co-owner of <SRC.UID.<LINK.MORE>.NAME>'s household.
+
+ONBUTTON=8
+
+TARGETF f_coown <UID>
+SRC.SYSMESSAGE Target the person you wish to name a friend of <SRC.UID.<LINK.MORE>.NAME>'s household.
+
+ONBUTTON=9
+
+DIALOG d_house_removec
+
+ONBUTTON=10
+
+DIALOG d_house_rfriend
+
+ONBUTTON=11
+
+DIALOG d_house_rfriend_all
+
+ONBUTTON=16
+IF (<TAG0.REMOVED> == 1)
+	SRC.SYSMESSAGE This house is already removed.
+	REMOVE
+	RETURN 1
+ENDIF
+
+IF (<LINK.TYPE> == t_multi_custom)
+	SRC.SYSMESSAGE For now, it's not possible to transfer custom houses.
+	RETURN 1
+ENDIF
+
+SRC.SYSMESSAGE @03b2 Target the person to whom you wish to give this house.
+SRC.TARGETF f_house_transfer <UID>
+
+
+ONBUTTON=17
+if <uid>
+	if <link.f_housing_getaccess <src>> >= <def.housing.access_owner>
+		if <f_isnewhouse> && !<src.isgm> && !<tag0.sentenced>
+			src.sysmessage "@,,1 Esta casa possui apenas <timeformat 0, <eval <f_isnewhouse> / 10>> e só poderá ser demolida após 3 dias."
+			return 0
+		elif (<link.distance <src>> > 2) && !<src.isgm>
+			src.sysmessage "@,,1 Você precisa estar bem próximo da placa da casa para demolir."
+			return 0
+		endif
+		src.f_house_closedialogs
+		dialog d_house_confirm_demolish
+	else
+		src.sysmessage "@,,1 Você não tem permissão para fazer isso."
+	endif
+else
+	src.sysmessage "@,,1 Esta casa nao existe mais."
+endif
+return 1
+
+ONBUTTON=18
+
+ONBUTTON=19
+
+SRC.SYSMESSAGE Opcao desabilitada.
+RETURN 1
+
+ONBUTTON=20
+RETURN 1
+ONBUTTON=21
+DIALOG d_house_rcoowner_all
+RETURN 1
+
+
+[DIALOG d_house_colist]               // Coowner List
+0,0                                   // Position
+resizepic 100 100 2600 400 300        // Grey background
+resizepic 147 359 5100 310 25         // Square Grey Box
+button 270 360 247 248 1 0 1          // Okay, Button 0
+dtext 215 118 0225 Co-owners of the house                    // Title
+local.diff 0
+for 1 8
+	dtext 170 <eval 160+<local.diff>> 0312 <TAG0.CO<dLOCAL._FOR>NAME>                      // Names
+	local.diff += 20
+endfor
+
+
+[DIALOG d_house_colist BUTTON]
+ONBUTTON=0                            // Cancel
+DIALOG d_house_private
+
+ONBUTTON=1                            // Okay Button
+
+DIALOG d_house_private
+
+
+[DIALOG d_house_flist]                // Friends list
+0,0                                   // Postion
+page 0                                // Page 0
+resizepic 100 100 2600 400 300        // Grey background
+resizepic 147 359 5100 310 25         // Square Grey box
+dtext 245 118 0225 Friends List                    // Title
+button 270 360 247 248 1 0 1          // Okay, button 1
+page 1                                // Page 1
+for 1 8
+	dtext 170 <eval 160+<local.diff>> 0312 <TAG0.F<dLOCAL._FOR>NAME>                      // Names
+	local.diff += 20
+endfor
+
+button 425 363 5224 5224 0 2          // Next Page
+page 2                                // Page 2
+for 9 16
+	dtext 170 <eval 160+<local.diff>> 0312 <TAG0.F<dLOCAL._FOR>NAME>                      // Names
+	local.diff += 20
+endfor
+button 160 363 5223 5223 0 1          // Previous Page
+button 425 363 5224 5224 0 3          // Next Page
+page 3                                // Page 3
+for 17 20
+	dtext 170 <eval 160+<local.diff>> 0312 <TAG0.F<dLOCAL._FOR>NAME>                      // Names
+	local.diff += 20
+endfor
+button 160 363 5223 5223 0 2          // Previous Page
+
+
+[DIALOG d_house_flist BUTTON]
+ONBUTTON=0                            // Cancel
+
+DIALOG d_house_private
+
+ONBUTTON=1                            // Okay Button
+
+DIALOG d_house_private
+
+
+
+[DIALOG d_house_removec]              // Remove Coowner
+0,0                                   // Postion
+page 0                                // Page 0
+resizepic 100 100 2600 400 300        // Grey background
+resizepic 147 359 5100 310 25         // Square Grey box
+dtext 185 118 0225 Remove a co-owner from the house                   // Title
+local.diff 0
+FOR 1 8
+	button 150 <eval 155+<local.diff>> 210 211 1 0 <dLOCAL._FOR>        // Co-owner 1 B
+	local.diff += 25
+ENDFOR
+local.diff 0
+for 1 8
+	dtext 180 <eval 155+<local.diff>> 0312 <TAG0.CO<dLOCAL._FOR>NAME>                      // Names
+	local.diff += 25
+endfor
+button 270 360 247 248 1 0 9          // Okay, button 1
+
+
+[DIALOG d_house_removec BUTTON]
+
+
+
+ON=1 8
+SRC.SYSMESSAGE <TAG0.CO<ARGN>NAME> has been removed as a co-owner of the house.
+TRY REGION.TAG0.CO<ARGN>UID = 0
+TRY TAG0.CO<ARGN>NAME=
+TRY TAG0.CO<ARGN>UID=0
+
+
+ON=0                            // Cancel
+DIALOG d_house_private
+
+ON=9                            // Okay Button
+DIALOG d_house_private
+
+[DIALOG d_house_rfriend]              // Remove Friend
+0,0                                   // Postion
+page 0                                // Page 0
+resizepic 100 100 2600 400 300        // Grey background
+resizepic 147 359 5100 310 25         // Square Grey box
+text 185 118 995 0                    // Title
+button 270 360 247 248 1 0 1          // Okay, button 1
+button 145 335 2714 2714 1 0 2        // Remove Button
+text 165 335 995 1                    // Remove Text
+page 1                                // Page 1
+button 150 155 210 211 1 0 3          // Friend 1 B
+button 150 180 210 211 1 0 4          // Friend 2 B
+button 150 205 210 211 1 0 5          // Friend 3 B
+button 150 230 210 211 1 0 6          // Friend 4 B
+button 150 255 210 211 1 0 7          // Friend 5 B
+button 150 280 210 211 1 0 8          // Friend 6 B
+button 150 305 210 211 1 0 9          // Friend 7 B
+text 180 155 0 2                      // Friend 1
+text 180 180 0 3                      // Friend 2
+text 180 205 0 4                      // Friend 3
+text 180 230 0 5                      // Friend 4
+text 180 255 0 6                      // Friend 5
+text 180 280 0 7                      // Friend 6
+text 180 305 0 8                      // Friend 7
+button 425 363 5224 5224 0 2          // Next Page
+page 2                                // Page 2
+button 150 155 210 211 1 0 10         // Friend 8 B
+button 150 180 210 211 1 0 11         // Friend 9 B
+button 150 205 210 211 1 0 12         // Friend 10 B
+button 150 230 210 211 1 0 13         // Friend 11 B
+button 150 255 210 211 1 0 14         // Friend 12 B
+button 150 280 210 211 1 0 15         // Friend 13 B
+button 150 305 210 211 1 0 16         // Friend 14 B
+text 180 305 0 9                      // Friend 8
+text 180 278 0 10                     // Friend 9
+text 180 293 0 11                     // Friend 10
+text 180 308 0 12                     // Friend 11
+text 180 255 0 13                     // Friend 12
+text 180 280 0 14                     // Friend 13
+text 180 305 0 15                     // Friend 14
+button 160 363 5223 5223 0 1          // Previous Page
+button 425 363 5224 5224 0 3          // Next Page
+page 3                                // Page 3
+button 150 155 210 211 1 0 17         // Friend 15 B
+button 150 180 210 211 1 0 18         // Friend 16 B
+button 150 205 210 211 1 0 19         // Friend 17 B
+button 150 230 210 211 1 0 20         // Friend 18 B
+button 150 255 210 211 1 0 21         // Friend 19 B
+button 150 280 210 211 1 0 21         // Friend 20 B
+text 180 305 0 16                     // Friend 15
+text 180 278 0 17                     // Friend 16
+text 180 293 0 18                     // Friend 17
+text 180 308 0 19                     // Friend 18
+text 180 255 0 20                     // Friend 19
+text 180 280 0 21                     // Friend 20
+button 160 363 5223 5223 0 2          // Previous Page
+
+[DIALOG d_house_rfriend TEXT]
+Remove a friend from the house        // Line 0
+Remove now!
+<TAG0.F1NAME>
+<TAG0.F2NAME>
+<TAG0.F3NAME>
+<TAG0.F4NAME>
+<TAG0.F5NAME>
+<TAG0.F6NAME>
+<TAG0.F7NAME>
+<TAG0.F8NAME>
+<TAG0.F9NAME>
+<TAG0.F10NAME>
+<TAG0.F11NAME>
+<TAG0.F12NAME>
+<TAG0.F13NAME>
+<TAG0.F14NAME>
+<TAG0.F15NAME>
+<TAG0.F16NAME>
+<TAG0.F17NAME>
+<TAG0.F18NAME>
+<TAG0.F19NAME>
+<TAG0.F20NAME>
+
+[DIALOG d_house_rfriend BUTTON]
+ONBUTTON=0                            // Cancel
+IF (<LINK.MOREY> == 0)
+DIALOG d_house_private
+RETURN 1
+ELSEIF (<LINK.MOREY> == 1)
+DIALOG d_house_public
+RETURN 1
+ENDIF
+ONBUTTON=1                            // Okay Button
+IF (<LINK.MOREY> == 0)
+DIALOG d_house_private
+RETURN 1
+ELSEIF (<LINK.MOREY> == 1)
+DIALOG d_house_public
+RETURN 1
+ENDIF
+ONBUTTON=2
+SRC.SYSMESSAGE You must select someone to remove first.
+ONBUTTON=3
+IF (<SRC.UID> == <MORE>) || (<SRC.ACCOUNT.PLEVEL> >= 4)
+SRC.SYSMESSAGE <TAG0.F1NAME> has been removed from friendship of the house.
+REGION.TAG0.F1UID=0
+TAG0.F1NAME=
+TAG0.F1UID=0
+ELSE
+SRC.SYSMESSAGE Only owners may remove friends from the house!
+RETURN 1
+ONBUTTON=4
+IF (<SRC.UID> == <MORE>) || (<SRC.ACCOUNT.PLEVEL> >= 4)
+SRC.SYSMESSAGE <TAG0.F2NAME> has been removed from friendship of the house.
+REGION.TAG0.F2UID=0
+TAG0.F2NAME=
+TAG0.F2UID=0
+ELSE
+SRC.SYSMESSAGE Only owners may remove friends from the house!
+RETURN 1
+ONBUTTON=5
+IF (<SRC.UID> == <MORE>) || (<SRC.ACCOUNT.PLEVEL> >= 4)
+SRC.SYSMESSAGE <TAG0.F3NAME> has been removed from friendship of the house.
+REGION.TAG0.F3UID=0
+TAG0.F3NAME=
+TAG0.F3UID=0
+ELSE
+SRC.SYSMESSAGE Only owners may remove friends from the house!
+RETURN 1
+ONBUTTON=6
+IF (<SRC.UID> == <MORE>) || (<SRC.ACCOUNT.PLEVEL> >= 4)
+SRC.SYSMESSAGE <TAG0.F4NAME> has been removed from friendship of the house.
+REGION.TAG0.F4UID=0
+TAG0.F4NAME=
+TAG0.F4UID=0
+ELSE
+SRC.SYSMESSAGE Only owners may remove friends from the house!
+RETURN 1
+ONBUTTON=7
+IF (<SRC.UID> == <MORE>) || (<SRC.ACCOUNT.PLEVEL> >= 4)
+SRC.SYSMESSAGE <TAG0.F5NAME> has been removed from friendship of the house.
+REGION.TAG0.F5UID=0
+TAG0.F5NAME=
+TAG0.F5UID=0
+ELSE
+SRC.SYSMESSAGE Only owners may remove friends from the house!
+RETURN 1
+ONBUTTON=8
+IF (<SRC.UID> == <MORE>) || (<SRC.ACCOUNT.PLEVEL> >= 4)
+SRC.SYSMESSAGE <TAG0.F6NAME> has been removed from friendship of the house.
+REGION.TAG0.F6UID=0
+TAG0.F6NAME=
+TAG0.F6UID=0
+ELSE
+SRC.SYSMESSAGE Only owners may remove friends from the house!
+RETURN 1
+ONBUTTON=9
+IF (<SRC.UID> == <MORE>) || (<SRC.ACCOUNT.PLEVEL> >= 4)
+SRC.SYSMESSAGE <TAG0.F7NAME> has been removed from friendship of the house.
+REGION.TAG0.F7UID=0
+TAG0.F7NAME=
+TAG0.F7UID=0
+ELSE
+SRC.SYSMESSAGE Only owners may remove friends from the house!
+RETURN 1
+ONBUTTON=10
+IF (<SRC.UID> == <MORE>) || (<SRC.ACCOUNT.PLEVEL> >= 4)
+SRC.SYSMESSAGE <TAG0.F8NAME> has been removed from friendship of the house.
+REGION.TAG0.F8UID=0
+TAG0.F8NAME=
+TAG0.F8UID=0
+ELSE
+SRC.SYSMESSAGE Only owners may remove friends from the house!
+RETURN 1
+ONBUTTON=11
+IF (<SRC.UID> == <MORE>) || (<SRC.ACCOUNT.PLEVEL> >= 4)
+SRC.SYSMESSAGE <TAG0.F9NAME> has been removed from friendship of the house.
+REGION.TAG0.F9UID=0
+TAG0.F9NAME=
+TAG0.F9UID=0
+ELSE
+SRC.SYSMESSAGE Only owners may remove friends from the house!
+RETURN 1
+ONBUTTON=12
+IF (<SRC.UID> == <MORE>) || (<SRC.ACCOUNT.PLEVEL> >= 4)
+SRC.SYSMESSAGE <TAG0.F11NAME> has been removed from friendship of the house.
+REGION.TAG0.F10UID=0
+TAG0.F10NAME=
+TAG0.F10UID=0
+ELSE
+SRC.SYSMESSAGE Only owners may remove friends from the house!
+RETURN 1
+ONBUTTON=13
+IF (<SRC.UID> == <MORE>) || (<SRC.ACCOUNT.PLEVEL> >= 4)
+SRC.SYSMESSAGE <TAG0.F11NAME> has been removed from friendship of the house.
+REGION.TAG0.F11UID=0
+TAG0.F11NAME=
+TAG0.F1UID=0
+ELSE
+SRC.SYSMESSAGE Only owners may remove friends from the house!
+RETURN 1
+ONBUTTON=14
+IF (<SRC.UID> == <MORE>) || (<SRC.ACCOUNT.PLEVEL> >= 4)
+SRC.SYSMESSAGE <TAG0.F12NAME> has been removed from friendship of the house.
+REGION.TAG0.F12UID=0
+TAG0.F12NAME=
+TAG0.F12UID=0
+ELSE
+SRC.SYSMESSAGE Only owners may remove friends from the house!
+RETURN 1
+ONBUTTON=15
+IF (<SRC.UID> == <MORE>) || (<SRC.ACCOUNT.PLEVEL> >= 4)
+SRC.SYSMESSAGE <TAG0.F13NAME> has been removed from friendship of the house.
+REGION.TAG0.F13UID=0
+TAG0.F13NAME=
+TAG0.F13UID=0
+ELSE
+SRC.SYSMESSAGE Only owners may remove friends from the house!
+RETURN 1
+ONBUTTON=16
+IF (<SRC.UID> == <MORE>) || (<SRC.ACCOUNT.PLEVEL> >= 4)
+SRC.SYSMESSAGE <TAG0.F14NAME> has been removed from friendship of the house.
+REGION.TAG0.F14UID=0
+TAG0.F14NAME=
+TAG0.F14UID=0
+ELSE
+SRC.SYSMESSAGE Only owners may remove friends from the house!
+RETURN 1
+ONBUTTON=17
+IF (<SRC.UID> == <MORE>) || (<SRC.ACCOUNT.PLEVEL> >= 4)
+SRC.SYSMESSAGE <TAG0.F15NAME> has been removed from friendship of the house.
+REGION.TAG0.F15UID=0
+TAG0.F15NAME=
+TAG0.F15UID=0
+ELSE
+SRC.SYSMESSAGE Only owners may remove friends from the house!
+RETURN 1
+ONBUTTON=18
+IF (<SRC.UID> == <MORE>) || (<SRC.ACCOUNT.PLEVEL> >= 4)
+SRC.SYSMESSAGE <TAG0.F16NAME> has been removed from friendship of the house.
+REGION.TAG0.F16UID=0
+TAG0.F16NAME=
+TAG0.F16UID=0
+ELSE
+SRC.SYSMESSAGE Only owners may remove friends from the house!
+RETURN 1
+ONBUTTON=19
+IF (<SRC.UID> == <MORE>) || (<SRC.ACCOUNT.PLEVEL> >= 4)
+SRC.SYSMESSAGE <TAG0.F17NAME> has been removed from friendship of the house.
+REGION.TAG0.F17UID=0
+TAG0.F17NAME=
+TAG0.F17UID=0
+ELSE
+SRC.SYSMESSAGE Only owners may remove friends from the house!
+RETURN 1
+ONBUTTON=20
+IF (<SRC.UID> == <MORE>) || (<SRC.ACCOUNT.PLEVEL> >= 4)
+SRC.SYSMESSAGE <TAG0.F18NAME> has been removed from friendship of the house.
+REGION.TAG0.F18UID=0
+TAG0.F18NAME=
+TAG0.F18UID=0
+ELSE
+SRC.SYSMESSAGE Only owners may remove friends from the house!
+RETURN 1
+ONBUTTON=21
+IF (<SRC.UID> == <MORE>) || (<SRC.ACCOUNT.PLEVEL> >= 4)
+SRC.SYSMESSAGE <TAG0.F19NAME> has been removed from friendship of the house.
+REGION.TAG0.F19UID=0
+TAG0.F19NAME=
+TAG0.F19UID=0
+ELSE
+SRC.SYSMESSAGE Only owners may remove friends from the house!
+RETURN 1
+ONBUTTON=22
+IF (<SRC.UID> == <MORE>) || (<SRC.ACCOUNT.PLEVEL> >= 4)
+SRC.SYSMESSAGE <TAG0.F20NAME> has been removed from friendship of the house.
+REGION.TAG0.F20UID=0
+TAG0.F20NAME=
+TAG0.F20UID=0
+ELSE
+SRC.SYSMESSAGE Only owners may remove friends from the house!
+RETURN 1
+
+[DIALOG d_house_redeed]               // Main
+0,0                                   // Position
+SRC.DIALOGCLOSE d_house_redeed
+resizepic 200 175 5054 400 240        // Curved Grey background
+resizepic 210 185 3000 380 220        // Curved White background
+resizepic 220 195 3000 360 100        // Curved White box
+text 260 315 0000 0                   // Continue Text
+button 220 315 4005 4006 1 0 1        // Continue Button
+text 260 340 0000 1                   // Cancel Text
+text 260 355 0000 2                   // Cancel Text
+button 220 340 4005 4006 1 0 2        // Cancel Button
+text 230 200 0000 3                   // Description
+text 230 215 0000 4                   // Description
+text 230 230 0000 5                   // Description
+
+[DIALOG d_house_redeed TEXT]
+No, I don't want to lose my vendors!
+Yes, demolish the house and put my deed in
+my bank box.
+Turning your house into a deed will dismiss any
+vendors that are associated with this house.
+Are you sure you want to do this?
+
+[DIALOG d_house_redeed BUTTON]
+ONBUTTON=0
+
+DIALOG d_house_private
+
+ONBUTTON=1
+
+DIALOG d_house_private
+
+ONBUTTON=2
+
+IF <UID>
+	S Removing house
+	SERV.NEWITEM i_deed
+	NEW.MORE <BASEID>
+	NEW.ATTR 04
+	NEW.NAME Deed to a <NAME>
+	NEW.CONT <SRC.FINDLAYER.29.UID>
+	REMOVE
+	SRC.BANKSELF
+ELSE
+	SRC.SYSMESSAGE Casa ja removida.
+ENDIF
+
+
+
+[DIALOG d_house_rfriend_all]          // Main
+0,0                                   // Position
+resizepic 200 175 5054 400 240        // Curved Grey background
+resizepic 210 185 3000 380 220        // Curved White background
+resizepic 220 195 3000 360 100        // Curved White box
+text 260 315 0000 0                   // Continue Text
+button 220 315 4005 4006 1 0 1        // Continue Button
+text 260 340 0000 1                   // Cancel Text
+button 220 340 4005 4006 1 0 2        // Cancel Button
+text 230 200 0000 2                   // Description
+text 230 215 0000 3                   // Description
+text 230 230 0000 4                   // Description
+text 230 245 0000 5                   // Description
+text 230 272 0000 6                   // Description
+
+[DIALOG d_house_rfriend_all TEXT]
+No, I do not want to do this after all.
+Yes, go ahead and remove all my friends.
+If you go ahead with this option, all the current
+friendships will be removed from the house, and
+any vendors associated with said friends will be
+made unwelcome.
+Are you sure you want to do this?
+
+[DIALOG d_house_rfriend_all BUTTON]
+ONBUTTON=0
+
+DIALOG d_house_private
+
+ONBUTTON=1
+
+DIALOG d_house_private
+
+ONBUTTON=2
+FOR 1 20
+TRY TAG0.F<dLOCAL._FOR>UID=0
+TRY TAG0.F<dLOCAL._FOR>NAME=
+TRY REGION.TAG0.F<dLOCAL._FOR>UID=0
+ENDFOR
+SRC.SYSMESSAGE Your friends have been successfully removed.
+
+
+
+
+[DIALOG d_house_rcoowner_all]         // Main
+0,0                                   // Position
+resizepic 200 175 5054 400 240        // Curved Grey background
+resizepic 210 185 3000 380 220        // Curved White background
+resizepic 220 195 3000 360 100        // Curved White box
+text 260 315 0000 0                   // Continue Text
+button 220 315 4005 4006 1 0 1        // Continue Button
+text 260 340 0000 1                   // Cancel Text
+button 220 340 4005 4006 1 0 2        // Cancel Button
+text 230 200 0000 2                   // Description
+text 230 215 0000 3                   // Description
+text 230 230 0000 4                   // Description
+text 230 245 0000 5                   // Description
+text 230 272 0000 6                   // Description
+
+[DIALOG d_house_rcoowner_all TEXT]
+No, I do not want to do this after all.
+Yes, go ahead and remove all my co-owners.
+If you go ahead with this option, all the current
+co-owners will be removed from the house, and
+any vendors associated with said friends will be
+made unwelcome.
+Are you sure you want to do this?
+
+[DIALOG d_house_rcoowner_all BUTTON]
+ONBUTTON=0
+
+DIALOG d_house_private
+
+ONBUTTON=1
+
+DIALOG d_house_private
+
+ONBUTTON=2
+FOR 1 20
+TRY TAG0.CO<dLOCAL._FOR>UID=0
+TRY TAG0.CO<dLOCAL._FOR>NAME=
+TRY REGION.TAG0.CO<dLOCAL._FOR>UID=0
+ENDFOR
+
+SRC.SYSMESSAGE Your co-owners have been successfully removed.
+RETURN 1
+
+
+
+[FUNCTION f_friends]  // Friends Memory
+REF69 <ARGS>
+
+IF !(<ARGO.ISPLAYER>)
+	SRC.SYSMESSAGE Only players can be friends of Houses.
+	RETURN 1
+ELIF (<ARGO.UID> == <REF69.MORE>)
+	SRC.SYSMESSAGE This person is already the house owner!
+	RETURN 1
+ENDIF
+
+
+FOR 1 8
+	IF (<ARGO.UID>==<REF69.TAG0.CO<dLOCAL._FOR>UID>)
+		SRC.SYSMESSAGE <ARGO.NAME> Is already a co-owner of the house.
+		RETURN 1
+	ENDIF
+ENDFOR
+FOR 1 20
+	IF (<ARGO.UID>==<REF69.TAG0.F<dLOCAL._FOR>UID>)
+		SRC.SYSMESSAGE <ARGO.NAME> Is already a friend of the house.
+		RETURN 1
+	ENDIF
+ENDFOR
+
+
+FOR 1 8
+	IF !(<REF69.TAG0.F<dLOCAL._FOR>UID>)
+		TRY REF69.TAG0.F<dLOCAL._FOR>UID=<ARGO.UID>
+		TRY REF69.TAG0.F<dLOCAL._FOR>NAME=<ARGO.NAME>
+		TRY REF69.REGION.TAG0.F<dLOCAL._FOR>UID=<ARGO.UID>
+		SRC.SYSMESSAGE <ARGO.NAME> has been made a friend of the house.
+		ARGO.SYSMESSAGE You have been made a friend of this house.
+		RETURN 1
+	ENDIF
+ENDFOR
+
+SRC.SYSMESSAGE You cannot add anymore friendss.
+SRC.SYSMESSAGE Try removing any unwanted friends to create more space for new ones.
+
+
+
+
+[FUNCTION f_coown]
+REF69 <ARGS>
+
+IF !(<ARGO.ISPLAYER>)
+	SRC.SYSMESSAGE Only players can be friends of Houses.
+	RETURN 1
+ELIF (<ARGO.UID> == <REF69.MORE>)
+	SRC.SYSMESSAGE This person is already the house owner!
+	RETURN 1
+ENDIF
+
+
+FOR 1 8
+	IF (<ARGO.UID>==<REF69.TAG0.CO<dLOCAL._FOR>UID>)
+		SRC.SYSMESSAGE <ARGO.NAME> Is already a co-owner of the house.
+		RETURN 1
+	ENDIF
+ENDFOR
+FOR 1 20
+	IF (<ARGO.UID>==<REF69.TAG0.F<dLOCAL._FOR>UID>)
+		SRC.SYSMESSAGE <ARGO.NAME> Is already a friend of the house.
+		RETURN 1
+	ENDIF
+ENDFOR
+
+
+FOR 1 8
+	IF !(<REF69.TAG0.CO<dLOCAL._FOR>UID>)
+		TRY REF69.TAG0.CO<dLOCAL._FOR>UID=<ARGO.UID>
+		TRY REF69.TAG0.CO<dLOCAL._FOR>NAME=<ARGO.NAME>
+		TRY REF69.REGION.TAG0.CO<dLOCAL._FOR>UID=<ARGO.UID>
+		SRC.SYSMESSAGE <ARGO.NAME> has been made a co-owner of the house.
+		TRY UID.<ARGO.UID>.SYSMESSAGE You have been made a co-owner of this house.
+		RETURN 1
+	ENDIF
+ENDFOR
+
+SRC.SYSMESSAGE You cannot add anymore co-owners.
+SRC.SYSMESSAGE Try removing any unwanted co-owners to create more space for new ones.
+
+[ITEMDEF i_tile_house_fence_entrance]
+NAME=House Fence Entry Checkpoint
+ID=0497
+TYPE=t_normal
+DISPID=0495
+
+ON=@Create
+	ATTR = 090
+	COLOR = 038
+
+//ON=@Step
+//	IF ((<SRC.HITS> < <SRC.MAXHITS>) || (<SRC.FLAGS> & STATF_FREEZE) || (<SRC.FLAGS> & STATF_STONE))
+//		SRC.SYSMESSAGE You must have full health to open this door.
+//		SRC.TIMERF 0,Z <Z>
+//		RETURN 1
+//	ENDIF
+
+[ITEMDEF i_tile_house_entrance]
+NAME=House Entry Checkpoint
+ID=0497
+TYPE=t_normal
+DISPID=0495
+
+ON=@Create
+	ATTR = 090
+	COLOR = 058
+
+ON=@Step
+//	IF ((<SRC.HITS> < <SRC.MAXHITS>) || (<SRC.FLAGS> & STATF_FREEZE) || (<SRC.FLAGS> & STATF_STONE))
+//		SRC.SYSMESSAGE You must have full health to open this door.
+//		SRC.TIMERF 0,Z <Z>
+//		RETURN 1
+//	ENDIF
+
+	SRC.TAG.INSIDE_PRIVATE_HOUSE 1
+
+[ITEMDEF i_tile_house_exit]
+NAME=House Exit Checkpoint
+ID=0497
+TYPE=t_normal
+DISPID=0495
+
+ON=@Create
+	ATTR = 090
+	COLOR = 029
+
+ON=@Step
+	SRC.TAG.INSIDE_PRIVATE_HOUSE
+
+[FUNCTION f_check_private_house]
+IF (<ARGV> != 1)
+	RETURN 1
+ENDIF
+
+REF1 <ARGV[0]>
+IF (<REF1.REGION.UID>)
+	REF1.TAG.INSIDE_PRIVATE_HOUSE
+ENDIF
+
+[REGIONTYPE r_house_private]
+DEFNAME=r_house_private
+
+ON=@Enter
+	SRC.EVENTS +e_house_private
+
+ON=@Exit
+	SRC.EVENTS -e_house_private
+
+	SRC.TIMERF 1,f_check_private_house <SRC.UID>
+
+ON=@Step
+	IF (<SRC.FLAGS> & statf_conjured)
+		SRC.REMOVE
+	ENDIF
+
+//IF <SRC.ISPLAYER>
+//	IF <SRC.ACCOUNT.PLEVEL> > 1
+//		RETURN 0
+//	ENDIF
+//	REF69 <SRC.REGION.TAG0.SIGNP>
+//	REF69 <REF69.LINK>
+//	IF <SRC.UID>==<UID.<REF69.MORE1>.UID>
+//		RETURN 0
+//	ENDIF
+//	FOR 1 20
+//
+//		IF <SRC.UID>==<SRC.REGION.TAG0.F<dLOCAL._FOR>UID>
+//			RETURN 0
+//		ENDIF
+//	ENDFOR
+//	FOR 1 8
+//		IF <SRC.UID>==<SRC.REGION.TAG0.CO<dLOCAL._FOR>UID>
+//			RETURN 0
+//		ENDIF
+//	ENDFOR
+//	SRC.SYSMESSAGE You may not enter !!
+//	doswitch <SRC.DIR>
+//		src.move s
+//		src.move sw
+//		src.move w
+//		src.move nw
+//		src.move n
+//		src.move ne
+//		src.move e
+//		src.move se
+//	enddo
+
+//ENDIF
+
+
+
+[EVENTS e_house_private]
+//ON=@ITEMDROPON_GROUND
+
+//REF69 <SERV.MAP(<ARGV[0]>,<ARGV[1]>).REGION.UID>
+//LOCAL.ITEMS 1
+//if (<ACT.TYPE>==t_container) || (<ACT.TYPE>==t_container_locked)
+//LOCAL.ITEMS += <ACT.FCOUNT>
+//ENDIF
+//IF (<REF69.HOUSEITEMS> + <dLOCAL.ITEMS>) > <eval <REF69.VALUE>/400>
+//SRC.SYSMESSAGE Esta casa ja possui muitos itens armazenados.
+//ACT.CONT <SRC.FINDLAYER.21.UID>
+//RETURN 1
+//ENDIF
+
+//ON=@ITEMDROPON_ITEM
+//IF <ARGO.TOPOBJ>==<UID>
+//RETURN 0
+//ENDIF
+//REF69 <REGION.UID>
+//IF <ARGO.REGION.UID>==<REF69.UID>
+
+//	LOCAL.ITEMS 1
+//		if (<ACT.TYPE>==t_container) || (<ACT.TYPE>==t_container_locked)
+//			LOCAL.ITEMS += <ACT.FCOUNT>
+//		ENDIF
+//		IF (<REF69.HOUSEITEMS> + <dLOCAL.ITEMS>) > <eval <REF69.VALUE>/400>
+//			SRC.SYSMESSAGE Esta casa ja possui muitos itens armazenados.
+//			ACT.CONT <SRC.FINDLAYER.21.UID>
+//		ENDIF
+//ENDIF
+
+[FUNCTION list_houses]
+SERV.NEWNPC c_dog
+NEW.go Britain
+NEW.f_list_houses
+NEW.REMOVE
+
+[FUNCTION f_list_houses]
+LOCAL.COUNT 0
+LOCAL.MONTHS 3
+
+CALL split_date <EXPLODE /: ,<SERV.RTIME.FORMAT %Y/%m/%d>>
+
+IF (<EVAL <LOCAL.MONTH> - <LOCAL.MONTHS>> <= 0)
+	LOCAL.YEAR -= 1
+	LOCAL.MONTH <EVAL (12 - <LOCAL.MONTHS>) + <LOCAL.MONTH>>
+ELSE
+	LOCAL.MONTH -= <LOCAL.MONTHS>
+ENDIF
+
+LOCAL.LIMIT_DAY <LOCAL.DAY>
+LOCAL.LIMIT_MONTH <LOCAL.MONTH>
+LOCAL.LIMIT_YEAR <LOCAL.YEAR>
+
+SERV.LOG Date limit: <DLOCAL.LIMIT_DAY>/<DLOCAL.LIMIT_MONTH>/<DLOCAL.LIMIT_YEAR>
+
+FORITEMS 9999
+	IF (<TAG0.house.birth>)
+		REF1 <UID.<REGION.UID>.MORE1>
+		REF2 <UID>
+
+		CALL split_date <EXPLODE /: ,<REF1.ACCOUNT.LASTCONNECTDATE>>
+
+		IF (<REF1.SKILLTOTAL> < 10000)
+			SERV.LOG <REF1.ACCOUNT> <REF1.SKILLTOTAL> <REF1.NAME> <DLOCAL.DAY>/<DLOCAL.MONTH>/<DLOCAL.YEAR> <REF2.NAME> <P>
+			LOCAL.COUNT += 1
+		ENDIF
+
+		IF (<LOCAL.YEAR> < <LOCAL.LIMIT_YEAR>) || ((<LOCAL.YEAR> == <LOCAL.LIMIT_YEAR>) && (<LOCAL.MONTH> < <LOCAL.LIMIT_MONTH>)) || ((<LOCAL.YEAR> == <LOCAL.LIMIT_YEAR>) && (<LOCAL.MONTH> == <LOCAL.LIMIT_MONTH>) && (<LOCAL.DAY> < <LOCAL.LIMIT_DAY>))
+//			SERV.LOG <REF1.ACCOUNT> <REF1.SKILLTOTAL> <REF1.NAME> <DLOCAL.DAY>/<DLOCAL.MONTH>/<DLOCAL.YEAR> <REF2.NAME> <P>
+			LOCAL.COUNT += 1
+		ENDIF
+
+	ENDIF
+ENDFOR
+
+SERV.LOG Houses to remove: <DLOCAL.COUNT>.
+
+
+[EOF]

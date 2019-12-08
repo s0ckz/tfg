@@ -1,0 +1,61 @@
+// Crested 11/2/2009 06:10:01, with GumpStudio
+// Exported SphereExporter ver 2.0.
+// Script ver 0.56/Revisions
+
+[FUNCTION pagehelpteste3]
+SRC.DIALOG d_menu_help_3
+
+[DIALOG d_menu_help_3]
+0,0
+page 0
+gumppic 344 269 1416 883
+gumppic 182 279 1416 883
+gumppic 343 279 1416 883
+gumppic 344 141 1416 883
+gumppic 182 141 1416 883
+gumppic 306 141 1416 883
+gumppic 131 126 10421
+gumppic 155 112 10420
+gumppic 164 407 10462
+gumppic 218 407 10462
+gumppic 272 407 10462
+gumppic 326 407 10462
+gumppic 380 407 10462
+gumppic 434 407 10462
+gumppic 468 125 10431
+gumppic 462 259 10432
+gumppic 439 111 10430
+resizepic 216 118 9200 222 25
+gumppic 182 269 1416 883
+gumppic 306 269 1416 883
+gumppic 306 279 1416 883
+gumppic 201 186 9762 900
+dtext 271 119 567 Remover Kills
+gumppic 201 261 9762 900
+dtext 227 184 567 1 Kill - 50.000gp
+gumppic 201 286 9762 900
+gumppic 201 311 9762 900
+gumppic 144 259 10422
+gumppic 201 211 9762 900
+gumppic 201 236 9762 900
+gumppic 201 336 9762 900
+dtext 227 208 567 5 Kills - 150.000gp
+dtext 227 234 567 10 Kills - 250.000gp
+dtext 227 259 567 50 Kills - 350.000gp
+dtext 227 284 567 100 Kills - 500.000gp
+dtext 227 309 567 Status
+dtext 227 334 567 Voltar
+
+[DIALOG d_menu_help_3 text] // useless
+Remover Kills
+1 Kill - 50.000gp
+5 Kills - 150.000gp
+10 Kills - 250.000gp
+50 Kills - 350.000gp
+100 Kills - 500.000gp
+Status
+Voltar
+
+[DIALOG d_menu_help_3 button]
+
+[EOF]

@@ -1,0 +1,353 @@
+[FUNCTION ON]
+INFORMATION
+
+[FUNCTION status]
+DIALOG d_char_status2
+
+[FUNCTION HelpPage]
+DIALOG d_SERV_HELP
+
+[DIALOG d_SERV_HELP]
+100, 100
+nomove
+nodispose
+resizepic 0 0 3600 600 450
+page 0
+gumppic 285 178 1418
+gumppic 15 50 1800
+gumppic 35 90 50990 //corpo
+gumppic 35 90 60993 //escudo
+gumppic 35 90 50617 //staff
+gumppic 520 20 5548 //cavalin
+text 220 17 995 0
+button 250 300 5514 5515 1 0 0
+page 1
+text 17 417 995 1
+text 290 140 995 2
+button 250 140 4005 4006 1 0 2
+button 250 165 4005 4006 1 0 3
+text 290 165 995 3
+button 250 190 4005 4006 1 0 4
+text 290 190 995 4
+button 250 215 4005 4006 1 0 5
+text 290 215 995 5
+button 250 240 4005 4006 1 0 6
+text 290 240 995 6
+button 250 265 4005 4006 1 0 7
+text 290 265 995 7
+
+[DIALOG d_SERV_HELP TEXT]
+<SERV.NAME> Help Menu
+The Fifteen Gems Help Menu
+News
+Mande Page ao GM (Seja claro)
+Status do Char
+Pagar Kills
+Shard Status
+<qval <src.FINDID.i_teleport_delay>?Cancelar Help Room:Pedir Help Room>
+
+[DIALOG d_SERV_HELP BUTTON]
+ONBUTTON=2
+WEBLINK http:\\www.tfg.com.br/forum
+ONBUTTON=3
+if <src.tag0.pageblock>
+	src.sysmessage @,,1 Voce nao pode mais enviar pages!
+	return 1
+endif
+SRC.SYSMESSAGE @65,,1 Horario de atendimento padrao: diariamente, apos as 22h.
+SRC.SYSMESSAGE @65,,1 Pages com reclamacoes infundadas - principalmente sobre PVP - serao ignoradas e passiveis de punicao.
+SRC.SYSMESSAGE @65,,1 Se tiver duvidas simples, utilize nosso Discord - digite .discord.
+dialog d_page_send
+ONBUTTON=4
+dialog d_char_status
+ONBUTTON=5
+IF <SRC.KILLS>>0
+dialog d_remove_kill
+else
+src.sysmessage @0790 Voce nao tem kills!
+ONBUTTON=6
+SRC.INFORMATION
+ONBUTTON=7
+DIALOG d_SERV_HELP_CONFIRM
+ONBUTTON=0
+SRC.SYSMESSAGE @0790 Help Menu Fechado.
+
+[FUNCTION dialogteste]
+DIALOG d_SERV_HELP_CONFIRM
+
+[DIALOG d_SERV_HELP_CONFIRM]
+100, 100
+nomove
+nodispose
+resizepic 0 0 3600 600 450
+page 0
+gumppic 285 178 1418
+gumppic 15 50 1800
+gumppic 35 90 50990 //corpo
+gumppic 35 90 60993 //escudo
+gumppic 35 90 50617 //staff
+gumppic 520 20 5548 //cavalin
+text 220 17 995 0
+button 250 330 5514 5515 1 0 0
+page 1
+text 17 417 995 1
+text 290 140 995 2
+button 250 140 4005 4006 1 0 2
+button 250 165 4005 4006 1 0 3
+text 290 165 995 3
+button 250 190 4005 4006 1 0 4
+text 290 190 995 4
+button 250 215 4005 4006 1 0 5
+text 290 215 995 5
+button 250 240 4005 4006 1 0 6
+text 290 240 995 6
+button 250 265 4006 4005 0 0 7
+if <src.findid.i_teleport_delay>
+dhtmlgump 290 266 180 40 0 0 <def.u><def.bfont_white>Voce tem certeza que deseja CANCELAR a Help Room?
+else
+dhtmlgump 290 266 180 40 0 0 <def.u><def.bfont_white>Voce tem certeza que deseja ir para a Help Room?
+endif
+button 300 310 4005 4006 1 0 8
+button 370 310 4005 4006 1 0 9
+dtext 339 309 91 Sim!
+dtext 409 309 31 Nao!
+
+[DIALOG d_SERV_HELP_CONFIRM TEXT]
+<SERV.NAME> Help Menu
+The Fifteen Gems Help Menu
+News
+Mande Page ao GM (Seja claro)
+Status do Char
+Pagar Kills
+Shard Status
+
+[DIALOG d_SERV_HELP_CONFIRM BUTTON]
+ONBUTTON=2
+WEBLINK http:\\www.tfg.com.br/forum
+ONBUTTON=3
+SRC.SYSMESSAGE @65,,1 Pages que nao descrevam claramente o problema nao serao atendidas.
+dialog d_page_send
+ONBUTTON=4
+dialog d_char_status
+ONBUTTON=5
+IF <SRC.KILLS>>0
+dialog d_remove_kill
+else
+src.sysmessage @0790 Voce nao tem kills!
+ONBUTTON=6
+SRC.INFORMATION
+ONBUTTON=7
+SRC.SDIALOG d_SERV_HELP_CONFIRM
+
+ONBUTTON=8
+if <src.findid.i_teleport_delay>
+	src.findid.i_teleport_delay.remove
+	src.DIALOGCLOSE cronohelp
+	src.events -e_wait_hr
+	src.sysmessage @,,1 Help Room Cancelada.
+else
+	IF (<SRC.TAG0.EVENT.ID>==1) || (<SRC.TAG0.ONEVENT>==1)
+	SRC.SYSMESSAGE @,,1 Voce nao pode chamar Help Room durante um evento.
+	RETURN 1
+	ENDIF
+
+	IF (<SRC.TAG0.CPAMOUNT>==1)
+	SRC.SYSMESSAGE @,,1 Voce nao pode chamar Help Room na CP.
+	RETURN 1
+	ENDIF
+
+	IF (STRMATCH(<REGION.NAME>,Jail 10))
+	SRC.SYSMESSAGE Voce nao pode chamar a Help Room na jail
+	RETURN 1
+	ENDIF
+	IF (STRMATCH(<REGION.NAME>,Jail9))
+	SRC.SYSMESSAGE Voce nao pode chamar a Help Room na jail
+	RETURN 1
+	ENDIF
+	IF (STRMATCH(*jail*,<region.name>))
+	SRC.SYSMESSAGE Voce nao pode chamar a Help Room na jail
+	RETURN 1
+	ENDIF
+
+	IF !(<src.findid.i_teleport_delay.uid>==0)
+
+
+	SRC.SYSMESSAGE Voce ja pediu a help room.
+	ELSE
+	IF <SRC.FLAGS>&04
+	SRC.SYSMESSAGE Voce nao pode chamar a help room neste estado
+	ELSE
+	src.newitem i_teleport_delay
+	new.equip
+	ENDIF
+	ENDIF
+endif
+
+ONBUTTON=9
+SRC.SYSMESSAGE @,,1 Pedido de Help Room cancelado.
+ONBUTTON=0
+SRC.SYSMESSAGE @0790 Help Menu Fechado.
+
+[DIALOG d_remove_kill]
+0, 0
+nomove
+nodispose
+resizepic 0 0 3600 300 370
+gumppic 220 20 5552 //espada*
+gumppic 200 150 9000 //cavalin
+page 0
+button 250 320 5514 5515 1 0 0
+page 1
+text 20 17 995 0
+text 17 338 995 1
+text 20 60 995 2
+text 20 80 995 3
+text 60 150 995 4
+text 60 170 995 5
+text 60 190 995 6
+text 60 210 995 7
+text 60 230 995 8
+button 20 150 4023 4024 1 0 1
+button 20 170 4023 4024 1 0 2
+button 20 190 4023 4024 1 0 3
+button 20 210 4023 4024 1 0 4
+button 20 230 4023 4024 1 0 5
+
+[DIALOG d_remove_kill TEXT]
+<SRC.NAME> Kills Menu
+TFG Free Shard
+Voce tem <src.kills> kill(s)!
+Quantas deseja pagar?
+1 kill		[50k]	// 4
+2 kills		[100k]	// 5
+5 kills		[250k]	// 6
+10 kills	[500k]	// 7
+25 kills	[1kk250k]	// 8
+
+[DIALOG d_remove_kill BUTTON]
+ONBUTTON=0
+dialog d_SERV_HELP
+SRC.SYSMESSAGE @0790 Kill Menu Fechado!
+ONBUTTON=1
+if <eval <src.kills> < 1 >
+src.message @0790 Voce nao tem kills!
+Return 1
+elseif (<SRC.GOLD> >= 50000)
+ SRC.GOLD -= 50000
+ SRC.kills=<src.kills> + - 1
+ SRC.UPDATE
+ SRC.FIX
+ SRC.MESSAGE @077a Voce pagou 1 kill.
+ RETURN 0
+ ELSE
+ SRC.MESSAGE @0790 Voce nao tem 50k.
+ ENDIF
+ RETURN 0
+ONBUTTON=2
+if <eval <src.kills> < 2 >
+src.message @0790 Voce tem apenas <src.kills> kill.
+Return 1
+elseif (<SRC.GOLD> >= 100000)
+ SRC.GOLD -= 100000
+ SRC.kills=<src.kills> + - 2
+ SRC.UPDATE
+ SRC.FIX
+ SRC.MESSAGE @077a Voce pagou 2 kills.
+ RETURN 0
+ ELSE
+ SRC.MESSAGE @0790 Voce nao tem 100k.
+ ENDIF
+ RETURN 0
+ONBUTTON=3
+if <eval <src.kills> < 5 >
+src.message @0790 Voce tem apenas <src.kills> kill(s).
+Return 1
+elseif (<SRC.GOLD> >= 250000)
+ SRC.GOLD -= 250000
+ SRC.kills=<src.kills> + - 5
+ SRC.UPDATE
+ SRC.FIX
+ SRC.MESSAGE @077a Voce pagou 5 kills.
+ RETURN 0
+ ELSE
+ SRC.MESSAGE @0790 Voce nao tem 250k.
+ ENDIF
+ RETURN 0
+ONBUTTON=4
+if <eval <src.kills> < 10 >
+src.message @0790 Voce tem apenas <src.kills> kill(s).
+Return 1
+elseif (<SRC.GOLD> >= 500000)
+ SRC.GOLD -= 500000
+ SRC.kills=<src.kills> + - 10
+ SRC.UPDATE
+ SRC.FIX
+ SRC.MESSAGE @077a Voce pagou 10 kills.
+ RETURN 0
+ ELSE
+ SRC.MESSAGE @0790 Voce nao tem 500k.
+ ENDIF
+ RETURN 0
+ONBUTTON=5
+if <eval <src.kills> < 25 >
+src.message @0790 Voce tem apenas <src.kills> kill(s).
+Return 1
+elseif (<SRC.GOLD> >= 1250000)
+ SRC.GOLD -= 1250000
+ SRC.kills=<src.kills> + - 25
+ SRC.UPDATE
+ SRC.FIX
+ SRC.MESSAGE @077a Voce pagou 25 kills.
+ RETURN 0
+ ELSE
+ SRC.MESSAGE @0790 Voce nao tem 1kk 250k.
+ ENDIF
+ RETURN 0
+
+[DIALOG d_char_status]
+0, 0
+nomove
+nodispose
+resizepic 0 0 3600 300 370
+gumppic 220 20 5586 //cavalin
+gumppic 200 150 9000 //cavalin
+page 0
+button 250 320 5514 5515 1 0 0
+page 1
+text 20 17 995 0
+text 17 338 995 1
+text 20 60 995 2
+text 20 80 995 3
+text 20 100 995 4
+text 20 120 995 5
+text 20 140 995 6
+text 20 160 995 7
+text 20 180 995 8
+text 20 200 995 9
+text 20 220 995 10
+text 20 240 995 11
+text 20 260 995 12
+text 20 280 995 13
+
+[DIALOG d_char_status TEXT]
+<SRC.NAME> Status
+The Fifteen Gems Shard
+Account: <src.account>
+STR: <SRC.STR>
+DEX: <SRC.DEX>
+INT: <SRC.INT>
+Karma: <src.karma>
+Fame: <src.fame>
+Kills: <src.kills>
+Deaths: <src.deaths>
+Skill Total: <src.SKILLTOTAL>
+Bank Balance: <src.BANKBALANCE>
+Fome: <src.food>
+Guild: <src.memoryfindtype.memory_guild.link.name>
+
+[DIALOG d_char_status BUTTON]
+ONBUTTON=0
+dialog d_SERV_HELP
+SRC.SYSMESSAGE @0790 Player Status Fechado.
+
+[eof]

@@ -1,0 +1,58 @@
+﻿[function achamapas]
+FORINSTANCES i_map
+	if <color>
+		s <name> <color> <p> <topobj.name>
+	endif
+ENDFOR
+sysmessage @,,1 <dlocal.ct> azuis, <dlocal.ct2> coloridos.
+return 1
+
+
+[FUNCTION achabau]
+forinstances i_chest_metal
+if <color> != 0
+s <p> <topobj.name> <region.name>
+endif
+endfor
+return 1
+
+
+[TYPEDEF t_figurine]
+ON=@DCLICK
+IF (<dTAG0.STATUETTE> == 1)
+	IF (<dTAG.SOUNDMIN> && <dTAG.SOUNDMAX>)
+		SRC.SOUND <R<dTAG.SOUNDMIN>,<dTAG.SOUNDMAX>>
+	ENDIF
+	RETURN 1
+ENDIF
+
+IF (<TOPOBJ> != <SRC>)
+	SRC.SYSMESSAGE @,,1 That shrinked animal must be in your bag to be used.
+	RETURN 1
+ENDIF
+
+if (<serv.time> < <src.ctag0.lastfigurineuse>)
+	local.timer = <eval (<src.ctag0.lastfigurineuse> - <serv.time>) / 10>
+	src.sysmessage "@,,1 Você precisa aguardar <dlocal.timer> segundos para usar um animal shrinkado novamente."
+	return 1
+endif
+if (<more1>==c_m_dragon_wyrm_chemical)
+	src.sysmessage @,,1 Animal temporariamente desativado.
+	return 1
+endif
+src.ctag.lastfigurineuse = <eval <serv.time> + 100>
+SERV.WRITEFILE Shrinks.txt <serv.rtime> : <src.name> deshrinkou <name> em <src.p> (<src.region.name>)
+
+[TYPEDEF T_LOG]
+
+On=@DCLICK
+IF (<BASEID> == I_DARK_LOG)
+	IF (<CONT.TOPOBJ> != <SRC>)
+		SRC.sysmessage The item must be in your bag.
+		RETURN 1
+	ENDIF
+	SRC.SYSMESSAGE Onde voce deseja aplicar esses logs?
+	SRC.TARGETF F_APLICA_DLOG <UID>
+	RETURN 1
+ENDIF
+

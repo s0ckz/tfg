@@ -1,0 +1,370 @@
+﻿[defname punicoes_TFG]
+pontos_1		7200 //2h
+pontos_1_cp		0
+pontos_2		14400 //4h
+pontos_2_cp		0
+pontos_3		28800 //8h
+pontos_3_cp		0
+pontos_4		57600 //16h
+pontos_4_cp		0
+pontos_5		115200 //32h
+pontos_5_cp		0
+pontos_6		172800 //48h
+pontos_6_cp		0
+pontos_7		172800 //48
+pontos_7_cp		1000 //resources na CP
+pontos_8		172800
+pontos_8_cp		1500
+pontos_9		172800
+pontos_9_cp		2000
+pontos_10		259200 //72h
+pontos_10_cp	2000
+pontos_11		259200
+pontos_11_cp	2500
+pontos_12		259200
+pontos_12_cp	3000
+pontos_13		259200
+pontos_13_cp	3500
+pontos_14		345600 //96h
+pontos_14_cp	4000
+pontos_15		345600
+pontos_15_cp	4500
+pontos_16		345600
+pontos_16_cp	5000
+pontos_17		432000 //120h
+pontos_17_cp	5000
+pontos_18		432000
+pontos_18_cp	5500
+pontos_19		511200 //142h
+pontos_19_cp	6000
+pontos_20		511200
+pontos_20_cp	8000
+pontos_21		604800 //168h
+pontos_21_cp	10000
+
+[function punir]
+targetf f_punir
+SRC.SYSMESSAGE Selecione o player que deseja punir...
+
+[function f_punir]
+argo.stone
+src.ctag.tobejailed <argo>
+src.dialog d_jail_tfg
+
+[DIALOG d_jail_tfg]
+0,0
+page 0
+resizepic 223 119 9300 262 294
+resizepic 292 189 9350 39 30
+textentry 300 193 24 20 0 1 0
+text 246 194 0 1
+text 283 132 0 2
+text 247 229 0 3
+resizepic 239 248 9350 226 106
+textentry 247 254 208 93 0 2 4
+button 319 373 247 248 1 0 1
+button 414 384 242 241 1 0 2
+text 379 202 0 5
+text 413 219 0 6
+text 386 181 0 7
+
+[DIALOG d_jail_tfg text]
+0
+Pontos
+Tfg Jail Point System
+Motivo
+a
+Pontos atuais
+<uid.<src.ctag0.tobejailed>.dtag0.jailpoints>
+<uid.<src.ctag0.tobejailed>.name>
+
+[DIALOG d_jail_tfg button]
+ON=1
+// Button 1
+src.ctag0.reason <ARGTXT[2]>
+src.ctag0.pontos <eval <ARGTXT[1]>>
+src.dialog d_jail_tfg_confirm
+
+ON=2
+// Button 2
+// 
+
+[DIALOG d_jail_tfg_confirm]
+0,0
+page 0
+resizepic 196 119 9300 290 219
+text 245 131 0 0
+button 265 300 247 248 1 0 1
+button 366 300 242 241 1 0 2
+text 274 206 0 1
+text 306 236 0 2
+text 205 163 0 3
+text 247 259 0 4
+text 399 236 0 5
+text 399 258 0 6
+text 378 162 0 7
+text 341 161 0 8
+gumppic 412 128 9804
+
+[DIALOG d_jail_tfg_confirm text]
+Tfg Jail Point System
+A punicao sera:
+Horas de jail:
+<uid.<src.ctag0.tobejailed>.name>
+Recursos Colonia penal:
+<eval (<def.pontos_<eval (<uid.<src.ctag0.tobejailed>.dtag0.jailpoints>+<src.dctag0.pontos>)>>)/3600>h //horas de jail
+<eval <def.pontos_<eval (<uid.<src.ctag0.tobejailed>.dtag0.jailpoints>+<src.dctag0.pontos>)>_cp>> //cp para cumprir
+<eval (<uid.<src.ctag0.tobejailed>.dtag0.jailpoints>+<src.ctag0.pontos>)> //pts totais do player
+pts:
+
+
+[DIALOG d_jail_tfg_confirm button]
+ON=1
+// Button 1
+ref1 <uid.<src.ctag0.tobejailed>>
+ref1.tag0.jailpoints += <src.dctag0.pontos>
+ref1.TAG0.JAILERNAME=<SRC.NAME>
+ref1.JAIL
+ref1.stone 0
+ref1.SYSMESSAGE @0bb7,,1 Voce esta Preso!
+s  <eval <def.pontos_<ref1.dtag0.jailpoints>>>
+ref1.TAG0.JTIME <def.pontos_<ref1.dtag0.jailpoints>>
+ref1.EVENTS +e_arthazjail 
+if (<eval <def.pontos_<ref1.dtag0.jailpoints>_cp>> > 0)
+	ref1.tag0.gotocp <eval <def.pontos_<ref1.dtag0.jailpoints>_cp>>
+endif
+ref1.TAG0.JREASON <src.ctag0.reason>
+SERV.WRITEFILE Historico_Jail.txt Jail de <ref1.name> por <src.name>. Razao: <ref1.TAG0.JREASON>. Tempo <eval <ref1.TAG0.JTIME>/3600>h. em <serv.rtime>
+ref1.JAILMENOWBOY 
+
+ON=2
+// Button 2
+// 
+
+
+[ITEMDEF i_algema_jail] 
+ID=0e2d 
+NAME=Algema de Jail 
+ 
+ON=@CREATE 
+COLOR=07bb
+ATTR=attr_newbie|attr_move_never|attr_magic
+ 
+ON=@DCLICK
+REMOVE
+return 1
+
+IF (<CONT> != <SRC.FINDLAYER.layer_pack.UID>)
+	SRC.SYSMESSAGE @0825 A Jail Stone nao esta na sua bag.Mande page para Staff!
+	Return 1
+ENDIF 
+IF (<SRC.ACCOUNT.PLEVEL> <= 1)
+	REMOVE
+	SRC.SYSMESSAGE S� Staff pode mecher nisto.
+	RETURN 1
+ELSE 
+DIALOG d_jailer
+RETURN 1
+ENDIF 
+ 
+[DIALOG d_jailer] 
+0,0 
+nomove 
+noclose 
+resizepic 0 0 2620 350 300 
+resizepic 100 180 3000 200 20 
+resizepic 100 205 3000 60 20 
+resizepic 100 230 3000 230 20 
+text 90 25 50 0      //O tempo e em minutos.
+text 81 120 50 19      //Em cima padroes de pena.
+text 25 5 50 14      //Jail Sistem - The Fifteen Gems Shard
+text 45 45 0480 1    //60=  Leve
+text 185 45 0480 2   //120= Leve R(2x)
+text 45 65 0480 3    //300= Media 
+text 185 65 0480 4   //1440= Media R(2x) 
+text 45 85 0480 5    //2880= Grave
+text 185 85 0480 6   //10080= 7 Dias
+text 81 105 0480 7   //No maximo 7 dias de jail.
+text 30 205 0480 8   //Minutos: 
+text 39 230 0480 9   //Motivo:
+text 100 260 0480 12 //Jailar  
+text 250 260 0480 13 //Jail System by aRTha
+text 45 180 0480 15  //Pena:
+text 165 140 0480 17 //Ficha criminal:
+text 15 140 0480 18  //Soltar Bandido:
+textentry 105 205 253 25 0480 0 10 //Minutos   
+textentry 105 230 253 25 0480 1 11 //Motivo
+textentry 105 180 253 25 0480 2 16
+button 58 260 4005 4006 1 0 1 // Botao Ficha Criminal:
+button 200 260 4005 4006 1 0 2 //Botao Soltar Bandido:
+button 130 140 210 211 1 0 3 //Botao Cancelar
+button 270 140 210 211 1 0 4 //Botao Jailar
+//radio 270 140 210 211 0 5185 
+ 
+[DIALOG d_jailer TEXT] 
+O tempo e em minutos.
+60=  Leve
+120= Leve R(2x)
+300= Media 
+1440= Media R(2x) 
+2880= Grave
+10080= Gravissima 
+No maximo 1 Gravissima. 
+Minutos:
+Motivo: 
+<EVAL (<EVAL <SRC.TAG.JTIME>>/60)> 
+<SRC.TAG.JREASON> 
+Cancelar 
+Prender
+Jail Sistem - The Fifteen Gems Shard
+Pena:
+1//<EVAL <SRC.TAG.BAILCOST>>
+Ficha criminal:
+Soltar Bandido:
+Em cima padroes de pena. 
+
+[DIALOG d_jailer BUTTON] 
+ON=1 
+SRC.SYSMESSAGE @0790 Jail cancelada!
+RETURN 1 
+ 
+ON=2
+IF (<EVAL (<ARGTXT[0]>*60)>>604800)
+SRC.SYSMESSAGE @0790 Voce nao pode jailar mais que 1 Gravissima.
+RETURN 1
+ENDIF
+IF (<ARGCHK[5185]>==1)
+SRC.TAG.BAIL=1
+SRC.TAG.JTIME=<EVAL (<ARGTXT[0]>*60)>
+SRC.TAG.JREASON=<ARGTXT[1]>
+//SRC.TAG.JMARK=<ARGTXT[2]>
+SRC.NEWITEM i_target_pad_jailer 
+SRC.ACT.TARGET 
+RETURN 1
+ELSE
+SRC.TAG.BAIL=0
+SRC.TAG.JTIME=<EVAL (<ARGTXT[0]>*60)>
+SRC.TAG.JREASON=<ARGTXT[1]>
+SRC.TAG.JMARK=<EVAL <ARGTXT[2]>>
+SRC.NEWITEM i_target_pad_jailer 
+SRC.ACT.TARGET 
+RETURN 1
+ENDIF
+ 
+ON=3
+SRC.NEWITEM=i_forgiver
+SRC.ACT.TARGET @0790 Quem voce deseja soltar?
+RETURN 1
+
+ON=4
+SRC.SYSMESSAGE @0790 Selecione o Bandido!
+SRC.NEWITEM i_lista_negra
+SRC.ACT.TARGET 
+RETURN 1
+
+[EVENTS e_arthazjail] 
+ON=@CLICK 
+MESSAGE @079a [Tempo de Jail]
+IF <ISONLINE>
+ MESSAGE @0481 <eval <FINDID.m_jail_clocker.TIMER>/60> Minutos
+ELSE
+ MESSAGE @0481 <eval <TAG0.LOGJAILTIME>/60> Minutos
+ENDIF
+
+ON=@DCLICK
+	SRC.SYSMESSAGE @32,,1 Motivo: <TAG.JREASON>
+	SRC.SYSMESSAGE @32,,1 Jailado por: <TAG.JAILERNAME>
+	SRC.SYSMESSAGE @077a,,1 <EVAL <TAG.jailpoints>>/20 Pontos.
+ 
+
+ON=@LOGOUT
+if <findid.m_jail_clocker.timer> > 0
+ TAG.LOGJAILTIME=<FINDID.m_jail_clocker.TIMER>
+ findid.m_jail_clocker.timer -1
+ TAG.LJOUT = 1
+endif
+
+ 
+ON=@LOGIN
+if <findid.m_jail_clocker>
+ FINDID.m_jail_clocker.TIMER=<TAG.LOGJAILTIME>
+ tag0.logjailtime
+ TAG.LJOUT
+endif
+SRC.SYSMESSAGE @,,1 Voce esta na jail por: <tag.jreason>
+
+[ITEMDEF i_target_pad_jailer] 
+TYPE=T_EQ_SCRIPT 
+
+ON=@TARGON_CHAR
+SRC.TARG.TAG.BAIL=<SRC.TAG.BAIL>
+//SRC.TARG.TAG.JMARK=<EVAL <SRC.TARG.TAG0.JMARK>+1)>
+SRC.TARG.TAG.JAILERNAME=<SRC.NAME>
+SRC.TARG.TAG.OJP=<SRC.TARG.P> 
+SRC.TARG.JAIL 
+SRC.SYSMESSAGE=<SRC.TARG.NAME> Voce esta Preso! 
+SRC.TARG.TAG.JTIME=<SRC.TAG.JTIME> 
+SRC.TARG.EVENTS e_arthazjail 
+SRC.TARG.TAG.JREASON=<SRC.TAG.JREASON>
+SERV.WRITEFILE Historico_Jail.txt Jail de <src.targ.name> por <src.name>. Razao: <src.tag.jreason>. Tempo <timeformat 0,<src.tag.jtime>>.
+SRC.TARG.JAILMENOWBOY 
+remove 
+RETURN 1
+ 
+[ITEMDEF i_forgiver] 
+TYPE=T_EQ_SCRIPT 
+
+ON=@TARGON_CHAR
+SRC.TARG.FINDID.m_jail_clocker.TIMER=1
+remove 
+RETURN 1 
+ 
+[FUNCTION jailmenowboy] 
+serv.NEWITEM m_jail_clocker 
+new.TIMER=<dTAG0.JTIME> 
+new.CONT=<UID> 
+ 
+[ITEMDEF m_jail_clocker] 
+NAME=Jail Clocker 
+ID=i_memory 
+TYPE=t_eq_script 
+
+ON=@Create 
+ATTR=attr_decay 
+
+ON=@Timer 
+IF (<CONT.TAG0.LJOUT>=1) 
+	TIMER=-1 
+	RETURN 1 
+ELSE 
+	CONT.FORGIVE 
+	CONT.EVENTS -e_arthazjail
+	CONT.TAG.BAIL=0
+	if (<cont.tag0.gotocp>)
+		cont.f_cp_player_fromjail <cont.uid>,<cont.dtag0.gotocp>
+		serv.newitem i_pickaxe
+		cont.bounce <new>
+		serv.newitem i_axe
+		cont.bounce <new>
+	else
+		CONT.MESSAGE @0790 TFG Shard avisa:
+		CONT.MESSAGE @0790 VOCE ESTA LIVRE!
+		CONT.MESSAGE @0790 Respeite as regras. 
+		CONT.P=5296,1173//<CONT.TAG.OJP> 
+		CONT.UPDATE 
+	endif
+ENDIF  
+
+[ITEMDEF i_lista_negra] 
+TYPE=T_EQ_SCRIPT 
+ON=@TARGON_CHAR
+SRC.SYSMESSAGE=@0790 Lista de Jail - Preso <SRC.TARG.TAG.JMARK> vez(s) 
+SRC.SYSMESSAGE=@0790 1 Pena = <SRC.TARG.TAG.JREASON1>
+SRC.SYSMESSAGE=@0790 2 Pena = <SRC.TARG.TAG.JREASON2>
+SRC.SYSMESSAGE=@0790 3 Pena = <SRC.TARG.TAG.JREASON3>
+SRC.SYSMESSAGE=@0790 4 Pena = <SRC.TARG.TAG.JREASON4>
+SRC.SYSMESSAGE=@0790 5 Pena = <SRC.TARG.TAG.JREASON5>
+remove 
+RETURN 1
+
+[EOF]

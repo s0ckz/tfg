@@ -1,0 +1,10 @@
+[ITEMDEF i_entrance_dungeon]
+ID = i_floor_marble
+DEFNAME = i_entrance_dungeon
+TYPE = t_entrance_dungeon
+NAME = Entrada de Dungeon
+
+ON=@CREATE
+ATTR=090
+
+[TYPEDEF t_entrance_dungeon]

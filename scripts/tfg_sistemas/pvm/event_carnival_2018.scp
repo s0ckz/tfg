@@ -1,0 +1,369 @@
+[SPEECH spk_carnival_bum]
+
+ON=*carnival*
+ON=*carnaval*
+    DORAND 2
+        MESSAGE Hey mah friend !!! I want to party hard at Carnival but I don't have nice clothes! What will I do? :-( I'll reward you !
+        MESSAGE Whats up, you bum ? I wanna party at Carnival but I'm not dressed correctly. Can you help me? I'll reward you.
+    ENDDO
+
+ON=*
+	MESSAGE I don't get you, idiot.
+
+[CHARDEF c_carnival_bum]
+NAME=#NAMES_HUMANMALE
+ID=C_MAN
+
+TSPEECH=spk_carnival_bum
+
+ON=@Create
+	NAME=#NAMES_HUMANMALE
+    FLAGS=statf_invisible|statf_invul|statf_freeze
+    COLOR=colors_skin
+    STR={61 75}
+    DEX={71 85}
+    INT={86 100}
+
+    NPC=brain_human
+    ITEMNEWBIE=random_male_hair
+    COLOR=colors_hair
+    ITEMNEWBIE=random_facial_hair
+    COLOR=match_hair
+
+ON=@ReceiveItem
+	IF (<TAG0.MONSTER_SPAWNED>)
+		RETURN 1
+	ENDIF
+
+    IF (<ARGO.TYPE> != t_clothing) || (<ARGO.ATTR> & attr_newbie) || (<ARGO.COLOR> == 0)
+        DORAND 2
+            MESSAGE I don't want that!
+            MESSAGE Common! This item is useless...
+        ENDDO
+
+        RETURN 1
+    ENDIF
+
+    TAG0.CLOTHES_COUNT += 1
+
+    IF (<TAG0.CLOTHES_COUNT> >= 5)
+    	MESSAGE Now we're talking about...
+
+    	LOCAL.P <f_get_world_random_location>
+    	SERV.NEWNPC c_carnival_horde_daemon
+    	NEW.P <LOCAL.P>
+    	NEW.HOME  <LOCAL.P>
+    	NEW.HOMEDIST 10
+    	NEW.HITS 30000
+    	NEW.MAXHITS 30000
+
+    	LOCAL.MINX <NEW.P.X> - <R350,460>
+    	LOCAL.MINY <NEW.P.Y> - <R350,460>
+
+    	LOCAL.MAXX <NEW.P.X> + <R350,460>
+    	LOCAL.MAXY <NEW.P.Y> + <R350,460>
+
+    	MESSAGE I summoned a Carnival Horde Daemon...
+    	MESSAGE It's located somewhere between (<DLOCAL.MINX>, <DLOCAL.MINY>) and  (<DLOCAL.MAXX>, <DLOCAL.MAXY>). Good luck and adios, mah friend!
+
+    	TAG.MONSTER_SPAWNED 1
+    	TIMERF 10, REMOVE
+
+    	SERV.LOG A new Carnival Horde Daemon was summoned in <NEW.P>
+    ELSE
+	    MESSAGE That's more like it... But I need more !
+    ENDIF
+
+
+    RETURN 1
+
+[CHARDEF c_carnival_horde_daemon]
+id=c_multicolored_horde_minion
+Name=Carnival Horde Daemon
+DAM=46,83
+ARMOR=40
+CAN=MT_WALK|MT_RUN|MT_FLY
+AVERSIONS=r_civilization
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	NPC=brain_dragon
+	STR=1200
+	DEX={800 900}
+	INT=300
+	PARRYING={95.0 105.0}
+	MAGERY=6.0
+	MAGICRESISTANCE={60.0 75.0}
+	TACTICS={90.0 100.0}
+	WRESTLING={99.0 100.0}
+	FAME={1000 6000}
+	KARMA=-10000
+	//SPELLCIRCLE=3 5
+	ITEMNEWBIE=i_light_source
+	ITEMNEWBIE=i_spellbook
+	ADDSPELL=s_magic_arrow
+	ADDSPELL=s_fireball
+	ADDSPELL=s_fire_field
+	ADDSPELL=s_explosion
+	ADDSPELL=s_flamestrike
+	ADDSPELL=s_meteor_swarm
+	ADDSPELL=s_fire_bolt
+
+ON=@GetHit
+	IF !(<SRC.FINDID.i_memory_carnival_damage.UID>)
+		SERV.NEWITEM i_memory_carnival_damage
+		NEW.CONT <SRC.UID>
+	ENDIF
+
+	SRC.FINDID.i_memory_carnival_damage.TAG0.DAMAGE += <ARGN1>
+
+ON=@Death
+	LOCAL.P <f_get_world_random_location>
+	SERV.NEWNPC c_carnival_bum
+	NEW.TITLE the Carnival Bum
+	NEW.P <LOCAL.P>
+
+	SERV.LOG A new Carnival Bum was summoned in <NEW.P>
+
+	f_carnival_loot 1
+	f_carnival_loot 2
+	f_carnival_loot 3
+	f_carnival_loot 4
+
+	FORINSTANCES i_memory_carnival_damage
+		REMOVE
+	ENDFOR
+
+ON=@DeathCorpse
+	FOR 6
+		SERV.NEWITEM i_fire_column
+		NEW.COLOR 0250
+		NEW.P <P>
+		NEW.MOVE <R12>,<R12>
+		NEW.ATTR attr_move_never|attr_decay
+		NEW.TIMER 10
+	ENDFOR
+
+ON=@NPCRestock
+	EVENTS +e_mage_spell_attack
+	EVENTS +e_poison_immune
+
+[ITEMDEF i_carnival_cape]
+ID=i_cape
+TYPE=t_clothing
+NAME=Carnival Cape
+
+ON=@Create
+	COLOR 0ab4
+	ATTR attr_newbie
+
+ON=@Destroy
+	HITS=5000
+	RETURN 1
+
+ON=@Dye
+	ARGN1 0ab4
+
+[ITEMDEF i_carnival_half_apron]
+ID=i_apron_half
+TYPE=t_clothing
+NAME=Carnival Half Apron
+
+ON=@Create
+	COLOR 0831
+	ATTR attr_newbie
+
+ON=@Destroy
+	HITS=5000
+	RETURN 1
+
+ON=@Dye
+	ARGN1 0831
+
+[ITEMDEF i_carnival_pants]
+ID=i_pants_short
+TYPE=t_clothing
+NAME=Carnival Pants
+
+ON=@Create
+	COLOR 0793
+	ATTR attr_newbie
+
+ON=@Destroy
+	HITS=5000
+	RETURN 1
+
+ON=@Dye
+	ARGN1 0793
+
+[ITEMDEF i_carnival_shirt]
+ID=i_shirt_plain
+TYPE=t_clothing
+NAME=Carnival Shirt
+
+ON=@Create
+	COLOR 079a
+	ATTR attr_newbie
+
+ON=@Destroy
+	HITS=5000
+	RETURN 1
+
+ON=@Dye
+	ARGN1 079a
+
+[ITEMDEF i_carnival_sandals]
+ID=i_sandals
+TYPE=t_clothing
+NAME=Carnival Sandals
+
+ON=@Create
+	COLOR 078a
+	ATTR attr_newbie
+
+ON=@Destroy
+	HITS=5000
+	RETURN 1
+
+ON=@Dye
+	ARGN1 078a
+
+[ITEMDEF i_carnival_bandana]
+ID=i_bandana
+TYPE=t_clothing
+NAME=Carnival Bandana
+
+ON=@Create
+	COLOR 079a
+	ATTR attr_newbie
+
+ON=@Destroy
+	HITS=5000
+	RETURN 1
+
+ON=@Dye
+	ARGN1 079a
+
+[FUNCTION f_carnival_loot]
+IF (<ARGV> != 1)
+	RETURN 1
+ENDIF
+
+REF1 <UID>
+LOCAL.POSITION <ARGV[0]>
+LOCAL.MAXIMUM_DAMAGE_UID 0
+LOCAL.MAXIMUM_DAMAGE 0
+
+FORINSTANCES i_memory_carnival_damage
+	IF (<TAG0.DAMAGE> > <LOCAL.MAXIMUM_DAMAGE>) && (<UID> != <TOPOBJ.UID>)
+		IF !(<TOBOBJ.FLAGS> & statf_dead) && (<REF1.DISTANCE <TOPOBJ.UID>> < 100)
+			LOCAL.MAXIMUM_DAMAGE_UID <UID>
+			LOCAL.MAXIMUM_DAMAGE <TAG0.DAMAGE>
+		ENDIF
+	ENDIF
+ENDFOR
+
+IF (<LOCAL.MAXIMUM_DAMAGE> > 0)
+	REF1 <UID.<LOCAL.MAXIMUM_DAMAGE_UID>.TOPOBJ>
+	UID.<LOCAL.MAXIMUM_DAMAGE_UID>.REMOVE
+
+	SERV.LOG Carnival Horde Daemon killed. Awarding: <REF1.NAME> / position: <DLOCAL.POSITION>
+
+	IF (<LOCAL.POSITION> == 1)
+		SERV.NEWITEM i_magic_gem
+		NEW.CONT <REF1.UID>
+
+		SERV.NEWITEM i_gold
+		NEW.AMOUNT 60000
+		NEW.CONT <REF1.UID>
+
+		SERV.NEWITEM i_gold
+		NEW.AMOUNT 60000
+		NEW.CONT <REF1.UID>
+
+		SERV.NEWITEM <ICON>
+		NEW.TAG.STATUETTE 1
+		NEW.COLOR <EVAL {079a 1 0793 1}>
+		NEW.NAME Carnival Horde Daemon 1st Prize Statuette
+		NEW.CONT <REF1.UID>
+
+		SERV.NEWITEM <EVAL {i_carnival_cape 1 i_carnival_half_apron 1 i_carnival_pants 1 i_carnival_shirt 1 i_carnival_sandals 1 i_carnival_bandana 1 }>
+		NEW.CONT <REF1.UID>
+	ELSEIF (<R3>)
+		SERV.NEWITEM <EVAL {i_carnival_cape 1 i_carnival_half_apron 1 i_carnival_pants 1 i_carnival_shirt 1 i_carnival_sandals 1 i_carnival_bandana 1 }>
+		NEW.CONT <REF1.UID>
+	ENDIF
+
+	SERV.NEWITEM i_magic_gem
+	NEW.CONT <REF1.UID>
+
+	SERV.NEWITEM i_gold
+	NEW.AMOUNT 60000
+	NEW.CONT <REF1.UID>
+
+	SERV.NEWITEM i_gold
+	NEW.AMOUNT 60000
+	NEW.CONT <REF1.UID>
+
+
+ENDIF
+
+[ITEMDEF i_memory_carnival_damage]
+ID=i_memory
+TYPE=t_eq_script
+
+ON=@CREATE
+	ATTR attr_move_never|attr_newbie|attr_invis
+
+ON=@Timer
+	SERV.LOG nao vai ser chamado
+
+[FUNCTION f_show_carnival_bum]
+FORINSTANCES c_carnival_bum
+	IF (<FLAGS> & statf_invisible)
+		TAG0.HOURS += 1
+
+		IF (<TAG.HOURS> >= 10)
+			FLAGS &= ~statf_invisible
+		ENDIF
+	ENDIF
+ENDFOR
+
+[FUNCTION f_announce_carnival_npcs]
+FORINSTANCES c_carnival_bum
+	IF !(<FLAGS> & statf_invisible)
+		LOCAL.MINX <EVAL ((<P.X> / 1000) - 1) * 1000>
+		LOCAL.MINY <EVAL ((<P.Y> / 1000) - 1) * 1000>
+		LOCAL.MAXX <EVAL ((<P.X> / 1000) + 1) * 1000>
+		LOCAL.MAXY <EVAL ((<P.Y> / 1000) + 1) * 1000>
+
+		IF (<LOCAL.MINX> < 0)
+			LOCAL.MINX 0
+		ENDIF
+
+		IF (<LOCAL.MINY> < 0)
+			LOCAL.MINY 0
+		ENDIF
+
+		IF (<LOCAL.MAXX> > 6144)
+			LOCAL.MAXX 6144
+		ENDIF
+
+		IF (<LOCAL.MAXY> > 6144)
+			LOCAL.MAXY 6144
+		ENDIF
+
+		SERV.B @55 Existe um NPC de Carnaval em algum lugar entre as seguintes coordenadas: (<DLOCAL.MINX>, <DLOCAL.MINY>) e (<DLOCAL.MAXX>, <DLOCAL.MAXY>) ! Por que nao tenta acha-lo?
+		RETURN
+	ELSE
+		SERV.B @55 Um NPC de carnaval irah nascer nas proximas horas. Aguarde!
+		RETURN
+	ENDIF
+ENDFOR
+
+FORINSTANCES c_carnival_horde_daemon
+	SERV.B @55 Existe um monstro de Carnaval em algum lugar do mundo ! Existem jogadores que sabem sua localizacao. Boa sorte.
+	RETURN
+ENDFOR
+
+[EOF]

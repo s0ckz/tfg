@@ -1,0 +1,50 @@
+[FUNCTION msg]
+IF (<SRC.UID> == <UID>)
+	IF (<SRC.ACCOUNT.PLEVEL> >= 4)
+		SRC.SYSMESSAGE @07a1 Selecione o destinatario...
+		TARGETF f_mensagem <ARGS>
+	ENDIF
+ENDIF
+RETURN 1
+
+[FUNCTION f_mensagem]
+	REF69 = <ARGO.UID>
+	IF (<ARGO.UID>)
+		IF (<REF69.ISPLAYER>)
+			TRYSRC <REF69.UID> DIALOG d_mensagem 0 "<ARGS>"
+		ENDIF
+	ENDIF
+	RETURN 1
+
+[DIALOG d_mensagem]
+50,50
+PAGE 1
+button 0 0 2642 2643 0 2 0
+
+PAGE 2
+NOCLOSE
+resizepic 0 0 2620 350 300
+CHECKERTRANS 0 0 505 301
+dtext 20 15 1152 <serv.name> Staff Message
+dtext 10 40 1152 Remetente: The Fifteen Gems Staff
+dtext 10 80 1152 Para: <src.name>
+dhtmlgump 50 110 250 120 025 1 <ARGS>
+button 50 255 4005 4006 1 0 1
+dtext 100 255 1152 OK
+
+[DIALOG d_mensagem BUTTON]
+ON=1
+TRY uid.<UID>.sysmessage @07a1 <src.name> leu sua mensagem!
+tag.msg=
+tag.sender=
+tag.pending=
+RETURN 0
+
+[FUNCTION f_msgservice]
+IF (<tag0.pending>)
+DIALOG d_message_display
+ENDIF
+
+
+
+[EOF]

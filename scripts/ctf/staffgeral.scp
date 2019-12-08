@@ -1,0 +1,499 @@
+[DEFNAME PLEVELNAME]
+PLEVELNAME_2 "Counseulor"
+PLEVELNAME_3 "Seer"
+PLEVELNAME_4 "GM"
+PLEVELNAME_5 "S-GM"
+PLEVELNAME_6 "Admin"
+PLEVELNAME_7 "Owner"
+
+[FUNCTION staffgeral]
+DIALOG d_staff_geral
+
+[EVENTS e_sorria]
+ON=@CLICK
+message "@077a,,1 (Sorria, você esta sendo filmado!)"
+
+ON=@RegionEnter
+REGION.ALLCLIENTS SYSMESSAGE @077a Twister entrou em sua regiao. Sorria, voce esta sendo filmado.
+
+[FUNCTION sitecs]
+WEBLINK www.tfg.com.br/forum/viewtopic.php?f=8&p=12245
+
+[DIALOG d_staff_geral]
+0,0
+nomove
+noclose
+nodispose
+
+page 0
+resizepic 8 10 9200 105 32
+button 13 18 5602 5606 1 0 1
+dtext 48 16 49 Staff
+
+[DIALOG d_staff_geral text]
+Staff
+
+[DIALOG d_staff_geral button]
+ON=1
+DIALOG d_staff_menu,0
+RETURN 1
+
+[DIALOG d_staff_menu]
+0,0
+nomove
+nodispose
+
+page 0
+resizepic 8 10 9200 105 193
+button 13 18 5600 5604 1 0 1
+dtext 49 16 50 Staff
+resizepic 13 42 9350 96 33
+dtext 46 50 50 Lista
+resizepic 13 75 9350 96 33
+dtext 46 82 50 Lugares
+resizepic 13 108 9350 96 33
+dtext 46 115 50 Eventos
+resizepic 13 141 9350 96 33
+dtext 47 147 50 Msgs
+dtext 28 178 48 TFG Shard
+button 20 51 5601 5605 1 0 2
+IF (<CTAG0.MENUGM> > 1) || (<ISEMPTY <CTAG.MENUGM>>)
+button 20 84 5601 5606 1 0 3
+ENDIF
+IF (<CTAG0.MENUGM> > 2) || (<ISEMPTY <CTAG.MENUGM>>)
+button 20 117 5601 5606 1 0 4
+ENDIF
+IF (<CTAG0.MENUGM> > 10) || (<ISEMPTY <CTAG.MENUGM>>)
+button 20 150 5601 5606 1 0 5
+ENDIF
+
+IF !(<ISEMPTY <CTAG.MENUGM>>)
+page 2
+IF (<CTAG0.MENUGM>==1)
+LOCAL.STAFFON=<stafferson>
+resizepic 13 42 9350 235 <eval 55 + <eval <local.staffon> * 29>>
+F_RENDERSTAFFMENU_LIST <LOCAL.STAFFON>
+button 20 51 5602 5606 1 0 2
+dtext 46 50 50 Lista
+ENDIF
+
+page 3
+IF (<CTAG0.MENUGM>==2)
+resizepic 13 75 9350 155 236
+button 18 83 5602 5606 1 0 3
+dtext 47 81 50 Lugares
+resizepic 18 107 9350 146 33
+button 25 116 5601 5606 1 0 4
+dtext 51 115 50 Locais de GM
+resizepic 18 140 9350 146 33
+button 25 149 5601 5606 1 0 4
+dtext 51 147 50 Eventos
+resizepic 18 173 9350 146 33
+button 25 182 5601 5606 1 0 4
+dtext 51 180 50 Respawns
+resizepic 18 206 9350 146 33
+button 25 215 5601 5606 1 0 4
+dtext 52 212 50 Cidades
+resizepic 18 239 9350 146 33
+button 25 248 5601 5606 1 0 4
+dtext 52 245 50 Sedes
+resizepic 18 272 9350 146 33
+button 25 281 5601 5606 1 0 4
+dtext 52 278 50 Outros
+ENDIF
+
+page 4
+//IF (<CTAG0.MENUGM>==3)
+resizepic 13 108 9350 155 236
+button 18 116 5602 5606 1 0 4
+dtext 47 114 50 Eventos
+resizepic 18 140 9350 146 33
+button 25 149 5601 5605 1 0 101
+IF !(STRCMPI("<VAR.EVENTO>","BINGO"))
+dtext 51 148 50 Parar Bingo
+Else
+dtext 51 148 50 Bingo
+ENDIF
+resizepic 18 173 9350 146 33
+button 25 182 5601 5605 1 0 102
+dtext 51 180 50 Aventura
+resizepic 18 206 9350 146 33
+button 25 215 5601 5605 1 0 103
+dtext 51 213 50 CTF
+resizepic 18 239 9350 146 33
+button 25 248 5601 5605 1 0 104
+dtext 52 245 50 Survivor
+resizepic 18 272 9350 146 33
+button 25 281 5601 5605 1 0 105
+dtext 52 278 50 Camp
+resizepic 18 305 9350 146 33
+button 25 314 5601 5605 1 0 106
+dtext 52 311 50 One Hit
+//ENDIF
+
+page 5
+IF (<CTAG0.MENUGM>==4)
+resizepic 13 108 9350 155 236
+button 18 116 5602 5606 1 0 4
+dtext 47 114 50 Eventos
+resizepic 18 140 9350 146 33
+button 25 149 5601 5605 1 0 101
+IF !(STRCMPI("<VAR.EVENTO>","BINGO"))
+dtext 51 148 50 Parar Bingo
+Else
+dtext 51 148 50 Bingo
+ENDIF
+resizepic 18 173 9350 146 33
+button 25 182 5601 5605 1 0 102
+dtext 51 180 50 Aventura
+resizepic 18 206 9350 146 33
+button 25 215 5601 5605 1 0 103
+dtext 51 213 50 CTF
+resizepic 18 239 9350 146 33
+button 25 248 5601 5605 1 0 104
+dtext 52 245 50 Survivor
+resizepic 18 272 9350 146 33
+button 25 281 5601 5605 1 0 105
+dtext 52 278 50 Camp
+resizepic 18 305 9350 146 33
+button 25 314 5601 5605 1 0 106
+dtext 52 311 50 One Hit
+resizepic 167 108 9350 364 236
+IF !(STRCMPI("<VAR.EVENTO>","BINGO"))
+dhtmlgump 174 115 351 194 1 0 <DEF.CENTER><DEF.BFONT_DRED>Voce deseja parar o bingo?
+ELSE
+dhtmlgump 174 115 351 194 1 0 <DEF.CENTER><DEF.BFONT_DRED>Voce deseja iniciar o bingo?
+ENDIF
+button 177 317 5601 5605 1 0 151
+dtext 197 316 50 Sim
+button 228 317 5601 5605 1 0 152
+dtext 248 316 50 Nao
+ENDIF
+
+page 6
+IF (<CTAG0.MENUGM>==5)
+resizepic 13 108 9350 155 236
+button 18 116 5602 5606 1 0 4
+dtext 47 114 50 Eventos
+resizepic 18 140 9350 146 33
+button 25 149 5601 5605 1 0 101
+dtext 51 148 50 Bingo
+resizepic 18 173 9350 146 33
+button 25 182 5601 5605 1 0 102
+dtext 51 180 50 Aventura
+resizepic 18 206 9350 146 33
+button 25 215 5601 5605 1 0 103
+dtext 51 213 50 CTF
+resizepic 18 239 9350 146 33
+button 25 248 5601 5605 1 0 104
+dtext 52 245 50 Survivor
+resizepic 18 272 9350 146 33
+button 25 281 5601 5605 1 0 105
+dtext 52 278 50 Camp
+resizepic 18 305 9350 146 33
+button 25 314 5601 5605 1 0 106
+dtext 52 311 50 One Hit
+resizepic 272 135 9350 182 230
+resizepic 292 312 9350 146 48
+resizepic 292 217 9350 146 92
+resizepic 169 135 9350 104 229
+resizepic 279 140 9350 170 75
+button 188 340 5601 5605 1 0 153
+dtext 332 336 50 Personalizar
+button 312 337 5601 5605 1 0 154
+dtext 297 219 50 Se perder a bandeira:
+dtext 178 147 50 Vagas
+dtext 340 144 50 Equipas
+checkbox 286 167 210 211 1 0
+dtext 310 168 152 Amarela
+checkbox 377 167 210 211 1 1
+dtext 401 168 177 Verde
+checkbox 286 188 210 211 1 2
+dtext 310 189 32 Vermelha
+checkbox 377 188 210 211 1 3
+dtext 401 189 90 Azul
+resizepic 169 108 9350 284 27
+dtext 280 113 50 Novo CTF
+resizepic 173 249 9350 94 56
+resizepic 174 217 9350 92 26
+resizepic 177 275 9350 60 26
+resizepic 174 169 9350 92 26
+dtext 178 197 50 Pontos Max
+dtext 201 254 50 Tempo
+dtext 240 281 50 min
+checkbox 300 241 210 211 1 4
+dtext 324 242 50 Perde Ponto
+checkbox 300 262 210 211 0 5
+dtext 324 263 50 Hallu
+checkbox 300 283 210 211 0 6
+dtext 324 284 50 Kill
+dtext 311 316 50 Premio:
+IF <ISEMPTY <SRC.CTAG.PREMIOCTF>>
+dtext 369 316 478 Padrao
+ELSE
+dtext 369 316 50 Proprio
+ENDIF
+dtext 201 312 50 Montarias
+dtext 207 338 138 Iniciar
+checkbox 178 311 210 211 1 7
+checkbox 178 253 210 211 1 8
+dtextentry 179 172 70 19 478 1 20
+dtextentry 179 220 70 19 478 2 20
+dtextentry 181 278 30 19 478 3 20
+ENDIF
+
+ENDIF
+
+[DIALOG d_staff_menu text]
+Staff
+Lista
+Lugares
+Eventos
+Msgs
+F2P Shard
+
+[DIALOG d_staff_menu button]
+ON=0
+return 1
+DIALOG d_staff_geral
+CTAG.MENUGM=
+RETURN 1
+
+ON=1
+return 1
+DIALOG d_staff_geral
+CTAG.MENUGM=
+RETURN 1
+
+ON=2
+return 1
+IF (<CTAG0.MENUGM>==1)
+CTAG.MENUGM=
+DIALOG d_staff_menu,0
+RETURN 1
+ELSE
+CTAG.MENUGM=1
+DIALOG d_staff_menu,2
+RETURN 1
+ENDIF
+
+on=3 // Lugares
+IF (<CTAG0.MENUGM>==2)
+CTAG.MENUGM=
+DIALOG d_staff_menu,0
+RETURN 1
+ELSE
+CTAG.MENUGM=2
+DIALOG d_staff_menu,3
+RETURN 1
+ENDIF
+
+on=4 // eventos?
+IF (<CTAG0.MENUGM>==3)
+CTAG.MENUGM=
+DIALOG d_staff_menu,0
+RETURN 1
+ELSE
+CTAG.MENUGM=3
+DIALOG d_staff_menu,4
+RETURN 1
+ENDIF
+
+ON=101
+return 1
+IF (<CTAG0.MENUGM>==4)
+CTAG.MENUGM=3
+DIALOG d_staff_menu,4
+RETURN 1
+ELSE
+CTAG.MENUGM=4
+DIALOG d_staff_menu,5
+RETURN 1
+ENDIF
+
+ON=103
+//if (<src.account.plevel> < 3)
+//	src.sysmessage @,,1 Este evento e reservado para Seers e pleveis superiores.
+//	return 1
+//endif
+IF (<CTAG0.MENUGM>==5)
+CTAG.MENUGM=3
+DIALOG d_staff_menu,4
+RETURN 1
+ELSE
+SRC.CTAG.PREMIOCTF=
+CTAG.MENUGM=5
+DIALOG d_staff_menu,6
+RETURN 1
+ENDIF
+
+on=102 106
+return 1
+CTAG.MENUGM=
+DIALOG d_staff_menu,0
+RETURN 1
+
+on=152
+return 1
+CTAG.MENUGM=3
+DIALOG d_staff_menu,4
+RETURN 1
+
+ON=151
+return 1
+IF !(STRCMPI("<VAR.EVENTO>","BINGO"))
+STOPBINGO
+CTAG.MENUGM=3
+DIALOG d_staff_menu,4
+RETURN 1
+ELSE
+//STARTBINGOX
+SRC.SYSMESSAGE Em reformulacao anti macro
+CTAG.MENUGM=3
+DIALOG d_staff_menu,4
+RETURN 1
+ENDIF
+
+on=153
+IF <ISEMPTY <SRC.CTAG.PREMIOCTF>>
+NOVOCTF <ARGTXT[1]>,<ARGCHK[0]>,<ARGCHK[2]>,<ARGCHK[3]>,<ARGCHK[1]>,<VAR.premio_ctf>,<ARGTXT[2]>,<ARGCHK[7]>,<QVAL <ARGCHK[8]>?<eval <ARGTXT[3]>*60>: -1>,<ARGCHK[4]>
+ELSE
+NOVOCTF <ARGTXT[1]>,<ARGCHK[0]>,<ARGCHK[2]>,<ARGCHK[3]>,<ARGCHK[1]>,<SRC.CTAG.PREMIOCTF>,<ARGTXT[2]>,<ARGCHK[7]>,<QVAL <ARGCHK[8]>?<eval <ARGTXT[3]>*60>: -1>,<ARGCHK[4]>
+REF1=<SRC.CTAG.PREMIOCTF>
+REF1.NAME = Premio CTF <serv.rtime %d/%M/%y>
+REF1.CONT 04008d38b
+REF1.UPDATEX
+SRC.CTAG.PREMIOCTF=
+ENDIF
+CTAG.MENUGM=3
+DIALOG d_staff_menu,4
+RETURN 1
+
+on=154
+if <src.account.plevel> < 5
+	src.sysmessage @,,1 Somente Senior GMs podem editar o premio dos eventos automaticos.
+	return 1
+endif
+SERV.NEWITEM i_bag
+NEW.COLOR 0790
+NEW.NAME @0790,0 Premio do CTF
+NEW.BOUNCE
+NEW.OPEN
+SRC.CTAG.PREMIOCTF <NEW.UID>
+SRC.SYSMESSAGE @,,1 Coloque o premio na bag que foi criada em sua backpack.
+CTAG.MENUGM=5
+DIALOG d_staff_menu,6
+RETURN 1
+
+ON=4 5
+return 1
+SRC.SYSMESSAGE @,,1 Em construcao bebe.
+CTAG.MENUGM=
+DIALOG d_staff_menu,0
+RETURN 1
+
+on=20 50
+return 1
+local.x=<eval <ARGN> - 19>
+GOUID <arrayshow 1,<CTAG.STAFF_LIST<dlocal.x>>>
+DIALOG d_staff_menu,2
+RETURN 1
+
+[FUNCTION stafferson]
+ref2=<uid>
+        for h <serv.accounts>
+                local.i=0
+                if (<serv.account.<eval <local.h> +-1>.chars>) && (<serv.account.<eval <local.h> +-1>.plevel> > 1)
+                        for i <serv.account.<eval <local.h> +-1>.chars>
+                                ref1 <serv.account.<eval <local.h> +-1>.char.<eval <local.i> +-1>.uid>
+                                IF !(<ref1.tag0.nostaff>) || (<ref2.account.plevel> > <ref1.account.plevel>)
+                                IF (<ref1.account.plevel> == 2)
+					local.ct ++
+					local.ct2 ++
+                                        local.staff2_list<dlocal.ct2>=<ref1.name>,<ref1.uid>
+                                ELIF (<ref1.account.plevel> == 3)
+					local.ct ++
+					local.ct3 ++
+                                        local.staff3_list<dlocal.ct3>=<ref1.name>,<ref1.uid>
+                                ELIF (<ref1.account.plevel> == 4)
+					local.ct ++
+					local.ct4 ++
+                                        local.staff4_list<dlocal.ct4>=<ref1.name>,<ref1.uid>
+                                ELIF (<ref1.account.plevel> == 5)
+					local.ct ++
+					local.ct5 ++
+                                        local.staff5_list<dlocal.ct5>=<ref1.name>,<ref1.uid>
+                                ELIF (<ref1.account.plevel> == 6)
+					local.ct ++
+					local.ct6 ++
+                                        local.staff6_list<dlocal.ct6>=<ref1.name>,<ref1.uid>
+                                ELIF (<ref1.account.plevel> == 7)
+					local.ct ++
+					local.ct7 ++
+                                        local.staff7_list<dlocal.ct7>=<ref1.name>,<ref1.uid>
+                                ELIF (<ref1.account.plevel> == 8) && (<ref2.account.plevel> == 8)
+					local.ct ++
+					local.ct8 ++
+                                        local.staff8_list<dlocal.ct8>=<ref1.name>,<ref1.uid>
+                                endif
+                                ENDIF
+                        endfor
+                endif
+        endfor
+for l 1 8
+ if <dlocal.ct<dlocal.l>>
+  for k 1 <dlocal.ct<dlocal.l>>
+    local.ctt ++
+    ref2.ctag.staff_list<dlocal.ctt>=<local.staff<dlocal.l>_list<dlocal.k>>
+  endfor
+  endif
+endfor
+return <dlocal.ct>
+
+[FUNCTION F_RENDERSTAFFMENU_LIST]
+FOR 1 <ARGS>
+ref1=<arrayshow 1,<CTAG.STAFF_LIST<dlocal._for>>>
+IF !<REF1.TAG0.NOSTAFF> || (<account.plevel>==8)
+IF <REF1.ISONLINE>
+resizepic 18 <eval 80 + <eval <local.bt> * 30>> 9350 225 30
+button 28 <eval 86 + <eval <local.bt> * 30>> 5601 5606 1 0 <eval 20 + <local.bt>>
+dhtmlgump 48 <eval 84 + <eval <local.bt> * 30>> 200 35 0 0 <def.B><DEF.BFONT_DGREEN> <REF1.NAME>
+//(<DEF.PLEVELNAME_<dREF1.ACCOUNT.PLEVEL>>)
+ELSE
+resizepic 18 <eval 80 + <eval <local.bt> * 30>> 9350 225 30
+button 28 <eval 86 + <eval <local.bt> * 30>> 5601 5606 1 0 <eval 20 + <local.bt>>
+dhtmlgump 48 <eval 84 + <eval <local.bt> * 30>> 180 35 0 0 <DEF.BFONT_DRED> <REF1.NAME>
+//(<DEF.PLEVELNAME_<dREF1.ACCOUNT.PLEVEL>>)
+ENDIF
+local.bt += 1
+ENDIF
+ENDFOR
+
+[FUNCTION set_event_gate_walls]
+IF (<ARGV> != 1)
+    RETURN 1
+ENDIF
+
+SERV.NEWNPC c_dog
+NEW.go 2341,541,1
+NEW.flags = statf_invul|statf_insubstantial
+NEW.f_set_event_gate_walls <ARGS>
+
+[FUNCTION f_set_event_gate_walls]
+FORITEMS 4
+    IF (<TYPE> == t_wall)
+        IF (<ARGV[0]> == 0)
+            Z
+        ELSE
+            Z 50
+        ENDIF
+    ENDIF
+ENDFOR
+
+FORPLAYERS 4
+    GO COMMERCE ROOM
+ENDFOR
+
+REMOVE
+
+[EOF]

@@ -1,0 +1,537 @@
+[DEFNAME CARNIVAL_2019_SETTINGS]
+CARNIVAL_2019_COLOR_1 0bb6
+CARNIVAL_2019_COLOR_2 0b9e
+CARNIVAL_2019_COLOR_COUNT 2
+
+[ITEMDEF i_carnival_2019_jin_baori]
+ID=i_jinbaori
+TYPE=t_clothing
+LAYER=layer_ears
+NAME=Carnival 2019 Jin-Baori
+TEVENTS=t_global_bound_item
+
+ON=@Create
+	COLOR=<DEF.CARNIVAL_2019_COLOR_<R1,<DEF.CARNIVAL_2019_COLOR_COUNT>>>
+	ATTR attr_newbie
+
+[ITEMDEF i_carnival_2019_ethereal_mount_talisman]
+ID=i_talisman4
+NAME=Carnival 2019 Ethereal Mount Talisman
+TEVENTS=t_global_bound_item
+
+ON=@Create
+	ATTR=attr_newbie
+	COLOR=<DEF.CARNIVAL_2019_COLOR_<R1,<DEF.CARNIVAL_2019_COLOR_COUNT>>>
+
+[ITEMDEF i_carnival_2019_bottle_hair_dye]
+ID=i_bottle_hair_dye
+NAME=Carnival 2019 Hair Dye
+
+ON=@Create
+	ATTR=attr_newbie
+	COLOR=<DEF.CARNIVAL_2019_COLOR_<R1,<DEF.CARNIVAL_2019_COLOR_COUNT>>>
+
+ON=@Click
+	MESSAGE @<f_get_carnival_2019_text_color <COLOR>>,,1 <NAME>
+	RETURN 1
+
+ON=@DClick
+	IF (<TOPOBJ.UID> != <SRC.UID>)
+		SRC.SYSMESSAGE @,,1 This item must be inside your backpack or bank to be used.
+		RETURN 1
+	ENDIF
+
+	IF (<SRC.FINDLAYER.layer_hair.UID>)
+		SRC.FINDLAYER.layer_hair.COLOR <COLOR>
+		REMOVE
+	ELSE
+		SRC.SYSMESSAGE @,,1 <DEFMSG.itemuse_dye_nohair>
+	ENDIF
+
+	IF (<SRC.FINDLAYER.layer_beard.UID>)
+		SRC.FINDLAYER.layer_beard.COLOR <COLOR>
+	ENDIF
+
+	RETURN 1
+
+[ITEMDEF i_carnival_2019_dye_tub]
+ID=0fab
+NAME=Carnival 2019 Dye Tub
+TYPE=T_NORMAL
+VALUE=20
+
+ON=@Create
+	MOREX = 1
+	COLOR = <DEF.CARNIVAL_2019_COLOR_<R1,<DEF.CARNIVAL_2019_COLOR_COUNT>>>
+
+ON=@Click
+	MESSAGE @,,1 <QVAL (<MOREX> < 2) ? [<DMOREX> charge] : [<DMOREX> charges] >
+
+ON=@DClick
+IF (<ATTR> == attr_move_never)
+	SRC.SYSMESSAGE @,,1 This item is locked.
+	RETURN 1
+ELSEIF (<MOREX> < 1)
+	REMOVE
+	RETURN 1
+ELSE
+	TARGET @,,1 Select what you want to dye.
+ENDIF
+RETURN 1
+
+ON=@Targon_Item
+IF (<ARGO.UID> == <UID>)
+	SRC.SYSMESSAGE @,,1 This dye tub is already colored.
+	RETURN 1
+ENDIF
+
+IF (<ARGO.BASEID> == <BASEID>) && (<ARGO.COLOR> == <COLOR>)
+  ARGO.MOREX += <MOREX>
+  SRC.SYSMESSAGE @,,1 You merged both dye tubs.
+  REMOVE
+  RETURN 1
+ENDIF
+
+if (<ARGO.BASEID> == i_dye_tub) && !(<ARGO.COLOR>)
+	if (<ARGO.CONT> == <SRC.FINDLAYER(21).UID>)
+		ARGO.REMOVE
+		SERV.NEWITEM i_carnival_2019_dye_tub
+		NEW.COLOR <COLOR>
+		NEW.MOREX = 1
+		NEW.LINK <SRC>
+		SRC.NEW.BOUNCE
+
+		SRC.SYSMESSAGE @,,1 You added one charge to this blank dye tube.
+
+		MOREX -= 1
+
+		IF (<MOREX> <= 0) || (<MOREX> > 100)
+			REMOVE
+		ENDIF
+
+		RETURN 1
+	ELSE
+		SRC.SYSMESSAGE @,,1 The dye tub must be inside your bag.
+	ENDIF
+ENDIF
+
+LOCAL.CHARGE_COST 1
+
+IF (<MOREX> <= 0) || (<MOREX> > 100)
+	REMOVE
+	RETURN 1
+ELSEIF (<ARGO.TYPE> != t_clothing)
+	SRC.SYSMESSAGE @,,1 You can't dye this item.
+	RETURN 1
+ELSEIF (<ARGO.ATTR> & attr_newbie) && !(STRMATCH(i_paragon_*, <ARGO.BASEID>))
+	LOCAL.CHARGE_COST 4
+ENDIF
+
+IF (<LOCAL.CHARGE_COST> > <MOREX>)
+	SRC.SYSMESSAGE @,,1 You must have <DLOCAL.CHARGE_COST> charges to dye this item.
+	RETURN 1
+ENDIF
+
+IF (<ARGO.TOPOBJ> == <SRC.UID>)
+	ARGO.COLOR <COLOR>
+	MOREX -= <LOCAL.CHARGE_COST>
+	IF (<MOREX> <= 0) || (<MOREX> > 100)
+		REMOVE
+	ENDIF
+
+	RETURN 1
+ELSE
+	SRC.SYSMESSAGE @,,1 The item to be dyed must be inside your backpack or bank.
+	RETURN 1
+ENDIF
+
+ON=@TargOn_Char
+	RETURN 1
+
+
+[FUNCTION f_become_carnival_2019_monster]
+IF (<ARGV> != 1)
+	RETURN
+ENDIF
+
+REF1 <ARGS>
+REF1.COLOR <DEF.CARNIVAL_2019_COLOR_<R1,<DEF.CARNIVAL_2019_COLOR_COUNT>>>
+REF1.EVENTS +e_carnival_2019
+REF1.STR <EVAL (<REF1.STR> * 12) / 10>
+REF1.MAXHITS <EVAL (<REF1.MAXHITS> * 12) / 10>
+REF1.HITS <REF1.MAXHITS>
+REF1.TAG.DISABLE_DEFAULT_LOOT 1
+
+[FUNCTION f_carnival_2019_decision]
+LOCAL.CHANCE 7
+
+IF (<STR> > 500)
+	LOCAL.CHANCE *= 3
+ENDIF
+
+IF !(<R<LOCAL.CHANCE>>)
+	SERV.NEWNPC <BASEID>
+	NEW.P <P>
+	NEW.HOME <NEW.P>
+	NEW.HOMEDIST 6
+
+	f_become_carnival_2019_monster <NEW.UID>
+
+	SERV.LOG A new <NEW.NAME> Carnival 2019 monster has been spawned at <NEW.P> (<NEW.REGION.NAME>) !
+ENDIF
+
+[FUNCTION f_get_carnival_2019_text_color]
+IF (<ARGS> == <DEF.CARNIVAL_2019_COLOR_1>)
+	RETURN 01e
+ELSE
+	RETURN 0a
+ENDIF
+
+[EVENTS e_carnival_2019]
+ON=@Click
+	MESSAGE @<f_get_carnival_2019_text_color <COLOR>>,,1 [Carnival 2019]
+
+ON=@DeathCorpse
+	ARGO.TAG.DISABLE_CUT 1
+
+ON=@Death
+//	IF (<ATTACKER>)
+//		FOR 0 <EVAL <ATTACKER> - 1>
+//			REF1 <ATTACKER.<DLOCAL._FOR>>
+//			IF (<REF1.ISPLAYER>)
+//				REF1.TAG0.CARNIVAL_2019_MONSTERS_KILLED += 1
+//				f_check_prizes_carnival_2019 <REF1.UID>
+//			ENDIF
+//		ENDFOR
+//	ENDIF
+
+	FORCONT <UID>
+		REMOVE
+	ENDFOR
+
+	LOCAL.CHANCE 200
+
+	IF (<STR> > 500)
+		LOCAL.CHANCE /= 4
+	ENDIF
+
+	IF !(<R<LOCAL.CHANCE>>)
+		SERV.NEWITEM <EVAL {i_carnival_2019_dye_tub 100 i_paragon_half_apron 10 i_paragon_cape 10 i_ethereal_mount_deed 20 i_paragon_ethereal_mount_talisman 5 i_carnival_2019_ethereal_mount_talisman 1 i_carnival_2019_jin_baori 1}>
+		NEW.EVENTS +t_drop_challenge
+		NEW.ATTR &= ~attr_newbie
+		NEW.CONT <UID>
+		SERV.LOG New Carnival Event 2019 Item dropped: <NEW.NAME>
+	ENDIF
+
+	IF (!<R36>)
+		NEWITEM <EVAL {i_ethereal_special_mount_deed 3 i_panotrue_g 4 i_panotrue_b 4 i_panotrue_w 4 i_deed_shop_marble_small 1 i_deed_shop_stone_small 1 i_deed_villa_2story 1 i_deed_house_patio_sand 1 i_deed_cabin_log_2story 1 i_deed_house_3room_fence 1 i_Wizardry_ring 2 i_20life_necklace 2 i_20Stamina_necklace 2 i_20Mana_necklace 2 i_paragon_ethereal_mount_talisman 5 i_Titan_ring 4 i_15Stamina_necklace 4 i_Knowledge_ring 4 i_Speedy_ring 4 i_ethereal_mount_deed 7 i_treasure_map_lvl_5 20 I_X_RUNEBOOK 20 i_keg_glb1 20 i_keg_gmb1 20 i_keg_grf1 20 i_chaos_shield 40 i_order_shield 40 i_magic_mask_tribal 50 i_magic_mask_orc 50 i_magic_helm_orc 50 i_magic_mask_deer 50 i_magic_mask_bear 50 i_magic_mask_bear_polar 50 i_magic_mask_bear_black 50 i_power_scroll 60}>
+		NEW.EVENTS +t_drop_challenge
+		NEW.ATTR &= ~attr_newbie
+		SERV.LOG New Carnival Event 2019 Item dropped: <NEW.NAME>
+		NEW.CONT <UID>
+	ENDIF
+
+	SERV.NEWITEM i_gold
+	NEW.AMOUNT <EVAL <BALANCEARGOLD <GRANAMOBS>> * 2>
+	NEW.CONT <UID>
+
+[FUNCTION f_carnival_2019_spawn_horde_daemon]
+IF (!<R3>)
+	LOCAL.P <f_get_world_random_location>
+	SERV.NEWNPC c_carnival_2019_horde_daemon
+	NEW.P <LOCAL.P>
+	NEW.HOME  <LOCAL.P>
+	NEW.HOMEDIST 10
+	NEW.HITS 30000
+	NEW.MAXHITS 30000
+
+	SERV.LOG Spawning <NEW.NAME> at <NEW.P>.
+ENDIF
+
+[CHARDEF c_carnival_2019_horde_daemon]
+id=c_multicolored_horde_minion
+Name=Carnival Horde Daemon
+DAM=46,83
+ARMOR=40
+CAN=MT_WALK|MT_RUN|MT_FLY
+AVERSIONS=r_civilization
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	NPC=brain_dragon
+	STR=1200
+	DEX={800 900}
+	INT=300
+	PARRYING={95.0 105.0}
+	MAGERY=6.0
+	MAGICRESISTANCE={60.0 75.0}
+	TACTICS={90.0 100.0}
+	WRESTLING={99.0 100.0}
+	FAME={1000 6000}
+	KARMA=-10000
+	//SPELLCIRCLE=3 5
+	ITEMNEWBIE=i_light_source
+	ITEMNEWBIE=i_spellbook
+	ADDSPELL=s_magic_arrow
+	ADDSPELL=s_fireball
+	ADDSPELL=s_fire_field
+	ADDSPELL=s_explosion
+	ADDSPELL=s_flamestrike
+	ADDSPELL=s_meteor_swarm
+	ADDSPELL=s_fire_bolt
+
+ON=@GetHit
+	IF !(<SRC.FINDID.i_memory_carnival_damage.UID>)
+		SERV.NEWITEM i_memory_carnival_damage
+		NEW.CONT <SRC.UID>
+	ENDIF
+
+	SRC.FINDID.i_memory_carnival_damage.TAG0.DAMAGE += <ARGN1>
+
+ON=@Death
+	f_carnival_2019_loot 1
+	f_carnival_2019_loot 2
+	f_carnival_2019_loot 3
+	f_carnival_2019_loot 4
+
+	FORINSTANCES i_memory_carnival_damage
+		REMOVE
+	ENDFOR
+
+ON=@DeathCorpse
+	FOR 6
+		SERV.NEWITEM i_fire_column
+		NEW.COLOR 0250
+		NEW.P <P>
+		NEW.MOVE <R12>,<R12>
+		NEW.ATTR attr_move_never|attr_decay
+		NEW.TIMER 10
+	ENDFOR
+
+ON=@NPCRestock
+	EVENTS +e_mage_spell_attack
+	EVENTS +e_poison_immune
+
+[FUNCTION f_carnival_2019_loot]
+IF (<ARGV> != 1)
+	RETURN 1
+ENDIF
+
+REF1 <UID>
+LOCAL.POSITION <ARGV[0]>
+LOCAL.MAXIMUM_DAMAGE_UID 0
+LOCAL.MAXIMUM_DAMAGE 0
+
+FORINSTANCES i_memory_carnival_damage
+	IF (<TAG0.DAMAGE> > <LOCAL.MAXIMUM_DAMAGE>) && (<UID> != <TOPOBJ.UID>)
+		IF !(<TOBOBJ.FLAGS> & statf_dead) && (<REF1.DISTANCE <TOPOBJ.UID>> < 100)
+			LOCAL.MAXIMUM_DAMAGE_UID <UID>
+			LOCAL.MAXIMUM_DAMAGE <TAG0.DAMAGE>
+		ENDIF
+	ENDIF
+ENDFOR
+
+IF (<LOCAL.MAXIMUM_DAMAGE> > 0)
+	REF1 <UID.<LOCAL.MAXIMUM_DAMAGE_UID>.TOPOBJ>
+	UID.<LOCAL.MAXIMUM_DAMAGE_UID>.REMOVE
+
+	SERV.LOG Carnival Horde Daemon killed. Awarding: <REF1.NAME> / position: <DLOCAL.POSITION>
+
+	IF (<LOCAL.POSITION> == 1)
+		SERV.NEWITEM i_magic_gem
+		NEW.CONT <REF1.UID>
+
+		SERV.NEWITEM i_gold
+		NEW.AMOUNT 60000
+		NEW.CONT <REF1.UID>
+
+		SERV.NEWITEM i_gold
+		NEW.AMOUNT 60000
+		NEW.CONT <REF1.UID>
+
+		SERV.NEWITEM <EVAL {i_carnival_2019_dye_tub 100 i_paragon_half_apron 10 i_paragon_cape 10 i_ethereal_mount_deed 20 i_paragon_ethereal_mount_talisman 5 i_carnival_2019_ethereal_mount_talisman 1 i_carnival_2019_jin_baori 1}>
+		SERV.LOG Carnival Horde Daemon Item created: <NEW.NAME>.
+		NEW.CONT <REF1.UID>
+	ELSEIF (<R4>)
+		SERV.NEWITEM <EVAL {i_magic_gem 1 i_panotrue_w 2 i_panotrue_b 2 i_panotrue_w 2}>
+		SERV.LOG Carnival Horde Daemon Item created: <NEW.NAME>.
+		NEW.CONT <REF1.UID>
+	ELSEIF (<R4>)
+		SERV.NEWITEM <EVAL {i_carnival_2019_dye_tub 100 i_paragon_half_apron 10 i_paragon_cape 10 i_ethereal_mount_deed 20 i_paragon_ethereal_mount_talisman 5 i_carnival_2019_ethereal_mount_talisman 1 i_carnival_2019_jin_baori 1}>
+		SERV.LOG Carnival Horde Daemon Item created: <NEW.NAME>.
+		NEW.CONT <REF1.UID>
+	ENDIF
+
+	SERV.NEWITEM i_gold
+	NEW.AMOUNT 60000
+	NEW.CONT <REF1.UID>
+
+	SERV.NEWITEM i_gold
+	NEW.AMOUNT 60000
+	NEW.CONT <REF1.UID>
+ENDIF
+
+[FUNCTION f_carnival_2019_announce_monster_hint]
+LOCAL.TOTAL 0
+FORINSTANCES c_carnival_2019_horde_daemon
+	LOCAL.TOTAL += 1
+ENDIF
+
+LOCAL.CURRENT 1
+LOCAL.TARGET <R1,<LOCAL.TOTAL>>
+
+FORINSTANCES c_carnival_2019_horde_daemon
+	IF (<LOCAL.TARGET> == <LOCAL.CURRENT>)
+		LOCAL.MINX <EVAL ((<P.X> / 1000) - 1) * 1000>
+		LOCAL.MINY <EVAL ((<P.Y> / 1000) - 1) * 1000>
+		LOCAL.MAXX <EVAL ((<P.X> / 1000) + 1) * 1000>
+		LOCAL.MAXY <EVAL ((<P.Y> / 1000) + 1) * 1000>
+
+		IF (<LOCAL.MINX> < 0)
+			LOCAL.MINX 0
+		ENDIF
+
+		IF (<LOCAL.MINY> < 0)
+			LOCAL.MINY 0
+		ENDIF
+
+		IF (<LOCAL.MAXX> > 6144)
+			LOCAL.MAXX 6144
+		ENDIF
+
+		IF (<LOCAL.MAXY> > 6144)
+			LOCAL.MAXY 6144
+		ENDIF
+
+		IF (<TOPOBJ.P.TYPE> == t_forest)
+			LOCAL.TERRAIN = "Forest"
+		ELIF (<TOPOBJ.P.TYPE> == t_water)
+			LOCAL.TERRAIN = "Water"
+		ELIF (<TOPOBJ.P.TYPE> == t_normal)
+			LOCAL.TERRAIN = "Terrain or Building"
+		ELIF (<TOPOBJ.P.TYPE> == t_swamp)
+			LOCAL.TERRAIN = "Swamp"
+		ELIF (<TOPOBJ.P.TYPE> == t_rock)
+			LOCAL.TERRAIN = "Rock, Sand, Mine or Dungeon"
+		ELIF (<TOPOBJ.P.TYPE> == t_sand)
+			LOCAL.TERRAIN = "Sand or Desert"
+		ELIF (<TOPOBJ.P.TYPE> == t_dirt)
+			LOCAL.TERRAIN = "Plantation or Arable"
+		ELIF (<TOPOBJ.P.TYPE> == t_grass)
+			LOCAL.TERRAIN = "Grass or Flower"
+		ELIF (<TOPOBJ.P.TYPE> == t_jungle)
+			LOCAL.TERRAIN = "Jungle"
+		ELIF (<TOPOBJ.P.TYPE> == t_snow)
+			LOCAL.TERRAIN = "Snow"
+		ELSE
+			LOCAL.TERRAIN = "Unknown"
+		ENDIF
+
+		SERV.B @55 There's a Carnival 2019 Horde Daemon somewhere between: (<DLOCAL.MINX>, <DLOCAL.MINY>) and (<DLOCAL.MAXX>, <DLOCAL.MAXY>) ! Why don't you try to find it?? The terrain type is: <LOCAL.TERRAIN>. Total of Carnival Horde Daemons around the world: <DLOCAL.TOTAL>.
+		RETURN
+	ENDIF
+
+	LOCAL.CURRENT += 1
+ENDFOR
+
+SERV.B @55 A new Carnival 2019 Horde Daemon will be spawned somewhere in the next hours.
+RETURN
+
+[ITEMDEF i_carnival_2019_ticket]
+ID=i_cards
+NAME=Carnival 2019 Ticket
+
+ON=@Create
+	MOREX=5
+	COLOR=<DEF.CARNIVAL_2019_COLOR_<R1,<DEF.CARNIVAL_2019_COLOR_COUNT>>>
+	VAR0.CARNIVAL_2019_TICKET_NUMBER += 1
+	TAG.TICKET_NUMBER = <VAR0.CARNIVAL_2019_TICKET_NUMBER>
+
+ON=@Click
+	MESSAGE @,,1 [Number: <DTAG.TICKET_NUMBER>]
+
+ON=@DClick
+	IF (<TOPOBJ.UID> != <SRC.UID>)
+		SRC.SYSMESSAGE @,,1 This item must be inside your backpack or bank to be used.
+		RETURN 1
+	ENDIF
+
+	IF !(<TAG0.PRIZE_ITEM>)
+		SRC.SYSMESSAGE Sorry, this ticket has no prizes !
+
+		REMOVE
+	ELSE
+		SERV.NEWITEM <TAG0.PRIZE_ITEM>
+		NEW.COLOR <TAG0.PRIZE_COLOR>
+		NEW.LINK <SRC.UID>
+		NEW.CONT <SRC.FINDLAYER.layer_pack>
+
+		SRC.SYSMESSAGE Congratulations, you have earned: <NEW.NAME> !
+
+		REMOVE
+	ENDIF
+
+	RETURN 1
+
+[FUNCTION f_carnival_2019_distribute_ticket_prizes]
+LOCAL.COUNT 0
+
+FORINSTANCES i_carnival_2019_ticket
+	TAG.PRIZE_ITEM
+	TAG.PRIZE_COLOR
+
+	LOCAL.COUNT += 1
+ENDFOR
+
+SERV.LOG <DLOCAL.COUNT> tickets found !
+
+f_carnival_2019_distribute_ticket_prize i_carnival_2019_ethereal_mount_talisman,<DEF.CARNIVAL_2019_COLOR_1>,2
+f_carnival_2019_distribute_ticket_prize i_carnival_2019_ethereal_mount_talisman,<DEF.CARNIVAL_2019_COLOR_2>,2
+f_carnival_2019_distribute_ticket_prize i_carnival_2019_jin_baori,<DEF.CARNIVAL_2019_COLOR_1>,2
+f_carnival_2019_distribute_ticket_prize i_carnival_2019_jin_baori,<DEF.CARNIVAL_2019_COLOR_2>,2
+f_carnival_2019_distribute_ticket_prize i_carnival_2019_bottle_hair_dye,<DEF.CARNIVAL_2019_COLOR_1>,10
+f_carnival_2019_distribute_ticket_prize i_carnival_2019_bottle_hair_dye,<DEF.CARNIVAL_2019_COLOR_2>,10
+f_carnival_2019_distribute_ticket_prize i_carnival_2019_dye_tub,<DEF.CARNIVAL_2019_COLOR_1>,10
+f_carnival_2019_distribute_ticket_prize i_carnival_2019_dye_tub,<DEF.CARNIVAL_2019_COLOR_2>,10
+f_carnival_2019_distribute_ticket_prize i_ethereal_bear,0,1
+
+[FUNCTION f_carnival_2019_distribute_ticket_prize]
+IF (<ARGV> != 3)
+	RETURN 1
+ENDIF
+
+LOCAL.ITEM <ARGV[0]>
+LOCAL.COLOR <ARGV[1]>
+LOCAL.AMOUNT <ARGV[2]>
+
+LOCAL.COUNT 0
+
+FORINSTANCES i_carnival_2019_ticket
+	LOCAL.COUNT += 1
+ENDFOR
+
+FOR 1 <LOCAL.AMOUNT>
+	LOCAL.TICKET_FOUND 0
+	LOCAL.POSITION 1
+
+	WHILE !(<LOCAL.TICKET_FOUND>)
+		LOCAL.RESULT <R100,<VAR.CARNIVAL_2019_TICKET_NUMBER>>
+
+		FORINSTANCES i_carnival_2019_ticket
+			IF (<TAG.TICKET_NUMBER> == <LOCAL.RESULT>)
+				IF !(<TAG0.PRIZE_ITEM>)
+					TAG.PRIZE_ITEM <LOCAL.ITEM>
+					TAG.PRIZE_COLOR <LOCAL.COLOR>
+
+					SERV.LOG Carnival 2019 Ticket <UID> / <DTAG.TICKET_NUMBER> prize: <SERV.ITEMDEF.<TAG.PRIZE_ITEM>.NAME> / color <LOCAL.COLOR>. Owner: <TOPOBJ.NAME>.
+					LOCAL.TICKET_FOUND = 1
+				ENDIF
+			ENDIF
+
+			LOCAL.POSITION += 1
+		ENDFOR
+	ENDWHILE
+
+ENDFOR
+
+[EOF]

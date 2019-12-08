@@ -1,0 +1,1456 @@
+//****************************************************************************
+//SPHERE by : Menasoft �1997-2004
+//www.sphereserver.com
+// All SPHERE script files and formats are copyright Menasoft & Partners.
+// This file may be freely edited for personal use, but may not be distributed
+// in whole or in part, in any format without express written permission from
+// Menasoft & Partners.  All donations and contributions
+// become the property of Menasoft & Partners.
+//****************************************************************************
+// FILE LAST UPDATED: Saturday, November 15, 2003
+//
+//VERSION=0.55i
+
+[EVENTS e_trainer]
+ON=@ContextMenuRequest
+   IF (<NPC> < 2) || (<NPC> == 4) || (<NPC> > 9)
+	  // Not all brain types can train
+	  SERV.LOG ERROR: <NAME> (<UID>) has the e_trainer event, but their brain type is not supported
+   ELSE
+	  FOR x 0 57
+		 LOCAL.PlayerSkill=<SRC.<SERV.SKILL.<dLOCAL.x>.KEY>>
+		 LOCAL.NpcSkill=<<SERV.SKILL.<dLOCAL.x>.KEY>>
+		 IF (<LOCAL.NpcSkill> > 30.0)
+			IF (<LOCAL.x>!=54) //Spellweaving cannot be trained
+			   SRC.ADDCONTEXTENTRY <EVAL 200+<LOCAL.x>>,<EVAL 6000+<LOCAL.x>>,<EVAL <QVAL <LOCAL.PlayerSkill> < <LOCAL.NpcSkill> ? 0 : 1>>,1
+			ENDIF
+		 ENDIF
+	  ENDFOR
+   ENDIF
+ON=@ContextMenuSelect
+   IF (<ARGN> >= 200)
+	  LOCAL.Skill=<EVAL <ARGN>-200>
+	  LOCAL.PlayerSkill=<SRC.<SERV.SKILL.<dLOCAL.Skill>.KEY>>
+	  LOCAL.NpcSkill=<<SERV.SKILL.<dLOCAL.Skill>.KEY>>
+	  TRAIN <SERV.SKILL.<dLOCAL.Skill>.KEY>
+   ENDIF
+
+[EVENTS E_CALL_MINIONS]
+ON=@GETHIT
+IF (<HITS> < <DTAG.MINHITS>) && (<TAG0.SUMMONHELP> == 0)
+	TAG.MINIONS <EVAL 11-<EVAL (<HITS>/100)>>
+	SAY @32 'inna bihajat 'iilaa musaeada
+	Timerf 1, SAY Kal Corp Xen
+	TIMERF 2, F_KCX <DTAG0.MINIONS>,C_MUMMY
+	TAG.SUMMONHELP 1
+ENDIF
+
+[EVENTS E_ANTIBOW]
+on=@GetHit
+IF (<SRC.FINDLAYER.2.TYPE>==T_WEAPON_BOW) || (<SRC.FINDLAYER.2.TYPE>==T_WEAPON_XBOW)
+ACTION -1
+MANA 0
+ENDIF
+
+[ITEMDEF i_anti_fcast]
+ID=i_gold
+NAME=antifcast
+
+ON=@CREATE
+ATTR=096
+MORE1=<R5,8>
+
+ON=@TIMER
+
+IF <MORE1>
+	REF69 <LINK.TAG.TARGET>
+	IF <REF69.UID>
+	IF <LINK.DISTANCE <REF69.UID>> > 1
+		IF ((<REF69.P.X> > <LINK.P.X>)) && (<REF69.P.Y> > <LINK.P.Y>))
+			LOCAL.DIR 3
+		ELIF ((<REF69.P.X> > <LINK.P.X>)) && (<REF69.P.Y> < <LINK.P.Y>))
+			LOCAL.DIR 1
+		ELIF ((<REF69.P.X> < <LINK.P.X>)) && (<REF69.P.Y> < <LINK.P.Y>))
+			LOCAL.DIR 7
+		ELIF ((<REF69.P.X> < <LINK.P.X>)) && (<REF69.P.Y> > <LINK.P.Y>))
+			LOCAL.DIR 5
+		ELIF (<REF69.P.X> > <LINK.P.X>)
+			LOCAL.DIR 2
+		ELIF (<REF69.P.X> < <LINK.P.X>)
+			LOCAL.DIR 6
+		ELIF (<REF69.P.y> < <LINK.P.y>)
+			LOCAL.DIR 0
+		ELIF (<REF69.P.y> > <LINK.P.y>)
+			LOCAL.DIR 4
+		ENDIF
+		IF <LINK.CANMOVE <dLOCAL.DIR>>
+			doswitch <dLOCAL.dir>
+				link.dir 0
+				link.dir 1
+				link.dir 2
+				link.dir 3
+				link.dir 4
+				link.dir 5
+				link.dir 6
+				link.dir 7
+			enddo
+			doswitch <dLOCAL.dir>
+				link.move n
+				link.move ne
+				link.move e
+				link.move se
+				link.move s
+				link.move sw
+				link.move w
+				link.move nw
+			enddo
+		ENDIF
+	ENDIF
+	ENDIF
+	MORE1 -=1
+	TIMERD <R2,3>
+	RETURN 1
+ELSE
+	LINK.TAG.ANTIFCAST
+	REMOVE
+	RETURN 0
+ENDIF
+
+[FUNCTION f_green_decision]
+if (STRMATCH(*Maze*,<src.region.name>))
+	if <r1,2> == 2
+		src.color 0806
+		src.tag.green 1
+	endif
+elif (<topobj.p.type> == t_forest) || (<topobj.p.type> == t_grass) || (<topobj.p.type> == t_jungle)
+	if (<r1,80> == 10)
+		src.color 0806
+		src.tag.green 1
+	endif
+endif
+
+[defname d_paragon_pois]
+parapoi_1	wrong
+parapoi_2	Moonglow Cemetary
+parapoi_3	Deceit
+parapoi_4	Destard Level
+parapoi_5	Hythloth
+parapoi_6	Jhelom cemetary
+parapoi_7	covetous
+parapoi_8	shame
+parapoi_9	britain sewers
+parapoi_10	Cove Graveyard
+parapoi_11  Vesper cemetary
+parapoi_12	Despise
+
+parapoi_name_1	Wrong
+parapoi_name_2	Moonglow Cemetary
+parapoi_name_3	Deceit
+parapoi_name_4	Destard
+parapoi_name_5	Hythloth
+parapoi_name_6	Jhelom Cemetary
+parapoi_name_7	Covetous
+parapoi_name_8	Shame
+parapoi_name_9	Britain Sewers
+parapoi_name_10	Cove Graveyard
+parapoi_name_11 Vesper Cemetary
+parapoi_name_12	Despise
+
+[FUNCTION f_reset_respawns_poi]
+local.hour = <f_paragon_hour>
+
+VAR.POI_TOTAL = 0
+VAR.POI_CURRENT_PARAGON_TEST = 0
+VAR.POI_FORCE_PARAGON = 1
+VAR.POI_FORCED_PARAGON = -1
+
+SERV.LOG Respawnando <def.parapoi_<dvar0.paragon_hour_<dlocal.hour>>> para POI.
+
+FORINSTANCES I_WORLDGEM_BIT
+	IF (STRMATCH(*<def.parapoi_<dvar0.paragon_hour_<dlocal.hour>>>*,<region.name>)) || (STRMATCH(*<def.parapoi_<dvar0.paragon_hour_<dlocal.hour>>>*,<room.name>))
+		IF !(<DTAG0.NO_POI>)
+			LOCAL.MOREP <MOREP>
+
+			IF (<MORE1> == c_m_prisma_w) || (<MORE1> == c_m_prisma_b) || (<MORE1> == c_m_prisma_g)
+				MOREP = 30,45,6
+			ELSEIF (STRMATCH(*Cemetary*,<def.parapoi_<dvar0.paragon_hour_<dlocal.hour>>>)) || (STRMATCH(*Graveyard*,<def.parapoi_<dvar0.paragon_hour_<dlocal.hour>>>))
+				MOREP = 10,15,6
+			ELSE
+				MOREP = 15,20,6
+			ENDIF
+
+			TIMERF 3600,MOREP <LOCAL.MOREP>
+
+			FORCERESTART
+		ENDIF
+	ENDIF
+ENDFOR
+
+// a contagem eh feita manualmente porque nem todo
+// respawn pode ser um paragon
+VAR.POI_FORCED_PARAGON = <R1,<DVAR.POI_TOTAL>>
+VAR.POI_TOTAL
+VAR.POI_FORCE_PARAGON
+
+SERV.LOG Respawnou <def.parapoi_<dvar0.paragon_hour_<dlocal.hour>>> para POI.
+
+SERV.B @55 Novo local para o POI: <def.parapoi_name_<dvar0.paragon_hour_<dlocal.hour>>>. Existe pelo menos um paragon nessa regiao. Boa sorte !
+
+[FUNCTION f_paragon_decision]
+VAR.POI_CURRENT_PARAGON_TEST += 1
+
+if ((<BODY> == C_MAN) || (<BODY> == C_WOMAN))
+	return 1
+endif
+local.hour = <f_paragon_hour>
+
+if (<str> < 141)
+	local.rand <r75,85>
+elif (<str> < 1000) && (<str> > 140)
+	local.rand = <r60,70>
+elif (<str> > 999)
+	local.rand = <r45,50>
+endif
+
+if (<region.defname> == a_britain_graveyard_1) || (<region.defname> == a_coveiro_lair)
+	local.rand <r170,190>
+endif
+
+if (STRMATCH(*<def.parapoi_<dvar0.paragon_hour_<dlocal.hour>>>*,<region.name>)) || (STRMATCH(*<def.parapoi_<dvar0.paragon_hour_<dlocal.hour>>>*,<room.name>))
+	local.reduct = <eval (<local.rand>*40)/100> //aumenta 40% a chance
+	// s Paragon POI calc rand <dlocal.rand> e redct <dlocal.reduct>
+	local.rand -= <dlocal.reduct>
+	if <local.rand> > 75
+		local.rand 60
+	endif
+endif
+
+local.luckap 0
+forclients 30
+	if (<src.tag0.luck>) && (<local.luckap> == 0)
+		local.rand = <eval (<local.rand>*4)/5>
+		local.luckap 1
+	endif
+endfor
+
+if ((<VAR.POI_FORCED_PARAGON> != -1) && (<VAR.POI_CURRENT_PARAGON_TEST> >= <VAR.POI_FORCED_PARAGON>)) || (!<r<dlocal.rand>>)
+	VAR.POI_FORCED_PARAGON = -1
+
+	s <uid> <name> became Paragon <serv.rtime>
+	serv.log <uid> <name> became Paragon <serv.rtime>
+	color 0a23
+	str = <eval <str> + (<str>/2)>
+	int = <eval <int> + (<int>/5)>
+	dex = <eval <dex> + (<dex>/2)>
+	maxhits = <eval <maxhits>*5>
+	hits = <maxhits>
+	mana = <int>
+	events +e_paragon
+	var.paragonborn += 1
+
+	serv.newitem i_paragon_control
+	//new.timer 2
+	equip <new>
+
+	tag.LOOTPROPRIO 1
+	//TAG0.PARAIMUNE += 1
+	events +e_poison_immune
+endif
+
+[FUNCTION f_paragon_hour]
+LOCAL.HOUR = <SERV.RTIME.FORMAT %H>
+
+IF (<LOCAL.HOUR> < 0)
+	   LOCAL.HOUR += 24
+ENDIF
+
+IF (<LOCAL.HOUR> == 0)
+	   LOCAL.HOUR = 12
+ENDIF
+
+IF (<LOCAL.HOUR> > 12)
+	   LOCAL.HOUR -= 12
+ENDIF
+
+RETURN <DLOCAL.HOUR>
+
+[FUNCTION f_become_paragon]
+
+	s <uid> <name> became Paragon <serv.rtime>
+	serv.log <uid> <name> became Paragon <serv.rtime>
+	color 0a23
+	str = <eval <str> + (<str>/5)>
+	int = <eval <int> + (<int>/5)>
+	dex = <eval <dex> + (<dex>/5)>
+	maxhits = <eval <maxhits>*5>
+	hits = <maxhits>
+	mana = <int>
+	events +e_paragon
+	var.paragonborn += 1
+
+	serv.newitem i_paragon_control
+	//new.timer 2
+	equip <new>
+
+	tag.LOOTPROPRIO 1
+	//TAG0.PARAIMUNE += 1
+	events +e_poison_immune
+
+[ITEMDEF i_paragon_control]
+NAME=Paragon Controller
+ID=i_handr_1
+TYPE=T_EQ_SCRIPT
+
+ON=@Create
+	ATTR=attr_invis|attr_decay
+	timer 6
+
+on=@equip
+	timer 6
+
+ON=@Timer
+	if (<cont.hits> < <cont.maxhits>)
+		cont.hits += 20
+		cont.sound snd_spell_heal
+	endif
+	if (<cont.mana> < <cont.int>)
+		cont.mana += 40
+	endif
+	timer 6
+	// normal timer fall through is to delete the item
+	return 1
+
+[events e_paragon]
+
+on=@click
+	message @0a23,,1 [Paragon]
+
+on=@DEATH
+	SERV.LOG Paragon <NAME> morto.
+
+	IF (<TAG0.NO_PARAGON_LOOT>)
+		SERV.LOG Loot nao gerado por causa de tag.
+		RETURN
+	ENDIF
+
+	local.hits <src.maxhits>
+	local.level 0
+	if (<dlocal.hits> < 1001)
+		local.level 1
+	elif (<dlocal.hits> < 2001) && (<dlocal.hits> > 1000)
+		local.level 2
+	elif (<dlocal.hits> < 3001) && (<dlocal.hits> > 2000)
+		local.level 3
+	elif (<dlocal.hits> < 4001) && (<dlocal.hits> > 3000)
+		local.level 4
+	elif (<dlocal.hits> < 6001) && (<dlocal.hits> > 4000)
+		local.level 5
+	elif (<dlocal.hits> > 6000)
+		local.level 6
+	endif
+	for 1 <dlocal.level>
+		if (<dlocal._for> > 3) && (<r<dlocal._for>,6> < 6)
+			serv.newitem i_treasure_map_lvl_<r2,4>
+			new.cont <uid>
+
+			serv.newitem i_gold
+			new.amount <R3000,4000>
+			new.cont <uid>
+		elif (<dlocal._for> < 4)
+			serv.newitem i_power_scroll
+			new.cont <uid>
+		endif
+	endfor
+
+	IF (<DEF.SKILL_TEACHER_QUEST_ENABLED>) && (!<R250>)
+		NEWITEM i_recipe_scroll
+		NEW.CONT <UID>
+	ENDIF
+
+
+	f_cria_paragon_chest <dlocal.level>,<uid>
+
+
+//hit +5 ja foi adicionado no @hit do e_all_monsters
+
+[FUNCTION f_cria_paragon_chest]
+ref1 <argv[1]> //monstro
+local.level <argv[0]>
+serv.newitem tm_paragon_treasure_lvl_<dlocal.level>
+new.cont <ref1>
+
+[ITEMDEF i_chest_paragon]
+NAME=Paragon Chest
+id=i_chest_metal_brass
+TYPE=T_CONTAINER_LOCKED
+WEIGHT=20
+
+on=@create
+	color 0a23
+	TYPE=T_CONTAINER_LOCKED
+
+ON=@DropOn_Ground
+	IF (<DISPID> == i_chest_metal_brass)
+		DISPID=0e41
+	ELSE
+		DISPID=i_chest_metal_brass
+	ENDIF
+
+[TEMPLATE tm_paragon_treasure_lvl_1]
+container=i_bag
+//color=084d
+ITEM=i_gold,{2000 4000}
+ITEM=i_reag_black_pearl,{10 30}
+ITEM=i_reag_blood_moss,{10 30}
+ITEM=i_reag_garlic,{10 30}
+ITEM=i_reag_ginseng,{10 30}
+ITEM=i_reag_mandrake_root,{10 30}
+ITEM=i_reag_nightshade,{10 30}
+ITEM=i_reag_sulfur_ash,{10 30}
+ITEM=i_reag_spider_silk,{10 30}
+ITEM=i_reag_batwing,{10 30}
+ITEM=i_reag_eye_of_newt,{10 30}
+item=i_survivor_shield,R20
+item=i_rust_dagger,R9
+
+[TEMPLATE tm_paragon_treasure_lvl_2]
+container=i_bag
+//color=084d
+ITEM=i_gold,{5000 6000}
+ITEM=i_reag_black_pearl,{20 40}
+ITEM=i_reag_blood_moss,{20 40}
+ITEM=i_reag_garlic,{20 40}
+ITEM=i_reag_ginseng,{20 40}
+ITEM=i_reag_mandrake_root,{20 40}
+ITEM=i_reag_nightshade,{20 40}
+ITEM=i_reag_sulfur_ash,{20 40}
+ITEM=i_reag_spider_silk,{20 40}
+ITEM=i_reag_batwing,{20 40}
+ITEM=i_reag_eye_of_newt,{20 40}
+item=I_REAG_OBSIDIAN,{20 40},R2
+item=i_survivor_shield,R15
+item=i_rust_dagger,R7
+
+[TEMPLATE tm_paragon_treasure_lvl_3]
+CONTAINER=i_chest_paragon
+ITEM=i_gold,{6000 10000}
+ITEM=i_reag_black_pearl,{30 50}
+ITEM=i_reag_blood_moss,{30 50}
+ITEM=i_reag_garlic,{30 50}
+ITEM=i_reag_ginseng,{30 50}
+ITEM=i_reag_mandrake_root,{30 50}
+ITEM=i_reag_nightshade,{30 50}
+ITEM=i_reag_sulfur_ash,{30 50}
+ITEM=i_reag_spider_silk,{30 50}
+ITEM=i_reag_batwing,{30 50}
+ITEM=i_reag_eye_of_newt,{30 50}
+item=I_REAG_OBSIDIAN,{30 50},R2
+item=i_survivor_shield,R12
+item=random_deco,R5
+item=i_rust_dagger,R5
+
+[TEMPLATE tm_paragon_treasure_lvl_4]
+CONTAINER=i_chest_paragon
+ITEM=i_gold,{12000 16000}
+ITEM=i_reag_black_pearl,{40 60}
+ITEM=i_reag_blood_moss,{40 60}
+ITEM=i_reag_garlic,{40 60}
+ITEM=i_reag_ginseng,{40 60}
+ITEM=i_reag_mandrake_root,{40 60}
+ITEM=i_reag_nightshade,{40 60}
+ITEM=i_reag_sulfur_ash,{40 60}
+ITEM=i_reag_spider_silk,{40 60}
+ITEM=i_reag_batwing,{40 60}
+ITEM=i_reag_eye_of_newt,{40 60}
+item=I_REAG_OBSIDIAN,{40 60}
+item=i_survivor_shield,R10
+item=random_deco,R2
+item=random_masks,R2
+item=i_rust_dagger,R3
+
+[TEMPLATE tm_paragon_treasure_lvl_5]
+CONTAINER=i_chest_paragon
+ITEM=i_gold,{16000 20000}
+ITEM=i_reag_black_pearl,{50 70}
+ITEM=i_reag_blood_moss,{50 70}
+ITEM=i_reag_garlic,{50 70}
+ITEM=i_reag_ginseng,{50 70}
+ITEM=i_reag_mandrake_root,{50 70}
+ITEM=i_reag_nightshade,{50 70}
+ITEM=i_reag_sulfur_ash,{50 70}
+ITEM=i_reag_spider_silk,{50 70}
+ITEM=i_reag_batwing,{50 70}
+ITEM=i_reag_eye_of_newt,{50 70}
+item=I_REAG_OBSIDIAN,{50 70}
+item=i_survivor_shield,R8
+item=random_deco,R2
+item=random_masks
+item=i_rust_dagger
+
+[TEMPLATE tm_paragon_treasure_lvl_6]
+CONTAINER=i_chest_paragon
+ITEM=i_gold,{20000 30000}
+ITEM=i_reag_black_pearl,{70 80}
+ITEM=i_reag_blood_moss,{70 80}
+ITEM=i_reag_garlic,{70 80}
+ITEM=i_reag_ginseng,{70 80}
+ITEM=i_reag_mandrake_root,{70 80}
+ITEM=i_reag_nightshade,{70 80}
+ITEM=i_reag_sulfur_ash,{70 80}
+ITEM=i_reag_spider_silk,{70 80}
+ITEM=i_reag_batwing,{70 80}
+ITEM=i_reag_eye_of_newt,{70 80}
+item=I_REAG_OBSIDIAN,{80 100}
+item=random_deco
+item=i_survivor_shield,R5
+item=random_masks
+item=i_rust_dagger
+item=i_rust_dagger,R2
+
+
+[EVENTS e_all_monsters]
+
+//brain_none             0
+//brain_animal           1
+//brain_human            2
+//brain_healer           3
+//brain_guard            4
+//brain_banker           5
+//brain_vendor           6
+//brain_animal_trainer   7
+//brain_monster          8
+//brain_berserk          9
+//brain_dragon           10
+
+on=@create
+	if (<npc> == brain_monster) || (<npc> == brain_dragon)
+		if (<flags>&statf_spawned)
+			IF (<VAR0.POI_FORCE_PARAGON>)
+				VAR.POI_TOTAL += 1
+			ENDIF
+
+//			f_carnival_2019_decision
+			timerf 2, f_paragon_decision
+		endif
+	endif
+
+	IF (<REGION.ISEVENT.r_house_private>) && (<FLAGS> & statf_conjured)
+		REMOVE
+		RETURN 1
+	ENDIF
+
+ON=@PetDesert
+	IF (<SRC.ISPLAYER>) && (<FLAGS> & statf_conjured)
+		REMOVE
+	ENDIF
+
+ON=@SpellEffect
+	IF (<REGION.TAG0.PVM_ONLY>) && (<MEMORYFINDTYPE.memory_ipet.UID>) && (<SRC.ISPLAYER>) && (<SERV.SPELL.<ARGN1>.FLAGS> & spellflag_harm)
+		RETURN 1
+	ENDIF
+
+//	IF ((<SRC.ISINSHIP>) && (!<ISINSHIP>)) || (!<SRC.ISINSHIP>) && (<ISINSHIP>)
+//		GO <SRC.P>
+//	ENDIF
+
+	if (<r1,3> == 3)
+		local.resist <r5,25>
+		if <r1,100> > 98
+			local.resist 100
+		endif
+		src.smsg <name> resisted <dlocal.rate>% of your magic.
+	else
+		local.resist = 0
+	endif
+
+	IF (<ARGN1> == 11)
+		IF (<FINDID.i_poison_effect.MORE2> == 5)
+			FINDID.i_poison_effect.remove
+			FLAGS <FLAGS>&~080
+		ENDIF
+
+		RETURN 1
+	ENDIF
+
+	IF (<ARGN1> == 20)
+		FINDID.i_poison_effect.remove
+		TRYSRC <UID> SERV.NEWITEM i_poison_effect
+		NEW.more2 5
+		NEW.MORE 4
+		NEW.TAG.POISONTIMER <R12,16>
+		NEW.TAG.ATTACKER <SRC.UID>
+		NEW.CONT <UID>
+		TRYSRC <UID> NEW.TRIGGER @EQUIP
+		NEW.TIMER
+
+		RETURN 1
+	ENDIF
+
+
+on=@NPCLostTeleport
+if (<src.owner>)
+	s <src.name> <src.uid> tentando ir para home <src.home>. Owner <uid.<src.owner>.name>
+	serv.log <src.name> <src.uid> tentando ir para home <src.home>. Owner <uid.<src.owner>.name>
+	home -1,-1
+	return 1
+endif
+
+
+ON=@CLICK
+IF <NPC>==brain_healer
+	TITLE the Healer
+ELIF <NPC>==brain_guard
+	TITLE the Guard
+ELIF <NPC>==brain_banker
+	TITLE the Banker
+ELIF <NPC>==brain_animal_trainer
+	TITLE the Animal Trainer
+ELIF (<ID> == C_H_FARMER) || (<ID> == C_H_Farmer_F)
+	TITLE the Farmer
+ENDIF
+
+ON=@HITTRY
+	IF (<REGION.TAG0.PVM_ONLY>) && (((<SRC.MEMORYFINDTYPE.memory_ipet.UID>) && (<ISPLAYER>)) || ((<MEMORYFINDTYPE.memory_ipet.UID>) && (<SRC.ISPLAYER>)))
+		RETURN 1
+	ENDIF
+
+	IF ((<npc> == brain_vendor ) || (<npc> == brain_animal_trainer) || (<npc> == brain_banker) || (<npc> == brain_healer)) && !(<MEMORYFINDTYPE.memory_ipet.UID>)
+		ACTION 67
+		RETURN 1
+	ENDIF
+	if <ARGN1> < 12
+		ARGN1 12
+	ENDIF
+	IF <FLAGS>&statf_freeze
+		ARGN1 1
+	ENDIF
+
+ON=@HIT
+IF (<SRC.ISPLAYER>) && (<OWNER.ISPLAYER>)
+	SRC.f_harmedby <OWNER.UID>
+ENDIF
+
+IF (<NPC> != brain_guard)
+	IF <SRC.FLAGS>&statf_hasshield
+		IF (<R100> < <SRC.PARRYING>/80)
+			SRC.EFFECT 3,i_fx_glow,20,25,1
+			SRC.SYSMESSAGE Voce bloqueou o golpe de <NAME>.
+			RETURN 1
+		ENDIF
+	ENDIF
+
+
+	LOCAL.DIFF <ARGN1>
+	//ARGN1=<dLOCAL.DIFF>
+	// S Dano PVM: <ARGN1>
+	ARGN1 += <eval (<dLOCAL.DIFF>*(<TACTICS>/16))/100>
+	// S Dano PVM: <ARGN1>
+	ARGN1 += <eval (<dLOCAL.DIFF>*((<ANATOMY>/20)+5))/100>
+	// S Dano PVM: <ARGN1>
+	ARGN1 += <eval (<dLOCAL.DIFF>*(<STR>/3))/200>
+	// S Dano PVM: <ARGN1>
+	if <isevent.e_paragon>
+		ARGN1 += 7
+	endif
+	if (<src.BASEID> == c_daemon) && (<src.owner>)
+		ARGN1 += <eval <ARGN1>*2>
+	endif
+
+	IF <SRC.ISPLAYER>
+	// ja tem em sphere_events_players / e_gerais
+	//	ARGN1 -= <eval (<ARGN1>*<SRC.AR>)/200>
+	ELSE
+		ARGN1 -= <eval (<ARGN1>*<SRC.AR>)/80>
+	ENDIF
+ENDIF
+
+ON=@GETHIT
+IF (<REGION.TAG0.PVM_ONLY>) && (<MEMORYFINDTYPE.memory_ipet.UID>) && (<SRC.ISPLAYER>)
+	RETURN 1
+ENDIF
+
+IF (<NPC>==3) || (<NPC>==4) || (<NPC>==5) || (<NPC>==6) || (<NPC>==7)
+	RETURN 1
+ENDIF
+
+IF ((<REGION.ISEVENT.r_house_private>) || (<SRC.REGION.ISEVENT.r_house_private>)) && ((<FLAGS>&statf_spawned) || !(<flags>&statf_pet))
+	GO <HOME>
+ENDIF
+
+IF (<SRC.REGION.GUARDED> == 1) && (<REGION.GUARDED> == 0) && ((<FLAGS>&statf_spawned) || !(<flags>&statf_pet))
+	GO <HOME>
+	RETURN 1
+ENDIF
+
+// IF ((<SRC.ISINSHIP>) && (!<ISINSHIP>)) || (!<SRC.ISINSHIP>) && (<ISINSHIP>)
+// 	GO <SRC.P>
+// ENDIF
+
+REF69 <UID>
+
+IF <MEMORYFINDTYPE.memory_ipet.UID>
+	IF <DISTANCE <MEMORYFINDTYPE.memory_ipet.LINK>> < 12
+		TRY UID.<MEMORYFINDTYPE.memory_ipet.LINK>.COMBMSG 0466,<ARGN1>
+	ENDIF
+ENDIF
+
+IF <SRC.MEMORYFINDTYPE.memory_ipet.UID>
+	IF <SRC.DISTANCE <SRC.MEMORYFINDTYPE.memory_ipet.LINK>> < 12
+		TRY UID.<SRC.MEMORYFINDTYPE.memory_ipet.LINK>.COMBMSG 026,<ARGN1>
+	ENDIF
+ENDIF
+
+IF (<SRC.ISPLAYER>)
+	SRC.COMBMSG 026,<ARGN1>
+
+	IF (<ARGN2> & dam_physical) && (<SRC.WEAPON>)
+//		IF (<SRC.WEAPON.TYPE> == t_weapon_bow) || (<SRC.WEAPON.TYPE> == t_weapon_xbow)
+//			TAG.PREVIOUS_MANA <MANA>
+//			MANA 0
+//		ELSE
+//			MANA <TAG0.PREVIOUS_MANA>
+//			TAG0.PREVIOUS_MANA
+//
+//			IF (<MANA> == 0)
+//				MANA <MAXMANA>
+//			ENDIF
+//		ENDIF
+
+		IF (<SRC.WEAPON.TAG0.LEGENDARY_WEAPON_EFFECT>) && (<SRC.WEAPON.TAG0.LEGENDARY_WEAPON_EFFECT_CHANCE>)
+			LOCAL.LEGENDARY_WEAPON_CHANCE <EVAL <SRC.WEAPON.TAG0.LEGENDARY_WEAPON_EFFECT_CHANCE> / 2>
+
+			IF (<LOCAL.LEGENDARY_WEAPON_CHANCE> == 0)
+				LOCAL.LEGENDARY_WEAPON_CHANCE = 1
+			ENDIF
+
+			IF !(<R<LOCAL.LEGENDARY_WEAPON_CHANCE>>)
+
+				IF (<SRC.WEAPON.TAG0.LEGENDARY_WEAPON_EFFECT> == s_paralyze)
+
+					IF (<ISEVENT.e_poison_immune>) && !(<TAG0.FROST_EFFECT_IMMUNE>) && !(<FINDID.i_paralyze_disable_effect.UID>)
+						SAY Oh no ! My dispel spell is disabled temporarily. Bastard !
+						SERV.NEWITEM i_paralyze_disable_effect
+						NEW.CONT <UID>
+						NEW.TIMER 120
+					ENDIF
+
+					TIMERF 2,SPELLEFFECT <SRC.WEAPON.TAG0.LEGENDARY_WEAPON_EFFECT>,1000,<SRC.UID>
+				ELSE
+					SPELLEFFECT <SRC.WEAPON.TAG0.LEGENDARY_WEAPON_EFFECT>,1000,<SRC.UID>
+				ENDIF
+			ENDIF
+		ENDIF
+
+		IF (<SRC.TAG0.PVM_HIT_INCREASE_PERCENTAGE>)
+			ARGN1 = <EVAL (<ARGN1> * (100 + <SRC.TAG.PVM_HIT_INCREASE_PERCENTAGE>)) / 100>
+		ENDIF
+	ENDIF
+
+	IF (<ARGN2> & dam_physical) && !(<FLAGS> & statf_conjured)
+		IF (<SRC.FINDLAYER.layer_hand1>)
+			f_handle_pvm_level_item_hits <SRC.FINDLAYER.layer_hand1>,<ARGN1>
+
+			IF !(STRCMPI(<SRC.FINDLAYER.layer_hand1.TAG0.LEVEL_ATTRIBUTE>, DAMAGE))
+				ARGN1 += <SRC.FINDLAYER.layer_hand1.TAG0.LEVEL_ATTRIBUTE_BONUS>
+			ENDIF
+		ENDIF
+
+		IF (<SRC.FINDLAYER.layer_hand2>)
+			f_handle_pvm_level_item_hits <SRC.FINDLAYER.layer_hand2>,<ARGN1>
+
+			IF !(STRCMPI(<SRC.FINDLAYER.layer_hand2.TAG0.LEVEL_ATTRIBUTE>, DAMAGE))
+				ARGN1 += <SRC.FINDLAYER.layer_hand2.TAG0.LEVEL_ATTRIBUTE_BONUS>
+			ENDIF
+		ENDIF
+	ENDIF
+
+	IF (<TAG0.COATED_ORE_WEAPON_WEAKNESS>)
+		LOCAL.WEAPON_FOUND 0
+		IF (<SRC.FINDLAYER.layer_hand1>)
+			IF (<SRC.FINDLAYER.layer_hand1.COLOR> == <TAG0.COATED_ORE_WEAPON_WEAKNESS>) && !(STRCMPI(<SRC.FINDLAYER.layer_hand1.TAG0.LEVEL_ATTRIBUTE>, DAMAGE))
+				LOCAL.WEAPON_FOUND 1
+			ENDIF
+		ENDIF
+
+		IF (<SRC.FINDLAYER.layer_hand2>)
+			IF (<SRC.FINDLAYER.layer_hand2.COLOR> == <TAG0.COATED_ORE_WEAPON_WEAKNESS>) && !(STRCMPI(<SRC.FINDLAYER.layer_hand2.TAG0.LEVEL_ATTRIBUTE>, DAMAGE))
+				LOCAL.WEAPON_FOUND 1
+			ENDIF
+		ENDIF
+
+		IF !(<LOCAL.WEAPON_FOUND>)
+			ARGN1 = 1
+		ENDIF
+	ENDIF
+ENDIF
+
+IF <HVAL <ARGN2>>&02
+	ARGN2 <ARGN2>&~02
+	ARGN2 <ARGN2>|04
+ENDIF
+
+IF <CANSEELOS <SRC.UID>>
+		IF <R2>==1
+			ATTACK <SRC.UID>
+		ENDIF
+ENDIF
+
+IF (<NOTOGETFLAG <SRC.UID>> >= noto_criminal) && !(<FLAGS> & statf_conjured) && ((<ISTEVENT.e_monster_of_the_month>) || (<ISEVENT.e_paragon>))
+	LOCAL.HOUR = <f_paragon_hour>
+
+	IF !(<TAG0.CURRENT_HITS>)
+		TAG.CURRENT_HITS <HITS>
+	ENDIF
+
+	LOCAL.DAMAGE <EVAL (<TAG.CURRENT_HITS> - <HITS>) + <ARGN1>>
+
+	IF (<LOCAL.DAMAGE> > 0)
+		IF (<HITS> < <LOCAL.DAMAGE>)
+			LOCAL.DAMAGE <HITS>
+		ENDIF
+
+		IF (STRMATCH(*<DEF.PARAPOI_<DVAR0.PARAGON_HOUR_<DLOCAL.HOUR>>>*,<SRC.REGION.NAME>)) || (STRMATCH(*<DEF.PARAPOI_<DVAR0.PARAGON_HOUR_<DLOCAL.HOUR>>>*,<SRC.ROOM.NAME>))
+			SRC.TAG0.PVM_DAMAGE += <EVAL <LOCAL.DAMAGE> * 2>
+		ELSE
+			SRC.TAG0.PVM_DAMAGE += <LOCAL.DAMAGE>
+		ENDIF
+
+		TAG.CURRENT_HITS <EVAL <TAG.CURRENT_HITS> - <LOCAL.DAMAGE>>
+	ELSE
+		IF (<EVAL <HITS> - <TAG.CURRENT_HITS>> > 150)
+			SERV.LOG Maybe a Weekly PVM Event Bugger: <SRC.NAME>.
+		ENDIF
+	ENDIF
+ENDIF
+
+// ON=@ATTACK
+// IF !(<SRC.ISPLAYER>)
+// 	IF (<MEMORYFINDTYPE.memory_ipet.UID>)
+// 		RETURN 0
+// 	ELSE
+// 		IF !(<SRC.NPC>==brain_animal)
+// 			IF !(<SRC.MEMORYFINDTYPE.memory_ipet.UID>)
+// 				ACTION 67
+// 				RETURN 1
+// 			ENDIF
+// 		ENDIF
+// 	endif
+// ENDIF
+
+ON=@PERSONALSPACE
+if (<stam> >= <Maxstam>) && !((<FLAGS> & statf_invisible) || (<FLAGS>&STATF_DEAD) || (<flags>&statf_hidden) || (<src.isgm>))
+	 ARGN1=<eval (<SRC.MAXSTAM>*20)/100>
+endif
+
+ON=@SKILLSTART
+IF <KARMA> < -1000
+KARMA -10000
+ENDIF
+
+ON=@NpcSeeNewPlayer
+IF <NPC>==brain_vendor
+	IF !(<TAG0.PVEND>)
+		TAG.VENDORMARKUP 30
+	ENDIF
+ENDIF
+FOOD 1000
+
+ON=@NPCRestock
+	src.VENDGOLD = 750
+
+
+ON=@DCLICK
+IF (<NPC>==brain_vendor) || (<NPC>==brain_animal_trainer) || (<NPC>==brain_healer)
+	IF !(<BASEID>==c_h_new_vendor)
+		IF (<TAG0.RESTOCKUNREADY> != 1)
+			SAY Itens reestocados, <SRC.NAME> !
+			TAG.RESTOCKUNREADY 1
+			RESTOCK
+			TIMERF 300, TAG.RESTOCKUNREADY
+		ELSE
+			SAY Preciso aguardar alguns minutos antes de reestocar...
+		ENDIF
+	ENDIF
+ENDIF
+
+ON=@DEATH
+IF (<TAG0.DISABLE_DEFAULT_LOOT>)
+	RETURN 0
+ENDIF
+
+IF (<NPC> != BRAIN_ANIMAL )
+	IF !(<FLAGS>&statf_conjured )
+		IF (<TAG0.LOOTPROPRIO> != 1)
+			GOLD 0
+			NEWGOLD <BALANCEARGOLD <GRANAMOBS>>
+		ELSE
+			GOLD <BALANCEARGOLD <GOLD>>
+		ENDIF
+	ENDIF
+ENDIF
+
+IF (<NPC>==brain_monster) || (<NPC>==brain_dragon) || (<NPC>==brain_human)
+	LOCAL.SPECIAL_LOOT_INCREASE_PERCENTAGE = 0
+	LOCAL.WEEKLY_PVM_SINGLE_CHAMPION 0
+
+	IF (<ATTACKER>)
+		FOR 0 <EVAL <ATTACKER> - 1>
+			REF1 <ATTACKER.<DLOCAL._FOR>>
+			IF (<REF1.TAG0.SPECIAL_LOOT_INCREASE_PERCENTAGE> > <LOCAL.SPECIAL_LOOT_INCREASE_PERCENTAGE>)
+				LOCAL.SPECIAL_LOOT_INCREASE_PERCENTAGE <REF1.TAG0.SPECIAL_LOOT_INCREASE_PERCENTAGE>
+			ENDIF
+
+			IF (<REF1.ISEVENT.e_weekly_pvm_single_champion>)
+				LOCAL.WEEKLY_PVM_SINGLE_CHAMPION 1
+			ENDIF
+		ENDFOR
+	ENDIF
+
+	IF (<SRC.ACT.ISCHAR>) && (<NPC> != brain_human)
+		SRC.ACT.TAG.KARMACHANGE <KARMA>/10
+
+
+		IF (<SRC.ACT.TAG0.KARMACHANGE>) > 500
+			SRC.ACT.SYSMESSAGE You have lost huge amounts of karma.
+		ELIF (<SRC.ACT.TAG0.KARMACHANGE>) > 250
+			SRC.ACT.SYSMESSAGE You have lost a lot of karma.
+		ELIF (<SRC.ACT.TAG0.KARMACHANGE>) > 100
+			SRC.ACT.SYSMESSAGE You have lost a moderate amount of karma.
+		ELIF (<SRC.ACT.TAG0.KARMACHANGE>) > 50
+			SRC.ACT.SYSMESSAGE You have lost a little of karma.
+		ELIF (<SRC.ACT.TAG0.KARMACHANGE>) > 0
+			SRC.ACT.SYSMESSAGE You have lost a bit of karma.
+		ENDIF
+
+		IF (<SRC.ACT.TAG0.KARMACHANGE>) < -500
+			SRC.ACT.SYSMESSAGE You have gained huge amounts of karma.
+		ELIF (<SRC.ACT.TAG0.KARMACHANGE>) < -250
+			SRC.ACT.SYSMESSAGE You have gained a lot of karma.
+		ELIF (<SRC.ACT.TAG0.KARMACHANGE>) < -100
+			SRC.ACT.SYSMESSAGE You have gained a moderate amount of karma.
+		ELIF (<SRC.ACT.TAG0.KARMACHANGE>) < -50
+			SRC.ACT.SYSMESSAGE You have gained a little of karma.
+		ELIF (<SRC.ACT.TAG0.KARMACHANGE>) < 0
+			SRC.ACT.SYSMESSAGE You have gained a bit of karma.
+		ENDIF
+
+
+		SRC.ACT.KARMA -= <SRC.ACT.TAG0.KARMACHANGE>
+		SRC.ACT.TAG.KARMACHANGE
+	ENDIF
+
+	IF (<VAR0.BONUS_EVENT>)
+		IF (!<R125>)
+			NEWITEM i_buffer_scroll
+			NEW.CONT <UID>
+		ENDIF
+	ELSE
+		LOCAL.CHANCE 250
+		LOCAL.CHANCE <EVAL (<LOCAL.CHANCE> * (100 - <LOCAL.SPECIAL_LOOT_INCREASE_PERCENTAGE>)) / 100>
+
+		IF (!<R<DLOCAL.CHANCE>>)
+			NEWITEM i_buffer_scroll
+			NEW.CONT <UID>
+		ENDIF
+	ENDIF
+
+	IF (<VAR0.BONUS_EVENT>)
+		IF (<DEF.SKILL_TEACHER_QUEST_ENABLED>) && (!<R175>)
+			NEWITEM i_recipe_scroll
+			NEW.CONT <UID>
+		ENDIF
+	ELSE
+		LOCAL.CHANCE 350
+		LOCAL.CHANCE <EVAL (<LOCAL.CHANCE> * (100 - <LOCAL.SPECIAL_LOOT_INCREASE_PERCENTAGE>)) / 100>
+
+		IF (<DEF.SKILL_TEACHER_QUEST_ENABLED>) && (!<R<DLOCAL.CHANCE>>)
+			NEWITEM i_recipe_scroll
+			NEW.CONT <UID>
+		ENDIF
+	ENDIF
+
+	IF (<VAR0.BONUS_EVENT>)
+		IF (!<R120>)
+			NEWITEM <EVAL {i_ethereal_special_mount_deed 3 i_paragon_ethereal_mount_talisman 5 i_ethereal_mount_deed 7 i_treasure_map_lvl_5 20 I_X_RUNEBOOK 20 i_keg_glb1 20 i_keg_gmb1 20 i_keg_grf1 20 i_chaos_shield 40 i_order_shield 40 i_power_scroll 100}>
+			NEW.ATTR &= ~attr_newbie
+			SERV.LOG Creating <NEW.NAME> for bonus event !
+			NEW.CONT <UID>
+		ENDIF
+	ENDIF
+
+	IF (<VAR0.BONUS_EVENT>)
+		IF (!<R75>)
+			NEWITEM <EVAL {i_bow_sup 1 i_except_War_fork 1 i_except_kryss 1 i_except_axe_exec 1 i_except_sword_Viking 1 i_except_halberd 1 i_except_bardiche 1 i_except_mace_war 1 i_except_war_hammer 1}>
+			f_make_pvm_weapon <NEW.UID>,<EVAL {s_paralyze 1 s_flamestrike 1 s_lightning 1}>
+			NEW.CONT <UID>
+
+			SERV.LOG New magic weapon dropped: <NEW.NAME>
+		ENDIF
+	ELSE
+		LOCAL.CHANCE 150
+		LOCAL.CHANCE <EVAL (<LOCAL.CHANCE> * (100 - <LOCAL.SPECIAL_LOOT_INCREASE_PERCENTAGE>)) / 100>
+
+		IF (!<R<DLOCAL.CHANCE>>)
+			NEWITEM <EVAL {i_bow_sup 1 i_except_War_fork 1 i_except_kryss 1 i_except_axe_exec 1 i_except_sword_Viking 1 i_except_halberd 1 i_except_bardiche 1 i_except_mace_war 1 i_except_war_hammer 1}>
+			f_make_pvm_weapon <NEW.UID>,<EVAL {s_paralyze 1 s_flamestrike 1 s_lightning 1}>
+			NEW.CONT <UID>
+
+			SERV.LOG New magic weapon dropped: <NEW.NAME>
+		ENDIF
+	ENDIF
+
+	IF (STRMATCH(*Paroxysmus*,<REGION.NAME>))
+		IF !(<R100>)
+			SERV.NEWITEM i_runic_stone
+			NEW.CONT <UID>
+		ENDIF
+	ENDIF
+
+	IF <TAG0.LOOTPROPRIO>==1
+		IF (STRMATCH(*skeleton*,<id>))
+			if <r1,2> < 2
+				newitem i_arrow
+				new.amount <r4,16>
+				new.cont <uid>
+			endif
+		endif
+
+		IF (<ISTEVENT.e_monster_of_the_month>)
+			f_monster_of_the_month_loot <LOCAL.SPECIAL_LOOT_INCREASE_PERCENTAGE>,<LOCAL.WEEKLY_PVM_SINGLE_CHAMPION>
+		ENDIF
+
+		RETURN 0
+	ENDIF
+
+	FORCONT <UID> ////itens antes daqui sao todos removidos se o npc nao tiver TAG.LOOTPROPRIO
+		IF !(<ATTR>&04)
+			REMOVE
+		ENDIF
+	ENDFOR
+
+	IF (<ISTEVENT.e_monster_of_the_month>)
+		f_monster_of_the_month_loot <LOCAL.SPECIAL_LOOT_INCREASE_PERCENTAGE>,<LOCAL.WEEKLY_PVM_SINGLE_CHAMPION>
+	ENDIF
+
+	IF (STRMATCH(*Destard*,<REGION.NAME>))
+		if <r30> == 1
+			if (<r0,3> > 0)
+				serv.newitem i_scroll_seamstress
+				new.cont <uid>
+			else
+				serv.newitem i_scroll_tailor
+				new.cont <uid>
+			endif
+		endif
+	endif
+
+	IF (STRMATCH(*Covetous*,<REGION.NAME>))
+		if <r30> == 1
+			serv.newitem i_scroll_dwarf
+			new.cont <uid>
+		endif
+	endif
+
+	IF (STRMATCH(*Sewers*,<REGION.NAME>))
+		if <r30> == 1
+			serv.newitem i_scroll_navigator
+			new.cont <uid>
+		endif
+	endif
+
+	IF <REGION.FLAGS>&04000
+		RETURN 0
+	ENDIF
+
+	IF (<NPC> != BRAIN_ANIMAL )
+		IF !(<FLAGS>&statf_conjured )
+			GOLD 0
+			NEWGOLD <BALANCEARGOLD <GRANAMOBS>>
+		ENDIF
+	ENDIF
+
+	VAR.NPCLVL=(((<STR>*<STR>)/1000)+((<INT>*<INT>)/10000)+((<DEX>*<DEX>)/4000)+((<SKILLTOTAL>*<SKILLTOTAL>)/100000)) / 20
+	IF <VAR0.NPCLVL> < 1
+		VAR.NPCLVL 1
+	ENDIF
+
+	IF <MAP>==0
+		CRIALOOT <VAR.NPCLVL>,<LOCAL.SPECIAL_LOOT_INCREASE_PERCENTAGE>,<LOCAL.WEEKLY_PVM_SINGLE_CHAMPION>
+	ENDIF
+ENDIF
+
+ON=@DEATHCORPSE
+	LOCAL.GOLD_INCREASE_PERCENTAGE = 0
+
+	IF (<ATTACKER>)
+		FOR 0 <EVAL <ATTACKER> - 1>
+			REF1 <ATTACKER.<DLOCAL._FOR>>
+			LOCAL.CURRENT_GOLD_INCREASE_PERCENTAGE <REF1.TAG0.GOLD_INCREASE_PERCENTAGE>
+
+			IF (<REF1.ISEVENT.e_weekly_pvm_single_champion>)
+				LOCAL.CURRENT_GOLD_INCREASE_PERCENTAGE <EVAL <LOCAL.CURRENT_GOLD_INCREASE_PERCENTAGE> + 100>
+			ENDIF
+
+			IF (<LOCAL.CURRENT_GOLD_INCREASE_PERCENTAGE> > <LOCAL.GOLD_INCREASE_PERCENTAGE>)
+				LOCAL.GOLD_INCREASE_PERCENTAGE <LOCAL.CURRENT_GOLD_INCREASE_PERCENTAGE>
+			ENDIF
+		ENDFOR
+	ENDIF
+
+	IF (<LOCAL.GOLD_INCREASE_PERCENTAGE>)
+		FORCONT <ARGO.UID> 10
+			IF (<BASEID> == i_gold)
+				AMOUNT = <EVAL (<AMOUNT> * (100 + <LOCAL.GOLD_INCREASE_PERCENTAGE>)) / 100>
+			ENDIF
+		ENDFOR
+	ENDIF
+
+	RETURN 0
+
+
+[FUNCTION GRANAMOBS]
+IF (<EVAL (<STR>+<DEX>+(<INT>/3))/100> > 14 )
+RETURN <EVAL (<STR>*3)+(<DEX>*3)+(<INT>*3)>
+ENDIF
+DOSWITCH <EVAL (<STR>+<DEX>+(<INT>/3))/100>
+RETURN <EVAL <STR>+<DEX>>
+RETURN <EVAL (<STR>*<eval (5/3)>)+<DEX>>
+RETURN <EVAL (<STR>*2)+<DEX>+(<INT>/2)>
+RETURN <EVAL (<STR>*3)+<DEX>+(<INT>/2)>
+RETURN <EVAL (<STR>*3)+<DEX>+(<INT>/2)>
+RETURN <EVAL (<STR>*3)+((<DEX>*3)/2)+<INT>>
+RETURN <EVAL (<STR>*3)+((<DEX>*3)/2)+<INT>>
+RETURN <EVAL (<STR>*3)+((<DEX>*3)/2)+<INT>>
+RETURN <EVAL (<STR>*3)+((<DEX>*3)/2)+<INT>>
+RETURN <EVAL (<STR>*4)+((<DEX>*3)/2)+<INT>>
+RETURN <EVAL (<STR>*4)+(<DEX>*2)+(<INT>*3)+<HITS>>
+RETURN <EVAL (<STR>*5)+(<DEX>*2)+(<INT>*3)+<HITS>>
+RETURN <EVAL (<STR>*6)+(<DEX>*3)+(<INT>*3)+<HITS>>
+RETURN <EVAL (<STR>*6)+(<DEX>*4)+(<INT>*4)+<HITS>>
+RETURN <EVAL (<STR>*6)+(<DEX>*4)+(<INT>*4)+<HITS>>
+RETURN <EVAL (<STR>*6)+(<DEX>*4)+(<INT>*4)+<HITS>>
+RETURN <EVAL (<STR>*6)+(<DEX>*4)+(<INT>*4)+<HITS>>
+ENDDO
+
+[FUNCTION BALANCEARGOLD]
+IF (<ARGN1> <= 1000) THEN
+	LOCAL.GOLDBALANCEADO = <FEVAL <FLOATVAL <ARGN1> / 1.8>>
+ELSE
+	LOCAL.GOLDBALANCEADO = <FEVAL <FLOATVAL <ARGN1> / 4>>
+
+	// evitar descontinuidade da funcao (1000 / 1.8)
+	IF (<dLOCAL.GOLDBALANCEADO> < 555)
+		LOCAL.GOLDBALANCEADO = <EVAL {500 600}>
+	ENDIF
+ENDIF
+
+IF (<dLOCAL.GOLDBALANCEADO> < 1)
+	LOCAL.GOLDBALANCEADO = 1
+ENDIF
+
+IF (<VAR0.BONUS_EVENT>)
+	LOCAL.GOLDBALANCEADO *= 2
+ENDIF
+
+RETURN <LOCAL.GOLDBALANCEADO>
+
+[FUNCTION CRIALOOT]
+LOCAL.SPECIAL_LOOT_INCREASE_PERCENTAGE <ARGV[1]>
+LOCAL.WEEKLY_PVM_SINGLE_CHAMPION <ARGV[2]>
+
+IF <MAGERY>
+	NEWITEM random_reagent
+
+	IF (<VAR0.BONUS_EVENT>)
+		NEW.AMOUNT <eval ((RAND(2,6) * <ARGN1>)>
+	ELSE
+		NEW.AMOUNT <eval ((RAND(1,4) * <ARGN1>)>
+	ENDIF
+
+	NEW.CONT <UID>
+
+	NEWITEM random_reagent
+	NEW.AMOUNT <eval ((RAND(1,4) * <ARGN1>)>
+	NEW.CONT <UID>
+
+	IF (<VAR0.BONUS_EVENT>)
+		NEW.AMOUNT *= 3
+	ENDIF
+
+ENDIF
+
+IF (<VAR0.BONUS_EVENT>)
+	IF RAND(300) < 2
+		NEWITEM rareloot_ssh
+		NEW.CONT <UID>
+	ENDIF
+ELSE
+	LOCAL.CHANCE 1200
+	LOCAL.CHANCE <EVAL (<LOCAL.CHANCE> * (100 - <LOCAL.SPECIAL_LOOT_INCREASE_PERCENTAGE>)) / 100>
+
+	IF !(<R<DLOCAL.CHANCE>>)
+		NEWITEM rareloot_ssh
+		NEW.CONT <UID>
+	ENDIF
+ENDIF
+
+IF <NPC> == brain_dragon
+	IF (<VAR0.BONUS_EVENT>)
+		if !(<R10>)
+			newitem t_blood_weapon_template
+			new.cont <uid>
+		endif
+	ELSE
+		LOCAL.CHANCE 20
+		LOCAL.CHANCE <EVAL (<LOCAL.CHANCE> * (100 - <LOCAL.SPECIAL_LOOT_INCREASE_PERCENTAGE>)) / 100>
+
+		IF !(<R<DLOCAL.CHANCE>>)
+			newitem t_blood_weapon_template
+			new.cont <uid>
+		endif
+	ENDIF
+else
+	IF (<VAR0.BONUS_EVENT>)
+		if !(<R150>)
+			newitem t_blood_weapon_template
+			new.cont <uid>
+		endif
+	ELSE
+		LOCAL.CHANCE 300
+		LOCAL.CHANCE <EVAL (<LOCAL.CHANCE> * (100 - <LOCAL.SPECIAL_LOOT_INCREASE_PERCENTAGE>)) / 100>
+
+		IF !(<R<DLOCAL.CHANCE>>)
+			newitem t_blood_weapon_template
+			new.cont <uid>
+		endif
+	ENDIF
+endif
+
+if (strmatch(*liche*,<baseid>)) || (strmatch(c_skeleton*,<baseid>)) || (c_zombie == <baseid>) || (c_m_ghoul == <baseid>) || (c_m_ghost == <baseid>) || (c_m_wraith == <baseid>) || (c_spectre == <baseid>)
+	IF (<VAR0.BONUS_EVENT>)
+		if !(<R15>)
+			newitem t_silver_weapon_template
+			new.cont <uid>
+		endif
+	ELSE
+		LOCAL.CHANCE 30
+		LOCAL.CHANCE <EVAL (<LOCAL.CHANCE> * (100 - <LOCAL.SPECIAL_LOOT_INCREASE_PERCENTAGE>)) / 100>
+
+		IF !(<R<DLOCAL.CHANCE>>)
+			newitem t_silver_weapon_template
+			new.cont <uid>
+		endif
+	ENDIF
+else
+	IF (<VAR0.BONUS_EVENT>)
+		if !(<R125>)
+			newitem t_silver_weapon_template
+			new.cont <uid>
+		endif
+	ELSE
+		LOCAL.CHANCE 250
+		LOCAL.CHANCE <EVAL (<LOCAL.CHANCE> * (100 - <LOCAL.SPECIAL_LOOT_INCREASE_PERCENTAGE>)) / 100>
+
+		IF !(<R<DLOCAL.CHANCE>>)
+			newitem t_silver_weapon_template
+			new.cont <uid>
+		endif
+	ENDIF
+endif
+
+IF RAND(200) < <INT>
+	NEWITEM random_lower_scroll
+	NEW.AMOUNT <eval (RAND(1,3))>
+	NEW.CONT <UID>
+ENDIF
+
+IF (<VAR0.BONUS_EVENT>)
+	IF RAND(250) < <INT>
+		NEWITEM random_upper_Scroll
+		NEW.AMOUNT 1
+		NEW.CONT <UID>
+	ENDIF
+ELSE
+	LOCAL.CHANCE 500
+	LOCAL.CHANCE <EVAL (<LOCAL.CHANCE> * (100 - <LOCAL.SPECIAL_LOOT_INCREASE_PERCENTAGE>)) / 100>
+
+	IF !(<R<DLOCAL.CHANCE>>)
+		NEWITEM random_upper_Scroll
+		NEW.AMOUNT 1
+		NEW.CONT <UID>
+	ENDIF
+ENDIF
+
+IF RAND(1000) < <INT>
+	NEWITEM random_lower_scroll
+	NEW.AMOUNT <eval (RAND(1,3))>
+	NEW.CONT <UID>
+ENDIF
+
+IF (STRMATCH(*skeleton*,<id>))
+	if <r1,3> < 3
+		newitem i_arrow
+		new.amount <r8,20>
+
+		IF (<VAR0.BONUS_EVENT>)
+			NEW.AMOUNT *= 2
+		ENDIF
+
+		new.cont <uid>
+	endif
+endif
+
+IF !(STRCMPI(<ID>,c_m_orc_captain))
+	IF <R7>==1
+		NEWITEM i_helm_orc
+		NEW.CONT <UID>
+	ENDIF
+ENDIF
+
+
+IF !(STRCMPI(<ID>,c_m_orc_mage)) || !(STRCMPI(<ID>,c_orc_w_club>))
+	IF <R20>==1
+		NEWITEM i_mask_orc
+		NEW.CONT <UID>
+	ENDIF
+ENDIF
+
+IF (<LOCAL.WEEKLY_PVM_SINGLE_CHAMPION>)
+	IF !(<R200>)
+		NEWITEM t_treas_maps_3a5
+		NEW.CONT <UID>
+	ENDIF
+ENDIF
+
+IF (<ICON>)
+	IF (<VAR0.BONUS_EVENT>)
+		IF (!<R150>) && (<ICON> != i_worldgem_bit)
+			NEWITEM <ICON>
+			NEW.TAG.STATUETTE 1
+			NEW.COLOR <COLOR>
+			NEW.NAME <NEW.NAME> Statuette
+			NEW.CONT <UID>
+
+			SERV.LOG New statuette dropped: <NEW.NAME>
+		ENDIF
+	ELSE
+		LOCAL.CHANCE 300
+		LOCAL.CHANCE <EVAL (<LOCAL.CHANCE> * (100 - <LOCAL.SPECIAL_LOOT_INCREASE_PERCENTAGE>)) / 100>
+
+		IF !(<R<DLOCAL.CHANCE>>) && (<ICON> != i_worldgem_bit)
+			NEWITEM <ICON>
+			NEW.TAG.STATUETTE 1
+			NEW.COLOR <COLOR>
+			NEW.NAME <NEW.NAME> Statuette
+			NEW.CONT <UID>
+
+			SERV.LOG New statuette dropped: <NEW.NAME>
+		ENDIF
+	ENDIF
+ENDIF
+
+[EVENTS e_anti_ranged_attack]
+ON=@NPCActFight
+	IF (<NPC> == brain_dragon)
+		STAM <EVAL <MAXSTAM> - 10>
+	ENDIF
+
+	IF !(<FLAGS> & statf_freeze) && !(<FLAGS> & statf_stone) && !(<TAG0.BREATH_COOLDOWN>) && (<CANSEELOS <SRC.UID>>)
+		IF (!<TAG0.BREATH_DELAY>)
+			TAG.BREATH_DELAY <SERV.TIME>
+		ELSEIF (<EVAL <SERV.TIME> - <TAG0.BREATH_DELAY>> > 20)
+			TAG.BREATH_DELAY
+
+			LOCAL.BREATH_INTENSITY <EVAL <HITS> * 4>
+			LOCAL.DISTANCE <DISTANCE <SRC.UID>>
+
+			IF (<LOCAL.DISTANCE> > 2) && (<LOCAL.DISTANCE> < 10) && (<TAG0.BREATH_DELAY>)
+				TAG.BREATH_DELAY <SERV.TIME>
+			ELSEIF (<EVAL <SERV.TIME> - <TAG0.BREATH_DELAY>> > 5)
+				TAG.BREATH_DELAY
+				SRC.SPELLEFFECT s_fireball, <LOCAL.BREATH_INTENSITY>, <UID>
+				TAG.BREATH_COOLDOWN 1
+				TIMERF 9,TAG.BREATH_COOLDOWN
+
+				RETURN 0
+			ENDIF
+		ENDIF
+	ENDIF
+
+[EVENTS e_mage_spell_attack]
+ON=@NPCActFight
+	IF (<NPC> == brain_dragon)
+		STAM <EVAL <MAXSTAM> - 10>
+	ENDIF
+
+	IF !(<FLAGS> & statf_freeze) && !(<FLAGS> & statf_stone) && !(<TAG0.BREATH_COOLDOWN>) && (<CANSEELOS <SRC.UID>>)
+		IF (!<TAG0.BREATH_DELAY>)
+			TAG.BREATH_DELAY <SERV.TIME>
+		ELSEIF (<EVAL <SERV.TIME> - <TAG0.BREATH_DELAY>> > 50)
+			TAG.BREATH_DELAY
+
+			IF (<TAG0.HITS>)
+				LOCAL.BREATH_INTENSITY <EVAL <TAG.HITS> * 8>
+			ELSE
+				LOCAL.BREATH_INTENSITY <EVAL <HITS> * 8>
+			ENDIF
+
+			LOCAL.DISTANCE <DISTANCE <SRC.UID>>
+
+			IF (<LOCAL.DISTANCE> < 10)
+				LOCAL.SPELL <EVAL {s_lightning 1 s_fIREBALL 1 s_explosion 1 s_harm 1 s_paralyze 1 s_magic_arrow 1}>
+
+				SRC.SPELLEFFECT <LOCAL.SPELL>, <LOCAL.BREATH_INTENSITY>, <UID>
+				TAG.BREATH_COOLDOWN 1
+				TIMERF 15,TAG.BREATH_COOLDOWN
+
+				RETURN 0
+			ENDIF
+		ENDIF
+	ENDIF
+
+[EVENTS e_mage_spell_attack_boss]
+ON=@NPCActFight
+	IF (<NPC> == brain_dragon)
+		STAM <EVAL <MAXSTAM> - 10>
+	ENDIF
+
+	IF !(<FLAGS> & statf_freeze) && !(<FLAGS> & statf_stone) && !(<TAG0.BREATH_COOLDOWN>) && (<CANSEELOS <SRC.UID>>)
+			IF (!<TAG0.BREATH_DELAY>)
+			TAG.BREATH_DELAY <SERV.TIME>
+		ELSEIF (<EVAL <SERV.TIME> - <TAG0.BREATH_DELAY>> > 50)
+			TAG.BREATH_DELAY
+			LOCAL.BREATH_INTENSITY <EVAL <HITS> * 3>
+			LOCAL.DISTANCE <DISTANCE <SRC.UID>>
+
+			IF (<LOCAL.DISTANCE> < 10)
+				LOCAL.SPELL <EVAL {s_lightning 1 s_fIREBALL 1 s_explosion 1 s_harm 1 s_chain_lightning 1 s_paralyze 1}>
+				SRC.SPELLEFFECT <LOCAL.SPELL>, <LOCAL.BREATH_INTENSITY>, <UID>
+				TAG.BREATH_COOLDOWN 1
+				TIMERF 10,TAG.BREATH_COOLDOWN
+
+				RETURN 0
+			ENDIF
+		   ENDIF
+	ENDIF
+
+[EVENTS e_Undead]
+
+[EVENTS e_Carnivores]
+// weak carnivores.
+
+[EVENTS e_Carnivores2]
+// normal carnivores.
+
+[EVENTS e_Carnivores3]
+// strong carnivores.
+
+[EVENTS e_Terathan]
+
+[EVENTS e_Ophidian]
+
+[EVENTS e_Horses]
+
+[EVENTS e_Notoriety]
+
+[EVENTS e_Ostards]

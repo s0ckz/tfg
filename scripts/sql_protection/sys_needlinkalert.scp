@@ -1,0 +1,21 @@
+[FUNCTION f_imlinked]
+	IF !(<SRC.ACCOUNT.TAG0.GLOBAL>)
+		DIALOG d_not_linkglobal
+		TIMERF 15,dialogclose d_not_linkglobal
+		TIMERF 15, TRYSRV DISCONNECT
+	ENDIF
+
+
+[DIALOG d_not_linkglobal]
+40,40
+NOMOVE
+NOCLOSE
+NODISPOSE
+
+page 0
+resizepic 147 102 9300 406 129
+dtext 200 116 132 Sua conta não está vinculada !
+dhtmlgump 165 145 377 72 1 0 Você precisa vincular sua conta através do painel de controle para jogar. Você sera desconectado em <def.b> 15 segundos.<def.center><def.l1>a href="http:\/\/tfg.com.br\/painel"<def.r1><def.BFONT_DBLUE>Ir para o painel e vincular minha conta.<def.l1>/a<def.r1>
+
+
+

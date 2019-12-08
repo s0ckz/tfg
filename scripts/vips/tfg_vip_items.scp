@@ -1,0 +1,1093 @@
+////////////////////////////ROUPAS
+
+[ITEMDEF i_vip_robe_of_gems]
+ID=0204e
+NAME=Robe of Gems
+TYPE=t_clothing
+WEIGHT=0
+TEVENTS=t_vip_all
+TEVENTS=t_vip_item_time_control
+TEVENTS=t_safe_drop
+VALUE=100 //Este valor sera em TFG Coins para todo item _vip_
+TDATA1=2592000 //Duracao do item em Segundos
+
+ON=@Create
+DISPID = 02683
+ATTR = attr_newbie | attr_blessed
+f_vip_create
+
+ON=@DClick
+	IF (<CONT> == <SRC.UID>) && !(<SRC.TAG0.DISABLE_SPECIAL_ROBE_GUMP>)
+		SDIALOG d_vip_robe_format
+	ENDIF
+
+ON=@Damage
+return 1
+
+ON=@EQUIP //revis� remplacer par equiptest
+if !(<link.uid>) // se nao tiver dono
+	src.sysmessage @,,1 Este item VIP nao foi comprado e nao pode ser usado. Um LOG deste erro foi gerado no servidor.
+	tag.auth_destroy = 1
+	remove
+	return 1
+elif (<link> != <src.uid>)
+	cont=<link.findlayer.21.uid>
+	updatex
+	src.sysmessage @,,1 Este item VIP nao te pertence e foi devolvido a seu dono. Um LOG deste erro foi gerado no servidor.
+	return 1
+else
+	src.sound snd_spell_bless
+	src.modstr += 10
+	src.modint += 10
+	src.moddex += 10
+endif
+
+on=@unequip //r�vis�
+src.dialogclose d_vip_robe_format
+src.sound snd_spell_bless
+src.modstr -= 10
+src.modint -= 10
+src.moddex -= 10
+
+ON=@DROPON_GROUND
+	src.sysmessage @,,1 Este item nao pode ser colocado no chao.
+	cont=<link.findlayer.21.uid>
+	updatex
+	return 1
+
+ON=@DropOn_Item
+	if !(<argo.topobj>==<link.uid>)
+		src.sysmessage @,,1 Este item e intransferivel. Guarde-o em sua bag ou bank.
+		return 1
+	endif
+
+ON=@DropOn_Char
+	return 1
+
+ON=@DropOn_Trade
+	return 1
+
+
+//////////// Raiden Robe of Gems
+[ITEMDEF i_vip_raiden_robe_of_gems]
+ID=i_kamishimo
+NAME=Raiden Robe of Gems
+TYPE=t_clothing
+WEIGHT=0
+TEVENTS=t_vip_all
+TEVENTS=t_vip_item_time_control
+TEVENTS=t_safe_drop
+VALUE=150 //Este valor sera em TFG Coins para todo item _vip_
+TDATA1=2592000 //Duracao do item em Segundos
+TDATA2=1 // Indica que o item nao pode contar seu timer sozinho (itens que usam timer pro Regen). O script vai criar uma memoria linkada pra contar o timer dele.
+
+ON=@Create
+ATTR = attr_newbie | attr_blessed
+f_vip_create
+
+ON=@DClick
+	IF (<CONT> == <SRC.UID>) && !(<SRC.TAG0.DISABLE_SPECIAL_ROBE_GUMP>)
+		SDIALOG d_vip_robe_format
+	ENDIF
+
+ON=@Damage
+return 1
+
+ON=@EQUIP
+if !<link> // se nao tiver dono
+	src.sysmessage @,,1 Este item VIP nao foi comprado e nao pode ser usado. Um LOG deste erro foi gerado no servidor.
+	tag.auth_destroy = 1
+	remove
+	return 1
+elif <link.isplayer>
+	if (<link> != <src.uid>)
+		cont=<link.findlayer.21.uid>
+		updatex
+		src.sysmessage @,,1 Este item VIP nao te pertence e foi devolvido a seu dono. Um LOG deste erro foi gerado no servidor.
+		return 1
+	endif
+elif (<link.more1> != <src.uid>)
+	ref1 = <link.more1>
+	cont=<ref1.findlayer.21.uid>
+	updatex
+	src.sysmessage @,,1 Este item VIP nao te pertence e foi devolvido a seu dono. Um LOG deste erro foi gerado no servidor.
+	return 1
+else
+SRC.SOUND snd_spell_bless
+SRC.MODSTR += 15
+SRC.MODDEX += 15
+SRC.MODINT += 15
+TIMER 3
+SRC.TAG.SPECIAL_LOOT_INCREASE_PERCENTAGE 30
+SRC.TAG.GOLD_INCREASE_PERCENTAGE 30
+endif
+
+on=@unequip
+SRC.DIALOGCLOSE D_VIP_ROBE_FORMAT
+SRC.SOUND SND_SPELL_BLESS
+SRC.MODSTR -= 15
+SRC.MODINT -= 15
+SRC.MODDEX -= 15
+SRC.TAG.SPECIAL_LOOT_INCREASE_PERCENTAGE
+SRC.TAG.GOLD_INCREASE_PERCENTAGE
+
+ON=@TIMER
+IF (<CONT>)
+	IF (<CONT.MANA> < <CONT.INT>) && !(<CONT.FLAGS>&statf_freeze)
+		CONT.MANA += 1
+	ENDIF
+	TIMER 2
+	RETURN 1
+ENDIF
+
+ON=@DROPON_GROUND //r�vis�
+	src.sysmessage @,,1 Este item nao pode ser colocado no chao.
+	cont=<link.topobj.findlayer.21.uid>
+	updatex
+	return 1
+
+ON=@DropOn_Item
+	if !(<argo.topobj>==<link.topobj.uid>)
+		src.sysmessage @,,1 Este item e intransferivel. Guarde-o em sua bag ou bank.
+		return 1
+	endif
+
+ON=@DropOn_Char
+	return 1
+
+ON=@DropOn_Trade
+	return 1
+
+//////////// Strength Sash
+
+[ITEMDEF i_vip_strength_sash]
+ID=i_sash
+NAME=Sash Of Strength
+TYPE=t_clothing
+WEIGHT=0
+TEVENTS=t_vip_all
+TEVENTS=t_vip_item_time_control
+VALUE=30
+TDATA1=2592000
+
+ON=@Create
+ATTR = attr_newbie | attr_blessed
+f_vip_create
+
+ON=@Damage
+return 1
+
+ON=@EQUIP //revis�
+if !(<link.uid>) // se nao tiver dono
+src.sysmessage @,,1 Este item VIP nao foi comprado e nao pode ser usado. Um LOG deste erro foi gerado no servidor.
+tag.auth_destroy = 1
+remove
+return 1
+elif (<link> != <src.uid>)
+cont=<link.findlayer.21.uid>
+updatex
+src.sysmessage @,,1 Este item VIP nao te pertence e foi devolvido a seu dono. Um LOG deste erro foi gerado no servidor.
+return 1
+else
+src.sound snd_spell_bless
+src.modstr += 5
+endif
+
+on=@unequip //r�vis�
+src.sound snd_spell_bless
+src.modstr -= 5
+
+ON=@DROPON_GROUND //r�vis�
+	src.sysmessage @,,1 Este item nao pode ser colocado no chao.
+	cont=<link.findlayer.21.uid>
+	updatex
+	return 1
+
+ON=@DropOn_Item
+	if !(<argo.topobj>==<link.uid>)
+		src.sysmessage @,,1 Este item e intransferivel. Guarde-o em sua bag ou bank.
+		return 1
+	endif
+
+ON=@DropOn_Char
+	return 1
+
+ON=@DropOn_Trade
+	return 1
+
+
+
+/////////// Intelligence Cloak
+
+[ITEMDEF i_vip_intelligence_cloak]
+ID=i_cape
+NAME=Intelligence Cloak
+TYPE=t_clothing
+WEIGHT=0
+TEVENTS=t_vip_all
+TEVENTS=t_vip_item_time_control
+VALUE=30
+TDATA1=2592000
+TDATA2=1 // Indica que o item nao pode contar seu timer sozinho (itens que usam timer pro Regen). O script vai criar uma memoria linkada pra contar o timer dele.
+
+ON=@Create
+ATTR = attr_newbie | attr_blessed
+f_vip_create
+
+ON=@Damage
+return 1
+
+ON=@EQUIP //revis�
+if !<link> // se nao tiver dono
+	src.sysmessage @,,1 Este item VIP nao foi comprado e nao pode ser usado. Um LOG deste erro foi gerado no servidor.
+	tag.auth_destroy = 1
+	remove
+	return 1
+elif <link.isplayer>
+	if (<link> != <src.uid>)
+		cont=<link.findlayer.21.uid>
+		updatex
+		src.sysmessage @,,1 Este item VIP nao te pertence e foi devolvido a seu dono. Um LOG deste erro foi gerado no servidor.
+		return 1
+	endif
+elif (<link.more1> != <src.uid>)
+	ref1 = <link.more1>
+	cont=<ref1.findlayer.21.uid>
+	updatex
+	src.sysmessage @,,1 Este item VIP nao te pertence e foi devolvido a seu dono. Um LOG deste erro foi gerado no servidor.
+	return 1
+else
+	src.sound snd_spell_bless
+	src.modint += 5
+	TIMER 3
+endif
+
+ON=@TIMER
+IF (<CONT>)
+	IF !(<CONT.FLAGS>&020) && (<CONT.MANA> < <CONT.INT>) && !(<CONT.FLAGS>&statf_freeze)
+		CONT.MANA += 1
+	ENDIF
+	TIMER 3
+	RETURN 1
+ENDIF
+
+on=@unequip //r�vis�
+src.sound snd_spell_bless
+src.modint -= 5
+
+ON=@DROPON_GROUND //r�vis�
+	src.sysmessage @,,1 Este item nao pode ser colocado no chao.
+	cont=<link.topobj.findlayer.21.uid>
+	updatex
+	return 1
+
+ON=@DropOn_Item
+	if !(<argo.topobj>==<link.topobj.uid>)
+		src.sysmessage @,,1 Este item e intransferivel. Guarde-o em sua bag ou bank.
+		return 1
+	endif
+
+ON=@DropOn_Char
+	return 1
+
+ON=@DropOn_Trade
+	return 1
+
+/////////// Raiden Hat
+
+[ITEMDEF i_vip_raiden_hat]
+ID=i_hat_kasa
+NAME=Raiden Hat
+TYPE=t_clothing
+WEIGHT=0
+TEVENTS=t_vip_all
+TEVENTS=t_vip_item_time_control
+VALUE=60
+TDATA1=2592000
+TDATA2=1 // Indica que o item nao pode contar seu timer sozinho (itens que usam timer pro Regen). O script vai criar uma memoria linkada pra contar o timer dele.
+
+ON=@Create
+ATTR = attr_newbie | attr_blessed
+f_vip_create
+
+ON=@Damage
+return 1
+
+ON=@EQUIP //revis�
+if !<link> // se nao tiver dono
+	src.sysmessage @,,1 Este item VIP nao foi comprado e nao pode ser usado. Um LOG deste erro foi gerado no servidor.
+	tag.auth_destroy = 1
+	remove
+	return 1
+elif <link.isplayer>
+	if (<link> != <src.uid>)
+		cont=<link.findlayer.21.uid>
+		updatex
+		src.sysmessage @,,1 Este item VIP nao te pertence e foi devolvido a seu dono. Um LOG deste erro foi gerado no servidor.
+		return 1
+	endif
+elif (<link.more1> != <src.uid>)
+	ref1 = <link.more1>
+	cont=<ref1.findlayer.21.uid>
+	updatex
+	src.sysmessage @,,1 Este item VIP nao te pertence e foi devolvido a seu dono. Um LOG deste erro foi gerado no servidor.
+	return 1
+else
+src.sound snd_spell_bless
+src.modstr += 5
+src.moddex += 5
+src.modint += 5
+timer 3
+endif
+
+ON=@TIMER
+IF (<CONT>)
+	IF (<CONT.MANA> < <CONT.INT>) && !(<CONT.FLAGS>&statf_freeze)
+		CONT.MANA += 1
+	ENDIF
+	TIMER 2
+	RETURN 1
+ENDIF
+
+on=@unequip //r�vis�
+src.sound snd_spell_bless
+src.modstr -= 5
+src.modint -= 5
+src.moddex -= 5
+
+ON=@DROPON_GROUND //r�vis�
+	src.sysmessage @,,1 Este item nao pode ser colocado no chao.
+	cont=<link.topobj.findlayer.21.uid>
+	updatex
+	return 1
+
+ON=@DropOn_Item
+	if !(<argo.topobj>==<link.topobj.uid>)
+		src.sysmessage @,,1 Este item e intransferivel. Guarde-o em sua bag ou bank.
+		return 1
+	endif
+
+ON=@DropOn_Char
+	return 1
+
+ON=@DropOn_Trade
+	return 1
+
+///////////
+
+[ITEMDEF i_vip_dexterity_sandals]
+ID=i_sandals
+NAME=Dexterity Sandals
+TYPE=t_clothing
+WEIGHT=0
+TEVENTS=t_vip_all
+TEVENTS=t_vip_item_time_control
+VALUE=30
+TDATA1=2592000
+TDATA2=1
+
+ON=@Create
+ATTR = attr_newbie | attr_blessed
+f_vip_create
+
+ON=@Damage
+return 1
+
+
+ON=@EQUIP //revis�
+if !<link> // se nao tiver dono
+	src.sysmessage @,,1 Este item VIP nao foi comprado e nao pode ser usado. Um LOG deste erro foi gerado no servidor.
+	tag.auth_destroy = 1
+	remove
+	return 1
+elif <link.isplayer>
+	if (<link> != <src.uid>)
+		cont=<link.findlayer.21.uid>
+		updatex
+		src.sysmessage @,,1 Este item VIP nao te pertence e foi devolvido a seu dono. Um LOG deste erro foi gerado no servidor.
+		return 1
+	endif
+elif (<link.more1> != <src.uid>)
+	ref1 = <link.more1>
+	cont=<ref1.findlayer.21.uid>
+	updatex
+	src.sysmessage @,,1 Este item VIP nao te pertence e foi devolvido a seu dono. Um LOG deste erro foi gerado no servidor.
+	return 1
+else
+src.sound snd_spell_bless
+src.moddex += 5
+timer 5
+endif
+
+on=@unequip //r�vis�
+src.sound snd_spell_bless
+src.moddex -= 5
+
+ON=@DROPON_GROUND //r�vis�
+	src.sysmessage @,,1 Este item nao pode ser colocado no chao.
+	cont=<link.findlayer.21.uid>
+	updatex
+	return 1
+
+ON=@DropOn_Item
+	if !(<argo.topobj>==<link.uid>)
+		src.sysmessage @,,1 Este item e intransferivel. Guarde-o em sua bag ou bank.
+		return 1
+	endif
+
+ON=@DropOn_Char
+	return 1
+
+ON=@DropOn_Trade
+	return 1
+
+ON=@Timer
+	IF (<CONT>)
+		IF (<CONT.STAM> < <CONT.DEX>) && !(<CONT.FLAGS> & statf_freeze)
+			CONT.STAM += 1
+		ENDIF
+
+		IF (<CONT.STAM> == 1)
+			TIMER 30
+		ELSE
+			TIMER 4
+		ENDIF
+
+		RETURN 1
+	ENDIF
+
+//////////////////////
+//
+//
+//  Itens de Regen
+//   - Mana Robe / - Wizard Hat
+//
+//
+/////////////////////
+
+[ITEMDEF i_vip_mana_robe]
+NAME=Magic Mana Robe
+ID=i_robe
+TYPE=t_clothing
+WEIGHT=0
+TEVENTS=t_vip_all
+TEVENTS=t_vip_item_time_control
+VALUE=80
+TDATA1=2592000
+TDATA2=1 // Indica que o item nao pode contar seu timer sozinho (itens que usam timer pro Regen). O script vai criar uma memoria linkada pra contar o timer dele.
+
+ON=@Create
+ATTR = attr_newbie | attr_blessed
+f_vip_create
+
+On=@Damage
+return 1
+
+ON=@EquipTest
+	if !<link> // se nao tiver dono
+		src.sysmessage @,,1 Este item VIP nao foi comprado e nao pode ser usado. Um LOG deste erro foi gerado no servidor.
+		tag.auth_destroy = 1
+		remove
+		return 1
+	elif <link.isplayer>
+		if (<link> != <src.uid>)
+			cont=<link.findlayer.21.uid>
+			updatex
+			src.sysmessage @,,1 Este item VIP nao te pertence e foi devolvido a seu dono. Um LOG deste erro foi gerado no servidor.
+			return 1
+		endif
+	elif (<link.more1> != <src.uid>)
+		ref1 = <link.more1>
+		cont=<ref1.findlayer.21.uid>
+		updatex
+		src.sysmessage @,,1 Este item VIP nao te pertence e foi devolvido a seu dono. Um LOG deste erro foi gerado no servidor.
+		return 1
+	endif
+
+for 1 25
+	if (<src.findlayer.<dlocal._for>.type>==t_armor) || (<src.findlayer.<dlocal._for>.type>==t_armor_leather)
+		if !((<src.findlayer.<dlocal._for>.id>==0144e) || (<src.findlayer.<dlocal._for>.id>==0144f) || (<src.findlayer.<dlocal._for>.id>==01450) || (<src.findlayer.<dlocal._for>.id>==01451) || (<src.findlayer.<dlocal._for>.id>==01452))
+			src.sysmessage @,,1 Voce nao pode equipar o Magic Mana Robe VIP usando armaduras.
+			return 1
+		endif
+	endif
+endfor
+
+// nao usar com armas salvo t_weapon_mace_staff
+if <src.findlayer(1).uid>
+	src.sysmessage @,,1 Voce nao pode equipar o Magic Mana Robe VIP usando esta arma.
+	return 1
+elif <src.findlayer(2).uid>
+	if !(<src.findlayer(2).type>==t_weapon_mace_staff)
+		src.sysmessage @,,1 Voce nao pode equipar o Magic Mana Robe VIP usando esta arma.
+		return 1
+	endif
+endif
+
+
+ON=@Equip
+	timer = 1
+		if (<src.tag0.boneparts>==5) && (<src.findlayer(9).baseid>==i_vip_hat_wizards)
+			src.tag0.magicresist_bonus = 100
+			src.magicresistance += 100
+			src.events +e_magicresist_bonus
+			src.sayua 478,2,0,,***Full Set Mage!***
+			src.effect = 3,i_fx_BLESS_EFFECT,3,40,1,480
+			//src.effect 3,037c4,1,40,,480,
+		endif
+
+
+On=@Unequip
+	timer = -1
+
+On=@Timer
+	if <cont.mana> < <cont.maxmana>
+		cont.mana += 1
+		cont.effect = 3,i_fx_sparkle_2,10,20,10,91
+	endif
+timer = 1
+return 1
+
+ON=@DROPON_GROUND //r�vis�
+	src.sysmessage @,,1 Este item nao pode ser colocado no chao.
+	cont=<link.topobj.findlayer.21.uid>
+	updatex
+	return 1
+
+ON=@DropOn_Item
+	if !(<argo.topobj>==<link.topobj.uid>)
+		src.sysmessage @,,1 Este item e intransferivel. Guarde-o em sua bag ou bank.
+		return 1
+	endif
+
+ON=@DropOn_Char
+	return 1
+
+ON=@DropOn_Trade
+	return 1
+
+////////////
+// HAT
+////////////
+
+[ITEMDEF i_vip_hat_wizards]
+NAME=Magic Wizard's Hat
+ID=i_hat_wizards
+TYPE=t_clothing
+WEIGHT=0
+LAYER=9
+TEVENTS=t_vip_all
+TEVENTS=t_vip_item_time_control
+VALUE=80
+TDATA1=2592000
+TDATA2=1
+
+ON=@Create
+ATTR = attr_newbie | attr_blessed
+f_vip_create
+
+On=@Damage
+return 1
+
+ON=@EquipTest
+	if !<link> // se nao tiver dono
+		src.sysmessage @,,1 Este item VIP nao foi comprado e nao pode ser usado. Um LOG deste erro foi gerado no servidor.
+		tag.auth_destroy = 1
+		remove
+		return 1
+	elif <link.isplayer>
+		if (<link> != <src.uid>)
+			cont=<link.findlayer.21.uid>
+			updatex
+			src.sysmessage @,,1 Este item VIP nao te pertence e foi devolvido a seu dono. Um LOG deste erro foi gerado no servidor.
+			return 1
+		endif
+	elif (<link.more1> != <src.uid>)
+		ref1 = <link.more1>
+		cont=<ref1.findlayer.21.uid>
+		updatex
+		src.sysmessage @,,1 Este item VIP nao te pertence e foi devolvido a seu dono. Um LOG deste erro foi gerado no servidor.
+		return 1
+	endif
+
+for 1 25
+	if (<src.findlayer.<dlocal._for>.type>==t_armor) || (<src.findlayer.<dlocal._for>.type>==t_armor_leather)
+		if !((<src.findlayer.<dlocal._for>.id>==0144e) || (<src.findlayer.<dlocal._for>.id>==0144f) || (<src.findlayer.<dlocal._for>.id>==01450) || (<src.findlayer.<dlocal._for>.id>==01451) || (<src.findlayer.<dlocal._for>.id>==01452))
+			src.sysmessage @,,1 Voce nao pode equipar o Magic Wizard's Hat VIP usando armaduras.
+			return 1
+		endif
+	endif
+endfor
+
+// nao usar com armas salvo t_weapon_mace_staff
+if <src.findlayer(1).uid>
+	src.sysmessage @,,1 Voce nao pode equipar o Magic Wizard's Hat VIP usando esta arma.
+	return 1
+elif <src.findlayer(2).uid>
+	if !(<src.findlayer(2).type>==t_weapon_mace_staff)
+		src.sysmessage @,,1 Voce nao pode equipar o Magic Wizard's Hat VIP usando esta arma.
+		return 1
+	endif
+endif
+
+ON=@Equip
+	timer = 1
+		if (<src.tag0.boneparts>==5) && (<src.findlayer(22).baseid>==i_vip_mana_robe)
+			src.tag0.magicresist_bonus = 100
+			src.magicresistance += 100
+			src.events +e_magicresist_bonus
+			src.sayua 478,2,0,,***Full Set Mage!***
+			src.effect = 3,i_fx_BLESS_EFFECT,3,40,1,480
+			//src.effect 3,037c4,1,40,,480,
+		endif
+	tag.layer_11 = <src.findlayer(11).baseid>,<src.findlayer(11).color>
+	src.findlayer(11).remove
+
+On=@Unequip
+	timer = -1
+	src.f_get_hair <tag.layer_11>
+	tag.layer_11 =
+
+On=@Timer
+	if <cont.mana> < <cont.maxmana>
+		cont.mana += 1
+		cont.effect = 3,i_fx_sparkle_2,10,20,10,91
+	endif
+timer = 1
+return 1
+
+ON=@DROPON_GROUND //r�vis�
+	src.sysmessage @,,1 Este item nao pode ser colocado no chao.
+	cont=<link.topobj.findlayer.21.uid>
+	updatex
+	return 1
+
+ON=@DropOn_Item
+	if !(<argo.topobj>==<link.topobj.uid>)
+		src.sysmessage @,,1 Este item e intransferivel. Guarde-o em sua bag ou bank.
+		return 1
+	endif
+
+ON=@DropOn_Char
+	return 1
+
+ON=@DropOn_Trade
+	return 1
+
+[Function f_get_hair]
+if !<findlayer.11.uid>
+serv.newitem <argv[0]>
+new.color <argv[1]>
+trysrc <uid> new.equip
+endif
+
+
+///////////////////
+//
+//
+//  Evento do Full Set Mage
+//
+//
+///////////////////
+
+[EVENTS e_magicresist_bonus]
+On=@ItemUnequip
+	if (<act.baseid>==i_vip_hat_wizards) || (<act.baseid>==i_vip_mana_robe) || (<act.istevent.t_bone_armor_magic>)
+		sysmessage @,,1 O seu Full Set Mage foi desativado !
+		magicresistance -= <tag0.magicresist_bonus>
+		tag0.magicresist_bonus =
+		effect = 3,i_fx_BLESS_EFFECT,3,40,1,33
+		events -e_magicresist_bonus
+	endif
+
+
+[TYPEDEF t_bone_armor_magic]
+ON=@Equip
+	src.tag0.boneparts +=1
+
+		if <src.tag0.boneparts> > 5
+			src.tag0.boneparts = 5
+		endif
+
+	if (<src.tag0.boneparts> >= 5)
+		if (<src.findlayer(2).baseid> == i_except_Staff_black)
+			src.findlayer(2).color = 0846
+			src.message @32 Power Blow Capable!
+		endif
+	endif
+
+		if (<src.tag0.boneparts>==5) && (<src.findlayer(22).baseid>==i_vip_mana_robe) && (<src.findlayer(9).baseid>==i_vip_hat_wizards)
+			src.tag0.magicresist_bonus = 100
+			src.magicresistance += 100
+			src.events +e_magicresist_bonus
+			src.sayua 478,2,0,,***Full Set Mage!***
+			src.effect = 3,i_fx_BLESS_EFFECT,3,40,1,480
+		endif
+
+
+ON=@UnEquip
+	if (<src.tag0.boneparts> >= 5)
+		if (<src.findlayer(2).baseid> == i_except_Staff_black)
+			src.findlayer(2).color = 0
+		endif
+	endif
+
+	if <src.tag0.boneparts>
+		src.tag0.boneparts -=1
+	endif
+
+
+
+
+//////////////////
+//
+//
+//      Memorias de Dura�ao do Robe e Hat VIP (visto que eles usam o timer pro REGEN)
+//
+//
+//////////////////
+
+[ITEMDEF i_memory_vip_link]
+BASEID=i_memory
+TYPE=t_eq_script
+NAME=VIP Item Link
+
+On=@timer
+if <link.cont> = <cont.uid>
+	trysrc <cont.uid> link.unequip
+	cont.sysmessage @,,1 A duracao do seu <link.name> acabou !
+endif
+remove
+return 1
+
+on=@destroy
+link.link = <cont.uid>
+
+///////////////////////////////
+//
+//         Dye Tubs
+//
+//
+///////////////////////////////
+
+[ITEMDEF i_vip_dye_tub]
+ID=0fab
+NAME=True Dye Tub
+TYPE=T_NORMAL
+TEVENTS=t_vip_all
+VALUE=20
+
+ON=@Create
+attr = attr_newbie
+morex = 1
+f_vip_create
+
+ON=@Click
+message @,,1 <qval (<morex> < 2) ? [<dmorex> carga] : [<dmorex> cargas] >
+if <def.vip_hue_changes> || !<color>
+	sdialog d_vip_dye_tub_color
+endif
+
+ON=@DClick
+if <attr> == 010
+	src.sysmessage @,,1 Este item esta travado.
+	return 1
+elif (<morex> < 1)
+	vip_dye_tub_remove
+	return 1
+elif !<color>
+	sdialog d_vip_dye_tub_color
+	src.sysmessage @,,1 Escolha a cor que deseja usar com esse True Dye Tub.
+	return 1
+else
+	src.dialogclose d_vip_dye_tub_color
+	target @,,1 Selecione o que voce deseja pintar.
+endif
+return 1
+
+ON=@Targon_Item
+if <argo.uid> == <uid>
+src.sysmessage @,,1 Este dye tub ja esta colorido.
+return 1
+endif
+
+// Juntar Cargas
+if (<argo.baseid> == <baseid>) && (<argo.color> == <color>)
+  argo.morex += <morex>
+  src.sysmessage @,,1 Voce juntou as duas tintas.
+  tag.auth_destroy = 1
+  remove
+  return 1
+endif
+
+// Separar cargas
+if (<argo.baseid> == i_dye_tub) && !<argo.color>
+	if <argo.cont> == <src.findlayer(21).uid>
+		argo.remove
+		serv.newitem i_vip_dye_tub
+		new.color <color>
+		new.morex = 1
+		new.link <src>
+		src.new.bounce
+		src.sysmessage @,,1 Voce adicionou uma carga desta tinta ao dye tub vazio.
+		morex --
+		vip_dye_tub_remove
+		return 1
+	else
+		src.sysmessage @,,1 O dye tub precisa estar na sua bag.
+	endif
+endif
+
+
+
+// pintar panos
+
+if (<morex> < 1)
+	vip_dye_tub_remove
+	return 1
+elif !(<argo.type> == t_clothing)
+	src.sysmessage @,,1 Nao eh possivel colorir este item.
+	return 1
+elif (<argo.topobj> == <src.uid>)
+	argo.color <color>
+	morex -= 1
+	vip_dye_tub_remove
+	return 1
+else
+	src.sysmessage @,,1 Voce so pode pintar um item que esteja com voce ou em seu banco.
+	return 1
+endif
+
+ON=@TargOn_Char // Evitar de pintar o cabelo com este dye tub.
+return 1
+
+[FUNCTION vip_dye_tub_remove]
+if !<morex>
+	src.sysmessage @,,1 Sua tinta acabou.
+	tag.auth_destroy = 1
+	remove
+	endif
+return 1
+
+[ITEMDEF i_vip_special_dye_tub]
+ID=0fab
+NAME=Special Dye Tub
+TYPE=T_NORMAL
+TEVENTS=t_vip_all
+VALUE=80
+
+ON=@Create
+attr = attr_newbie
+morex = 1
+f_vip_create
+
+ON=@Click
+message @,,1 <qval (<morex> < 2) ? [<dmorex> carga] : [<dmorex> cargas] >
+if <def.vip_hue_changes> || !<color>
+	sdialog d_vip_special_dye_tub_color
+endif
+
+ON=@DClick
+if <attr> == 010
+	src.sysmessage @,,1 Este item esta travado.
+	return 1
+elif (<morex> < 1)
+	vip_dye_tub_remove
+	return 1
+elif !<color>
+	sdialog d_vip_special_dye_tub_color
+	src.sysmessage @,,1 Escolha a cor que deseja usar com esse Special Dye Tub.
+	return 1
+else
+	src.dialogclose d_vip_special_dye_tub_color
+	target @,,1 Selecione o que voce deseja pintar.
+endif
+return 1
+
+ON=@Targon_Item
+if <argo.uid> == <uid>
+src.sysmessage @,,1 Este dye tub ja esta colorido.
+return 1
+endif
+
+// Juntar Cargas
+if (<argo.baseid> == <baseid>) && (<argo.color> == <color>)
+  argo.morex += <morex>
+  src.sysmessage @,,1 Voce juntou as duas tintas.
+  tag.auth_destroy = 1
+  remove
+  return 1
+endif
+
+// Separar cargas
+if (<argo.baseid> == i_dye_tub) && !<argo.color>
+	if <argo.cont> == <src.findlayer(21).uid>
+		argo.remove
+		serv.newitem i_vip_special_dye_tub
+		new.color <color>
+		new.morex = 1
+		new.link <src>
+		src.new.bounce
+		src.sysmessage @,,1 Voce adicionou uma carga desta tinta ao dye tub vazio.
+		morex --
+		vip_dye_tub_remove
+		return 1
+	else
+		src.sysmessage @,,1 O dye tub precisa estar na sua bag.
+	endif
+endif
+
+
+
+// pintar panos
+
+if (<morex> < 1)
+	vip_dye_tub_remove
+	return 1
+elif !(<argo.type> == t_clothing)
+	src.sysmessage @,,1 Nao eh possivel colorir este item.
+	return 1
+elif (<argo.topobj> == <src.uid>)
+	argo.color <color>
+	morex -= 1
+	vip_dye_tub_remove
+	return 1
+else
+	src.sysmessage @,,1 Voce so pode pintar um item que esteja com voce ou em seu banco.
+	return 1
+endif
+
+ON=@TargOn_Char // Evitar de pintar o cabelo com este dye tub.
+return 1
+
+///////////////////////////////
+//
+//         Deeds Casas Vip
+//
+//
+///////////////////////////////
+
+[TYPEDEF t_vip_deed]
+
+ON=@Click
+	MESSAGE @,,1 <LINK.NAME>'s VIP <NAME>
+	RETURN 1
+
+ON=@DClick
+	if !(<link.uid>) // se nao tiver dono
+		src.sysmessage @,,1 Este item VIP nao foi comprado e nao pode ser usado. Um LOG deste erro foi gerado no servidor.
+		tag.auth_destroy = 1
+		remove
+		return 1
+	elif (<link> != <src.uid>)
+		cont=<link.findlayer.21.uid>
+		updatex
+		src.sysmessage @,,1 Este item VIP nao te pertence e foi devolvido a seu dono. Um LOG deste erro foi gerado no servidor.
+		return 1
+
+ON=@DROPON_GROUND
+	src.sysmessage @,,1 Este item nao pode ser colocado no chao.
+	cont=<link.findlayer.21.uid>
+	updatex
+	return 1
+
+ON=@DropOn_Item
+	if !(<argo.topobj>==<link.uid>)
+		src.sysmessage @,,1 Este item e intransferivel. Guarde-o em sua bag ou bank.
+		return 1
+	endif
+
+ON=@DropOn_Char
+	return 1
+
+ON=@DropOn_Trade
+	return 1
+
+[ITEMDEF i_deed_sandstone_cabin_horse_place]
+NAME=Deed to a Sandstone Cabin with Horse Slot
+ID=i_Deed
+value=80
+RESOURCES=i_deed, m_multi_sandstone_cabin_horse_place
+TEVENTS=t_vip_deed
+
+ON=@Create
+	ATTR = attr_newbie
+	MORE=m_multi_sandstone_cabin_horse_place
+
+[ITEMDEF i_deed_log_cabin_horse_places]
+NAME=Deed to a Log Cabin with Horse Slots
+ID=i_Deed
+value=120
+RESOURCES=i_deed, m_multi_log_cabin_horse_places
+TEVENTS=t_vip_deed
+
+ON=@Create
+	ATTR = attr_newbie
+	MORE=m_multi_log_cabin_horse_places
+
+[ITEMDEF i_deed_large_log_cabin_ranch]
+NAME=Deed to a Large Log Cabin Ranch
+ID=i_Deed
+value=160
+RESOURCES=i_deed, m_multi_large_log_cabin_ranch
+TEVENTS=t_vip_deed
+
+ON=@Create
+	ATTR = attr_newbie
+	MORE=m_multi_large_log_cabin_ranch
+
+[ITEMDEF i_deed_country_house]
+NAME=Deed to a Country Side House
+ID=i_Deed
+value=180
+RESOURCES=i_deed, m_multi_country_house
+TEVENTS=t_vip_deed
+
+ON=@Create
+	ATTR = attr_newbie
+	MORE=m_multi_country_house
+
+[ITEMDEF i_deed_marble_tower_with_fence]
+NAME=Deed to a Marble Tower with Fence
+ID=i_Deed
+value=200
+RESOURCES=i_deed, m_multi_marble_tower_with_fence
+TEVENTS=t_vip_deed
+
+ON=@Create
+	ATTR = attr_newbie
+	MORE=m_multi_marble_tower_with_fence
+
+[ITEMDEF i_deed_twin_fortress]
+NAME=Deed to a Twin Fortress
+ID=i_Deed
+value=280
+RESOURCES=i_deed, m_multi_twin_fortress
+TEVENTS=t_vip_deed
+
+ON=@Create
+	ATTR = attr_newbie
+	MORE=m_multi_twin_fortress
+
+[ITEMDEF i_deed_foundation_18x18]
+NAME=Deed to a 18x18 3-Story Customizable House
+ID=i_deed
+VALUE=320
+RESOURCES=i_deed,m_multi_foundation_18x18
+TEVENTS=t_vip_deed
+
+ON=@Create
+	MORE=m_multi_foundation_18x18
+
+
+
+///////////////////////////
+//
+//
+//   Itens que vao ser criados.
+//   - Guild House / - Privilegios VIP /
+//
+//
+///////////////////////////
+
+[EOF]

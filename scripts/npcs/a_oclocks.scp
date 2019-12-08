@@ -1,0 +1,53 @@
+[CHARDEF c_ice_oclock]
+ID=c_ostard_desert
+NAME=Ice Oclock
+DAM=5,9
+ARMOR=15
+
+
+
+ON=@Create
+	COLOR=0a48
+	NPC=brain_animal
+	MAXHITS={150 200}
+	STR={120 160}
+	DEX={110 255}
+	INT={16 30}
+	PARRYING={75.0 100.0}
+	MAGICRESISTANCE={65.0 120.0}
+	TACTICS={79.0 119.0}
+	WRESTLING={69.0 99.0}
+	TAMING=110.0
+	FAME=10
+	KARMA={1 99}
+
+ON=@CLICK
+   MESSAGE @0a48 <name>
+   RETURN 1
+
+[CHARDEF c_fire_oclock]
+ID=c_ostard_desert
+NAME=Fire Oclock
+DAM=5,9
+ARMOR=15
+
+
+
+ON=@Create
+	COLOR=077a
+	NPC=brain_animal
+	MAXHITS={150 200}
+	STR={120 160}
+	DEX={110 255}
+	INT={16 30}
+	PARRYING={75.0 100.0}
+	MAGICRESISTANCE={65.0 120.0}
+	TACTICS={79.0 119.0}
+	WRESTLING={69.0 99.0}
+	TAMING=110.0
+	FAME=10
+	KARMA={1 99}
+
+ON=@CLICK
+   MESSAGE @077a <name>
+   RETURN 1

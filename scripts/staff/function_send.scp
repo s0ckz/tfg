@@ -1,0 +1,25 @@
+﻿[FUNCTION send]
+TARGETF send_op <args>
+
+[FUNCTION send_op]
+if <argo.isplayer> || <argo.npc>
+	argo.f_go <args>
+	argo.updatex
+else
+	src.sysmessage @,,1 Você so pode usar esta funcao em um jogador ou npc.
+endif
+return 1
+
+
+[FUNCTION tirarinvis]
+TARGETF tirarinvis_op
+
+[FUNCTION tirarinvis_op]
+if <argo.isplayer>
+	argo.invis 0
+endif
+return 1
+
+
+[FUNCTION bb]
+SERV.B @0a48 <args>

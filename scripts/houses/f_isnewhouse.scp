@@ -1,0 +1,10 @@
+[FUNCTION f_isnewhouse]
+if !<tag0.house.birth>
+   return 0
+elif (<serv.time> >= <eval <tag.house.birth> + 2592000>) // 3 dias
+   tag.house.birth =
+   return 0
+else
+   return <eval <serv.time> - <tag.house.birth>>
+endif
+return 0

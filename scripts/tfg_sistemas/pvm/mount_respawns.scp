@@ -1,0 +1,59 @@
+[DEFNAME mount_respawn_settings]
+MOUNT_RESPAWN_GROUPS {SPAWN_black_mounts 1 SPAWN_stone_mounts 1 SPAWN_gay_mounts 1 SPAWN_snow_mounts 1 SPAWN_lightgreen_mounts 1 SPAWN_Panamino_mounts 1 SPAWN_mage_mounts 1 SPAWN_night_mounts 1 SPAWN_red_roan_mounts 1 SPAWN_Grey_mounts 1 SPAWN_crimson_mounts 1 SPAWN_sky_mounts 1 SPAWN_wimmimate_mounts 1 SPAWN_chemical_mounts 1 SPAWN_nature_mounts 1}
+
+[FUNCTION f_spawn_hourly_mounts]
+LOCAL.PARAGON_HOUR = <DVAR0.PARAGON_HOUR_<f_paragon_hour>>
+LOCAL.POI_LOCATION <f_get_random_location <DEF.PARAPOI_<DLOCAL.PARAGON_HOUR>>>
+LOCAL.RESPAWN_GROUP <EVAL <DEF.MOUNT_RESPAWN_GROUPS>>
+
+SERV.NEWNPC <SERV.SPAWN.<LOCAL.RESPAWN_GROUP>.RESOURCES.<R1,<SERV.SPAWN.<LOCAL.RESPAWN_GROUP>.RESOURCES.COUNT>>.KEY>
+NEW.P <LOCAL.POI_LOCATION>
+NEW.HOME <NEW.P>
+NEW.TAG.RANDOM_SPAWN_MOUNT 1
+NEW.HOMEDIST 6
+
+SERV.LOG Spawning <NEW.NAME> at <NEW.P> - (<NEW.REGION.NAME>) - POI.
+
+LOCAL.RANDOM_POI <DVAR0.PARAGON_HOUR_<R1,12>>
+
+WHILE (<LOCAL.PARAGON_HOUR> == <LOCAL.RANDOM_POI>)
+	LOCAL.RANDOM_POI <DVAR0.PARAGON_HOUR_<R1,12>>
+ENDWHILE
+
+LOCAL.RANDOM_LOCATION <f_get_random_location <DEF.PARAPOI_<DLOCAL.RANDOM_POI>>>
+LOCAL.RESPAWN_GROUP <EVAL <DEF.MOUNT_RESPAWN_GROUPS>>
+
+SERV.NEWNPC <SERV.SPAWN.<LOCAL.RESPAWN_GROUP>.RESOURCES.<R1,<SERV.SPAWN.<LOCAL.RESPAWN_GROUP>.RESOURCES.COUNT>>.KEY>
+NEW.P <LOCAL.RANDOM_LOCATION>
+NEW.HOME <NEW.P>
+NEW.TAG.RANDOM_SPAWN_MOUNT 1
+NEW.HOMEDIST 6
+
+SERV.LOG Spawning <NEW.NAME> at <NEW.P> - (<NEW.REGION.NAME>) - random.
+
+SERV.B @55 Uma montaria foi criada no POI: <def.parapoi_name_<dlocal.paragon_hour>>. Ha tambem outra montaria em uma dungeon ou cemiterio fora desse POI. Boa sorte !
+
+[FUNCTION remove_random_spawn_mounts]
+SERV.NEWNPC c_dog
+NEW.go Britain
+NEW.f_remove_random_spawn_mounts
+NEW.REMOVE
+
+[FUNCTION f_remove_random_spawn_mounts]
+SERV.LOG Started removing random spawn mounts...
+
+LOCAL.TOTAL 0
+
+FORCHARS 9999
+	IF (<TAG0.RANDOM_SPAWN_MOUNT>) && (<EVAL <SERV.TIME> - <TAG0.TAMING_START_TIME>> > <EVAL <DEF.MAX_TAMING_WAIT_TIME_LIMIT> + <DEF.TAMING_WAIT_TIME_RESET_THRESHOLD>>)
+		SERV.LOG Removing <UID> / <BASEID> / <NAME> / <P> / <REGION.NAME> random spawn mount.
+		REMOVE
+
+		LOCAL.TOTAL += 1
+	ENDIF
+ENDFOR
+
+SERV.LOG Removed <DLOCAL.TOTAL> random spawn mounts!
+
+
+[EOF]

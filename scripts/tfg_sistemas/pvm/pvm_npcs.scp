@@ -1,0 +1,202 @@
+[DEFNAME def_skill_teacher]
+SKILL_TEACHER_QUEST_ENABLED 1
+SKILL_TEACHER_DECIPHER_COST 100000
+SKILL_TEACHER_LOCATIONS_COUNT 10
+SKILL_TEACHER_LOCATION_1 Covetous Level
+SKILL_TEACHER_LOCATION_2 Deceit Level
+SKILL_TEACHER_LOCATION_3 Despise Level
+SKILL_TEACHER_LOCATION_4 Destard Level
+SKILL_TEACHER_LOCATION_5 Hythloth Level
+SKILL_TEACHER_LOCATION_6 Shame Level
+SKILL_TEACHER_LOCATION_7 Wind Tunnels
+SKILL_TEACHER_LOCATION_8 Wrong Level
+SKILL_TEACHER_LOCATION_9 Britain Sewers
+SKILL_TEACHER_LOCATION_9 Ice Dungeon Level
+SKILL_TEACHER_LOCATION_10 Fire Dungeon
+
+[SPEECH spk_skill_teacher]
+
+ON=*
+    DORAND 2
+        MESSAGE Hello, dear! Do you possess any scroll recipe? You can give me and I'll help you to decipher it for <dDEF.SKILL_TEACHER_DECIPHER_COST> GPs.
+        MESSAGE Great <SRC.NAME>! Drop a scroll recipe in me and I'll decipher it for you for <dDEF.SKILL_TEACHER_DECIPHER_COST> GPs.
+    ENDDO
+
+[CHARDEF c_skill_teacher]
+NAME=#NAMES_HUMANMALE
+ID=C_MAN
+
+TSPEECH=spk_skill_teacher
+
+ON=@Create
+	NAME=#NAMES_HUMANMALE
+    FLAGS=000000005
+    COLOR=colors_skin
+    STR={61 75}
+    DEX={71 85}
+    INT={86 100}
+
+    NPC=brain_human
+    ITEMNEWBIE=random_male_hair
+    COLOR=colors_hair
+    ITEMNEWBIE=random_facial_hair
+    COLOR=match_hair
+    ITEMNEWBIE=i_hat_wizards
+    ITEMNEWBIE=i_robe
+    ITEMNEWBIE=i_staff_black
+    COLOR=0026
+
+ON=@ReceiveItem
+    IF (<ARGO.BASEID> != i_recipe_scroll)
+        DORAND 2
+            MESSAGE I only know recipe scrolls, dear.
+            MESSAGE Please give me recipe scrolls, my darling.
+        ENDDO
+
+        RETURN 1
+    ENDIF
+
+    IF (<ARGO.MORE1> != <TAG.TEACHING_SKILL>)
+        MESSAGE I can only decipher <SERV.SKILL.<TAG.TEACHING_SKILL>.NAME> scrolls ! I'm sorry.
+        RETURN 1
+    ENDIF
+
+    IF (<f_get_real_skill <SRC.UID>,<TAG.TEACHING_SKILL>> != 950)
+        MESSAGE You must have 95.0% of <SERV.SKILL.<TAG.TEACHING_SKILL>.NAME> ! Sorry.
+        RETURN 1
+    ENDIF
+
+    IF (<ARGO.TAG0.DECIPHERED>)
+        MESSAGE Good news, my friend. Your recipe is already deciphered !
+        RETURN 1
+    ENDIF
+
+    IF (<SRC.BANKBALANCE> < <DEF.SKILL_TEACHER_DECIPHER_COST>)
+        MESSAGE I'm so sorry but you don't have <dDEF.SKILL_TEACHER_DECIPHER_COST> to pay me.
+        RETURN 1
+    ENDIF
+
+    SRC.GOLD -= <DEF.SKILL_TEACHER_DECIPHER_COST>
+    SRC.TAG.GM_QUEST_SKILL_<EVAL <ARGO.MORE1>> 1
+
+    ARGO.TAG.DECIPHERED 1
+    ARGO.ATTR attr_newbie
+    ARGO.EVENTS +t_bound_item
+
+    MESSAGE I deciphered the recipe scroll for you, dear ! Good luck with that.
+
+    RETURN 1
+
+[FUNCTION f_respawn_all_skill_teachers]
+SERV.LOG Starting to respawn all skill teachers...
+
+FORINSTANCES c_skill_teacher
+    REMOVE
+ENDFOR
+
+FOR <DEF.WORK_MIN> <DEF.WORK_MAX>
+    IF (<LOCAL._FOR> == 1) || (<LOCAL._FOR> == 2) || (<LOCAL._FOR> == 4) || (<LOCAL._FOR> == 7) || (<LOCAL._FOR> == 9) || (<LOCAL._FOR> == 12) || (<LOCAL._FOR> == 13) || (<LOCAL._FOR> == 14)
+        SERV.NEWNPC c_skill_teacher
+        f_init_skill_teacher_char_uid <NEW.UID>,<DEF.WORK<DLOCAL._FOR>>
+        NEW.P <f_get_random_location <DEF.SKILL_TEACHER_LOCATION_<R1,<DEF.SKILL_TEACHER_LOCATIONS_COUNT>>>>
+        SERV.LOG <NEW.NAME>, <NEW.TITLE> spawned at <NEW.REGION.NAME> / <NEW.P>.
+    ENDIF
+ENDFOR
+
+SERV.LOG Finished respawning all skill teachers!
+
+[FUNCTION init_skill_teacher]
+IF (<ARGV> != 1)
+    SRC.SYSMESSAGE @,,1 You must inform: skill_number
+ENDIF
+
+TARGETF f_init_skill_teacher <ARGV[0]>
+
+[FUNCTION f_init_skill_teacher]
+IF (<ARGO.BASEID> != c_skill_teacher)
+    SRC.SYSMESSAGE @,,1 This function must be used on skill teacher NPCs only.
+ELSE
+    f_init_skill_teacher_char_uid <ARGO.UID>,<ARGS>
+ENDIF
+
+[FUNCTION f_init_skill_teacher_char_uid]
+IF (<ARGV> != 2)
+    RETURN 1
+ENDIF
+
+REF1 <ARGV[0]>
+LOCAL.SKILL <ARGV[1]>
+
+IF (<REF1.BASEID> != c_skill_teacher)
+    RETURN 1
+ENDIF
+
+REF1.FINDLAYER.6.COLOR <DEF.DEF_SKILLCOLOR_<dLOCAL.SKILL>>
+REF1.FINDLAYER.22.COLOR <DEF.DEF_SKILLCOLOR_<dLOCAL.SKILL>>
+REF1.TAG.TEACHING_SKILL <LOCAL.SKILL>
+REF1.TITLE the <SERV.SKILL.<LOCAL.SKILL>.NAME> Teacher
+
+[FUNCTION f_get_world_random_location]
+SERV.NEWNPC c_dog
+
+REF1 <NEW.UID>
+REF1.FLAGS = statf_invul|statf_insubstantial
+
+LOCAL.P <REF1.f_get_world_random_location_verified>
+
+REF1.REMOVE
+
+RETURN <LOCAL.P>
+
+[FUNCTION f_get_world_random_location_verified]
+REF1 <UID>
+WHILE (1)
+    P <R1,6144>,<R1,6144>,0,0
+    Z
+
+    FORITEMS 100
+        IF (<BASEID> == i_worldgem_bit) && !(<REGION.GUARDED>) && !(<REGION.SAFE>)
+            REF1.P <P>
+
+            IF !(<REF1.ISSTUCK>)
+                RETURN <P>
+            ENDIF
+        ENDIF
+    ENDFOR
+ENDWHILE
+
+[FUNCTION f_get_random_location]
+IF (<ARGV> != 1)
+    SERV.LOG There was a wrong call for f_get_random_location. Returning 100,100 position.
+    RETURN 100,100
+ENDIF
+
+LOCAL.LOCATION_COUNT 0
+FORINSTANCES i_worldgem_bit
+    IF (STRMATCH(*<ARGV[0]>*, <REGION.NAME>))
+        LOCAL.LOCATION_COUNT += 1
+    ENDIF
+ENDFOR
+
+IF !(<LOCAL.LOCATION_COUNT>)
+    SERV.LOG No gems found in <ARGV[0]> Returning 100,100 position.
+    RETURN 100,100
+ENDIF
+
+LOCAL.RANDOM_INDEX <R1,<dLOCAL.LOCATION_COUNT>>
+LOCAL.CURRENT_INDEX 1
+
+FORINSTANCES i_worldgem_bit
+    IF (STRMATCH(*<ARGV[0]>*, <REGION.NAME>))
+        IF (<LOCAL.CURRENT_INDEX> == <LOCAL.RANDOM_INDEX>)
+            RETURN <P>
+        ENDIF
+
+        LOCAL.CURRENT_INDEX += 1
+    ENDIF
+ENDFOR
+
+SERV.LOG Unexpectedly the chosen random location was not found. Returning 100,100 position.
+RETURN 100,100
+
+[EOF]

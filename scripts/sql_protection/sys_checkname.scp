@@ -1,0 +1,73 @@
+// Deletar chars com nick duplicados
+// Nao mudar pra nao interferir no funcionamento do painel/Sql
+
+[FUNCTION f_CHECKNAME]
+SRC.NAME <STRTRIM <SRC.NAME>>
+for x 0 <eval (<serv.accounts> - 1)> 
+  if <serv.account.<dlocal.x>.chars> 
+    for y 0 <eval (<serv.account.<dlocal.x>.chars> - 1)> 
+      ref1 = <serv.account.<dlocal.x>.char.<dlocal.y>> 
+      IF !(STRCMPI(<SRC.NAME>, <REF1.NAME>))
+		IF !(<SRC.UID> == <REF1.UID>)
+			DIALOG d_dnome
+			CTAG.BLOCK 1
+			TIMERF 1, BYECHAR
+			RETURN 1
+		ENDIF
+      endif 
+    endfor 
+  endif 
+endfor
+IF !(STRCMPI(<SRC.NAME>, Man)) || !(STRCMPI(<SRC.NAME>, Woman))
+	DIALOG d_dnome
+	CTAG.BLOCK 1
+	TIMERF 1, BYECHAR
+	RETURN 1
+ENDIF
+RETURN 0
+
+[DIALOG d_dnome]
+0,0
+nomove
+noclose
+nodispose
+
+page 0
+resizepic 147 102 9300 406 129
+text 299 116 132 0
+htmlgump 165 145 377 72 1 0 0
+
+[DIALOG d_dnome text]
+Nome Invalido
+Desculpe, mas ja existe outra conta com o nome <NAME>. Voce sera desconectado e esse char deletado em 10 segundos. Crie um novo char com um novo nickname! Obrigado pela atencao.
+
+[DIALOG d_dnome button]
+
+
+
+[ITEMDEF memori_deleta_char]
+NAME=Tempo de Espera Nome
+ID=i_memory
+TYPE=t_eq_script
+LAYER=layer_special
+
+ON=@Create
+ATTR=attr_decay
+
+ON=@Timer
+LINK.DESTROY 1
+if <tag0.razao>
+	SERV.LOG <LINK.NAME> Removido por falta de cadastro global.
+else
+	SERV.LOG <LINK.NAME> Removido por nick duplicado.
+endif
+REMOVE
+RETURN 0
+
+[function byechar]
+SERV.NEWITEM memori_deleta_char
+NEW.P <P>
+NEW.LINK <UID>
+NEW.TAG.RAZAO=<ARGS>
+NEW.TIMER 1
+TRYSRV DISCONNECT

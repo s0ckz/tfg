@@ -1,0 +1,52 @@
+﻿[EVENTS e_congela_hit]
+ON=@GETHIT
+FLAGS=05
+
+
+[CHARDEF c_miroslav_klose]
+NAME=Miroslav Klose
+ID=C_MAN
+DESIRES=i_gold,e_notoriety
+AVERSIONS=t_TRAP,t_eerie_stuff
+
+//TSPEECH=spk_copa_miroslav 
+
+TEVENTS=e_Human_Needs
+TEVENTS=e_Human_Refuse
+TEVENTS=e_Human_Environ
+
+ON=@Create
+NPC=brain_vendor
+FLAGS=04
+COLOR=083ea
+STR={61 75}
+DEX={66 80}
+INT={51 68}
+HITS=100
+
+//ITEMNEWBIE=i_hair_2_pigtails
+//COLOR=01
+
+ON=@NPCRestock
+ITEM=i_shirt_fancy
+COLOR=0481
+ITEM=i_pants_short
+COLOR=01
+ITEM=i_shoes_plain
+COLOR=01
+
+ON=@CLICK
+MESSAGE @91,,1 (Artilheiro da Copa)
+MESSAGE @61,,1 Miroslav Klose
+return 1
+
+
+// Bola da Copa
+
+[ITEMDEF i_bola_copa]
+ID=i_fx_explode_ball
+TYPE=t_eq_script
+NAME=Bola da Copa
+
+ON=@CREATE
+COLOR = 077ad

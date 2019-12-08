@@ -1,0 +1,14 @@
+// Created 10/05/2016 23:17:42, with Gump Studio.
+// Exported with with SphereExporter ver 1.1.
+// Script for 0.56/Revisions
+// Apostas rodada 1: 191
+// Apostas rodada 2: 21
+
+[FUNCTION acha_apostas]
+FORINSTANCES i_bilhete_aposta
+	s <uid> <topobj.name>
+ENDFOR
+return 1
+
+
+[EOF]

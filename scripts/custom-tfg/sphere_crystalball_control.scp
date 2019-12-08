@@ -1,0 +1,253 @@
+//////////////////////////////////////// BOLA DE CONTROLE DE PLAYERS ///////////////////////////////////////
+
+//COMMENT accountinfo script
+//This is made to simplify character and account handling for GM's.
+//By using .accountinfo <Name> or by doing .accountinfo and than target the character
+//you wish info about, you will be able to view info about and access all of the 
+//characters on the targeted account, including offline characters.
+
+//Script is untested in a live shard environment and has only been used on my testserver, hence I do not guarantee it to be bugfree.
+//Comments, suggestions and bug reports are gladly accepted at klas.nyholm at comcast.net (at = @, avoiding spambots.)
+//I hold no responsibility for the use of this script and it should be tested before put to use on a live shard.
+
+[itemdef i_control_ball]
+id=0e2d
+name=Controle de Players
+
+on=@create
+attr=04
+color=0b9a
+
+on=@dclick
+target @07a1 Escolha o player.
+return 1
+
+on=@targon_char
+sdialog d_accinfo
+
+[FUNCTION accountinfo]
+IF (<ISEMPTY <ARGS>>)
+	NEWITEM=i_account_memory
+	NEW.EQUIP
+	RETURN 1
+ENDIF
+f_accountinfo <ARGS>
+
+[FUNCTION f_accountinfo]
+IF !STRCMPI(<ARGS>,<NAME>)
+	SRC.CTAG.CRYSTALBALL=<UID>
+ELSE
+	VAR.TELEFLAGS=<FLAGS>
+	IF !(<FLAGS>&statf_insubstantial)
+		FLAGS=<FLAGS>|statf_insubstantial
+	ENDIF
+
+	LOCAL.BACKP=<P>
+	GONAME <ARGS>
+	SRC.CTAG.CRYSTALBALL=<ACT.UID>
+	P=<LOCAL.BACKP>
+	FLAGS=<VAR.TELEFLAGS>
+	UPDATE
+ENDIF
+
+TRYSRC <UID> DIALOG d_accinfo
+
+
+[ITEMDEF i_account_memory]
+ID=i_memory
+TYPE=t_eq_script
+NAME=Accountinfo memory
+
+ON=@EQUIP
+TARGET Whose accountinfo do you wish to view?
+
+ON=@TARGON_CHAR
+SRC.f_accountinfo <SRC.TARG.NAME>
+REMOVE
+RETURN 1
+
+ON=@TARGON_ITEM
+REMOVE
+RETURN 1
+
+ON=@TARGON_GROUND
+TRIGGER @TARGON_ITEM
+
+ON=@TARGON_CANCEL
+TRIGGER @TARGON_ITEM
+
+
+[DIALOG d_accinfo] 
+0,0
+resizepic 0 0 3600 300 503 
+resizepic 350 0 3600 300 503 
+
+tilepic 245 20 <EVAL(<UID.<SRC.CTAG.CRYSTALBALL>.ACCOUNT.ICON>)> 
+dtext 20 15 1152 Char # <EVAL(<VAR0.CHARNR> + 1)>
+dtext 120 15 1152 Chars total: <UID.<SRC.CTAG.CRYSTALBALL>.ACCOUNT.CHARS>
+
+dtext 20 55 180 Name
+dtextentry 90 55 220 20 1152 0 <UID.<SRC.CTAG.CRYSTALBALL>.ACCOUNT.NAME>
+dtext 20 75 180 Title
+dtextentry 90 75 220 20 1152 1 <UID.<SRC.CTAG.CRYSTALBALL>.ACCOUNT.Title>
+dtext 20 95 180 UID
+dtext 90 95 1152 <UID.<SRC.CTAG.CRYSTALBALL>.ACCOUNT.UID>
+dtext 20 115 180 Status
+dtext 90 115 1152 <QVAL <UID.<SRC.CTAG.CRYSTALBALL>.ACCOUNT.ISONLINE> ? Online : Offline> 
+dtext 20 145 180 P
+dtext 90 145 1152 <UID.<SRC.CTAG.CRYSTALBALL>.ACCOUNT.P> (<UID.<SRC.CTAG.CRYSTALBALL>.ACCOUNT.REGION.NAME>)
+dtext 20 165 180 Guild
+dtext 90 165 1152 <UID.<SRC.CTAG.CRYSTALBALL>.ACCOUNT.MEMORYFINDTYPE.memory_guild.LINK.ABBREV>
+dtext 20 185 180 Karma
+dtextentry 90 185 220 20 1152 2 <UID.<SRC.CTAG.CRYSTALBALL>.ACCOUNT.KARMA>
+dtext 20 205 180 Fame
+dtextentry 90 205 220 20 1152 3 <UID.<SRC.CTAG.CRYSTALBALL>.ACCOUNT.FAME>
+dtext 125 235 180 Events
+dhtmlgump 20 255 260 65 20 1 <UID.<SRC.CTAG.CRYSTALBALL>.ACCOUNT.EVENTS>
+
+dtext 50 327 1152 Open characters bankbox
+dtext 50 352 1152 Open characters backpack
+dtext 50 377 1152 Summon character
+dtext 50 402 1152 Goto character
+dtext 50 427 1152 Run function on character
+
+button 25 330 1209 1210 1 0 3 // Bank
+button 25 355 1209 1210 1 0 4 // Backpack
+button 25 380 1209 1210 1 0 5 // Summon
+button 25 405 1209 1210 1 0 6 // Goto
+button 25 430 1209 1210 1 0 7 // Function
+
+button 80 460 2124 2123 1 0 1 // Apply
+button 160 460 2121 2120 1 0 2 // Cancel
+
+button 25 460 4014 4016 1 0 8 // Left arrow
+button 245 460 4005 4007 1 0 9 // Right arrow
+
+
+dtext 370 15 180 Account
+dtext 460 15 1152 <UID.<SRC.CTAG.CRYSTALBALL>.ACCOUNT>
+dtext 370 35 180 Plevel
+dtext 460 35 1152 <UID.<SRC.CTAG.CRYSTALBALL>.ACCOUNT.PLEVEL>
+dtext 370 55 180 Status
+dtext 460 55 1152 <UID.<SRC.CTAG.CRYSTALBALL>.ACCOUNT.STATUS>
+dtext 370 75 180 Email
+dtext 460 75 1152 <UID.<SRC.CTAG.CRYSTALBALL>.ACCOUNT.EMAIL>
+
+dtext 370 115 180 First connection date
+dtext 370 135 1152 <UID.<SRC.CTAG.CRYSTALBALL>.ACCOUNT.FIRSTCONNECTDATE>
+dtext 370 155 180 Last connection date
+dtext 370 175 1152 <UID.<SRC.CTAG.CRYSTALBALL>.ACCOUNT.LASTCONNECTDATE>
+dtext 370 195 180 Last Character logged
+dtext 370 215 1152 <UID.<UID.<SRC.CTAG.CRYSTALBALL>.ACCOUNT.LASTCHARUID>.NAME>
+dtext 370 235 180 Total connect time (mins)
+dtext 370 255 1152 <UID.<SRC.CTAG.CRYSTALBALL>.ACCOUNT.TOTALCONNECTTIME>
+dtext 370 275 180 Last connect time (mins)
+dtext 370 295 1152 <UID.<SRC.CTAG.CRYSTALBALL>.ACCOUNT.LASTCONNECTTIME>
+
+//dtext 370 335 180 Password
+//dtextentry 370 355 220 20 1152 4 <QVAL (<SRC.ACCOUNT.PLEVEL> == 7) ? <UID.<SRC.CTAG.CRYSTALBALL>.ACCOUNT.PASSWORD> : N/A>
+
+//dtext 400 387 1152 Block/unblock account
+dtext 400 412 1152 Jail/Pardon account
+//dtext 400 437 1152 Delete account
+
+button 375 390 1209 1210 1 0 10 // Block
+button 375 415 1209 1210 1 0 11 // Jail
+button 375 440 1209 1210 1 0 12 // Delete
+
+dtext 440 470 550 The Fusion Shard
+
+[DIALOG d_accinfo BUTTON] 
+ON=0
+VAR.CHARNR=
+RETURN 1
+
+ON=1 
+TRY UID.<SRC.CTAG.CRYSTALBALL>.ACCOUNT.CHAR.<VAR.CHARNR>.NAME=<ARGTXT[0]>
+TRY UID.<SRC.CTAG.CRYSTALBALL>.ACCOUNT.CHAR.<VAR.CHARNR>.TITLE=<ARGTXT[1]>
+TRY UID.<SRC.CTAG.CRYSTALBALL>.ACCOUNT.CHAR.<VAR.CHARNR>.KARMA=<ARGTXT[2]>
+TRY UID.<SRC.CTAG.CRYSTALBALL>.ACCOUNT.CHAR.<VAR.CHARNR>.FAME=<ARGTXT[3]>
+IF (<ACCOUNT.PLEVEL> == 7)
+	UID.<SRC.CTAG.CRYSTALBALL>.ACCOUNT.PASSWORD=<ARGTXT[4]>
+ENDIF
+DIALOG d_accinfo
+
+ON=2
+VAR.CHARNR=
+RETURN 1
+
+ON=3 
+TRY UID.<SRC.CTAG.CRYSTALBALL>.ACCOUNT.CHAR.<VAR.CHARNR>.FINDLAYER.29.OPEN
+VAR.CHARNR=
+RETURN 1
+
+
+ON=4 
+TRY UID.<SRC.CTAG.CRYSTALBALL>.ACCOUNT.CHAR.<VAR.CHARNR>.FINDLAYER.21.OPEN
+VAR.CHARNR=
+RETURN 1
+
+ON=5
+TRY UID.<SRC.CTAG.CRYSTALBALL>.ACCOUNT.CHAR.<VAR.CHARNR>.GONAME <NAME>
+VAR.CHARNR=
+RETURN 1
+
+ON=6
+GONAME <UID.<SRC.CTAG.CRYSTALBALL>.ACCOUNT.CHAR.<VAR.CHARNR>.NAME>
+VAR.CHARNR=
+RETURN 1
+
+ON=7
+TARG <UID.<SRC.CTAG.CRYSTALBALL>.ACCOUNT.CHAR.<VAR.CHARNR>.UID>
+EVERBTARG 
+VAR.CHARNR=
+RETURN 1
+
+ON=8
+IF (!<VAR.CHARNR>)
+	DIALOG d_accinfo
+ELSE
+	VAR.CHARNR=<EVAL(<VAR0.CHARNR> - 1)>
+	DIALOG d_accinfo
+ENDIF
+
+ON=9
+IF (<VAR.CHARNR> == <EVAL(<UID.<SRC.CTAG.CRYSTALBALL>.ACCOUNT.CHARS> - 1)>)
+	DIALOG d_accinfo
+ELSE
+	VAR.CHARNR=<EVAL(<VAR0.CHARNR> + 1)>
+	DIALOG d_accinfo
+ENDIF
+
+ON=10
+IF (<ACCOUNT.PLEVEL> > 4)
+	DOSWITCH <UID.<SRC.CTAG.CRYSTALBALL>.ACCOUNT.BLOCK>
+	UID.<SRC.CTAG.CRYSTALBALL>.ACCOUNT.BLOCK 1
+	UID.<SRC.CTAG.CRYSTALBALL>.ACCOUNT.BLOCK 0
+	ENDDO
+	DIALOG d_accinfo
+ELSE
+	SYSMESSAGE You can not block accounts.
+	DIALOG d_accinfo
+ENDIF
+
+ON=11
+IF (<ACCOUNT.PLEVEL> > 2)
+	DOSWITCH <UID.<SRC.CTAG.CRYSTALBALL>.ACCOUNT.JAIL>
+	UID.<SRC.CTAG.CRYSTALBALL>.ACCOUNT.JAIL 1
+	UID.<SRC.CTAG.CRYSTALBALL>.ACCOUNT.JAIL 0
+	ENDDO
+	DIALOG d_accinfo
+ELSE
+	SYSMESSAGE You can not jail accounts.
+	DIALOG d_accinfo
+ENDIF
+
+ON=12
+IF (<ACCOUNT.PLEVEL> == 7)
+	UID.<SRC.CTAG.CRYSTALBALL>.ACCOUNT.DELETE
+ELSE
+	SYSMESSAGE You can not delete accounts.
+	DIALOG d_accinfo
+ENDIF
+

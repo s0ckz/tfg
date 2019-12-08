@@ -1,0 +1,43 @@
+/////////////////// RENOMEAR BAGS ////////////////////////////
+/////////////////////////////////////////////////////////////
+
+[FUNCTION RBAG]
+src.newitem i_rbag
+src.act.name= <args>
+src.act.equip
+
+[ITEMDEF i_rbag]
+ID=I_bag
+TYPE=T_container
+layer=0
+ON=@CREATE
+timer=30
+layer=0
+ATTR=00
+on=@equip
+target
+src.sysmessage Qual bag voce deseja renomear?
+on=@targon_char
+cont.sysmessage Este comando eh apenas para bags normais.
+remove
+return=1
+on=@targon_item
+if <cont.targ.type> == i_bag
+cont.targ.name=<name>
+cont.sysmessage Bag Renomeada.
+remove
+return=1
+else
+cont.sysmessage Isto comando eh apenas para bags normais.
+remove
+return=1
+endif
+on=@timer
+remove
+return=1
+
+
+
+
+////////////////////////////////
+////////////////////////////////

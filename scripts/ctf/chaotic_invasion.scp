@@ -1,0 +1,592 @@
+ok // nao permitir recall / marcar / help room
+ok // impedir saida da cidade
+ok // gate para entrar e para sair periodicamente
+// itens com tag para poder atravessar o mundo
+ok // entra com itens basicos
+ok // liberar / bloquear pvp nas horas certas
+// contabilizar dano pvp e pvm da galera
+ok // gate precisa ter a parada de memorias etc e kills e mortes
+// loots
+// premios participantes e vencedores
+// loots que voltam pro mundo: panos, montaria ethereal, ps, kegs de 100 e de 1000, ingots de blood, black, myth e ada, gs, deeds de casas, deeds de barcos, talisma
+
+[DEFNAME chaotic_invasion_settings]
+CHAOTIC_INVASION_TYPE_MINUTES 20
+CHAOTIC_INVASION_GATE_OUT_MINUTES 3
+CHAOTIC_INVASION_MAX_MONSTERS_COUNT 100
+CHAOTIC_INVASION_CONTROL_LOCATION 1892,2777,0,1
+CHAOTIC_INVASION_RESURRECTION_STONE_LOCATION 1891,2782,0,1
+CHAOTIC_INVASION_START_LOCATION 1894,2779,0,1
+CHAOTIC_INVASION_GATE_LOCATION 2341,541,1
+CHAOTIC_INVASION_RADIUS 120
+
+// Start Functions
+[FUNCTION start_chaotic_invasion]
+IF <TAG0.CAN_I_USE_EVENT_CMD>
+	f_start_chaotic_invasion
+ELSE
+	SRC.SYSMESSAGE @,,1 You can't use this command.
+ENDIF
+
+[FUNCTION f_start_chaotic_invasion]
+IF (<VAR0.CHAOTIC_INVASION_CONTROL>)
+	f_stop_chaotic_invasion
+ENDIF
+
+FORINSTANCES i_control_chaotic_invasion
+	REMOVE
+ENDFOR
+
+SERV.NEWITEM i_chaotic_invasion_gate
+NEW.P <DEF.CHAOTIC_INVASION_GATE_LOCATION>
+NEW.UPDATEX
+REF1=<NEW.UID>
+
+serv.newitem i_chaotic_invasion_announcement
+NEW.P <REF1.P>
+NEW.UPDATE
+
+SERV.NEWITEM i_chaotic_invasion_resurrection_stone
+NEW.P <DEF.CHAOTIC_INVASION_RESURRECTION_STONE_LOCATION>
+
+serv.newitem i_control_chaotic_invasion
+NEW.P <DEF.CHAOTIC_INVASION_CONTROL_LOCATION>
+NEW.ATTR 090
+NEW.TAG.NO_PVP 1
+NEW.UPDATEX
+
+VAR.CHAOTIC_INVASION_CONTROL = <NEW>
+
+SERV.B @70 [INVASAO CAOTICA] Comecou !!! O gate esta na Commerce Room ! Corra !
+RETURN 1
+
+[FUNCTION stop_chaotic_invasion]
+IF <TAG0.CAN_I_USE_EVENT_CMD>
+	f_stop_chaotic_invasion
+ELSE
+	SRC.SYSMESSAGE @,,1 Voce nao pode usar este comando.
+ENDIF
+
+[FUNCTION f_stop_chaotic_invasion]
+FORINSTANCES i_chaotic_invasion_gate
+	REMOVE
+ENDFOR
+
+FORINSTANCES i_chaotic_invasion_resurrection_stone
+	REMOVE
+ENDFOR
+
+FORINSTANCES i_chaotic_invasion_announcement
+	REMOVE
+ENDFOR
+
+FORINSTANCES i_control_chaotic_invasion
+	REMOVE
+ENDFOR
+
+VAR.CHAOTIC_INVASION_CONTROL
+
+FOR X 0 <EVAL <SERV.ACCOUNTS> - 1>
+    IF (<SERV.ACCOUNT.<DLOCAL.X>.CHARS> > 0)
+        FOR Y 0 <EVAL <SERV.ACCOUNT.<DLOCAL.X>.CHARS> -1>
+            REF1 = <SERV.ACCOUNT.<DLOCAL.X>.CHAR.<DLOCAL.Y>>
+
+			IF (<REF1.ISEVENT.e_chaotic_invasion_players>)
+				REF1.GO Commerce Room
+			ENDIF
+		ENDFOR
+	ENDIF
+ENDFOR
+
+// Loot gravestone
+[ITEMDEF i_chaotic_invasion_resurrection_stone]
+id=i_gravestone_18
+name=Ressuscite aqui
+TYPE=t_shrine
+
+ON=@CREATE
+ATTR 010
+COLOR=70
+
+ON=@DCLICK
+IF !(<SRC.FLAGS> & statf_dead)
+	SRC.SYSMESSAGE @,,1 Voce nao esta morto !
+	RETURN 1
+ENDIF
+
+IF (<EVAL <SERV.TIME> - <SRC.CTAG0.LAST_DEATH>> < 300)
+	SRC.MESSAGE Tempo restante: <EVAL 30 - (<SERV.TIME> - <SRC.CTAG0.LAST_DEATH>) / 10> s
+	RETURN 1
+ENDIF
+
+SRC.RESURRECT
+SRC.chaotic_invasion_loot
+
+RETURN 1
+
+// Announcement
+[ITEMDEF i_chaotic_invasion_announcement]
+ID=i_crystal_ball
+NAME=Chaotic Invasion [DO NOT REMOVE]
+WEIGHT=200
+TYPE=t_eq_script
+
+ON=@Create
+    ATTR=attr_decay|attr_invis
+    TIMER=300
+
+ON=@TIMER
+  	SERV.B @55 [INVASAO CAOTICA] Estah Ocorrendo !!! O gate esta na Commerce Room ! Corra !
+	TIMER 300
+	RETURN 1
+
+// Gate
+[ITEMDEF i_chaotic_invasion_exit_gate]
+ID=i_moongate_blue
+WEIGHT=1
+NAME=Chaotic Invasion - Saida
+
+ON=@Create
+	ATTR 08000
+	COLOR 70
+
+ON=@Click
+	MESSAGE @0790 <NAME>
+	RETURN 1
+
+ON=@Step
+IF !(<SRC.ISPLAYER>)
+	RETURN 1
+ENDIF
+
+IF (<SRC.FLAGS> & statf_dead)
+	SRC.SYSMESSAGE @,,1 Voce esta morto !
+	RETURN 1
+ENDIF
+
+IF (<SRC.FLAGS> & statf_war)
+	SRC.SYSMESSAGE @,,1 Voce esta em war mode !
+	RETURN 1
+ENDIF
+
+IF (<SRC.HITS> < <SRC.MAXHITS>)
+	SRC.SYSMESSAGE @,,1 Voce precisa estar com hits full para sair !
+	RETURN 1
+ENDIF
+
+[ITEMDEF i_chaotic_invasion_gate]
+ID=0f6c
+WEIGHT=1
+TYPE=t_normal
+NAME=Chaotic Invasion
+
+ON=@Create
+	ATTR 08000
+	COLOR 70
+
+ON=@Click
+	MESSAGE @0790 <NAME>
+	RETURN 1
+
+ON=@Step
+IF !(<SRC.ISPLAYER>)
+	RETURN 1
+ENDIF
+
+IF <SRC.TAG0.EVENT_BLOCK>
+	SRC.SYSMESSAGE @,,1 Voce esta banido de eventos!
+	RETURN 1
+ENDIF
+
+SRC.shrinklayer25_save
+SRC.CANCELLHELPROOM
+
+SRC.TAG.ASKILLS = <SRC.KILLS>
+SRC.TAG.ASKARMA = <SRC.KARMA>
+SRC.TAG.ASFAME = <SRC.FAME>
+SRC.TAG.ASDEATHS = <SRC.DEATHS>
+SRC.TAG.ASHITS = <SRC.HITS>
+
+SRC.FINDLAYER.31.BOUNCE //LAYER DRAGGING
+SRC.TAG.LASTBACKPACK <SRC.FINDLAYER.21.UID>
+SRC.stripsave
+
+TAG0.CURRENT_TEAM += 1
+
+SRC.TAG.ONEVENT 1
+
+SRC.FINDLAYER.21.ATTR 0
+REF1=<SRC.FINDLAYER.21.UID>
+SRC.FINDLAYER.21.CONT <SRC.FINDLAYER.29.UID>
+REF1.UPDATEX
+SRC.NEWITEM I_BACKPACK
+
+src.chaotic_invasion_loot
+
+SRC.HITS=<SRC.MAXHITS>
+SRC.MANA=<SRC.MAXMANA>
+SRC.STAM=<SRC.MAXSTAM>
+
+SRC.GO <DEF.CHAOTIC_INVASION_START_LOCATION>
+
+SRC.RESENDALL
+SRC.EVENTS +e_chaotic_invasion_players
+
+SERV.B @70 [INVASAO CAOTICA] <SRC.NAME> entrou !
+
+RETURN 1
+
+[FUNCTION chaotic_invasion_loot]
+src.newitem i_bow_bloodrock
+src.act.equip
+
+src.newitem i_except_War_fork
+src.act.name <src.act.name> (Poisoned)
+src.act.maxhits 5000
+src.act.hits <src.act.maxhits>
+src.act.tag.poisonlevel 4
+src.act.tag.poisontimer 3
+src.act.equip
+
+src.newitem i_except_kryss
+src.act.name <src.act.name> (Poisoned)
+src.act.maxhits 5000
+src.act.hits <src.act.maxhits>
+src.act.tag.poisonlevel 4
+src.act.tag.poisontimer 3
+src.act.equip
+
+src.newitem i_except_axe_exec
+src.act.name <src.act.name> (Poisoned)
+src.act.maxhits 5000
+src.act.hits <src.act.maxhits>
+src.act.tag.poisonlevel 4
+src.act.tag.poisontimer 3
+src.act.equip
+
+src.newitem i_bloodrock_closed_helm
+src.act.maxhits 5000
+src.act.hits <src.act.maxhits>
+src.act.equip
+
+src.newitem i_bloodrock_female_platemail
+src.act.maxhits 5000
+src.act.hits <src.act.maxhits>
+src.act.equip
+
+src.newitem i_bloodrock_platemail_arms
+src.act.maxhits 5000
+src.act.hits <src.act.maxhits>
+src.act.equip
+
+src.newitem i_bloodrock_platemail_gauntlets
+src.act.maxhits 5000
+src.act.hits <src.act.maxhits>
+src.act.equip
+
+src.newitem i_bloodrock_platemail_gorget
+src.act.maxhits 5000
+src.act.hits <src.act.maxhits>
+src.act.equip
+
+src.newitem i_bloodrock_platemail_leggings
+src.act.maxhits 5000
+src.act.hits <src.act.maxhits>
+src.act.equip
+
+src.newitem i_llama_evento // animal
+new.attr ~= attr_newbie
+src.act.equip
+
+if (!src.finditem.i_spellbook_full)
+	src.newitem i_spellbook_full
+	src.act.color 07B5
+	src.act.bounce
+endif
+
+if (<src.memoryfindtype.memory_guild.link.align>==2)
+src.newitem i_chaos_shield
+src.act.maxhits 5000
+src.act.hits <src.act.maxhits>
+src.act.equip
+elif (<src.memoryfindtype.memory_guild.link.align>==1)
+src.newitem i_order_shield
+src.act.maxhits 5000
+src.act.hits <src.act.maxhits>
+src.act.equip
+else
+src.newitem i_bloodrock_heater_shield
+src.act.maxhits 5000
+src.act.hits <src.act.maxhits>
+src.act.equip
+endif
+
+src.newitem i_bless_robe
+src.act.maxhits 5000
+src.act.hits <src.act.maxhits>
+src.act.equip
+
+src.newitem i_leather_leggings_wyrm
+src.act.maxhits 5000
+src.act.hits <src.act.maxhits>
+src.act.equip
+
+src.newitem i_leather_tunic_wyrm
+src.act.maxhits 5000
+src.act.hits <src.act.maxhits>
+src.act.equip
+
+src.newitem i_leather_sleeves_wyrm
+src.act.maxhits 5000
+src.act.hits <src.act.maxhits>
+src.act.equip
+
+src.newitem i_leather_gorget_wyrm
+src.act.maxhits 5000
+src.act.hits <src.act.maxhits>
+src.act.equip
+
+src.newitem i_leather_gloves_wyrm
+src.act.maxhits 5000
+src.act.hits <src.act.maxhits>
+src.act.equip
+
+src.newitem i_color_orc_helm_12
+src.act.maxhits 5000
+src.act.hits <src.act.maxhits>
+src.act.equip
+
+src.campmine_renew_resources
+
+
+[ITEMDEF i_control_chaotic_invasion]
+ID=i_crystal_ball
+NAME=Chaotic Invasion [DO NOT REMOVE]
+WEIGHT=200
+TYPE=t_eq_script
+
+ON=@Create
+    ATTR=attr_decay|attr_invis
+    TIMER=5
+
+ON=@Destroy
+	SECTOR.FLAGS 0
+
+	FORCHARS <EVAL <DEF.CHAOTIC_INVASION_RADIUS> * 2>
+		IF (<ISEVENT.e_chaotic_invasion_monsters>)
+			REMOVE
+		ENDIF
+	ENDFOR
+
+ON=@TIMER
+	SECTOR.FLAGS secf_nosleep
+
+	IF (<TAG0.CREATED_MONSTERS> < <DEF.CHAOTIC_INVASION_MAX_MONSTERS_COUNT>)
+		SERV.NEWNPC <EVAL {c_m_prisma_w 1 c_m_prisma_g 1 c_m_prisma_b 1 c_m_dragon_wyrm_Dark 1 c_awyrm 1 c_m_dragon_Silver 1 c_m_dragon_Blood 1}>
+		NEW.P=<P>
+		NEW.MOVE <EVAL {-<DEF.CHAOTIC_INVASION_RADIUS> <DEF.CHAOTIC_INVASION_RADIUS>}> <EVAL {-<DEF.CHAOTIC_INVASION_RADIUS> <DEF.CHAOTIC_INVASION_RADIUS>}>
+
+		WHILE (<NEW.ISSTUCK>)
+			NEW.P=<P>
+			NEW.MOVE <EVAL {-<DEF.CHAOTIC_INVASION_RADIUS> <DEF.CHAOTIC_INVASION_RADIUS>}> <EVAL {-<DEF.CHAOTIC_INVASION_RADIUS> <DEF.CHAOTIC_INVASION_RADIUS>}>
+		ENDWHILE
+
+		NEW.HOME=<NEW.P>
+		NEW.HOMEDIST=6
+		NEW.TAG.CONTROL_CHAOTIC_INVASION=<UID>
+		NEW.EVENTS +e_chaotic_invasion_monsters
+		f_weaken_monster_char_uid <NEW.UID>
+
+		NEW.UPDATE
+
+		NEW.Z 50
+		NEW.FIX
+
+		SERV.B @91 [INVASAO CAOTICA] Um <NEW.NAME> nasceu nas coordenadas <NEW.P> ! Corra para derrotar ele !
+
+		TAG0.CREATED_MONSTERS += 1
+	ENDIF
+
+	TIMER=20
+
+	TAG0.ELAPSED_TIME += <TIMER>
+
+	IF !(<TAG0.NOPVP>) &&  (<TAG0.ELAPSED_TIME> >= <EVAL <DEF.CHAOTIC_INVASION_GATE_OUT_MINUTES> * 60>) && (<TAG0.GATE_OPEN>)
+		SERV.B @70 [INVASAO CAOTICA] Gate de saida fechado. Aguarde a proxima abertura !
+
+		UID.<TAG0.GATE_OPEN>.REMOVE
+		TAG0.GATE_OPEN
+	ELSEIF (<TAG0.ELAPSED_TIME> >= <EVAL <DEF.CHAOTIC_INVASION_TYPE_MINUTES> * 60>)
+
+		REF1 <UID>
+		FORPLAYERS 6144
+			IF (<ISEVENT.e_chaotic_invasion_players>)
+				IF (<DISTANCE <REF1.UID>> > <EVAL <DEF.CHAOTIC_INVASION_RADIUS> * 2>)
+					GO <DEF.CHAOTIC_INVASION_START_LOCATION>
+				ENDIF
+			ENDIF
+		ENDFOR
+
+		IF (<TAG0.NOPVP>)
+			TAG.NOPVP 0
+
+			SERV.NEWITEM i_chaotic_invasion_exit_gate
+			NEW.NAME Saida
+			NEW.MOREP 2341,532,1
+			NEW.P <DEF.CHAOTIC_INVASION_CONTROL_LOCATION>
+
+			TAG0.GATE_OPEN <NEW.UID>
+
+			SERV.B @70 [INVASAO CAOTICA] Gate de saida aberto. PVP liberado ! Se quiser guardar seus itens, a hora eh essa !
+		ELSE
+			TAG.NOPVP 1
+
+			SERV.B @70 [INVASAO CAOTICA] PVP bloqueado ! Aguarde a proxima vez !
+		ENDIF
+
+		TAG0.ELAPSED_TIME
+	ENDIF
+
+	RETURN 1
+
+
+[FUNCTION weaken_monster]
+TARGETF f_weaken_monster
+
+[FUNCTION f_weaken_monster]
+f_weaken_monster_char_uid <ARGO.UID>
+
+[FUNCTION f_weaken_monster_char_uid]
+IF (<ARGV> != 1)
+	RETURN 1
+ENDIF
+
+REF1=<ARGV[0]>
+
+REF1.MAXHITS=<EVAL <REF1.MAXHITS> / 10>
+REF1.HITS=<REF1.MAXHITS>
+REF1.STR=<EVAL <REF1.STR> / 5>
+REF1.DEX=<EVAL <REF1.DEX> / 5>
+REF1.INT=<EVAL <REF1.INT> / 5>
+REF1.DAM=<EVAL <REF1.STR> / 5>
+REF1.TAG.WEAKENED 1
+
+IF (<REF1.DAM> > 20)
+	REF1.DAM 20
+ELSEIF (<REF1.DAM> <= 5)
+	REF1.DAM 5
+ENDIF
+
+IF (<REF1.HITS> < 100)
+	REF1.HITS 100
+	REF1.MAXHITS <REF1.HITS>
+ENDIF
+
+[EVENTS e_chaotic_invasion_players]
+ON=@SpellEffect
+	IF (<UID.<VAR.CHAOTIC_INVASION_CONTROL>.TAG0.NOPVP>) && (<SRC.ISPLAYER>) && (<SERV.SPELL.<ARGN1>.FLAGS> & spellflag_harm)
+		RETURN 1
+	ENDIF
+
+ON=@GetHit
+	IF (<UID.<VAR.CHAOTIC_INVASION_CONTROL>.TAG0.NOPVP>) && (<SRC.ISPLAYER>)
+		RETURN 1
+	ENDIF
+
+ON=@HitTry
+	IF (<UID.<VAR.CHAOTIC_INVASION_CONTROL>.TAG0.NOPVP>) && (<SRC.ISPLAYER>)
+		RETURN 1
+	ENDIF
+
+ON=@EnvironChange
+	IF (<MAP> != 1)
+		IF (<HITS> < 1)
+			RESURRECT
+		ENDIF
+
+		STRIPREMOVE
+
+		SRC.KILLS=<TAG.ASKILLS>
+		SRC.KARMA=<TAG.ASKARMA>
+		SRC.FAME=<TAG.ASFAME>
+		SRC.DEATHS=<TAG.ASDEATHS>
+		SRC.HITS=<TAG.ASHITS>
+		SRC.MEMORYFINDTYPE.MEMORY_HARMEDBY.REMOVE
+		SRC.MEMORYFINDTYPE.MEMORY_IAGGRESSOR.REMOVE
+		SRC.MEMORYFINDTYPE.MEMORY_FIGHT.REMOVE
+		SRC.MEMORYFINDTYPE.MEMORY_SAWCRIME.REMOVE
+		SRC.MEMORYFINDTYPE.MEMORY_AGGREIVED.REMOVE
+		SRC.MEMORYFINDTYPE.MEMORY_WAR_TARG.REMOVE
+		SRC.MEMORYFINDTYPE.MEMORY_HARMEDBY.REMOVE
+		SRC.MEMORYFINDTYPE.MEMORY_IAGGRESSOR.REMOVE
+		SRC.MEMORYFINDTYPE.MEMORY_FIGHT.REMOVE
+		SRC.MEMORYFINDTYPE.MEMORY_SAWCRIME.REMOVE
+		SRC.MEMORYFINDTYPE.MEMORY_AGGREIVED.REMOVE
+		SRC.MEMORYFINDTYPE.MEMORY_WAR_TARG.REMOVE
+
+		TAG.ASKILLS
+		TAG.ASKARMA
+		TAG.ASFAME
+		TAG.ASDEATHS
+		TAG.ASHITS
+
+		SRC.CRIMINAL 0
+		INVIS 0
+
+	    FINDLAYER.21.REMOVE
+	    FINDLAYER.25.REMOVE
+	    FINDLAYER.31.REMOVE
+
+	    NEWITEM I_GOLD
+	    ACT.LINK 0<TAG.LASTBACKPACK>
+	    ACT.LINK.CONT <UID>
+	    ACT.REMOVE
+
+		EVENTS -e_chaotic_invasion_players
+
+		IF (<FINDLAYER.21> = 0)
+			SERV.LOG Err... <NAME> saiu do evento e nao foi possivel recuperar sua backpack!
+			SERV.LOG Root: <UID> - Act: <ACT.UID> - Src: <SRC.UID> - Action: <ACTION> - Backpack: <TAG.LASTBACKPACK>
+		ENDIF
+
+		RESENDALL
+		REEQUIPALL
+
+		TAG.LASTBACKPACK
+		TAG.ONEVENT
+		TAG.NAME.HUE
+	ENDIF
+
+	RETURN 0
+
+
+[EVENTS e_chaotic_invasion_monsters]
+
+ON=@Destroy
+	UID.<TAG0.CONTROL_CHAOTIC_INVASION>.TAG0.CREATED_MONSTERS -= 1
+
+	IF (<UID.<TAG0.CONTROL_CHAOTIC_INVASION>.TAG0.CREATED_MONSTERS> <= 0)
+		UID.<TAG0.CONTROL_CHAOTIC_INVASION>.TAG0.CREATED_MONSTERS
+	ENDIF
+
+ON=@Death
+	FORCONT <UID>
+		REMOVE
+	ENDFOR
+
+	SERV.NEWITEM <EVAL {i_potion_refresh 1 i_potion_life_boost_great 1 i_potion_mana_boost_great 1 i_scroll_flamestrike 1 i_bandage 1 i_arrow 1 i_potion_refilling_great 1}>
+	NEW.AMOUNT <R30>
+	NEW.CONT <UID>
+
+	IF !(<R5>)
+		SERV.NEWITEM tm_bag_o_regs
+		NEW.CONT <UID>
+	ENDIF
+
+	UID.<TAG0.CONTROL_CHAOTIC_INVASION>.TAG0.CREATED_MONSTERS -= 1
+
+	IF (<UID.<TAG0.CONTROL_CHAOTIC_INVASION>.TAG0.CREATED_MONSTERS> <= 0)
+		UID.<TAG0.CONTROL_CHAOTIC_INVASION>.TAG0.CREATED_MONSTERS
+	ENDIF
+
+[EOF]

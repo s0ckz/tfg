@@ -1,0 +1,1296 @@
+﻿//****************************************************************************
+// SPHERE by : Menasoft �1997-2014
+// www.sphereserver.net
+// All SPHERE script files and formats are copyright Menasoft & Partners.
+// This file may be freely edited for personal use, but may not be distributed
+// in whole or in part, in any format without express written permission from
+// Menasoft & Partners.  All donations and contributions
+// become the property of Menasoft & Partners.
+//****************************************************************************
+// FILE LAST UPDATED: Sunday, Nov 30, 2014
+//
+VERSION=0.56c
+
+[COMMENT sphere_resource]
+A REGIONRESOURCE (usually named mr_something) describes how a map resource
+can be harvested by using the following properties:
+
+ AMOUNT=     The amount of resources that can be reaped.
+ REAP=       The itemdef that will be reaped.
+ REAPAMOUNT= The amount that can be gathered in one use of skill.
+ SKILL=      The skill required to gather that resource.
+ REGEN=      The time that must pass before that location can be mined again.
+
+A REGIONTYPE (usually named r_something) is an EVENT that affects players
+and/or creatures in a map region.
+
+A map region (also known as AREADEF or ROOMDEF, and usually named a_something)
+can be assigned one or more REGIONTYPEs through its EVENT= property.
+
+In order for harvesting skills like mining, lumberjacking, and fishing to
+work in a map region, the REGIONTYPE must be linked to a Terrain TYPEDEF,
+and that REGIONTYPE needs one or more RESOURCE= properties linked to a map
+resource.
+
+A terrain TYPEDEF (usually named t_something) is linked to terrain through
+it`s TERRAIN= property.
+
+* REGIONRESOURCE and REGIONTYPE are defined in the sphere_region.scp file.
+* Terrain TYPEDEFs are defined in the sphere_terrain_types.scp file.
+* Regions (AREADEF and ROOMDEF) are defined in sphere_map*.scp files.
+
+
+////////////////////////////////
+// The "nothing" map resource //
+////////////////////////////////
+
+
+[REGIONRESOURCE mr_nothing]
+// there is nothing here
+REAP=i_unused
+REGEN=2*60*10	// maybe something here later.
+
+/////////////////////////////////
+// Resources for fishing skill //
+/////////////////////////////////
+
+[REGIONRESOURCE mr_fish_tuna]
+skill=70.0,85.0
+amount=1,4
+REAP=i_tuna
+REGEN=60*60
+REAPAMOUNT=1,2
+
+On=@ResourceGather
+return <src.f_fishbuff_engine <local.ResourceID>,<argn1>>
+
+[REGIONRESOURCE mr_fish_large]
+skill=65.0,80.0
+amount=2,5
+REAP=i_large_fish
+REGEN=60*70
+REAPAMOUNT=1,2
+
+On=@ResourceGather
+return <src.f_fishbuff_engine <local.ResourceID>,<argn1>>
+
+[REGIONRESOURCE mr_fish_magical]
+skill=75.0,100.0
+amount=2,4
+REAP=i_magical_fish
+REGEN=2*60*10
+REAPAMOUNT=1,2
+
+On=@ResourceGather
+return <src.f_fishbuff_engine <local.ResourceID>,<argn1>>
+
+[REGIONRESOURCE mr_fish_golden]
+skill=80.0,100.0
+amount=2,4
+REAP=i_golden_fish
+REGEN=2*60*10
+REAPAMOUNT=1,2
+
+On=@ResourceGather
+return <src.f_fishbuff_engine <local.ResourceID>,<argn1>>
+
+[REGIONRESOURCE mr_fish1]
+// fishing default
+// t_water
+skill=1.0,100.0
+amount=2,9
+REAP=i_fish_big_1
+REGEN=2*60*10
+REAPAMOUNT=1,3
+
+On=@ResourceGather
+return <src.f_fishbuff_engine <local.ResourceID>,<argn1>>
+
+[REGIONRESOURCE mr_fish2]
+// fishing default
+// t_water
+skill=1.0,100.0
+REAP=i_fish_big_2
+amount=1,3
+REGEN=2*60*10
+REAPAMOUNT=1,3
+
+On=@ResourceGather
+return <src.f_fishbuff_engine <local.ResourceID>,<argn1>>
+
+[REGIONRESOURCE mr_fish3]
+// fishing default
+// t_water
+skill=1.0,100.0
+amount=3,5
+REAP=i_fish_big_3
+REGEN=2*60*10
+REAPAMOUNT=2,5
+
+On=@ResourceGather
+return <src.f_fishbuff_engine <local.ResourceID>,<argn1>>
+
+[REGIONRESOURCE mr_fish4]
+// fishing default
+// t_water
+skill=1.0,100.0
+amount=5,10
+REAP=i_fish_big_4
+REGEN=2*60*10
+REAPAMOUNT=3,7
+
+On=@ResourceGather
+return <src.f_fishbuff_engine <local.ResourceID>,<argn1>>
+
+[REGIONRESOURCE mr_boots]
+// fishing default
+// t_water
+skill=1.0,100.0
+amount=1
+REAP=random_boots
+REGEN=2*60*10
+
+[REGIONRESOURCE mr_shoes]
+// fishing default
+// t_water
+skill=1.0,100.0
+amount=1
+REAP=random_shoes
+REGEN=2*60*10
+
+///////////////////////////////////////
+// Resources for lumberjacking skill //
+///////////////////////////////////////
+
+[REGIONRESOURCE mr_tree]
+// lumberjacking default
+// t_tree
+skill=0.1,80.0
+amount=5,12
+REAP=i_log
+REGEN=2*60*15
+REAPAMOUNT=3,5
+
+On=@ResourceGather
+return <src.f_logbuff_engine <local.ResourceID>,<argn1>>
+
+[REGIONRESOURCE mr_cedar]
+// lumberjacking Cedar
+// t_tree
+skill=40.0,50.0
+amount=4,6
+REAP=i_cedar_log
+REGEN=6*60*10
+REAPAMOUNT=1,3
+
+On=@ResourceGather
+return <src.f_logbuff_engine <local.ResourceID>,<argn1>>
+
+[REGIONRESOURCE mr_mahogany]
+// lumberjacking Mahogany
+// t_tree
+skill=60.0,70.0
+amount=3,5
+REAP=i_mahogany_log
+REGEN=7*60*10
+REAPAMOUNT=1,3
+
+On=@ResourceGather
+return <src.f_logbuff_engine <local.ResourceID>,<argn1>>
+
+[REGIONRESOURCE mr_hard_maple]
+// lumberjacking Hard Maple
+// t_tree
+skill=56.0,63.0
+amount=2,4
+REAP=i_hard_maple_log
+REGEN=8*60*10
+REAPAMOUNT=1,3
+
+On=@ResourceGather
+return <src.f_logbuff_engine <local.ResourceID>,<argn1>>
+
+[REGIONRESOURCE mr_hickory]
+// lumberjacking Hickory
+// t_tree
+skill=63.0,70.0
+amount=1,2
+REAP=i_hickory_log
+REGEN=10*60*10
+REAPAMOUNT=1,2
+
+On=@ResourceGather
+return <src.f_logbuff_engine <local.ResourceID>,<argn1>>
+
+[REGIONRESOURCE mr_dark]
+//lumberjacking Dark LOG
+//t_tree
+skill=70.0,95.0
+amount=2,3
+REAP=i_dark_log
+REGEN=5*60*15
+REAPAMOUNT=1,3
+
+On=@ResourceGather
+return <src.f_logbuff_engine <local.ResourceID>,<argn1>>
+
+[REGIONTYPE r_default_tree t_tree]
+// All tress produce wood by default.
+RESOURCES=5.0 mr_nothing
+RESOURCES=85.0 mr_tree
+RESOURCES=1.5 mr_dark //DARK LOG
+RESOURCES=1.0 mr_cedar
+RESOURCES=0.7 mr_mahogany
+RESOURCES=0.4 mr_hard_maple
+RESOURCES=0.1 mr_hickory
+
+[REGIONTYPE r_cp_tree t_tree]
+// All tress produce wood by default.
+RESOURCES=5.0 mr_nothing
+RESOURCES=85.0 mr_tree
+
+[REGIONRESOURCE mr_grass]
+// grazing animals
+// t_grass
+AMOUNT=9,30
+REGEN=2*60*10
+REAP=i_hay_sheaf
+
+[REGIONTYPE r_tortuga_quest]
+on=@ENTER
+ src.events +e_tortuga_quest
+
+on=@EXIT
+ref1 <uid.04000a83a>
+src.events -e_tortuga_quest
+src.timerf 1, f_processa_saida_tortuga <ref1>
+
+[function f_processa_saida_tortuga]
+ref1 <argv[0]> //pedra
+
+if (<ref1.f_distance_quest_joias <src>> > 300)
+	ref1.f_pegar_barco_tortuga <src>
+endif
+
+[function f_distance_quest_joias]
+ref1 <argv[0]>
+return <distance <ref1>>
+
+[Function f_pegar_barco_tortuga]
+ref1 <uid.<args>>
+foritems 100
+	if (<type> == t_ship)
+		if (<more1> == <ref1>)
+			remove
+			ref1.timerf <r1,15>, dialog d_afundamos_barco
+		endif
+	endif
+endfor
+
+//[REGIONTYPE r_default]
+// Unclaimed regions.
+//ON=@ENTER
+//	SRC.MUSIC=midi_britain1,midi_ForestA,midi_JungleA,midi_MountainA,midi_Plains,midi_Victory
+
+//ON=@CLIPERIODIC
+//	SRC.MUSIC=midi_britain1,midi_ForestA,midi_JungleA,midi_MountainA,midi_Plains,midi_Victory
+
+////////////////////////////////
+// Resources for mining skill //
+////////////////////////////////
+[COMMENT Buffer_decrease_values]
+****  TFG 2017  *****
+Cada ore retirado deve reduzir uma quantidade de pontos de um buffer que cada char(ou conta global) tem.
+P.Ex.: Minerar 5 ceramic ore reduz 5 pontos do buffer inicial, ficando <bufferinicial>-5. Se ele minerar mais 10 iron ore
+reduzirá 20 pontos desse buffer, ficando <bufferinicial>-5-20 e assim vai.
+Quando o buffer em questao chegar a 0, o player deverá esperar o buffer ser restaurado (1x por dia, por hora, etc.) para poder
+minerar novamente.
+
+@ResourceGather
+ARGO	The worldgem bit that represents the resource in the world.
+I	The region resource being gathered.
+SRC	The character gathering the resource.
+
+Argument	In/Out	Description
+Local.ResourceID	IO	The id of the item being gathered.
+ARGN1	IO	The amount of the resource being gathered at this time.
+
+Seguindo a seguinte tabela:
+
+[DEFNAME Buffer_decrease_values_def]
+////DEfs de impacto de cada ore para ser retirado no buffer
+Buffer_inicial_ores		10000
+/// Metais ///
+BFC_i_ore_Iron			1
+BFC_i_ore_Ceramic		2
+BFC_i_ore_Rusty 		4
+BFC_i_ore_Old_Copper 	5
+BFC_i_ore_Dull_Copper	5
+BFC_i_ore_Copper 		6
+BFC_i_ore_Bronze 		6
+BFC_i_ore_Shadow 		7
+BFC_i_ore_Agapite 		8
+BFC_i_ore_Rose 			11
+BFC_i_ore_Silver 		14
+BFC_i_ore_Valorite 		23
+BFC_i_ore_Verite 		23
+BFC_i_ore_Gold 			30
+BFC_i_ore_Bloodrock 	40
+BFC_i_ore_Blackrock 	40
+BFC_i_ore_Mytheril		80
+BFC_i_ore_Order 		140
+BFC_i_ore_Chaos 		140
+BFC_i_ore_Adamantium 	400
+
+/// Pedras ///
+BFC_i_gem_Citrine 		23
+BFC_i_gem_Tourmaline 	26
+BFC_i_gem_Amethyst 		30
+BFC_i_gem_Sapphire 		36
+BFC_i_gem_Star_Sapphire	60
+BFC_i_gem_Emerald 		60
+BFC_i_gem_Ruby 			80
+BFC_i_gem_Diamond 		140
+
+Buffer_inicial_logs		3000
+/// Logs ///
+BFC_i_log				1
+BFC_i_dark_log			3
+BFC_i_cedar_log			5
+BFC_i_mahogany_log		7
+BFC_i_hard_maple_log	10
+BFC_i_hickory_log		40
+BFC_i_elven_log			25
+
+Buffer_inicial_fishes	3000
+/// Fishes ///
+BFC_i_fish_big_1		2
+BFC_i_fish_big_2		2
+BFC_i_fish_big_3		2
+BFC_i_fish_big_4		2
+BFC_i_large_fish		5
+BFC_i_tuna				8
+BFC_i_golden_fish		15
+BFC_i_magical_fish		25
+
+[DEFNAME new_buffer_nerf_def]
+/// Metais ///
+NBFC_i_ore_Iron				1
+NBFC_i_ore_Ceramic			1
+NBFC_i_ore_Rusty	 		1
+NBFC_i_ore_Old_Copper	 	1
+NBFC_i_ore_Dull_Copper		1
+NBFC_i_ore_Copper	 		1
+NBFC_i_ore_Bronze	 		2
+NBFC_i_ore_Shadow	 		2
+NBFC_i_ore_Agapite	 		2
+NBFC_i_ore_Rose		 		2
+NBFC_i_ore_Silver			3
+NBFC_i_ore_Valorite	 		3
+NBFC_i_ore_Verite	 		3
+NBFC_i_ore_Gold	 			3
+NBFC_i_ore_Bloodrock	 	4
+NBFC_i_ore_Blackrock	 	5
+NBFC_i_ore_Mytheril			6
+NBFC_i_ore_Order	 		7
+NBFC_i_ore_Chaos	 		7
+NBFC_i_ore_Adamantium	 	8
+
+/// Pedras ///
+NBFC_i_gem_Citrine 			1
+NBFC_i_gem_Tourmaline 		1
+NBFC_i_gem_Amethyst 		1
+NBFC_i_gem_Sapphire 		1
+NBFC_i_gem_Star_Sapphire	1
+NBFC_i_gem_Emerald 			1
+NBFC_i_gem_Ruby 			1
+NBFC_i_gem_Diamond 			1
+
+
+[FUNCTION f_reiniciar_buffs]
+var.conta_<account.dtag.global>.OREBUFFER = <def.Buffer_inicial_ores>
+var.conta_<account.dtag.global>.LOGBUFFER = <def.Buffer_inicial_logs>
+var.conta_<account.dtag.global>.FISHBUFFER = <def.Buffer_inicial_fishes>
+
+var.conta_<account.dtag.global>.OREBUFFERREDUCTION
+var.conta_<account.dtag.global>.LOGBUFFERREDUCTION
+var.conta_<account.dtag.global>.FISHBUFFERREDUCTION
+
+if (<isonline>)
+	ctag0.orebufferzero
+	ctag0.logbufferzero
+	ctag0.fishbufferzero
+endif
+
+if <findid.i_memory_buffervip_mining>
+	findid.i_memory_buffervip_mining.remove
+endif
+
+[FUNCTION f_skill_buffer_cost_reduction]
+LOCAL.SKILL <ARGV[0]> * 10
+LOCAL.BUFFER_COST <ARGV[1]>
+
+IF (<dLOCAL.SKILL> <= 700)
+	RETURN 0
+ENDIF
+
+FLOAT.BUFFER_COST_REDUCTION <FLOATVAL ((<dLOCAL.SKILL> - 700) * <dLOCAL.BUFFER_COST>) / 600>
+LOCAL.BUFFER_COST_REDUCTION ((<dLOCAL.SKILL> - 700) * <dLOCAL.BUFFER_COST>) / 600
+LOCAL.CEIL_CHANCE <FEVAL <FLOATVAL 100 * (<FLOAT.BUFFER_COST_REDUCTION> - <dLOCAL.BUFFER_COST_REDUCTION>)>>
+
+IF (<dLOCAL.CEIL_CHANCE> > 0) && (<R1,100> <= <dLOCAL.CEIL_CHANCE>)
+	LOCAL.BUFFER_COST_REDUCTION += 1
+ENDIF
+
+RETURN <dLOCAL.BUFFER_COST_REDUCTION>
+
+[function f_new_orebuff_engine]
+LOCAL.ID <ARGV[0]>
+LOCAL.AMOUNT <ARGV[1]>
+
+IF !(<R<DDEF.NBFC_<SERV.ITEMDEF.<LOCAL.ID>.DEFNAME>>>)
+	IF (<EVAL <LOCAL.AMOUNT> / 3> <= 0)
+		RETURN 1
+	ELSE
+		RETURN <EVAL <LOCAL.AMOUNT> / 3>
+	ENDIF
+ENDIF
+
+
+[Function f_orebuff_engine]
+local.id <argv[0]>
+local.amount <argv[1]>
+if (<src.isevent.e_cp>)
+	return 0
+endif
+if (<src.ctag0.orebufferzero>) && (<var0.buffervip<src.account.dtag0.global>> < 1)
+	return 1
+else
+	src.ctag0.orebufferzero
+endif
+if (<var0.conta_<src.account.dtag.global>.orebuffer> < 1) && (<var0.buffervip<src.account.dtag0.global>> < 1)
+	if !(<src.ctag0.orebufferzero>)
+		src.ctag0.orebufferzero 1
+	endif
+	return 1
+elif (<var0.conta_<src.account.dtag.global>.orebuffer> < 1) && (<var0.buffervip<src.account.dtag0.global>> > 0) //buffer VIP
+	local.BuffCost <eval <def.BFC_<serv.itemdef.<local.id>.defname>>*<local.amount>>
+	local.BuffCostReduction <f_skill_buffer_cost_reduction <src.mining>,<dlocal.buffcost>>
+	if (<eval <var0.buffervip<src.account.dtag0.global>>-<dlocal.BuffCost>> <= 0)
+		src.timerf 1, smsg @17,,1 You have depleted your Mining VIP Buffer Storage.
+		var0.buffervip<src.account.dtag0.global>
+		return 0
+	endif
+	var0.buffervip<src.account.dtag0.global> -= <dlocal.BuffCost>
+	var0.buffervip<src.account.dtag0.global> += <dlocal.BuffCostReduction>
+
+	var0.conta_<src.account.dtag.global>.orebufferreduction += <dlocal.BuffCostReduction>
+
+	return 0
+endif
+local.BuffCost <eval <def.BFC_<serv.itemdef.<local.id>.defname>>*<local.amount>>
+local.BuffCostReduction <f_skill_buffer_cost_reduction <src.mining>,<dlocal.buffcost>>
+if (<eval <var0.conta_<src.account.dtag.global>.orebuffer>-<dlocal.BuffCost>> <= 0) && (<var0.buffervip<src.account.dtag0.global>> > 0)
+	var.conta_<src.account.dtag.global>.orebuffer = 0
+	Src.smsg @17,,1 You are using Mining VIP Buffer points now. You have <dvar0.buffervip<src.account.dtag0.global>> points.
+	return 0
+elif (<eval <var0.conta_<src.account.dtag.global>.orebuffer>-<dlocal.BuffCost>> <= 0) && (<var0.buffervip<src.account.dtag0.global>> == 0)
+	var.conta_<src.account.dtag.global>.orebuffer = 0
+	return 0
+endif
+var.conta_<src.account.dtag.global>.orebuffer -= <dlocal.BuffCost>
+var.conta_<src.account.dtag.global>.orebuffer += <dlocal.BuffCostReduction>
+
+var0.conta_<src.account.dtag.global>.orebufferreduction += <dlocal.BuffCostReduction>
+
+return 0
+/////////////////////////////////////
+
+[Function f_logbuff_engine]
+local.id <argv[0]>
+local.amount <argv[1]>
+if (<src.isevent.e_cp>)
+	return 0
+endif
+if (<src.ctag0.logbufferzero>) && (<var0.buffervip<src.account.dtag0.global>_lumber> < 1)
+	src.sysmessage @,,1 You are tired of cutting trees today, come back tomorrow.
+	return 1
+else
+	src.ctag0.logbufferzero
+endif
+if (<var0.conta_<src.account.dtag.global>.logbuffer> < 1) && (<var0.buffervip<src.account.dtag0.global>_lumber> < 1)
+	src.sysmessage @,,1 You are tired of cutting trees today, come back tomorrow.
+	if !(<src.ctag0.logbufferzero>)
+		src.ctag0.logbufferzero 1
+	endif
+	return 1
+elif (<var0.conta_<src.account.dtag.global>.logbuffer> < 1) && (<var0.buffervip<src.account.dtag0.global>_lumber> > 0) //buffer VIP
+	local.BuffCost <eval <def.BFC_<serv.itemdef.<local.id>.defname>>*<local.amount>>
+	local.BuffCostReduction <f_skill_buffer_cost_reduction <src.lumberjacking>,<dlocal.buffcost>>
+	if (<eval <var0.buffervip<src.account.dtag0.global>_lumber>-<dlocal.BuffCost>> <= 0)
+		src.sysmessage @,,1 You are tired of cutting trees today, come back tomorrow.
+		src.timerf 1, smsg @17,,1 You have depleted your Lumber VIP Buffer Storage.
+		var0.buffervip<src.account.dtag0.global>_lumber
+		return 0
+	endif
+	var0.buffervip<src.account.dtag0.global>_lumber -= <dlocal.BuffCost>
+	var0.buffervip<src.account.dtag0.global>_lumber += <dlocal.BuffCostReduction>
+
+	var0.conta_<src.account.dtag.global>.logbufferreduction += <dlocal.BuffCostReduction>
+
+	return 0
+endif
+local.BuffCost <eval <def.BFC_<serv.itemdef.<local.id>.defname>>*<local.amount>>
+local.BuffCostReduction <f_skill_buffer_cost_reduction <src.lumberjacking>,<dlocal.buffcost>>
+if (<eval <var0.conta_<src.account.dtag.global>.logbuffer>-<dlocal.BuffCost>> <= 0) && (<var0.buffervip<src.account.dtag0.global>_lumber> > 0)
+	src.sysmessage @,,1 You are tired of cutting trees today, come back tomorrow.
+	var.conta_<src.account.dtag.global>.logbuffer = 0
+	Src.smsg @17,,1 You are using Lumber VIP Buffer points now. You have <dvar0.buffervip<src.account.dtag0.global>_lumber> points.
+	return 0
+elif (<eval <var0.conta_<src.account.dtag.global>.logbuffer>-<dlocal.BuffCost>> <= 0) && (<var0.buffervip<src.account.dtag0.global>_lumber> == 0)
+	src.sysmessage @,,1 You are tired of cutting trees today, come back tomorrow.
+	var.conta_<src.account.dtag.global>.logbuffer = 0
+	return 0
+endif
+var.conta_<src.account.dtag.global>.logbuffer -= <dlocal.BuffCost>
+var.conta_<src.account.dtag.global>.logbuffer += <dlocal.BuffCostReduction>
+
+var0.conta_<src.account.dtag.global>.logbufferreduction += <dlocal.BuffCostReduction>
+
+return 0
+
+[Function f_fishbuff_engine]
+local.id <argv[0]>
+local.amount <argv[1]>
+if (<src.ctag0.fishbufferzero>) && (<var0.buffervip<src.account.dtag0.global>_fish> < 1)
+	src.sysmessage @,,1 You are tired of fishing for this day, come back tomorrow.
+	return 1
+else
+	src.ctag0.fishbufferzero
+endif
+if (<var0.conta_<src.account.dtag.global>.fishbuffer> < 1) && (<var0.buffervip<src.account.dtag0.global>_fish> < 1)
+	src.sysmessage @,,1 You are tired of fishing for this day, come back tomorrow.
+	if !(<src.ctag0.fishbufferzero>)
+		src.ctag0.fishbufferzero 1
+	endif
+	return 1
+elif (<var0.conta_<src.account.dtag.global>.fishbuffer> < 1) && (<var0.buffervip<src.account.dtag0.global>_fish> > 0) //buffer VIP
+	local.BuffCost <eval <def.BFC_<serv.itemdef.<local.id>.defname>>*<local.amount>>
+	local.BuffCostReduction <f_skill_buffer_cost_reduction <src.fishing>,<dlocal.buffcost>>
+	if (<eval <var0.buffervip<src.account.dtag0.global>_fish>-<dlocal.BuffCost>> <= 0)
+		src.sysmessage @,,1 You are tired of fishing today, come back tomorrow.
+		src.timerf 1, smsg @17,,1 You have depleted your Lumber VIP Buffer Storage.
+		var0.buffervip<src.account.dtag0.global>_fish
+		return 0
+	endif
+	var0.buffervip<src.account.dtag0.global>_fish -= <dlocal.BuffCost>
+	var0.buffervip<src.account.dtag0.global>_fish += <dlocal.BuffCostReduction>
+
+	var0.conta_<src.account.dtag.global>.fishbufferreduction += <dlocal.BuffCostReduction>
+
+	return 0
+endif
+local.BuffCost <eval <def.BFC_<serv.itemdef.<local.id>.defname>>*<local.amount>>
+local.BuffCostReduction <f_skill_buffer_cost_reduction <src.fishing>,<dlocal.buffcost>>
+if (<eval <var0.conta_<src.account.dtag.global>.fishbuffer>-<dlocal.BuffCost>> <= 0) && (<var0.buffervip<src.account.dtag0.global>_fish> > 0)
+	src.sysmessage @,,1 You are tired of fishing for this day, come back tomorrow.
+	var.conta_<src.account.dtag.global>.fishbuffer = 0
+	Src.smsg @17,,1 You are using Lumber VIP Buffer points now. You have <dvar0.buffervip<src.account.dtag0.global>_fish> points.
+	return 0
+elif (<eval <var0.conta_<src.account.dtag.global>.fishbuffer>-<dlocal.BuffCost>> <= 0) && (<var0.buffervip<src.account.dtag0.global>_fish> == 0)
+	src.sysmessage @,,1 You are tired of fishing for this day, come back tomorrow.
+	var.conta_<src.account.dtag.global>.fishbuffer = 0
+	return 0
+endif
+var.conta_<src.account.dtag.global>.fishbuffer -= <dlocal.BuffCost>
+var.conta_<src.account.dtag.global>.fishbuffer += <dlocal.BuffCostReduction>
+
+var0.conta_<src.account.dtag.global>.fishbufferreduction += <dlocal.BuffCostReduction>
+
+return 0
+
+[REGIONRESOURCE mr_ceramic]
+// t_rock
+SKILL=0.0,20.0
+AMOUNT=10,25
+REAP=i_ore_ceramic
+REGEN=30*60
+REAPAMOUNT=2 7
+
+On=@ResourceGather
+IF (<SRC.f_orebuff_engine <local.ResourceID>,<ARGN1>>)
+	ARGN1=<SRC.f_new_orebuff_engine <local.ResourceID>,<ARGN1>>
+ENDIF
+
+[REGIONRESOURCE mr_iron]	// default mining result.
+// t_rock
+skill=1.0,20.0
+amount=7,15
+REAP=i_ore_iron
+REGEN=30*60
+REAPAMOUNT=4,7
+
+On=@ResourceGather
+IF (<SRC.f_orebuff_engine <local.ResourceID>,<ARGN1>>)
+	ARGN1=<SRC.f_new_orebuff_engine <local.ResourceID>,<ARGN1>>
+ENDIF
+
+[REGIONRESOURCE mr_rusty]
+// t_rock
+skill=15.0,25.0
+amount=3,10
+REAP=i_ore_rusty
+REGEN=30*60//400
+
+On=@ResourceGather
+IF (<SRC.f_orebuff_engine <local.ResourceID>,<ARGN1>>)
+	ARGN1=<SRC.f_new_orebuff_engine <local.ResourceID>,<ARGN1>>
+ENDIF
+
+[REGIONRESOURCE mr_oldcopper]
+// t_rock
+skill=20.0,30.0
+amount=3,8
+REAP=i_ore_old_copper
+REGEN=30*60//400
+
+On=@ResourceGather
+IF (<SRC.f_orebuff_engine <local.ResourceID>,<ARGN1>>)
+	ARGN1=<SRC.f_new_orebuff_engine <local.ResourceID>,<ARGN1>>
+ENDIF
+
+[REGIONRESOURCE mr_dullcopper]
+// t_rock
+skill=25.0,37.0
+amount=4,7
+REAP=i_ore_dull_copper
+REGEN=30*60//300
+
+On=@ResourceGather
+IF (<SRC.f_orebuff_engine <local.ResourceID>,<ARGN1>>)
+	ARGN1=<SRC.f_new_orebuff_engine <local.ResourceID>,<ARGN1>>
+ENDIF
+
+[REGIONRESOURCE mr_copper]
+// copper makes terrible armor
+// t_rock
+skill=30.0,40.0
+amount=3,6
+REAP=i_ore_copper
+REGEN=30*60//2*60*30
+REAPAMOUNT=4,6
+
+On=@ResourceGather
+IF (<SRC.f_orebuff_engine <local.ResourceID>,<ARGN1>>)
+	ARGN1=<SRC.f_new_orebuff_engine <local.ResourceID>,<ARGN1>>
+ENDIF
+
+[REGIONRESOURCE mr_bronze]
+// Bronze is really copper and tin !
+// t_rock
+skill=30.0,43.0
+amount=3,6
+REAP=i_ore_bronze
+REGEN=30*60//2*60*30
+REAPAMOUNT=4,6
+
+On=@ResourceGather
+IF (<SRC.f_orebuff_engine <local.ResourceID>,<ARGN1>>)
+	ARGN1=<SRC.f_new_orebuff_engine <local.ResourceID>,<ARGN1>>
+ENDIF
+
+[REGIONRESOURCE mr_shadow]
+// t_rock
+skill=42.0,45.0
+amount=2,8
+REAP=i_ore_shadow
+REGEN=30*60//2*60*30
+REAPAMOUNT=2,3
+
+On=@ResourceGather
+IF (<SRC.f_orebuff_engine <local.ResourceID>,<ARGN1>>)
+	ARGN1=<SRC.f_new_orebuff_engine <local.ResourceID>,<ARGN1>>
+ENDIF
+
+[REGIONRESOURCE mr_agapite]
+// t_rock
+skill=45.0,50.0
+amount=3,6
+REAP=i_ore_agapite
+REGEN=30*60//2*60*30
+
+On=@ResourceGather
+IF (<SRC.f_orebuff_engine <local.ResourceID>,<ARGN1>>)
+	ARGN1=<SRC.f_new_orebuff_engine <local.ResourceID>,<ARGN1>>
+ENDIF
+
+[REGIONRESOURCE mr_rose]
+// t_rock
+skill=50.0,52.0
+amount=4,6
+REAP=i_ore_rose
+REGEN=30*60//2*60*30
+
+On=@ResourceGather
+IF (<SRC.f_orebuff_engine <local.ResourceID>,<ARGN1>>)
+	ARGN1=<SRC.f_new_orebuff_engine <local.ResourceID>,<ARGN1>>
+ENDIF
+
+[REGIONRESOURCE mr_silver]
+// t_rock
+skill=52.0,55.0
+amount=3,6
+REAP=i_ore_silver
+REGEN=30*60//2*60*30
+REAPAMOUNT=2,3
+
+On=@ResourceGather
+IF (<SRC.f_orebuff_engine <local.ResourceID>,<ARGN1>>)
+	ARGN1=<SRC.f_new_orebuff_engine <local.ResourceID>,<ARGN1>>
+ENDIF
+
+[REGIONRESOURCE mr_Valorite]
+// t_rock
+skill=55.0,57.0
+amount=3,5
+REAP=i_ore_Valorite
+REGEN=30*60//2*60*30
+REAPAMOUNT=2,3
+
+On=@ResourceGather
+IF (<SRC.f_orebuff_engine <local.ResourceID>,<ARGN1>>)
+	ARGN1=<SRC.f_new_orebuff_engine <local.ResourceID>,<ARGN1>>
+ENDIF
+
+
+[REGIONRESOURCE mr_verite]
+// t_rock
+skill=57.0,60.0
+amount=2,5
+REAP=i_ore_verite
+REGEN=30*60//2*60*30
+REAPAMOUNT=2,3
+
+On=@ResourceGather
+IF (<SRC.f_orebuff_engine <local.ResourceID>,<ARGN1>>)
+	ARGN1=<SRC.f_new_orebuff_engine <local.ResourceID>,<ARGN1>>
+ENDIF
+
+[REGIONRESOURCE mr_gold]
+// t_rock - Gold makes terrible armor.
+skill=60.0,65.0
+amount=2,5
+REAP=i_ore_gold
+REGEN=40*60//2*60*30
+REAPAMOUNT=2,4
+
+On=@ResourceGather
+IF (<SRC.f_orebuff_engine <local.ResourceID>,<ARGN1>>)
+	ARGN1=<SRC.f_new_orebuff_engine <local.ResourceID>,<ARGN1>>
+ENDIF
+
+[REGIONRESOURCE mr_bloodrock]
+// t_rock
+skill=61.5,69.0
+amount=2,4
+REAP=i_ore_bloodrock
+REGEN=40*60//2*60*30
+REAPAMOUNT=2,4
+
+On=@ResourceGather
+IF (<SRC.f_orebuff_engine <local.ResourceID>,<ARGN1>>)
+	ARGN1=<SRC.f_new_orebuff_engine <local.ResourceID>,<ARGN1>>
+ENDIF
+
+IF (<ARGN1> > 0)
+	SRC.F_GM_QUEST_SKILL_INCREASE 45,<SERV.REGIONRESOURCE.<ARGO.MORE1>.REAP>
+ENDIF
+
+[REGIONRESOURCE mr_blackrock]
+// t_rock
+skill=62.0,69.0
+amount=1,3
+REAP=i_ore_blackrock
+REGEN=40*60//2*60*30
+REAPAMOUNT=2
+
+On=@ResourceGather
+IF (<SRC.f_orebuff_engine <local.ResourceID>,<ARGN1>>)
+	ARGN1=<SRC.f_new_orebuff_engine <local.ResourceID>,<ARGN1>>
+ENDIF
+
+IF (<ARGN1> > 0)
+	SRC.F_GM_QUEST_SKILL_INCREASE 45,<SERV.REGIONRESOURCE.<ARGO.MORE1>.REAP>
+ENDIF
+
+[REGIONRESOURCE mr_mytheril]
+// t_rock
+skill=67.0,75.0
+amount=1,2
+REAP=i_ore_mytheril
+REGEN=40*60//2*60*30
+REAPAMOUNT=1
+
+On=@ResourceGather
+IF (<SRC.f_orebuff_engine <local.ResourceID>,<ARGN1>>)
+	ARGN1=<SRC.f_new_orebuff_engine <local.ResourceID>,<ARGN1>>
+ENDIF
+
+IF (<ARGN1> > 0)
+	SRC.F_GM_QUEST_SKILL_INCREASE 45,<SERV.REGIONRESOURCE.<ARGO.MORE1>.REAP>
+ENDIF
+
+[REGIONRESOURCE mr_order]
+// t_rock
+SKILL=70.0,75.0
+AMOUNT=4,6
+REAP=i_ore_order
+REGEN=40*60//60*60*3
+REAPAMOUNT=1
+
+On=@ResourceGather
+IF (<SRC.f_orebuff_engine <local.ResourceID>,<ARGN1>>)
+	ARGN1=<SRC.f_new_orebuff_engine <local.ResourceID>,<ARGN1>>
+ENDIF
+
+[REGIONRESOURCE mr_chaos]
+// t_rock
+SKILL=70.0,75.0
+AMOUNT=4,6
+REAP=i_ore_chaos
+REGEN=40*60//60*60*3
+REAPAMOUNT=1
+
+On=@ResourceGather
+IF (<SRC.f_orebuff_engine <local.ResourceID>,<ARGN1>>)
+	ARGN1=<SRC.f_new_orebuff_engine <local.ResourceID>,<ARGN1>>
+ENDIF
+
+[REGIONRESOURCE mr_adamantium]
+// t_rock
+skill=75.0,100.0
+amount=1,1
+REAP=i_ore_adamantium
+REGEN=50*60//60*60*2
+REAPAMOUNT=1
+
+On=@ResourceGather
+IF (<SRC.f_orebuff_engine <local.ResourceID>,<ARGN1>>)
+	ARGN1=<SRC.f_new_orebuff_engine <local.ResourceID>,<ARGN1>>
+ENDIF
+
+IF (<ARGN1> > 0)
+	SRC.F_GM_QUEST_SKILL_INCREASE 45,<SERV.REGIONRESOURCE.<ARGO.MORE1>.REAP>
+ENDIF
+
+[REGIONRESOURCE mr_diamond]
+// t_rock
+skill=75.0,95.0
+amount=1,2
+REAP=i_gem_diamond
+REGEN=30*60//2*60*10
+
+On=@ResourceGather
+IF (<SRC.f_orebuff_engine <local.ResourceID>,<ARGN1>>)
+	ARGN1=<SRC.f_new_orebuff_engine <local.ResourceID>,<ARGN1>>
+ENDIF
+
+[REGIONRESOURCE mr_ruby]
+// t_rock
+skill=75.0,95.0
+amount=1,2
+REAP=i_gem_ruby
+REGEN=30*60//2*60*10
+
+On=@ResourceGather
+IF (<SRC.f_orebuff_engine <local.ResourceID>,<ARGN1>>)
+	ARGN1=<SRC.f_new_orebuff_engine <local.ResourceID>,<ARGN1>>
+ENDIF
+
+[REGIONRESOURCE mr_citrine]
+// t_rock
+skill=75.0,95.0
+amount=1,4
+REAP=i_gem_citrine
+REGEN=30*60//2*60*10
+
+On=@ResourceGather
+IF (<SRC.f_orebuff_engine <local.ResourceID>,<ARGN1>>)
+	ARGN1=<SRC.f_new_orebuff_engine <local.ResourceID>,<ARGN1>>
+ENDIF
+
+[REGIONRESOURCE mr_Emerald]
+// t_rock
+skill=75.0,95.0
+amount=1,4
+REAP=i_gem_Emerald
+REGEN=30*60//2*60*10
+
+On=@ResourceGather
+IF (<SRC.f_orebuff_engine <local.ResourceID>,<ARGN1>>)
+	ARGN1=<SRC.f_new_orebuff_engine <local.ResourceID>,<ARGN1>>
+ENDIF
+
+[REGIONRESOURCE mr_Star_Sapphire]
+// t_rock
+skill=75.0,95.0
+amount=1,4
+REAP=i_gem_Star_Sapphire
+REGEN=30*60//2*60*10
+
+On=@ResourceGather
+IF (<SRC.f_orebuff_engine <local.ResourceID>,<ARGN1>>)
+	ARGN1=<SRC.f_new_orebuff_engine <local.ResourceID>,<ARGN1>>
+ENDIF
+
+[REGIONRESOURCE mr_Sapphire]
+// t_rock
+skill=75.0,95.0
+amount=1,4
+REAP=i_gem_Sapphire
+REGEN=30*60//2*60*10
+
+On=@ResourceGather
+IF (<SRC.f_orebuff_engine <local.ResourceID>,<ARGN1>>)
+	ARGN1=<SRC.f_new_orebuff_engine <local.ResourceID>,<ARGN1>>
+ENDIF
+
+[REGIONRESOURCE mr_Amethyst]
+// t_rock
+skill=75.0,95.0
+amount=1,4
+REAP=i_gem_Amethyst
+REGEN=30*60//2*60*10
+
+On=@ResourceGather
+IF (<SRC.f_orebuff_engine <local.ResourceID>,<ARGN1>>)
+	ARGN1=<SRC.f_new_orebuff_engine <local.ResourceID>,<ARGN1>>
+ENDIF
+
+[REGIONRESOURCE mr_Tourmaline]
+// t_rock
+skill=75.0,95.0
+amount=1,4
+REAP=i_gem_Tourmaline
+REGEN=30*60//2*60*10
+
+On=@ResourceGather
+IF (<SRC.f_orebuff_engine <local.ResourceID>,<ARGN1>>)
+	ARGN1=<SRC.f_new_orebuff_engine <local.ResourceID>,<ARGN1>>
+ENDIF
+
+[TEMPLATE all_joias]
+ITEM={ i_gem_diamond 1 i_gem_Tourmaline 7 i_gem_Amethyst 6 i_gem_Sapphire 5 i_gem_Star_Sapphire 4 i_gem_Emerald 3 i_gem_citrine 8 i_gem_ruby 2 }
+
+
+[COMMENT OTHER ORES]
+// other things that could be mined for .
+//	ChanceofVein, MinFindSkill,	Item, Color, Name, OrePerVein Min, Max
+//Dragon,0593,100.0,1.0,1-2,06037
+//Titan,0736,100.0,1.0,1-2,06035
+//Crystaline,0065,100.0,1.0,1-2,06039
+//Kryptonite,0170,100.0,1.0,1-2,06505
+//Vulcan,6324,100.0,1.0,1-2,06506
+//Sand Rock,0709,100.0,1.0,1-2,06507
+//Blood Crest,064e,100.0,1.0,1-2,06508
+//Steel,0540,100.0,1.0,1-2,06509
+//Elvin,0596,100.0,1.0,1-2,06510
+//Gorgan,0456,100.0,1.0,1-2,06512
+//Acid,0078,100.0,1.0,1-2,06514
+//Aqua,123982,100.0,1.0,1-2,06513
+//Eldar,04d8,100.0,1.0,1-2,06511
+
+[REGIONTYPE r_default t_rock]
+RESOURCES=1000.0 mr_nothing
+
+[REGIONTYPE r_vip_mine t_rock] //FALTA REVISAR, assim como as color mines
+RESOURCES=1.0 mr_nothing
+RESOURCES=10.0 mr_iron
+RESOURCES=8.0 mr_ceramic
+//RESOURCES=1.0 mr_copper
+//RESOURCES=1.0 mr_bronze
+RESOURCES=8.0 mr_shadow
+RESOURCES=5.0 mr_silver
+RESOURCES=3.0 mr_Valorite
+RESOURCES=6.0 mr_verite
+RESOURCES=5.0 mr_gold
+RESOURCES=5.5 mr_bloodrock
+RESOURCES=5.5 mr_blackrock
+RESOURCES=1.5 mr_order
+RESOURCES=1.5 mr_chaos
+RESOURCES=2.5 mr_mytheril
+RESOURCES=0.9 mr_adamantium
+RESOURCES=0.7 mr_diamond
+RESOURCES=0.7 mr_ruby
+RESOURCES=0.7 mr_citrine
+RESOURCES=0.7 mr_Emerald
+RESOURCES=0.7 mr_Star_Sapphire
+RESOURCES=0.7 mr_Sapphire
+RESOURCES=0.7 mr_Amethyst
+RESOURCES=0.7 mr_Tourmaline
+
+[REGIONTYPE r_default_mine t_rock] // REVISADO 2017
+RESOURCES=50.5 mr_nothing
+RESOURCES=55.0 mr_iron
+RESOURCES=29.7 mr_ceramic
+RESOURCES=19.6 mr_rusty
+RESOURCES=13.5 mr_oldcopper
+RESOURCES=13.5 mr_dullcopper
+RESOURCES=10.0 mr_copper
+RESOURCES=8.0 mr_bronze
+RESOURCES=7.4 mr_shadow
+RESOURCES=6.1 mr_agapite
+RESOURCES=4.1 mr_rose
+RESOURCES=3.3 mr_silver
+RESOURCES=2.0 mr_Valorite
+RESOURCES=2.0 mr_verite
+RESOURCES=0.7 mr_gold
+RESOURCES=0.6 mr_bloodrock
+RESOURCES=0.4 mr_blackrock
+RESOURCES=0.2 mr_order
+RESOURCES=0.2 mr_chaos
+RESOURCES=0.2 mr_mytheril
+RESOURCES=0.1 mr_adamantium
+RESOURCES=0.8 mr_citrine
+RESOURCES=0.7 mr_Tourmaline
+RESOURCES=0.6 mr_Amethyst
+RESOURCES=0.4 mr_Sapphire
+RESOURCES=0.3 mr_Star_Sapphire
+RESOURCES=0.2 mr_Emerald
+RESOURCES=0.2 mr_ruby
+RESOURCES=0.1 mr_diamond
+
+[REGIONTYPE r_cp_mine t_rock] // REVISADO 2017
+RESOURCES=10.0 mr_nothing
+RESOURCES=80.0 mr_iron
+
+[REGIONTYPE r_color_mine1 t_rock]
+RESOURCES=30.5 mr_nothing
+RESOURCES=30.0 mr_iron
+RESOURCES=29.7 mr_ceramic
+RESOURCES=19.6 mr_rusty
+RESOURCES=12.5 mr_oldcopper
+RESOURCES=12.5 mr_dullcopper
+RESOURCES=10.0 mr_copper
+RESOURCES=8.0 mr_bronze
+RESOURCES=6.4 mr_shadow
+RESOURCES=9.1 mr_agapite
+RESOURCES=7.1 mr_rose
+RESOURCES=5.3 mr_silver
+RESOURCES=5.0 mr_Valorite
+RESOURCES=4.0 mr_verite
+RESOURCES=2.5 mr_gold
+RESOURCES=1.7 mr_bloodrock
+RESOURCES=1.5 mr_blackrock
+RESOURCES=0.7 mr_order
+RESOURCES=0.7 mr_chaos
+RESOURCES=0.4 mr_mytheril
+RESOURCES=0.1 mr_adamantium
+RESOURCES=0.8 mr_citrine
+RESOURCES=0.7 mr_Tourmaline
+RESOURCES=0.6 mr_Amethyst
+RESOURCES=0.5 mr_Sapphire
+RESOURCES=0.3 mr_Star_Sapphire
+RESOURCES=0.3 mr_Emerald
+RESOURCES=0.2 mr_ruby
+RESOURCES=0.1 mr_diamond
+
+[REGIONTYPE r_color_mine2 t_rock]
+RESOURCES=30.5 mr_nothing
+RESOURCES=20.0 mr_iron
+RESOURCES=19.7 mr_ceramic
+RESOURCES=15.6 mr_rusty
+RESOURCES=10.5 mr_oldcopper
+RESOURCES=10.5 mr_dullcopper
+RESOURCES=10.0 mr_copper
+RESOURCES=5.0 mr_bronze
+RESOURCES=6.4 mr_shadow
+RESOURCES=5.1 mr_agapite
+RESOURCES=4.1 mr_rose
+RESOURCES=3.3 mr_silver
+RESOURCES=3.0 mr_Valorite
+RESOURCES=2.0 mr_verite
+RESOURCES=2.5 mr_gold
+RESOURCES=1.9 mr_bloodrock
+RESOURCES=1.6 mr_blackrock
+RESOURCES=0.8 mr_order
+RESOURCES=0.8 mr_chaos
+RESOURCES=0.7 mr_mytheril
+RESOURCES=0.2 mr_adamantium
+RESOURCES=0.8 mr_citrine
+RESOURCES=0.7 mr_Tourmaline
+RESOURCES=0.6 mr_Amethyst
+RESOURCES=0.5 mr_Sapphire
+RESOURCES=0.3 mr_Star_Sapphire
+RESOURCES=0.3 mr_Emerald
+RESOURCES=0.2 mr_ruby
+RESOURCES=0.1 mr_diamond
+
+[REGIONTYPE r_color_mine3 t_rock]
+RESOURCES=30.5 mr_nothing
+RESOURCES=20.0 mr_iron
+RESOURCES=20.7 mr_ceramic
+RESOURCES=15.6 mr_rusty
+RESOURCES=12.5 mr_oldcopper
+RESOURCES=12.5 mr_dullcopper
+RESOURCES=10.0 mr_copper
+RESOURCES=8.0 mr_bronze
+RESOURCES=6.4 mr_shadow
+RESOURCES=5.1 mr_agapite
+RESOURCES=4.1 mr_rose
+RESOURCES=3.3 mr_silver
+RESOURCES=3.0 mr_Valorite
+RESOURCES=2.0 mr_verite
+RESOURCES=1.5 mr_gold
+RESOURCES=1.7 mr_bloodrock
+RESOURCES=1.4 mr_blackrock
+RESOURCES=0.9 mr_order
+RESOURCES=0.9 mr_chaos
+RESOURCES=0.8 mr_mytheril
+RESOURCES=0.2 mr_adamantium
+RESOURCES=0.8 mr_citrine
+RESOURCES=0.7 mr_Tourmaline
+RESOURCES=0.6 mr_Amethyst
+RESOURCES=0.5 mr_Sapphire
+RESOURCES=0.3 mr_Star_Sapphire
+RESOURCES=0.3 mr_Emerald
+RESOURCES=0.2 mr_ruby
+RESOURCES=0.1 mr_diamond
+
+[REGIONTYPE r_default_rock t_rock]
+RESOURCES=1000.0 mr_nothing
+
+[REGIONTYPE r_default_water t_water]
+// Not really ocean area.
+RESOURCES=20.0 mr_nothing
+RESOURCES=20.0 mr_fish1
+RESOURCES=20.0 mr_fish2
+RESOURCES=20.0 mr_fish3
+RESOURCES=20.0 mr_fish4
+RESOURCES=2.0 mr_fish_golden
+RESOURCES=0.5 mr_fish_magical
+RESOURCES=10.0 mr_fish_large
+RESOURCES=7.0 mr_fish_tuna
+
+[REGIONTYPE r_default_grass t_grass]
+// All grass can be eaten by default.
+RESOURCES=1.0 mr_grass
+
+[REGIONTYPE r_water t_water]
+// Water/Ocean boat sounds
+RESOURCES=20.0 mr_nothing
+RESOURCES=20.0 mr_fish1
+RESOURCES=20.0 mr_fish2
+RESOURCES=20.0 mr_fish3
+RESOURCES=20.0 mr_fish4
+RESOURCES=2.0 mr_fish_golden
+RESOURCES=0.5 mr_fish_magical
+RESOURCES=7.0 mr_fish_large
+RESOURCES=7.0 mr_fish_tuna
+RESOURCES=4.0 mr_boots
+RESOURCES=4.0 mr_shoes
+
+ON=@REGPERIODIC
+	src.SFX={025,1,026,1,027,1,010,1,011,1,012,1,013,1}
+
+[REGIONTYPE r_brit t_rock]
+// Brit
+RESOURCES=60.0 mr_nothing
+
+ON=@ENTER
+	SRC.MESSAGE Welcome to Britain <SRC.NAME>!
+	SRC.MESSAGE Lord British Guards are here to protect you!
+	SRC.MUSIC=midi_britain1,midi_britain2
+
+ON=@CLIPERIODIC
+	SRC.MUSIC=midi_britain1,midi_britain2
+
+[REGIONTYPE r_brit_castle]
+// Lord brit castle.
+ON=@ENTER
+	SRC.MUSIC=midi_LBCastle
+ON=@CLIPERIODIC
+	SRC.MUSIC=midi_LBCastle
+
+[REGIONTYPE r_guard_tower]
+// Guard tower.
+ON=@ENTER
+	SRC.MUSIC=midi_ForestA
+ON=@CLIPERIODIC
+	SRC.MUSIC=midi_ForestA
+
+[REGIONTYPE r_black_castle1]
+// Lord Blackthorne's Castle
+ON=@ENTER
+	SRC.MUSIC=midi_BtCastle
+ON=@CLIPERIODIC
+	SRC.MUSIC=midi_BtCastle
+
+[REGIONTYPE r_bucs_den]
+// Bucs den
+
+ON=@CLIPERIODIC
+	SRC.MUSIC=midi_BucsDen
+
+[REGIONTYPE r_spooky t_rock]
+// Spooky outdoor area.
+RESOURCES=1000.0 mr_nothing
+
+ON=@ENTER
+	SRC.MUSIC=midi_Approach
+ON=@CLIPERIODIC
+	SRC.MUSIC=midi_Approach
+
+[REGIONTYPE r_dungeon t_rock]
+// Dungeon sounds same day or night.
+// Shadow ore is only found here.
+RESOURCES=100.0 mr_nothing
+
+ON=@REGPERIODIC
+	src.SFX={021f,1,0243,1,0244,1,0245,1}
+
+[REGIONTYPE r_plains1]
+// Plains night and day.
+ON=@REGPERIODIC
+	src.SFX={0a,1,0b,1}
+
+[REGIONTYPE r_forests]
+// Forest Day and night.
+
+ON=@REGPERIODIC
+	IF <src.sector.ISNIGHTTIME>
+		src.SFX={00,2,01,2,02,2,07d,1}
+	ELSE
+		src.SFX={08,10,09,10,0219,1,07d,1}
+	ENDIF
+
+[REGIONTYPE r_jungle]
+// Jungle Day and night.
+
+ON=@REGPERIODIC
+	IF <src.sector.ISNIGHTTIME>
+		src.SFX={0c,2,0d,2,0b3,1}
+	ELSE
+		src.SFX={03,2,04,2,05,2,0b3,1}
+	ENDIF
+
+[REGIONTYPE r_swamp t_rock]
+// Swamp Day and night.
+// Never anything to mine here.
+
+ON=@REGPERIODIC
+	src.SFX={0e,10,0f,10,022,1,023,1,024,1,0267,1}
+
+[REGIONTYPE r_kiosk]
+DEFNAME=r_kiosk
+
+ON=@ENTER
+	SRC.EVENTS +E_ON_KIOSK
+
+ON=@EXIT
+	SRC.EVENTS -E_ON_KIOSK
+
+[EVENTS E_ON_KIOSK]
+
+[EOF]
+

@@ -1,0 +1,19 @@
+[FUNCTION stonar]
+if (<tag0.can_i_use_extra_cons_cmd>) || ((<tag0.can_i_use_event_cmd>) && (<p.map> == 1))
+TARGETF stonar2
+endif
+return 1
+
+[FUNCTION stonar2]
+if (<tag0.can_i_use_extra_cons_cmd>) || ((<tag0.can_i_use_event_cmd>) && (<argo.p.map> == 1))
+ARGO.STONE
+endif
+
+[FUNCTION sendcommerce]
+TARGETF scom2
+
+[FUNCTION scom2]
+if <argo.stone>
+	return 1
+endif
+ARGO.GO Commerce Room

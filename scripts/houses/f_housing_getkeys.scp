@@ -1,0 +1,35 @@
+[FUNCTION f_housing_getkeys]
+local.maxkeys = <f_housing_maxkeys <argv[1]>>
+ref1 = <findlayer.29.uid> // bank
+if <local.maxkeys> >= 1
+serv.newitem i_bag
+new.cont = <ref1>
+new.color = 065
+new.name = @,,1 Kit de Chaves Newbies <dlocal.maxkeys>
+ref2 = <new>
+	for 1 <local.maxkeys>
+		serv.newitem i_key_gold
+		new.attr = attr_newbie
+		new.link = <argv[0]>
+		new.more1 = <argv[0]>
+		new.color = <ddef.housing.nbkey.color>
+		new.name = Chave de <serv.uid.<argv[0]>.name>
+		new.cont = <ref2>
+	endfor
+endif
+return 1
+
+[FUNCTION f_housing_maxkeys]
+local.value = <args>
+if (<local.value> < 100000)
+	local.keys = 0
+elif (<local.value> < 300000)
+	local.keys = 1
+elif (<local.value> < 450000)
+	local.keys = 2
+elif (<local.value> <= 899999)
+	local.keys = 3
+elif (<local.value> > 899999)
+	local.keys = 4
+endif
+return <dlocal.keys>

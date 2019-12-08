@@ -1,0 +1,66 @@
+﻿[DEFNAME MAGIC_RESISTANCE_SETTINGS]
+MAGIC_RESISTANCE_COOLDOWN 200
+
+[events e_resisting_spells]
+On=@SpellEffect
+local.spellflags <serv.spell.<argn>.flags>
+	if (<local.spellflags>&spellflag_harm) && (<local.spellflags>&spellflag_resist)
+		if (<src.uid> == <uid>)
+			tag.avoid_magic_resist_gain = 1
+			return 1
+		endif
+
+		tag0.avoid_magic_resist_gain
+
+		IF (<EVAL <SERV.TIME> - <CTAG0.LAST_MAGIC_RESISTANCE>> < <DEF.MAGIC_RESISTANCE_COOLDOWN>)
+			local.resist = 0
+			RETURN
+		ENDIF
+
+		if !(<f_resist_chance>)
+			CTAG.LAST_MAGIC_RESISTANCE <SERV.TIME>
+			if (<local.spellflags>&spellflag_damage)
+				//ctag0.resist_spell = <f_resist_rate>
+				local.resist = <f_resist_rate>
+				sysmessage @,,1 Voce resistiu a <dlocal.resist>% do dano desta magia.
+				effect = 3,i_fx_sparkle_2,10,20,10
+			else
+				sysmessage @,,1 Voce resistiu completamente a magia.
+				effect = 3,i_fx_sparkle_2,10,20,10
+				//action -1 // testar com e sem
+				return 1
+			endif
+		else
+			local.resist = 0
+		endif
+	endif
+
+[function f_resist_chance]
+doswitch <eval <MagicResistance> / 100>
+local.result = 129 // 0-9 de skill - 1 chance em 130
+local.result =  99 // 10-19 de skill - 1 chance em 100
+local.result =  89 // 20-29 de skill - 1 chance em 90
+local.result =  79 // 30-39 de skill - 1 chance em 80
+local.result =  69 // 40-49 de skill - 1 chance em 70
+local.result =  59 // 50-59 de skill - 1 chance em 60
+local.result =  49 // 60-69 de skill - 1 chance em 50
+local.result =  39 // 70-79 de skill - 1 chance em 40
+local.result =  29 // 80-89 de skill - 1 chance em 30
+local.result =  19 // 90-99 de skill - 1 chance em 20
+local.result =  10 // 100-109 de skill - 1 chance em 10
+local.result =  5 // 110 de skill (full set) - 1 chance em 6
+enddo
+return <R<dlocal.result>>
+
+[function f_resist_rate]
+local.min_resist = <eval <MagicResistance> / 100>
+local.max_resist = <eval <MagicResistance> / 50>
+if <MagicResistance> >= 1000
+	if <r110> == 1
+		local.max_resist = 100
+	endif
+endif
+local.resist = <r<local.min_resist>,<local.max_resist>>
+return <local.resist>
+
+

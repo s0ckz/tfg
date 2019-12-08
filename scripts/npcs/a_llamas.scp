@@ -1,0 +1,103 @@
+[CHARDEF c_heaven_llama]
+ID=c_llama
+NAME=Heaven Llama
+DAM=3,5
+ARMOR=25
+
+ON=@Create
+	COLOR=0ab4
+	NPC=brain_animal
+	MAXHITS={250 300}
+	STR={60 80}
+	DEX={110 255}
+	INT={16 30}
+	PARRYING={75.0 100.0}
+	MAGICRESISTANCE={65.0 120.0}
+	TACTICS={79.0 119.0}
+	WRESTLING={89.0 99.0}
+	TAMING=105.0
+	FAME=10
+	KARMA={1 99}
+
+ON=@CLICK
+   MESSAGE @<color> <name> [rare]
+   RETURN 1
+
+[CHARDEF c_desert_llama]
+ID=c_llama
+NAME=Desert Llama
+DAM=3,5
+ARMOR=25
+
+ON=@Create
+	COLOR=01be
+	NPC=brain_animal
+	MAXHITS={250 300}
+	STR={50 70}
+	DEX={110 255}
+	INT={16 30}
+	PARRYING={75.0 100.0}
+	MAGICRESISTANCE={65.0 120.0}
+	TACTICS={79.0 119.0}
+	WRESTLING={89.0 99.0}
+	TAMING=105.0
+	FAME=10
+	KARMA={1 99}
+
+ON=@CLICK
+   MESSAGE @<color> <name>
+   RETURN 1
+
+[CHARDEF c_fire_llama]
+ID=c_llama
+NAME=Fire Llama
+DAM=5,9
+ARMOR=15
+
+
+
+ON=@Create
+	COLOR=077a
+	NPC=brain_animal
+	MAXHITS={150 200}
+	STR={120 160}
+	DEX={110 255}
+	INT={16 30}
+	PARRYING={75.0 100.0}
+	MAGICRESISTANCE={65.0 120.0}
+	TACTICS={79.0 119.0}
+	WRESTLING={69.0 99.0}
+	TAMING=110.0
+	FAME=10
+	KARMA={1 99}
+
+ON=@CLICK
+   MESSAGE @077a <name>
+   RETURN 1
+
+[CHARDEF c_ice_llama]
+ID=c_llama
+NAME=Ice Llama
+DAM=5,9
+ARMOR=15
+
+
+
+ON=@Create
+	COLOR=0a48
+	NPC=brain_animal
+	MAXHITS={150 200}
+	STR={120 160}
+	DEX={110 255}
+	INT={16 30}
+	PARRYING={75.0 100.0}
+	MAGICRESISTANCE={65.0 120.0}
+	TACTICS={79.0 119.0}
+	WRESTLING={69.0 99.0}
+	TAMING=110.0
+	FAME=10
+	KARMA={1 99}
+
+ON=@CLICK
+   MESSAGE @0a48 <name>
+   RETURN 1

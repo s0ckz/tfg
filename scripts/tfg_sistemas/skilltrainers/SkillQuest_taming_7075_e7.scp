@@ -1,0 +1,236 @@
+[CHARDEF c_emissary_tam75]
+NAME=The Emissary
+ID=C_MAN
+AVERSIONS=t_TRAP,t_eerie_stuff
+TSPEECH=spk_emissary_tam75
+DAM=17,20
+TAG.name.hue=32
+
+ON=@Create
+ TAG.LOOTPROPRIO 1
+ TAG.PARAIMUNE 1
+ COLOR=0771
+ STR={200 250}
+ DEX={99 140}
+ INT={800 950}
+ MAXMANA=5000
+ MAXHITS=3000
+
+ events=+e_antibow
+ events=+e_poison_immune
+
+ MAGERY={111.0 150.0}
+ EVALUATINGINTEL={55.0 78.0}
+ INSCRIPTION={76.0 90.0}
+ WRESTLING={100.0 100.0}
+ SWORDSMANSHIP={100.0 100.0}
+ MAGICRESISTANCE={100.0 100.0}
+ MEDITATION={99.0 100.0}
+ TACTICS={100.0 100.0}
+ NPC=brain_monster
+ KARMA={-6000 -6999}
+ ITEMNEWBIE=i_hair_long
+ 	COLOR=00
+ ITEMNEWBIE=I_BEARD_GOATEE
+ 	COLOR=match_hair
+ ITEMNEWBIE=i_spellbook
+        ADDSPELL=s_flamestrike
+ ITEMNEWBIE=i_elven_robe_female
+  	NAME=Coveiros Robe
+  	COLOR=0810
+ ITEMNEWBIE=I_STAFF_BLACK
+ ITEMNEWBIE=I_SHOES_PLAIN
+ 	COLOR=0774
+ ITEMNEWBIE=I_HAT_FLOPPY
+  	NAME=Death Hat
+  	COLOR=0810
+
+on=@NPCSeeNewPlayer
+    Say So you found me <src.name>...Let's see if you are a valuable warrior! //'
+    Attack
+    return 0
+
+ON=@NPCRestock
+    ITEM=i_scroll_tam75e7
+
+
+ON=@GETHIT
+IF (<HITS> < 1000) && (<TAG0.SUMMONHELP> == 0)
+	TAG.MINIONS <EVAL 11-<EVAL (<HITS>/100)>>
+	SAY @32 Come Guards, Help me
+	Timerf 1, SAY Nih Kal Corp Xen
+	TIMERF 2, F_KCX <DTAG0.MINIONS>,C_SKELETON_KNIGHT_BRIT
+	TAG.SUMMONHELP 1
+ENDIF
+
+IF <ACTION> == MAGERY
+	IF <R3> == 1
+		SAY Nao serei dispelado!
+	ENDIF
+	HITS -= <ARGN1>
+	RETURN 1
+ENDIF
+
+ON=@SPELLSUCCESS
+SRC.FINDID.I_STAFF_BLACK.EQUIP
+
+ON=@SPELLFAIL
+SRC.FINDID.I_STAFF_BLACK.EQUIP
+
+ON=@DEATHCORPSE
+REGION.ALLCLIENTS SYSMESSAGE @,,1 The cemetery will be closed in 120 seconds...
+FORINSTANCES I_CEMITA_EVENT_CONTROL
+	TIMER -1
+ENDFOR
+ARGO.TIMERF 120, F_FECHAR_CEMITA
+
+[speech spk_emissary_tam75]
+
+[itemdef i_tile__tam75e7]
+id=i_floor_marble
+type=t_normal
+name=Quest Taming 75 Tile (nao mexer)
+
+on=@create
+    attr= attr_invis|attr_move_never
+
+on=@step
+    if (<src.tag0.tam75e7>)
+        if (<src.restest i_amuleto_tam75>)
+            src.flags = <src.flags>&statf_freeze
+            src.flags = <src.flags>&statf_invul
+            src.message @,,1 I am feeling the Dark Magic! What is this?!
+            src.timerf 1, emissary_tile_effect1
+            src.timerf 2, emissary_tile_effect2
+            src.timerf 3, emissary_tile_effect3
+        else
+            src.smsg @,,1 It seems that you are in the right place, but lacks some sort os talisman...
+        endif
+    endif
+
+[function emissary_tile_effect1]
+serv.newitem i_FIRE_COLUMN
+new.color 0819
+new.attr attr_decay
+new.timer 1
+new.type t_script
+new.p <src.P>
+SRC.SOUND=snd_SPELL_FLAMESTRIKE
+
+//
+[function emissary_tile_effect2]
+SERV.NEWITEM=i_FIRE_COLUMN
+NEW.COLOR=0819
+NEW.ATTR attr_decay
+NEW.TIMER=1
+NEW.TYPE=t_script
+NEW.P=<SRC.P>
+NEW.MOVE=n 2
+
+SERV.NEWITEM=i_FIRE_COLUMN
+NEW.COLOR=0819
+NEW.ATTR attr_decay
+NEW.TIMER=1
+NEW.TYPE=t_script
+NEW.P=<SRC.P>
+NEW.MOVE=w 2
+
+SERV.NEWITEM=i_FIRE_COLUMN
+NEW.COLOR=0819
+NEW.ATTR attr_decay
+NEW.TIMER=1
+NEW.TYPE=t_script
+NEW.P=<SRC.P>
+NEW.MOVE=s 2
+
+SERV.NEWITEM=i_FIRE_COLUMN
+NEW.COLOR=0819
+NEW.ATTR attr_decay
+NEW.TIMER=1
+NEW.TYPE=t_script
+NEW.P=<SRC.P>
+NEW.MOVE=e 2
+
+/////
+[function emissary_tile_effect3]
+SERV.NEWITEM=i_FIRE_COLUMN
+NEW.COLOR=0819
+NEW.ATTR attr_decay
+NEW.TIMER=1
+NEW.TYPE=t_script
+NEW.P=<SRC.P>
+NEW.MOVE=nw 4
+
+SERV.NEWITEM=i_FIRE_COLUMN
+NEW.COLOR=0819
+NEW.ATTR attr_decay
+NEW.TIMER=1
+NEW.TYPE=t_script
+NEW.P=<SRC.P>
+NEW.MOVE=n 4
+
+SERV.NEWITEM=i_FIRE_COLUMN
+NEW.COLOR=0819
+NEW.ATTR attr_decay
+NEW.TIMER=1
+NEW.TYPE=t_script
+NEW.P=<SRC.P>
+NEW.MOVE=ne 4
+
+SERV.NEWITEM=i_FIRE_COLUMN
+NEW.COLOR=0819
+NEW.ATTR attr_decay
+NEW.TIMER=1
+NEW.TYPE=t_script
+NEW.P=<SRC.P>
+NEW.MOVE=e 4
+
+SERV.NEWITEM=i_FIRE_COLUMN
+NEW.COLOR=0819
+NEW.ATTR attr_decay
+NEW.TIMER=1
+NEW.TYPE=t_script
+NEW.P=<SRC.P>
+NEW.MOVE=se 4
+
+SERV.NEWITEM=i_FIRE_COLUMN
+NEW.COLOR=0819
+NEW.ATTR attr_decay
+NEW.TIMER=1
+NEW.TYPE=t_script
+NEW.P=<SRC.P>
+NEW.MOVE=s 4
+
+SERV.NEWITEM=i_FIRE_COLUMN
+NEW.COLOR=0819
+NEW.ATTR attr_decay
+NEW.TIMER=1
+NEW.TYPE=t_script
+NEW.P=<SRC.P>
+NEW.MOVE=sw 4
+
+SERV.NEWITEM=i_FIRE_COLUMN
+NEW.COLOR=0819
+NEW.ATTR attr_decay
+NEW.TIMER=1
+NEW.TYPE=t_script
+NEW.P=<SRC.P>
+NEW.MOVE=w 4
+
+src.timerf 1, go 6298,992 //paited caves
+src.flags = <src.flags>&~statf_freeze
+src.flags = <src.flags>&~statf_invul
+
+[itemdef i_scroll_tam75e7]
+id=i_scroll_blank
+name=Misterious Scroll
+
+on=create
+    color = 07a1
+    attr=attr_newbie|attr_move_never
+
+on=@dclick
+    src.smsg @,,1 You can't use this...it's way over your skill.
+    return 1
+
+

@@ -1,0 +1,27 @@
+[TYPEDEF t_event_door]
+On=@DCLICK
+if <var.iseventopen>
+	timer
+else
+	timer = 600
+	src.sysmessage @,,1 Nao ha nenhum evento no momento.
+endif 
+
+[FUNCTION abre_portas_evento]
+ref1=040110105
+ref2=04010f7c2
+ref1.move 0,-1
+ref2.move 0,1
+
+[FUNCTION fecha_portas_evento]
+ref1=040110105
+ref2=04010f7c2
+ref1.p 5416,1189
+ref2.p 5416,1190
+
+
+[REGIONTYPE r_recallproibido]
+ON=@ENTER
+if <account.plevel> < 2
+	STONE 1
+endif 

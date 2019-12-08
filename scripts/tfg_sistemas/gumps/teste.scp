@@ -1,0 +1,55 @@
+// Created 10/06/2018 00:11:46, with Gump Studio.
+// Exported with with SphereExporter ver 1.1.
+// Script for 0.56/Revisions
+
+[DIALOG d_default]
+250,250
+page 0
+resizepic 0 1 9300 383 508
+Group 0
+radio 32 73 2153 2151 0 0
+text 68 76 0 0
+button 296 461 241 242 1 0 0
+button 32 466 2466 2467 1 0 0
+button 126 466 2469 2470 1 0 0
+htmlgump 18 17 348 45 1 0 0
+button 223 461 247 248 1 0 0
+text 32 388 0 2
+text 32 418 0 3
+resizepic 154 385 3000 42 27
+resizepic 221 385 3000 42 27
+resizepic 154 416 3000 109 27
+text 204 387 0 4
+textentry 158 388 33 20 0 0 5
+textentry 225 388 33 20 0 0 6
+textentry 157 419 102 20 0 0 7
+
+[DIALOG d_default text]
+Jogo
+HtmlGump id.1
+Result:
+Value (in GPs):
+x
+Textentry id.0
+Textentry id.0
+Textentry id.0
+
+[DIALOG d_default button]
+ON=0
+// Button 4
+// 
+
+ON=0
+// Button 5
+// 
+
+ON=0
+// Copy of Button 5
+// 
+
+ON=0
+// Copy of Button 4
+// 
+
+
+[EOF]

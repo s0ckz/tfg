@@ -1,0 +1,857 @@
+[function trocar_rb]
+targetf f_new_rb_generate
+src.sysmessage @,,1 Qual runebook deseja trocar?
+return 1
+
+[function f_new_rb_generate]
+ref2 = <argo.uid>
+serv.newitem i_x_runebook
+new.cont = <src.findlayer(21).uid>
+ref1 = <new>
+local.ct 0
+for runa 1 42
+	if !<isempty <ref2.tag.runa<dlocal.runa>>>
+		if <local.runa> <= 9
+			local.lugar = 110<dlocal.runa>
+		elif <local.runa> == 10
+			local.lugar = 1110
+		elif <local.runa> <= 14
+			local.nruna = <eval <local.runa> - 10>
+			local.lugar = 120<dlocal.nruna>
+		elif <local.runa> <= 23
+			local.nruna = <eval <local.runa> - 14>
+			local.lugar = 210<dlocal.nruna>
+		elif <local.runa> == 24
+			local.lugar = 2110
+		elif <local.runa> <= 28
+			local.nruna = <eval <local.runa> - 24>
+			local.lugar = 220<dlocal.nruna>
+		elif <local.runa> <= 37
+			local.nruna = <eval <local.runa> - 28>
+			local.lugar = 310<dlocal.nruna>
+		elif <local.runa> == 38
+			local.lugar = 3110
+		elif <local.runa> <= 42
+			local.nruna = <eval <local.runa> - 38>
+			local.lugar = 320<dlocal.nruna>
+		endif
+		ref1.tag.rune<dlocal.lugar>_name = <ref2.tag.runanome<dlocal.runa>>
+		ref1.tag.rune<dlocal.lugar>_p = <ref2.tag.runa<dlocal.runa>>
+		local.ct ++
+		//src.sysmessage @,,1 Runa <ref2.tag.runanome<dlocal.runa>> transferida.
+	endif
+endfor
+src.sysmessage @,,1 <dlocal.ct> runas transferidas.
+return 1
+
+[function f_new_rb_transfer]
+ref2 = <uid>
+ref1 = <args>
+for folha 1 8
+	for pagina 1 2
+		for runa 1 10
+			if <local.runa> < 10
+				local.name = <dlocal.folha><dlocal.pagina>0<dlocal.runa>
+			else
+				local.name = <dlocal.folha><dlocal.pagina><dlocal.runa>
+			endif
+			if <ref1.tag0.rune<dlocal.name>_p> || <ref1.tag0.rune<dlocal.name>_name>
+				src.sysmessage @,,1 Este Exceptional Runebook nao esta vazio.
+				return 1
+			endif
+		endfor
+	endfor
+endfor
+local.ct 0
+for runa 1 42
+	if !<isempty <ref2.tag.runa<dlocal.runa>>>
+		if <local.runa> <= 9
+			local.lugar = 110<dlocal.runa>
+		elif <local.runa> == 10
+			local.lugar = 1110
+		elif <local.runa> <= 14
+			local.nruna = <eval <local.runa> - 10>
+			local.lugar = 120<dlocal.nruna>
+		elif <local.runa> <= 23
+			local.nruna = <eval <local.runa> - 14>
+			local.lugar = 210<dlocal.nruna>
+		elif <local.runa> == 24
+			local.lugar = 2110
+		elif <local.runa> <= 28
+			local.nruna = <eval <local.runa> - 24>
+			local.lugar = 220<dlocal.nruna>
+		elif <local.runa> <= 37
+			local.nruna = <eval <local.runa> - 28>
+			local.lugar = 310<dlocal.nruna>
+		elif <local.runa> == 38
+			local.lugar = 3110
+		elif <local.runa> <= 42
+			local.nruna = <eval <local.runa> - 38>
+			local.lugar = 320<dlocal.nruna>
+		endif
+		ref1.tag.rune<dlocal.lugar>_name = <ref2.tag.runanome<dlocal.runa>>
+		ref1.tag.rune<dlocal.lugar>_p = <ref2.tag.runa<dlocal.runa>>
+		ref2.tag.runanome<dlocal.runa> =
+		ref2.tag.runa<dlocal.runa> =
+		local.ct ++
+		//src.sysmessage @,,1 Runa <ref2.tag.runanome<dlocal.runa>> transferida.
+	endif
+endfor
+src.sysmessage @,,1 <dlocal.ct> runas transferidas.
+return 1
+
+[ITEMDEF I_X_RUNEBOOK]
+ID=I_SPELLBOOK
+NAME=Exceptional Runebook
+TYPE=T_NORMAL
+VALUE=150000
+DYE=1
+RESOURCES=100 i_scroll_blank,250 i_reag_blood_moss,250 i_reag_mandrake_root,250 i_reag_black_pearl,250 i_reag_spider_silk,250 i_reag_sulfur_ash,15 i_scroll_recall,15 i_scroll_gate_travel,10 i_rune_marker
+SKILLMAKE=INSCRIPTION 100.0, MAGERY 100.0
+
+ON=@CREATE
+COLOR=0<R99>
+ATTR=ATTR_NEWBIE
+TAG.PAGE 1
+FOR 1 8
+ TAG.PAGE<EVAL <dLOCAL._FOR>>_NAME Page <EVAL <dLOCAL._FOR>>
+ENDFOR
+
+ON=@DropOn_Item
+  IF (<ARGO.TYPE> != t_corpse)
+    ATTR <ATTR> | ATTR_NEWBIE
+  ENDIF
+
+ON=@DCLICK
+  ATTR <ATTR> | ATTR_NEWBIE
+  IF (<dTAG.PAGE> < 1) || (<dTAG.PAGE> > 8)
+  TAG.PAGE 1
+  ENDIF
+  //IF (<SRC.FINDID.i_recall_timer_new>) || (<SRC.FINDID.i_gate_timer_new>)
+  //SRC.SYSMESSAGE @,,1 The item is in use
+  IF (<SRC.FLAGS>&STATF_FREEZE)
+  SRC.SYSMESSAGE @,,1 You can't reach that.
+  ELSE
+  SRC.SOUND 85
+  SDIALOG D_XRUNEBOOK <dTAG0.PAGE>
+  ENDIF
+  RETURN 1
+
+ON=@TARGON_CHAR
+TAG.BUTTON
+RETURN 1
+
+ON=@TARGON_GROUND
+TAG.BUTTON
+RETURN 1
+
+ON=@TARGON_ITEM
+IF !(<SRC.TARG.BASEID> == I_RUNE_MARKER)
+ SRC.SYSMESSAGE @,,1 That item is not a recall rune.
+ RETURN 1
+ELIF !(<SRC.TARG.TOPOBJ.UID> == <SRC>)
+ SRC.SYSMESSAGE @,,1 <SRC.TARG.NAME> must be in your backpack
+ RETURN 1
+ELIF !(<SRC.TARG.MOREP>)
+ SRC.SYSMESSAGE @,,1 The recall rune's magic has faded
+ RETURN 1
+ELSE
+ IF !(<TAG0.RUNE<dTAG.BUTTON>>)
+  TRY TAG.RUNE<dTAG.BUTTON>_P=<SRC.TARG.MOREP>
+  IF (STRMATCH(Rune to:*,<SRC.TARG.NAME>))
+   LOCAL.NAME=<SRC.TARG.NAME>
+   SRC.TARG.NAME=<STRSUB 8 <HVAL STRLEN(<LOCAL.NAME>)> <LOCAL.NAME>>
+  ENDIF
+  TRY TAG.RUNE<dTAG.BUTTON>_NAME=<SRC.TARG.NAME>
+  SRC.TARG.REMOVE
+  SDIALOG D_XRUNEBOOK <dTAG0.PAGE>
+ ENDIF
+ENDIF
+TAG.BUTTON
+RETURN 1
+
+/////////////////////////////
+
+[FUNCTION F_RUNERENAME]
+OBJ <SRC.TAG.RUNEBOOK>
+
+IF <ISEMPTY <ARGS>>
+ SYSMESSAGE @,,1 Rune Renaming Canceled
+ RETURN 1
+ELSE
+ IF !(<ISNUM <ARGS>>)
+  IF <ISEMPTY <OBJ.TAG.RUNE<dTAG0.BUTTON>_NAME>>
+     SYSMESSAGE @,,1 Esta runa nao existe mais.
+     RETURN 1
+  ENDIF
+  OBJ.TAG0.RUNE<dTAG0.BUTTON>_NAME=<STRSUB 0 24 <ARGS>>
+  SYSMESSAGE @,,1 Rune renamed: <ARGS>
+ ELSE
+  SYSMESSAGE @,,1 You can't put only numbers in the rune name
+ ENDIF
+ENDIF
+TAG.RUNEBOOK
+TAG.BUTTON
+RETURN 1
+
+[FUNCTION F_PAGERENAME]
+OBJ <SRC.TAG.RUNEBOOK>
+
+IF <ISEMPTY <ARGS>>
+ SYSMESSAGE @,,1 Page Renaming Canceled
+ RETURN 1
+ELSE
+ IF !(<ISNUM <ARGS>>)
+  OBJ.TAG0.PAGE<dTAG0.BUTTON>_NAME=<STRSUB 0 16 <ARGS>>
+  SYSMESSAGE @,,1 Page renamed: <ARGS>
+ ELSE
+  SYSMESSAGE @,,1 You can't put only numbers in the page name
+ ENDIF
+ENDIF
+TAG.RUNEBOOK
+TAG.BUTTON
+RETURN 1
+
+[FUNCTION rb_using_verify]
+if <findid.i_recall_timer_new> || <findid.i_gate_timer_new> || <findid.i_recall_timer> || <findid.i_gate_timer>
+	FINDID.i_recall_timer_new.REMOVE
+	FINDID.i_gate_timer_new.REMOVE
+	FINDID.i_recall_timer.REMOVE
+	FINDID.i_gate_timer.REMOVE
+	MESSAGE The spell fizzles
+	EFFECT 3,i_fx_smoke_small,20,20
+	EVENTS -e_new_runadano
+	EVENTS -e_runadano
+endif
+
+[FUNCTION DISTURB_E_DANO]
+FINDID.i_recall_timer_new.REMOVE
+FINDID.i_gate_timer_new.REMOVE
+MESSAGE The spell fizzles
+EFFECT 3,i_fx_smoke_small,20,20
+EVENTS -e_new_runadano
+
+[FUNCTION DISTURB_E_DANO2]
+FINDID.i_gate_timer_new.REMOVE
+
+[ITEMDEF i_recall_timer_new]
+ID=I_MEMORY
+NAME=RECALL TIMER
+TYPE=T_EQ_SCRIPT
+
+//ON=@EquipTest
+//rb_using_verify
+
+ON=@TIMER
+if <more1> > 10
+	MORE1 -= 10
+endif
+
+IF (<MORE1> < 10)
+
+    IF (<MORE1> > 0)
+        TIMERD <MORE1>
+	more1 0
+        RETURN 1
+    ENDIF
+
+    IF (<SERV.MAP(<MOREX>,<MOREY>,<MOREM>).REGION.FLAGS>&REGION_ANTIMAGIC_RECALL_IN) || (<UID.<SERV.MAP(<MOREX>,<MOREY>,<MOREM>).REGION.UID>.TYPE>==T_MULTI) || (<SERV.MAP(<MOREX>,<MOREY>,<MOREM>).TYPE>==T_WATER)
+        CONT.EFFECT 3,I_FX_SMOKE,20,20
+        CONT.SYSMESSAGE @,,1 You can't teleport to that spot.
+        CONT.EVENTS -e_new_runadano
+        REMOVE
+        RETURN 1
+    ELSEIF (<CONT.REGION.FLAGS>&REGION_ANTIMAGIC_RECALL_OUT)
+        CONT.EFFECT 3,I_FX_SMOKE,20,20
+        CONT.SYSMESSAGE @,,1 You can't teleport to that spot.
+        CONT.EVENTS -e_new_runadano
+        REMOVE
+        RETURN 1
+    ELSEIF (<CONT.FLAGS>&STATF_FREEZE)
+        CONT.EFFECT 3,I_FX_SMOKE,20,20
+        CONT.SYSMESSAGE @,,1 You are frozen and can not move.
+        CONT.EVENTS -e_new_runadano
+        REMOVE
+        RETURN 1
+    ENDIF
+
+    IF !(<CONT.ISGM>)
+        IF !(<CONT.RESTEST 1 I_REAG_MANDRAKE_ROOT>) || !(<CONT.RESTEST 1 I_REAG_BLOOD_MOSS>) || !(<CONT.RESTEST 1 I_REAG_BLACK_PEARL>)
+            CONT.SYSMESSAGE @,,1 You lack reagents for this spell
+            CONT.EVENTS -e_new_runadano
+            REMOVE
+            RETURN 1
+            //ELSEIF !(<CONT.MANA> >= <SERV.SPELL.S_RECALL.MANAUSE>)
+            //IF !(<CONT.MANA> >= <SERV.SPELL.S_RECALL.MANAUSE>)
+            //CONT.SYSMESSAGE @,,1 You lack sufficient mana for this spell
+            //CONT.EVENTS -e_new_runadano
+            //REMOVE
+            //RETURN 1
+        ELSE
+            //CONT.MANA -= <SERV.SPELL.S_RECALL.MANAUSE>
+            CONT.CONSUME 1 I_REAG_BLACK_PEARL
+            CONT.CONSUME 1 I_REAG_BLOOD_MOSS
+            CONT.CONSUME 1 I_REAG_MANDRAKE_ROOT
+        ENDIF
+    ENDIF
+
+    CONT.GO <MOREP>
+    CONT.CTAG.LAST_TELEPORT <SERV.TIME>
+    CONT.EVENTS -e_new_runadano
+    REMOVE
+    RETURN 1
+ELSE
+    TIMERD 10
+ENDIF
+RETURN 1
+
+/////////////////////////////////
+
+[ITEMDEF i_gate_timer_new]
+ID=I_MEMORY
+NAME=GATE TIMER
+TYPE=T_EQ_SCRIPT
+
+//ON=@EquipTest
+//rb_using_verify
+
+ON=@TIMER
+SERV.LOG <MOREX>, <MOREY>, <MOREM>
+IF (<SERV.MAP(<MOREX>,<MOREY>,<MOREM>).REGION.FLAGS>&REGION_ANTIMAGIC_RECALL_IN) || (<UID.<SERV.MAP(<MOREX>,<MOREY>,<MOREM>).REGION.UID>.TYPE>==T_MULTI) || (<SERV.MAP(<MOREX>,<MOREY>,<MOREM>).P.TYPE> == t_water)
+ CONT.EFFECT 3,I_FX_SMOKE,20,20
+ CONT.SYSMESSAGE @,,1 Antimagic blocks the gate
+ CONT.EVENTS -e_new_runadano
+ REMOVE
+ RETURN 1
+ELIF (<CONT.ISINMULTI <CONT.P>>)
+ CONT.EFFECT 3,I_FX_SMOKE,20,20
+ CONT.SYSMESSAGE @,,1 Antimagic blocks the gate
+ CONT.EVENTS -e_new_runadano
+ REMOVE
+ RETURN 1
+ELIF (<CONT.REGION.FLAGS>&REGION_ANTIMAGIC_RECALL_OUT)
+ CONT.EFFECT 3,I_FX_SMOKE,20,20
+ CONT.SYSMESSAGE @,,1 Antimagic blocks the gate
+ CONT.EVENTS -e_new_runadano
+ REMOVE
+ RETURN 1
+ELIF (<CONT.FLAGS>&STATF_FREEZE)
+ CONT.EFFECT 3,I_FX_SMOKE,20,20
+ CONT.SYSMESSAGE @,,1 You are frozen and can not move.
+ CONT.EVENTS -e_new_runadano
+ REMOVE
+ RETURN 1
+ENDIF
+IF !(<CONT.ISGM>)
+ IF !(<CONT.RESTEST 1 I_REAG_MANDRAKE_ROOT>) || !(<CONT.RESTEST 1 I_REAG_SULFUR_ASH>) || !(<CONT.RESTEST 1 I_REAG_BLACK_PEARL>)
+  CONT.SYSMESSAGE @,,1 You lack reagents for this spell
+  CONT.EVENTS -e_new_runadano
+  REMOVE
+  RETURN 1
+ //ELIF !(<CONT.MANA> >= <SERV.SPELL.S_RECALL.MANAUSE>)
+  //CONT.SYSMESSAGE @,,1 You lack sufficient mana for this spell
+  //CONT.EVENTS -e_new_runadano
+  //REMOVE
+  //RETURN 1
+ ELSE
+  //CONT.MANA -= <SERV.SPELL.S_GATE_TRAVEL.MANAUSE>
+  CONT.CONSUME 1 I_REAG_BLACK_PEARL
+  CONT.CONSUME 1 I_REAG_SULFUR_ASH
+  CONT.CONSUME 1 I_REAG_MANDRAKE_ROOT
+ ENDIF
+ENDIF
+
+SERV.NEWITEM i_moongate_blue
+REF100=<NEW.UID>
+LOCAL.NEWGATE <REF100.UID>
+REF100.P <CONT.P>
+ IF (<REF100.GATE_VERIFY2 <CONT.UID>>)
+ CONT.EFFECT 3,i_fx_smoke_small,20,20
+ CONT.EVENTS -e_new_runadano
+ REF100.LINK.REMOVE
+ REF100.REMOVE
+ REMOVE
+ RETURN 1
+ ENDIF
+REF100.TYPE T_TELEPAD
+//REF100.TAG.PGATE 1
+REF100.MOREP <MOREP>
+IF (<SERV.MAP(<MOREX>,<MOREY>,<MOREM>).REGION.FLAGS>&REGION_FLAG_GUARDED)
+ REF100.COLOR 063
+ELSE
+ REF100.COLOR 026
+ENDIF
+//IF (<REF100.move_traps_a> < 2)
+//LOCAL.PERIGO 1
+//ENDIF
+REF100.NAME=@<REF100.COLOR> <SERV.MAP(<MOREX>,<MOREY>,<MOREM>).REGION.NAME> por <CONT.NAME>
+REF100.ATTR=ATTR_STATIC|ATTR_DECAY
+REF100.TAG.CRIADOR=<CONT.UID>
+REF100.TIMER 25
+REF100.FIX
+
+SERV.NEWITEM i_moongate_blue
+REF100=<NEW.UID>
+REF100.TAG.GATE <LOCAL.NEWGATE>
+REF100.LINK <LOCAL.NEWGATE>
+TRY UID.<LOCAL.NEWGATE>.LINK <REF100.UID>
+TRY UID.<LOCAL.NEWGATE>.TAG.GATE <REF100.UID>
+REF100.P <MOREP>
+ IF (<REF100.GATE_VERIFY3 <CONT.UID>>)
+ CONT.EFFECT 3,i_fx_smoke_small,20,20
+ CONT.EVENTS -e_new_runadano
+ REF100.LINK.REMOVE
+ REF100.REMOVE
+ REMOVE
+ RETURN 1
+ ENDIF
+REF100.TYPE T_TELEPAD
+//REF100.TAG.PGATE 1
+REF100.MOREP <CONT.P>
+IF (<CONT.REGION.FLAGS>&REGION_FLAG_GUARDED)
+ REF100.COLOR 063
+ELSE
+ REF100.COLOR 026
+ENDIF
+//IF (<LOCAL.PERIGO>)
+//REF100.COLOR 2910
+//REF100.NAME @0799 <CONT.REGION.NAME> por <CONT.NAME> [possivel trap]
+//ELSE
+REF100.NAME @<REF100.COLOR> <CONT.REGION.NAME> por <CONT.NAME>
+//ENDIF
+//IF (<REF100.move_traps_a> < 2)
+//REF100.LINK.COLOR 2910
+//REF100.LINK.NAME @0799 <REF100.REGION.NAME> por <CONT.NAME> [possivel trap]
+//ENDIF
+REF100.ATTR ATTR_STATIC|ATTR_DECAY
+REF100.TAG.CRIADOR=<CONT.UID>
+REF100.TIMER 25
+REF100.FIX
+
+CONT.EVENTS -e_new_runadano
+REMOVE
+RETURN 1
+
+/////////////////////////////////
+
+[EVENTS E_NEW_RUNADANO]
+ON=@USERWARMODE
+DISTURB_E_DANO
+ON=@GETHIT
+DISTURB_E_DANO
+ON=@HIT
+DISTURB_E_DANO
+ON=@LOGOUT
+DISTURB_E_DANO
+ON=@SPELLCAST
+DISTURB_E_DANO
+//ON=@SKILLPRESTART
+//DISTURB_E_DANO
+ON=@SPELLEFFECT
+IF (<SERV.SPELL.<ARGN1>.FLAGS> & SPELLFLAG_HARM) && (<SRC.UID>!=<UID>)
+DISTURB_E_DANO
+ENDIF
+
+[DIALOG D_XRUNEBOOK]
+189,175
+PAGE 0
+GUMPPIC 0 0 500
+
+DHTMLGUMP 245 5 120 20 0 0 <DEF.BFONT_GREEN><DEF.CENTER><SERV.NAME>
+DHTMLGUMP 246 21 120 20 0 0 <DEF.CENTER>UO Private Server
+DHTMLGUMP 245 20 120 20 0 0 <DEF.BFONT_WHITE><DEF.CENTER>UO Private Server
+
+LOCAL.X 60
+GUMPPIC 30 35 57
+GUMPPIC 220 35 57
+FOR 8
+ GUMPPIC <dLOCAL.X> 35 58
+ GUMPPIC <EVAL <dLOCAL.X>+190> 35 58
+ LOCAL.X += 15
+ENDFOR
+GUMPPIC 170 35 59
+GUMPPIC 360 35 59
+
+RESIZEPIC 229 194 9300 159 22
+FOR I 1 8
+ LOCAL.X 211
+ IF (<dLOCAL.I> == 4)
+  LOCAL.X += 1
+ ELIF (<dLOCAL.I> == 5)
+  LOCAL.X += 3
+ ELIF (<dLOCAL.I> == 6) || (<dLOCAL.I> == 7) || (<dLOCAL.I> == 8)
+  LOCAL.X += 4
+ ENDIF
+ BUTTON <EVAL <dLOCAL.X>+(<dLOCAL.I>*19)> 195 <EVAL <dLOCAL.I>+2224> <EVAL <dLOCAL.I>+2224> 1 <dLOCAL.I> <dLOCAL.I>
+ENDFOR
+
+LOCAL.PAGE <dTAG.PAGE>
+//FOR PAGE 1 8
+ PAGE <dLOCAL.PAGE>
+
+ DHTMLGUMP 55 22 120 20 0 0 <DEF.BFONT_DGREEN><DEF.CENTER><TAG.PAGE<dLOCAL.PAGE>_NAME>
+ BUTTON 105 5 5411 5411 1 0 100<dLOCAL.PAGE>
+
+ IF (<dTAG.PAGE> > 1)
+  BUTTON 0 0 501 501 1 10 10
+ ENDIF
+ IF (<dTAG.PAGE> < 8)
+  BUTTON 356 0 502 502 1 11 11
+ ENDIF
+
+ LOCAL.Y 54
+ FOR <dLOCAL.PAGE>101 <dLOCAL.PAGE>110
+  BUTTON 30 <dLOCAL.Y> 2103 2104 1 0 <dLOCAL._FOR>
+  IF !<ISEMPTY <TAG.RUNE<dLOCAL._FOR>_NAME>>
+   DHTMLGUMP 53 <EVAL <dLOCAL.Y> - 4> 127 20 0 0 <DEF.BFONT_SIZE1><TAG0.RUNE<EVAL <LOCAL._FOR>>_NAME>
+   BUTTON 40 <dLOCAL.Y> 2103 2104 1 0 <EVAL 10 + <dLOCAL._FOR>>
+   BUTTON 180 <dLOCAL.Y> 2103 2104 1 0 <EVAL 20 + <dLOCAL._FOR>>
+   BUTTON 190 <dLOCAL.Y> 2103 2104 1 0 <EVAL 30 + <dLOCAL._FOR>>
+  ENDIF
+  BUTTON 220 <dLOCAL.Y> 2103 2104 1 0 <EVAL <dLOCAL._FOR>+100>
+  IF !<ISEMPTY <TAG.RUNE<EVAL <dLOCAL._FOR>+100>_NAME>>
+   DHTMLGUMP 243 <EVAL <dLOCAL.Y> - 4> 127 20 0 0 <DEF.BFONT_SIZE1><TAG0.RUNE<EVAL <LOCAL._FOR>+100>_NAME>
+   BUTTON 230 <dLOCAL.Y> 2103 2104 1 0 <EVAL 110 + <dLOCAL._FOR>>
+   BUTTON 370 <dLOCAL.Y> 2103 2104 1 0 <EVAL 120 + <dLOCAL._FOR>>
+   BUTTON 380 <dLOCAL.Y> 2103 2104 1 0 <EVAL 130 + <dLOCAL._FOR>>
+  ENDIF
+  LOCAL.Y += 14
+ ENDFOR
+
+ GUMPPIC 31 191 5009
+ GUMPPIC 191 191 5009
+ DHTMLGUMP 42 190 160 20 0 0 Gate          Remove
+ DHTMLGUMP 32 203 100 20 0 0 Recall/<DEF.BFONT_DGREEN>Add Rune
+ DHTMLGUMP 158 201 60 20 0 0 Rename
+
+ LOCAL.X 220
+ IF (<dLOCAL.PAGE> == 4)
+  LOCAL.X += 1
+ ELIF (<dLOCAL.PAGE> == 5)
+  LOCAL.X += 3
+ ELIF (<dLOCAL.PAGE> == 6) || (<dLOCAL.PAGE> == 7) || (<dLOCAL.PAGE> == 8)
+  LOCAL.X += 4
+ ENDIF
+ GUMPPIC <EVAL <dLOCAL.X>+(<dLOCAL.PAGE>*19)> 195 5020
+//ENDFOR
+
+[DIALOG D_XRUNEBOOK BUTTON]
+ON=1 9999
+
+IF (<ARGN> >= 1) && (<ARGN> <= 8)
+ TAG.PAGE <ARGN>
+ SDIALOG D_XRUNEBOOK <ARGN>
+ENDIF
+
+IF (<ARGN> == 10)
+ TAG.PAGE -= 1
+ SDIALOG D_XRUNEBOOK <dTAG.PAGE>
+ELIF (<ARGN> == 11)
+ TAG.PAGE += 1
+ SDIALOG D_XRUNEBOOK <dTAG.PAGE>
+ENDIF
+
+IF (<ARGN> >= 1001) && (<ARGN> <= 1008)
+ SRC.TAG.RUNEBOOK <UID>
+ SRC.TAG.BUTTON <EVAL <ARGN> - 1000>
+ PROMPTCONSOLE F_PAGERENAME @,,1 What is the new name of the page?
+ RETURN 1
+ENDIF
+
+IF (<ARGN> >= <dTAG.PAGE>101) && (<ARGN> <= <dTAG.PAGE>110) || (<ARGN> >= <dTAG.PAGE>201) && (<ARGN> <= <dTAG.PAGE>210)
+ IF !<ISEMPTY <TAG.RUNE<dARGN>_NAME>>
+  //IF (<SRC.FINDID.i_recall_timer_new>) || (<SRC.FINDID.i_gate_timer_new>)
+   //src.rb_using_verify
+   //SRC.FINDID.i_recall_timer_new.REMOVE
+   //SRC.FINDID.i_gate_timer_new.REMOVE
+  IF (<SRC.FLAGS>&STATF_FREEZE)
+   SRC.SYSMESSAGE @,,1 You are frozen and can not move.
+   RETURN 1
+  ELSE
+   src.rb_using_verify
+   MOREP=<TAG0.RUNE<ARGN>_P>
+   IF (0<SERV.MAP(<MOREX>,<MOREY>,<MOREM>).REGION.FLAGS>&REGION_ANTIMAGIC_RECALL_IN) || (0<UID.<SERV.MAP(<MOREX>,<MOREY>,<MOREM>).REGION.UID>.TYPE>==T_MULTI)
+    SRC.SYSMESSAGE @,,1 An anti-magic field blocks you
+    RETURN 1
+   ELSEIF (<SRC.REGION.FLAGS>&REGION_ANTIMAGIC_RECALL_OUT)
+    SRC.SYSMESSAGE @,,1 An anti-magic field blocks you
+    RETURN 1
+   ELSEIF !(<SRC.RESTEST 1 I_REAG_MANDRAKE_ROOT>) || !(<SRC.RESTEST 1 I_REAG_BLOOD_MOSS>) || !(<SRC.RESTEST 1 I_REAG_BLACK_PEARL>)
+    SRC.SYSMESSAGE @,,1 You lack reagents for this spell
+    RETURN 1
+   ELSEIF !(<SRC.MANA> >= <SERV.SPELL.S_RECALL.MANAUSE>)
+    SRC.SYSMESSAGE @,,1 You lack sufficient mana for this spell
+    RETURN 1
+   ELSEIF !(<SRC.CANCAST S_RECALL>)
+    SRC.SYSMESSAGE @,,1 You can't cast Recall
+    RETURN 1
+   ELSE
+    SRC.ACTION -1
+    SRC.FINDLAYER.1.UNEQUIP
+    SRC.FINDLAYER.2.UNEQUIP
+    SRC.EVENTS +e_new_runadano
+    SERV.NEWITEM i_recall_timer_new,1,<SRC>
+    NEW.MORE1=<SERV.SPELL.S_RECALL.CAST_TIME>
+    NEW.TIMERD=10
+    //NEW.TIMERD=<SERV.SPELL.S_RECALL.CAST_TIME>
+    SRC.MANA -= <SERV.SPELL.S_RECALL.MANAUSE>
+    NEW.MOREP=<MOREP>
+    SRC.SOUND SND_SPELL_RECALL
+
+    IF (<SRC.FLAGS> & statf_hidden)
+      SRC.FLAGS = <SRC.FLAGS> & ~statf_hidden
+    ENDIF
+
+    SRC.SAY @<SERV.WOPColor>,<SERV.WOPFont> Kal Ort Por
+    SRC.ANIM 17
+   ENDIF
+  ENDIF
+ ELSE
+  IF (<TOPOBJ.UID>==<SRC>)
+   TAG.BUTTON <dARGN>
+   SDIALOG D_XRUNEBOOK <dTAG.PAGE>
+   TARGET @,,1 Target a rune
+  ELSE
+   RETURN 1
+  ENDIF
+ ENDIF
+ENDIF
+
+IF (<ARGN> >= <dTAG.PAGE>111) && (<ARGN> <= <dTAG.PAGE>120) || (<ARGN> >= <dTAG.PAGE>211) && (<ARGN> <= <dTAG.PAGE>220)
+ IF !<ISEMPTY <TAG.RUNE<EVAL <dARGN>-10>_NAME>>
+  //IF (<SRC.FINDID.i_recall_timer_new>) || (<SRC.FINDID.i_gate_timer_new>)
+   //src.rb_using_verify
+   //SRC.FINDID.i_recall_timer_new.REMOVE
+   //SRC.FINDID.i_gate_timer_new.REMOVE
+  IF (<SRC.FLAGS>&STATF_FREEZE)
+   SRC.SYSMESSAGE @,,1 You are frozen and can not move.
+   RETURN 1
+  ELSE
+   src.rb_using_verify
+   MOREP=<TAG0.RUNE<EVAL <dARGN>-10>_P>
+   IF (0<SERV.MAP(<MOREX>,<MOREY>,<MOREM>).REGION.FLAGS>&REGION_ANTIMAGIC_GATE) || (0<UID.<SERV.MAP(<MOREX>,<MOREY>,<MOREM>).REGION.UID>.TYPE>==T_MULTI)
+    SRC.SYSMESSAGE @,,1 An anti-magic field blocks you
+    RETURN 1
+   //ELSEIF (0<SERV.MAP(<MOREX>,<MOREY>,<MOREM>).ISNEARTYPE t_casagua 0>) || (<SRC.ISNEARTYPE t_casagua 0>)
+    //SRC.SYSMESSAGE @,,1 Voce nao pode abrir gates em casas aquaticas.
+    //RETURN 1
+   ELSEIF (<SRC.REGION.FLAGS>&REGION_ANTIMAGIC_RECALL_OUT)
+    SRC.SYSMESSAGE @,,1 An anti-magic field blocks you
+    RETURN 1
+   ELSEIF !(<SRC.RESTEST 1 I_REAG_MANDRAKE_ROOT>) || !(<SRC.RESTEST 1 I_REAG_SULFUR_ASH>) || !(<SRC.RESTEST 1 I_REAG_BLACK_PEARL>)
+    SRC.SYSMESSAGE @,,1 You lack reagents for this spell
+    RETURN 1
+   ELSEIF !(<SRC.MANA> >= <SERV.SPELL.S_GATE_TRAVEL.MANAUSE>)
+    SRC.SYSMESSAGE @,,1 You lack sufficient mana for this spell
+    RETURN 1
+   ELSEIF !(<SRC.CANCAST S_GATE_TRAVEL>)
+    SRC.SYSMESSAGE @,,1 You can't cast Gate Travel
+    RETURN 1
+   ELSEIF (<SRC.GATE_VERIFY2 <src.uid>>)
+    RETURN 1
+   ELSE
+    SRC.FINDLAYER.1.UNEQUIP
+    SRC.FINDLAYER.2.UNEQUIP
+    IF (<SRC.ACTION>==skill_magery)
+    SRC.ACTION -1
+    ENDIF
+    SRC.EVENTS +e_new_runadano
+    SERV.NEWITEM i_gate_timer_new,1,<SRC>
+    SRC.MANA -= <SERV.SPELL.S_GATE_TRAVEL.MANAUSE>
+    NEW.TIMERD=<SERV.SPELL.S_GATE_TRAVEL.CAST_TIME>
+    NEW.MOREP=<MOREP>
+    SRC.SOUND SND_SPELL_RECALL
+
+    IF (<SRC.FLAGS> & statf_hidden)
+      SRC.FLAGS = <SRC.FLAGS> & ~statf_hidden
+      SRC.SYSMESSAGE @,,1 <DEFMSG.hiding_revealed>
+    ENDIF
+
+    if !(<src.isgm>)
+        SRC.SAY @<SERV.WOPColor>,<SERV.WOPFont> Vas Rel Por
+    endif
+    SRC.ANIM 17
+   ENDIF
+  ENDIF
+ ENDIF
+ENDIF
+
+IF (<ARGN> >= <dTAG.PAGE>121) && (<ARGN> <= <dTAG.PAGE>130) || (<ARGN> >= <dTAG.PAGE>221) && (<ARGN> <= <dTAG.PAGE>230)
+ IF (<TOPOBJ.UID>==<SRC>)
+  SERV.NEWITEM=I_RUNE_MARKER
+  NEW.NAME=<TAG0.RUNE<EVAL <ARGN>-20>_NAME>
+  NEW.MOREP=<TAG0.RUNE<EVAL <ARGN>-20>_P>
+  NEW.MORE1=10
+  TRY TAG.RUNE<EVAL <dARGN>-20>_P
+  TRY TAG.RUNE<EVAL <dARGN>-20>_NAME
+  NEW.BOUNCE
+  SDIALOG D_XRUNEBOOK <dTAG.PAGE>
+ ENDIF
+ RETURN 1
+ENDIF
+
+IF (<ARGN> >= <dTAG.PAGE>131) && (<ARGN> <= <dTAG.PAGE>140) || (<ARGN> >= <dTAG.PAGE>231) && (<ARGN> <= <dTAG.PAGE>240)
+ SRC.TAG.RUNEBOOK <UID>
+ SRC.TAG.BUTTON <EVAL <ARGN>-30>
+ PROMPTCONSOLE F_RUNERENAME @,,1 What is the new name of the rune?
+ RETURN 1
+ENDIF
+
+[FUNCTION NGATE]
+IF (<ARGV[0]> > 0) && (<ARGV[0]> <= 8)
+ LOCAL.RUNA=<eval <ARGV[0]>*1000>
+  IF (<ARGV[1]> > 0) && (<ARGV[1]> < 11)
+  LOCAL.RUNA += 100
+  LOCAL.RUNA += <ARGV[1]>
+  ELIF (<ARGV[1]> > 10) && (<ARGV[1]> < 21)
+  LOCAL.RUNA += 200
+  LOCAL.RUNA += <eval <ARGV[1]> - 10>
+  ELSE
+  SRC.SYSMESSAGE @32,,1 Argumentos invalidos.
+  SRC.SYSMESSAGE @478,,1 Use: .gate pagina[1-8],runa[1-20]
+  RETURN 1
+  ENDIF
+ELSE
+  SRC.SYSMESSAGE @32,,1 Argumentos invalidos.
+  SRC.SYSMESSAGE @478,,1 Use: .gate pagina[1-8],runa[1-20]
+  RETURN 1
+ENDIF
+
+LOCAL.RUNEBOOK <SRC.tag0.runebook>
+
+IF !<local.runebook>
+ SRC.SYSMESSAGE @026,,1 Voce nao tem um runebook definido.
+ SRC.SYSMESSAGE @026,,1 Use .gate set
+ RETURN 1
+ENDIF
+
+IF <ISEMPTY <UID.<LOCAL.RUNEBOOK>.TAG.RUNE<dLOCAL.RUNA>_NAME>>
+ SRC.SYSMESSAGE @026,,1 Voce nao tem uma runa neste slot.
+ RETURN 1
+ENDIF
+
+ IF !<ISEMPTY <UID.<LOCAL.RUNEBOOK>.TAG.RUNE<dLOCAL.RUNA>_NAME>>
+  IF (<SRC.FLAGS>&STATF_FREEZE)
+   SRC.SYSMESSAGE @,,1 You are frozen and can not move.
+   RETURN 1
+  ELSE
+   TRY UID.<LOCAL.RUNEBOOK>.MOREP=<UID.<LOCAL.RUNEBOOK>.TAG0.RUNE<dLOCAL.RUNA>_P>
+   IF (0<SERV.MAP(<UID.<LOCAL.RUNEBOOK>.MOREX>,<UID.<LOCAL.RUNEBOOK>.MOREY>,<UID.<LOCAL.RUNEBOOK>.MOREM>).REGION.FLAGS>&REGION_ANTIMAGIC_RECALL_IN) || (0<UID.<SERV.MAP(<UID.<LOCAL.RUNEBOOK>.MOREX>,<UID.<LOCAL.RUNEBOOK>.MOREY>,<UID.<LOCAL.RUNEBOOK>.MOREM>).REGION.UID>.TYPE>==T_MULTI)
+    SRC.SYSMESSAGE @,,1 An anti-magic field blocks you
+    RETURN 1
+   ELSEIF (<SRC.REGION.FLAGS>&REGION_ANTIMAGIC_RECALL_OUT)
+    SRC.SYSMESSAGE @,,1 An anti-magic field blocks you
+    RETURN 1
+   ELSEIF !(<SRC.MANA> >= <SERV.SPELL.S_RECALL.MANAUSE>)
+    SRC.SYSMESSAGE @,,1 You lack sufficient mana for this spell
+    RETURN 1
+   ELSEIF !(<SRC.CANCAST s_gate_travel>)
+    SRC.SYSMESSAGE @,,1 Voce nao pode castar Gate Travel.
+    RETURN 1
+   ELSE
+    SRC.FINDLAYER.1.UNEQUIP
+    SRC.FINDLAYER.2.UNEQUIP
+    IF (<SRC.ACTION>==skill_magery)
+    SRC.ACTION -1
+    ENDIF
+	SRC.rb_using_verify
+    SRC.EVENTS +e_new_runadano
+    SERV.NEWITEM i_gate_timer_new,1,<SRC>
+    NEW.TIMERD=<SERV.SPELL.S_RECALL.CAST_TIME>
+	SRC.MANA -= <SERV.SPELL.S_RECALL.MANAUSE>
+    NEW.MOREP=<UID.<LOCAL.RUNEBOOK>.MOREP>
+    SRC.SOUND SND_SPELL_RECALL
+
+    IF (<SRC.FLAGS> & statf_hidden)
+      SRC.FLAGS = <SRC.FLAGS> & ~statf_hidden
+      SRC.SYSMESSAGE @,,1 <DEFMSG.hiding_revealed>
+    ENDIF
+
+    if !(<src.isgm>)
+        SRC.SAY @<SERV.WOPColor>,<SERV.WOPFont> Vas Rel Por
+    endif
+    SRC.ANIM 17
+   ENDIF
+  ENDIF
+ ENDIF
+
+[FUNCTION NRECALL]
+IF (<ARGV[0]> > 0) && (<ARGV[0]> <= 8)
+ LOCAL.RUNA=<eval <ARGV[0]>*1000>
+  IF (<ARGV[1]> > 0) && (<ARGV[1]> < 11)
+  LOCAL.RUNA += 100
+  LOCAL.RUNA += <ARGV[1]>
+  ELIF (<ARGV[1]> > 10) && (<ARGV[1]> < 21)
+  LOCAL.RUNA += 200
+  LOCAL.RUNA += <eval <ARGV[1]> - 10>
+  ELSE
+  SRC.SYSMESSAGE @32,,1 Argumentos invalidos.
+  SRC.SYSMESSAGE @478,,1 Use: .recall pagina[1-8],runa[1-20]
+  RETURN 1
+  ENDIF
+ELSE
+  SRC.SYSMESSAGE @32,,1 Argumentos invalidos.
+  SRC.SYSMESSAGE @478,,1 Use: .recall pagina[1-8],runa[1-20]
+  RETURN 1
+ENDIF
+
+LOCAL.RUNEBOOK <SRC.tag0.runebook>
+
+IF !<SRC.FINDID.I_X_RUNEBOOK>
+ SRC.SYSMESSAGE @026,,1 Voce nao tem um runebook.
+ RETURN 1
+ENDIF
+
+IF !<local.runebook>
+ SRC.SYSMESSAGE @026,,1 Voce nao tem um runebook definido.
+ SRC.SYSMESSAGE @026,,1 Use .recall set
+ RETURN 1
+ENDIF
+
+ IF !<ISEMPTY <UID.<LOCAL.RUNEBOOK>.TAG.RUNE<dLOCAL.RUNA>_NAME>>
+  IF (<SRC.FLAGS>&STATF_FREEZE)
+   SRC.SYSMESSAGE @,,1 You are frozen and can not move.
+   RETURN 1
+  ELSE
+   TRY UID.<LOCAL.RUNEBOOK>.MOREP=<UID.<LOCAL.RUNEBOOK>.TAG0.RUNE<dLOCAL.RUNA>_P>
+   IF (0<SERV.MAP(<UID.<LOCAL.RUNEBOOK>.MOREX>,<UID.<LOCAL.RUNEBOOK>.MOREY>,<UID.<LOCAL.RUNEBOOK>.MOREM>).REGION.FLAGS>&REGION_ANTIMAGIC_RECALL_IN) || (0<UID.<SERV.MAP(<UID.<LOCAL.RUNEBOOK>.MOREX>,<UID.<LOCAL.RUNEBOOK>.MOREY>,<UID.<LOCAL.RUNEBOOK>.MOREM>).REGION.UID>.TYPE>==T_MULTI)
+    SRC.SYSMESSAGE @,,1 An anti-magic field blocks you
+    RETURN 1
+   ELSEIF (<SRC.REGION.FLAGS>&REGION_ANTIMAGIC_RECALL_OUT)
+    SRC.SYSMESSAGE @,,1 An anti-magic field blocks you
+    RETURN 1
+   ELSEIF !(<SRC.RESTEST 1 I_REAG_MANDRAKE_ROOT>) || !(<SRC.RESTEST 1 I_REAG_BLOOD_MOSS>) || !(<SRC.RESTEST 1 I_REAG_BLACK_PEARL>)
+    SRC.SYSMESSAGE @,,1 You lack reagents for this spell
+	RETURN 1
+   ELSEIF !(<SRC.MANA> >= <SERV.SPELL.S_RECALL.MANAUSE>)
+    SRC.SYSMESSAGE @,,1 You lack sufficient mana for this spell
+    RETURN 1
+   ELSEIF !(<SRC.CANCAST S_RECALL>)
+    SRC.SYSMESSAGE @,,1 You can't cast Recall
+    RETURN 1
+   ELSE
+	SRC.rb_using_verify
+    SRC.FINDLAYER.1.UNEQUIP
+    SRC.FINDLAYER.2.UNEQUIP
+    SRC.ACTION -1
+    SRC.EVENTS +e_new_runadano
+    SERV.NEWITEM i_recall_timer_new,1,<SRC>
+    NEW.MORE1=<SERV.SPELL.S_RECALL.CAST_TIME>
+    NEW.TIMERD=10
+    //NEW.TIMERD=<SERV.SPELL.S_RECALL.CAST_TIME>
+	SRC.MANA -= <SERV.SPELL.S_RECALL.MANAUSE>
+    NEW.MOREP=<UID.<LOCAL.RUNEBOOK>.MOREP>
+    SRC.SOUND SND_SPELL_RECALL
+
+    IF (<SRC.FLAGS> & statf_hidden)
+      SRC.FLAGS = <SRC.FLAGS> & ~statf_hidden
+    ENDIF
+
+    SRC.SAY @<SERV.WOPColor>,<SERV.WOPFont> Kal Ort Por
+    SRC.ANIM 17
+   ENDIF
+  ENDIF
+ ENDIF
+
+
+[EOF]

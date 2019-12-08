@@ -1,0 +1,5 @@
+[function fixantiloot]
+forinstances i_anti_l00t
+	remove
+endfor
+return 1

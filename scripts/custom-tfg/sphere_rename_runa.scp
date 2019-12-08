@@ -1,0 +1,59 @@
+[TYPEDEF t_rune]
+ON=@DCLICK
+	IF !(<MOREX>
+		src.sysmessage Esta runa esta em branco.
+		RETURN 1
+	ENDIF
+src.ctag.rune_rename = <uid>
+PROMPTCONSOLE f_dc_rename_rune,@,,1 Qual nome voce deseja dar a esta runa?
+return 1
+
+On=@DropOn_Item
+if (<argo.baseid> == i_x_runebook)
+	for folha 1 8
+		for pagina 1 2
+			for runa 1 10
+				if <local.runa> < 10
+					local.name = <dlocal.folha><dlocal.pagina>0<dlocal.runa>
+				else
+					local.name = <dlocal.folha><dlocal.pagina><dlocal.runa>
+				endif
+				if !<argo.tag0.rune<dlocal.name>_p> && !<argo.tag0.rune<dlocal.name>_name>
+					src.sysmessage @,,1 Sua runa foi adicionada na folha <dlocal.folha>, pagina <dlocal.pagina>, posicao <dlocal.runa>.
+					argo.tag.rune<dlocal.name>_p = <morep>
+					argo.tag.rune<dlocal.name>_name = <name>
+					if <src.isdialogopen D_XRUNEBOOK>
+						src.dialogclose d_xrunebook
+						argo.tag.page <dlocal.folha>
+						argo.sdialog d_xrunebook <dlocal.folha>
+					endif
+					remove
+					return 1
+				endif
+			endfor
+		endfor
+	endfor
+elif (<argo.baseid> == i_runebook)
+	FOR 40
+	IF !(<argo.tag0.runa<eval <local._for>>>)
+	try argo.tag.runa<eval <local._for>>=<morep>
+	try argo.tag.runanome<eval <local._for>>=<name>
+	src.sysmessage @,,1 Runa adicionada.
+	remove
+	return 1
+	ENDIF
+	ENDFOR
+src.sysmessage @33,,1 The book already has 40 runes.
+return 1
+elif !<argo.iscont>
+	src.sysmessage @,,1 Voce so pode adicionar esta runa a um runebook.
+endif
+
+[FUNCTION f_dc_rename_rune] 
+ref1 = <src.ctag.rune_rename>
+ref1.name = <args>
+src.sysmessage @,,1 Voce renomeou a runa para: <ref1.name>
+src.ctag.rune_rename = 
+return 1
+
+

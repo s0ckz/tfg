@@ -1,0 +1,448 @@
+[ITEMDEF i_survivor_shield]
+NAME=Survivor Shield
+ID=i_shield_round_metal
+ARMOR=6
+REQSTR=100
+WEIGHT=5
+CATEGORY=Provisions - Armor - Colored
+SUBSECTION=Survivor
+DESCRIPTION=Buckler
+RESOURCES=10 i_INGOT_adamantium
+SKILLMAKE=BLACKSMITHING 200.0
+
+ON=@Create
+	COLOR=0af9
+	HITPOINTS={200 220}
+
+on=@click
+	message @,,1 [PvM Buff: IK Defense]
+	message @0800,,1 Survivor's Shield
+	return 1
+
+on=@equip
+	src.tag0.survivorshield 1
+
+on=@UNEQUIP
+	src.tag0.survivorshield
+
+/////////////////////////////////////////////
+////////// Poisonar /////////////////////////
+/////////////////////////////////////////////
+
+[itemdef 00]
+id=I_GOLD
+
+on=@create
+remove
+
+[FUNCTION f_poisoncheck]
+LOCAL.POISONCHANCE= (<TAG0.POISONLEVEL>*<TAG0.POISONLEVEL>) + 3
+IF <R<dLOCAL.POISONCHANCE>> == 1
+	IF (<TAG0.POISONLEVEL>)
+		SRC.FINDID.I_poison_effect.remove
+		SERV.NEWITEM i_poison_effect
+		NEW.MORE2 <TAG.POISONLEVEL>
+		NEW.MORE 8
+		NEW.TAG.POISONTIMER <TAG.POISONTIMER>
+		NEW.TAG.ATTACKER <UID>
+		NEW.CONT <SRC.UID>
+		NEW.TRIGGER @EQUIP
+		NEW.TIMER 2
+	ENDIF
+ENDIF
+
+[events e_pb_stam]
+ON=@HIT
+if ((<src.body>=c_man) || (<src.body>=c_woman)) && !(<src.npc>) && (<SRC> != <UID>)
+ IF (<FENCING> >= 100.0) && (<anatomy> >= 100.0)  && (<TACTICS> >= 100.0)
+
+		SRC.SOUND=0210
+		local.fixo <EVAL ((<ARGO.HITS>*3)+(<DEX>))/12>
+
+		IF <DLOCAL.FIXO> > 30
+			LOCAL.FIXO 30
+		ELIF <DLOCAL.FIXO> < 22
+			LOCAL.FIXO 22
+		ENDIF
+
+		IF (<SERV.ITEMDEF.<WEAPON.BASEID>.TWOHANDS> == 1)
+			LOCAL.FIXO <EVAL (<LOCAL.FIXO> * 13) / 10>
+		ENDIF
+
+		SRC.STAM -= <dLOCAL.FIXO>
+
+		IF (<SRC.STAM> <= 0)
+			SRC.STAM = 0
+			SRC.SAY @31 <qval <isempty <src.tag.name.alt>>?<src.name>:<src.tag.name.alt>> recebeu um Power Blow!!!
+			SRC.SOUND=0210
+			SRC.EFFECT=3,i_fx_energy_ray,3,20,1
+			src.f_updateplayer
+		ENDIF
+ ENDIF
+endif
+
+[events e_pb_mana]
+on=@hit
+if ((<src.body>=c_man) || (<src.body>=c_woman)) && !(<src.npc>) && (<SRC> != <UID>)
+ IF (<SWORDSMANSHIP> >= 100.0) && (<anatomy> >= 100.0)  && (<TACTICS> >= 100.0)
+
+		SRC.SOUND=0210
+		local.fixo <EVAL ((<ARGO.HITS>*3)+(<INT>))/12>
+
+		IF <DLOCAL.FIXO> > 26
+			LOCAL.FIXO 26
+		ELIF <DLOCAL.FIXO> < 15
+			LOCAL.FIXO 15
+		ENDIF
+
+		IF (<SRC.MANA> <= <DLOCAL.FIXO>)
+			SRC.MANA = 0
+		ELSE
+			SRC.MANA -= <dLOCAL.FIXO>
+		ENDIF
+
+			if (<src.mana> <= 0) || (<SRC.MANA> > 20000)
+				SRC.MANA = 0
+				SRC.SAY @0ab4 <qval <isempty <src.tag.name.alt>>?<src.name>:<src.tag.name.alt>> recebeu um Power Blow!!!
+				SRC.SOUND=0210
+				SRC.EFFECT=3,i_fx_energy_ray,3,20,1,33
+				src.f_updateplayer
+			endif
+ ENDIF
+endif
+
+[events e_pb_hits]
+on=@hit
+if ((<src.body>=c_man) || (<src.body>=c_woman)) && !(<src.npc>) && (<SRC> != <UID>)
+	IF (<MACEFIGHTING> >= 100.0) && (<anatomy> >= 100.0)  && (<TACTICS> >= 100.0)
+
+			local.fixo <EVAL ((<ARGO.HITS>*3)+(<STR>))/12>
+
+			IF <DLOCAL.FIXO> > 26
+				LOCAL.FIXO 26
+			ELIF <DLOCAL.FIXO> < 15
+				LOCAL.FIXO 15
+			ENDIF
+
+			IF <R5> == 1
+				//SRC.HITS -= <dLOCAL.FIXO>
+				ARGN1 = <EVAL <ARGN1>*2>
+				SRC.SAY @33 <qval <isempty <src.tag.name.alt>>?<src.name>:<src.tag.name.alt>> recebeu um Power Blow!!!
+				SRC.SOUND=0210
+				src.effect 1,i_gold,99,45
+				if (<src.hits> <= 0) || (<SRC.HITS> > 20000)
+					SRC.HITS = 0
+					src.f_updateplayer
+				endif
+			endif
+	ENDIF
+endif
+
+[events e_pb_hits_bstaff]
+on=@hit
+if (<tag0.boneparts> >= 5)
+	if ((<src.body>=c_man) || (<src.body>=c_woman)) && !(<src.npc>) && (<SRC> != <UID>)
+		IF (<MACEFIGHTING> >= 100.0) && (<anatomy> >= 100.0)  && (<TACTICS> >= 100.0)
+
+				// local.fixo <EVAL ((<ARGO.HITS>*3)+(<STR>))/10>
+
+				// IF <DLOCAL.FIXO> > 29
+				// 	LOCAL.FIXO 30
+				// ELIF <DLOCAL.FIXO> < 18
+				// 	LOCAL.FIXO 18
+				// ENDIF
+
+					argn1 = <eval <argn1>*2>
+					//SRC.HITS -= <dLOCAL.FIXO>
+					SRC.SAY @32 <qval <isempty <src.tag.name.alt>>?<src.name>:<src.tag.name.alt>> recebeu um Power Blow!!!
+					SRC.SOUND=0210
+					src.effect 1,i_gold,99,45
+					if (<src.hits> <= 0) || (<SRC.HITS> > 20000)
+						SRC.HITS = 0
+						src.f_updateplayer
+					endif
+		ENDIF
+	endif
+endif
+
+///////////////////////////
+////// Fencing ////////////
+///////////////////////////
+
+[ITEMDEF i_except_War_fork]
+ID=i_war_fork
+NAME=Exceptional War Fork
+RESOURCES=150 i_ingot_iron
+WEIGHT=8
+TYPE=T_WEAPON_FENCE
+FLIP=1
+DAM=16,22
+SPEED=64
+SKILL=Fencing
+REQSTR=100
+TWOHANDS=Y
+SKILLMAKE=BLACKSMITHING 70.0
+VALUE=400
+
+ON=@Create
+	HITPOINTS={40 50}
+
+ON=@EQUIP
+	LINK <SRC.UID>
+	SRC.EVENTS +e_pb_stam
+
+ON=@UNEQUIP
+	SRC.EVENTS -e_pb_stam
+
+[ITEMDEF i_except_kryss]
+//Kryss
+NAME=Exceptional Kryss
+ID=01400
+TYPE=t_weapon_fence
+SPEED=70
+DAM=13,18
+SKILLMAKE=70.0 BLACKSMITHING
+RESOURCES=100 i_ingot_iron
+SKILL=Fencing
+REPAIR=1
+REQSTR=90
+TWOHANDS=N
+VALUE=50
+WEIGHT=6
+
+ON=@CREATE
+	HITPOINTS 40
+
+ON=@EQUIP
+	LINK <SRC.UID>
+	SRC.EVENTS +e_pb_stam
+
+ON=@UNEQUIP
+	SRC.EVENTS -e_pb_stam
+
+/////////////////////////////////
+///////// Swords ////////////////
+/////////////////////////////////
+
+[ITEMDEF i_except_axe_exec]
+ID=i_axe_exec
+NAME=Exceptional Executioner's Axe //'
+RESOURCES=150 i_ingot_iron
+SKILLMAKE=BLACKSMITHING 70.0
+WEIGHT=8
+TYPE=T_WEAPON_AXE
+FLIP=1
+DAM=17,23
+SPEED=57
+SKILL=Swordsmanship
+REQSTR=100
+TWOHANDS=Y
+VALUE=400
+
+ON=@Create
+	HITPOINTS={50 60}
+
+ON=@EQUIP
+	LINK <SRC.UID>
+	SRC.EVENTS +e_pb_mana
+
+ON=@UNEQUIP
+	SRC.EVENTS -e_pb_mana
+
+[ITEMDEF i_except_sword_Viking]
+ID=i_sword_viking
+NAME=Exceptional Viking Sword
+RESOURCES=100 i_ingot_iron
+WEIGHT=6
+TYPE=T_WEAPON_SWORD
+FLIP=1
+DAM=13,17
+SPEED=65
+SKILL=Swordsmanship
+REQSTR=90
+TWOHANDS=N
+VALUE=400
+SKILLMAKE=BLACKSMITHING 70.0
+
+ON=@CREATE
+	HITPOINTS 50
+
+ON=@EQUIP
+	LINK <SRC.UID>
+	SRC.EVENTS +e_pb_mana
+
+ON=@UNEQUIP
+	SRC.EVENTS -e_pb_mana
+
+[ITEMDEF i_except_halberd]
+ID=i_halberd
+name=Exceptional Halberd
+RESOURCES=160 i_ingot_iron
+WEIGHT=6
+TYPE=T_WEAPON_SWORD
+FLIP=1
+DAM=23,29
+SPEED=49
+SKILL=Swordsmanship
+REQSTR=100
+TWOHANDS=Y
+VALUE=400
+SKILLMAKE=BLACKSMITHING 70.0
+
+ON=@Create
+	HITPOINTS={50 60}
+
+ON=@EQUIP
+	LINK <SRC.UID>
+	SRC.EVENTS +e_pb_mana
+
+ON=@UNEQUIP
+	SRC.EVENTS -e_pb_mana
+
+[ITEMDEF i_except_bardiche]
+ID=i_bardiche
+NAME=Exceptional Bardiche
+RESOURCES=140 i_ingot_iron
+TYPE=T_WEAPON_SWORD
+FLIP=1
+DAM=20,25
+SPEED=52
+SKILL=Swordsmanship
+REQSTR=100
+TWOHANDS=Y
+WEIGHT=5
+SKILLMAKE=BLACKSMITHING 70.0
+VALUE=400
+
+ON=@Create
+	HITPOINTS={50 60}
+
+ON=@EQUIP
+	LINK <SRC.UID>
+	SRC.EVENTS +e_pb_mana
+
+ON=@UNEQUIP
+	SRC.EVENTS -e_pb_mana
+
+///////////////////////////////
+//// Mace Fight ///////////////
+///////////////////////////////
+
+[ITEMDEF i_except_Staff_black]
+ID=i_staff_black
+NAME=Exceptional Black Staff
+RESOURCES=120 i_log
+DAM=20,25
+SPEED=57
+SKILL=Macefighting
+TWOHANDS=Y
+SKILLMAKE=CARPENTRY 70.0, t_carpentry
+WEIGHT=8
+VALUE=400
+
+ON=@Create
+	HITPOINTS 50
+
+ON=@EQUIP
+	LINK <SRC.UID>
+	SRC.EVENTS +e_pb_hits_bstaff
+	if (<src.tag0.boneparts> >= 5)
+		color = 0846
+		src.message @32 Power Blow Capable!
+	endif
+
+ON=@UNEQUIP
+	SRC.EVENTS -e_pb_hits_bstaff
+	src.events -e_pb_hits
+	color 00
+
+[ITEMDEF i_except_shepherds_crook]
+ID=i_shepherds_crook
+NAME=Exceptional Shepherd's Crook
+//RESOURCES=20 i_log
+DAM=23,28
+SPEED=55
+SKILL=Macefighting
+TWOHANDS=Y
+SKILLMAKE=CARPENTRY 70.0, t_carpentry
+VALUE=200
+
+ON=@Create
+	HITPOINTS={50 60}
+
+ON=@EQUIP
+	LINK <SRC.UID>
+	SRC.EVENTS +e_pb_hits
+
+ON=@UNEQUIP
+	SRC.EVENTS -e_pb_hits
+
+[ITEMDEF i_except_mace_war]
+ID=i_mace_war
+NAME=Exceptional War Mace
+RESOURCES=100 i_ingot_iron
+WEIGHT=6
+TYPE=T_WEAPON_MACE_SHARP
+FLIP=1
+DAM=17,22
+SPEED=55
+REQSTR=35
+TWOHANDS=N
+SKILLMAKE=BLACKSMITHING 70.0
+SKILL=Macefighting
+VALUE=400
+
+ON=@Create
+	HITPOINTS={50 60}
+
+ON=@EQUIP
+	LINK <SRC.UID>
+	SRC.EVENTS +e_pb_hits
+
+ON=@UNEQUIP
+	SRC.EVENTS -e_pb_hits
+
+[ITEMDEF i_except_war_hammer]
+ID=i_hammer_war
+NAME=Exceptional War Hammer
+RESOURCES=120 i_ingot_iron, 30 i_log
+WEIGHT=12
+TYPE=T_WEAPON_MACE_SHARP
+FLIP=1
+DAM=18,23
+SPEED=60
+REQSTR=95
+TWOHANDS=Y
+SKILLMAKE=BLACKSMITHING 70.0
+SKILL=Macefighting
+VALUE=400
+
+ON=@Create
+	HITPOINTS={50 60}
+
+ON=@EQUIP
+	LINK <SRC.UID>
+	SRC.EVENTS +e_pb_hits
+
+ON=@UNEQUIP
+	SRC.EVENTS -e_pb_hits
+
+////////////////////////////
+///////////// DISARM ///////
+////////////////////////////
+
+[ITEMDEF i_disarm_timer]
+NAME=Disarm timer
+ID=i_memory
+type=t_eq_script
+LAYER=layer_special
+
+ON=@CREATE
+ATTR=096
+MORE=0
+
+ON=@TIMER
+CONT.SYSMESSAGE Voce pode equipar suas armas novamente.
+RETURN 0
+
+[EOF]

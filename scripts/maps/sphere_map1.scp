@@ -1,0 +1,126 @@
+VERSION=0.56b
+
+///////////////////////////////////////////////////////////////////////////////////
+////////////////////// WORLD 0 - MUDANCAS ////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+[AREADEF a_world_map1] // UO Renaissance (T2A, map0,statics0,staidx0), map #0
+NAME=The Lost World
+FLAGS=08e
+GROUP=ALLMAP
+P=1323,1624,55,1
+RECT=0,0,7168,4096,1
+EVENTS=r_default,r_default_rock,r_default_water,r_default_tree,r_default_grass
+
+
+[REGIONTYPE r_magicseal]
+ON=@ENTER
+SRC.EMOTE LELELE
+
+
+ON=@EXIT
+if <src.account.plevel> > 1
+	return 0
+endif
+IF <SRC.P.X> > 1553
+SRC.F_GO 1530 <SRC.P.Y> 0 1
+ENDIF
+IF <SRC.P.X> < 1011
+SRC.F_GO 1020 <SRC.P.Y> 0 1
+ENDIF
+IF <SRC.P.Y> < 3310
+SRC.P.Y 3320
+ENDIF
+IF <SRC.P.Y> > 4094
+SRC.P.Y 4080
+ENDIF
+SRC.SYSMESSAGE Uma forca misteriosa impede sua passagem
+RETURN 1
+
+[AREADEF a_arena_campmine1]
+NAME=Arena Camp 1
+FLAGS=region_antimagic_recall_in|region_flag_nobuilding|region_antimagic_gate|region_antimagic_recall_out
+P=5450,1132,0,1
+RECT=5439,1123,5461,1141,1
+
+[AREADEF a_arena_campmine2]
+NAME=Arena Camp 2
+FLAGS=region_antimagic_recall_in|region_flag_nobuilding|region_antimagic_gate|region_antimagic_recall_out
+P=5450,1153,0,1
+RECT=5439,1144,5461,1162,1
+
+[AREADEF a_arena_campmine3]
+NAME=Arena Camp 3
+FLAGS=region_antimagic_recall_in|region_flag_nobuilding|region_antimagic_gate|region_antimagic_recall_out
+P=5475,1132,0,1
+RECT=5464,1123,5486,1141,1
+
+[AREADEF a_arena_campmine4]
+NAME=Arena Camp 4
+FLAGS=region_antimagic_recall_in|region_flag_nobuilding|region_antimagic_gate|region_antimagic_recall_out
+P=5475,1153,0,1
+RECT=5464,1144,5486,1162,1
+
+[AREADEF a_arena_campmine5]
+NAME=Arena Camp 5
+FLAGS=region_antimagic_recall_in|region_flag_nobuilding|region_antimagic_gate|region_antimagic_recall_out
+P=5500,1132,0,1
+RECT=5489,1123,5511,1141,1
+
+[AREADEF a_mystic_isle]
+NAME= Indefinid, the Mystic Island
+FLAGS 08e
+P=1383,3815,0,1
+RECT=1011,3310,1553,4094,1
+EVENTS=r_magicseal,r_default,r_default_rock,r_default_water,r_default_tree,r_default_grass
+
+[AREADEF a_recall_room]
+NAME=Recall Room
+FLAGS=0843a
+P=4561,337,-5,1
+RECT=4556,344,4572,331,1
+EVENTS=r_default
+
+[AREADEF a_green_acres_3_1_trammel]
+EVENTS=r_default,r_default_rock,r_default_water,r_default_tree,r_default_grass
+NAME=Green Acres 3 - Trammel
+GROUP=Green Acres
+FLAGS=06c8f
+P=5932,1945,0,1
+RECT=5121,2049,6143,2303,1
+RECT=5375,1535,5424,1792,1
+RECT=5423,1536,6143,1791,1
+RECT=5633,1777,6143,2049,1
+EVENTS=r_plains1
+TAG.GUARDOWNER=GM
+
+[AREADEF a_green_acres_2_1_trammel]
+EVENTS=r_default,r_default_rock,r_default_water,r_default_tree,r_default_grass
+NAME=Green Acres 2 - Trammel
+GROUP=Green Acres
+FLAGS=06c8f
+P=5250,392,15,1
+RECT=5120,256,5376,516,1
+EVENTS=r_plains1
+TAG.GUARDOWNER=GM
+
+[AREADEF a_green_acres_3_trammel]
+EVENTS=r_default,r_default_rock,r_default_water,r_default_tree,r_default_grass
+NAME=Green Acres - Trammel
+GROUP=Green Acres
+FLAGS=06c8f
+P=5454,1103,0,1
+RECT=5374,1079,5631,1280,1
+RECT=5630,1023,6143,1279,1
+RECT=5887,511,6143,1024,1
+EVENTS=r_plains1
+TAG.GUARDOWNER=GM
+
+
+[EOF]
+
+
+

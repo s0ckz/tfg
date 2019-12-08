@@ -1,0 +1,522 @@
+[ITEMDEF i_gate_pkxblue]
+ID=0f6c
+WEIGHT=1
+TYPE=t_normal
+NAME=Pks x Blues
+
+ON=@Create
+  attr 08000
+  color 079d
+  tag.contagem 0
+    tag.contagempk 0
+	 tag.contagemblue 0
+  tag.maximo 16
+  tag.maxpk 8
+  tag.maxblue 8
+  return 0
+
+ON=@Click
+  message @0790 <name>
+  return 1
+
+ON=@Step
+if (<tag.contagem> >= <tag.maximo>) && (<tag.maximo> > 0)
+    src.message @0790,,1 Evento Lotado!
+    return 1
+elif <src.ispk> && (<tag0.contagempk> >= <tag.maxpk>)
+    src.message @0790,,1 Todas vagas para PK foram preenchidas!
+    return 1
+elif !(<src.ispk>) && (<tag0.contagemblue> >= <tag.maxblue>)
+    src.message @0790,,1 Todas vagas para Blues foram preenchidas!
+    return 1
+endif
+  src.shrinklayer25_save
+  tag.contagem += 1
+  SRC.OFFABREV
+  if (<SRC.KILLS> > <SERV.MURDERMINCOUNT>)
+	tag0.contagempk += 1
+	  tag.cortemp=31
+	    src.tag.name.alt Blackthrone's Army
+  else 
+	tag0.contagemblue += 1
+	  tag.cortemp=91
+	  	    src.tag.name.alt British's Army
+  endif
+SRC.CANCELLHELPROOM
+src.tag.askills=<src.kills> 
+src.tag.askarma=<src.karma> 
+src.tag.asfame=<src.fame>  
+src.tag.asdeaths=<src.deaths> 
+  src.findlayer.31.bounce //layer dragging 
+  src.tag.lastbackpack <src.findlayer.21.uid>
+  src.stripsave
+  ref199=<more2>
+  SRC.tag.name.hue=<tag.cortemp>
+  src.tag.onevent 1
+  src.findlayer.21.attr 0
+  ref1=<src.findlayer.21.uid>
+  src.findlayer.21.cont <src.findlayer.29.uid>
+  REF1.updatex
+  src.newitem i_backpack
+  src.act.color <tag.cortemp>
+  src.act.equip
+
+	// itens 
+  src.newitem i_bow_bloodrock  
+  src.act.name TFG Shard Evento
+  src.act.color <tag.cortemp>
+  src.act.equip
+
+  src.newitem i_except_War_fork  
+  src.act.name TFG Shard Evento (Poisoned)
+  src.act.tag.poisonlevel 4
+  src.act.tag.poisontimer 3
+  src.act.color <tag.cortemp>
+  src.act.equip
+  
+    src.newitem i_except_kryss
+  src.act.name TFG Shard Evento (Poisoned)
+  src.act.tag.poisonlevel 4
+  src.act.tag.poisontimer 3
+  src.act.color <tag.cortemp>
+  src.act.equip
+  
+  src.newitem i_bloodrock_closed_helm
+  //src.act.attr 010
+  src.act.name TFG Shard Evento
+  src.act.color <tag.cortemp>
+  src.act.equip
+  
+  src.newitem i_bloodrock_female_platemail
+  //src.act.attr 010
+  src.act.name TFG Shard Evento
+  src.act.color <tag.cortemp>
+  src.act.equip
+  
+  src.newitem i_bloodrock_platemail_arms
+  //src.act.attr 010
+  src.act.name TFG Shard Evento
+  src.act.color <tag.cortemp>
+  src.act.equip
+  
+  src.newitem i_bloodrock_platemail_gauntlets
+  //src.act.attr 010
+  src.act.name TFG Shard Evento
+  src.act.color <tag.cortemp>
+  src.act.equip
+  
+  src.newitem i_bloodrock_platemail_gorget
+  //src.act.attr 010
+  src.act.name TFG Shard Evento
+  src.act.color <tag.cortemp>
+  src.act.equip
+  
+  src.newitem i_bloodrock_platemail_leggings
+  //src.act.attr 010
+  src.act.name TFG Shard Evento
+  src.act.color <tag.cortemp>
+  src.act.equip
+  
+  src.newitem i_llama_evento // animal
+  src.act.name TFG Shard Evento
+  src.act.color <tag.cortemp>
+  src.act.attr 010
+  src.act.equip
+  
+  src.newitem i_spellbook_full
+  src.act.color 07B5
+  src.act.bounce
+  
+  if (<src.memoryfindtype.memory_guild.link.align>==2)
+	  src.newitem i_chaos_shield
+	  //src.act.attr 010
+	  src.act.name TFG Shard Evento
+	  src.act.color <tag.cortemp>
+	  src.act.equip
+  elif (<src.memoryfindtype.memory_guild.link.align>==1)
+	  src.newitem i_order_shield 
+	  //src.act.attr 010
+	  src.act.name TFG Shard Evento
+	  src.act.color <tag.cortemp>
+	  src.act.equip
+  else
+      src.newitem i_bloodrock_heater_shield
+	  //src.act.attr 010
+	  src.act.name TFG Shard Evento
+	  src.act.color <tag.cortemp>
+	  src.act.equip
+  endif 
+  
+  	  src.newitem i_bless_robe
+	  //src.act.attr 010
+	  src.act.name TFG Shard Evento
+	  src.act.color <tag.cortemp>
+	  src.act.equip
+	  
+	  src.newitem i_leather_leggings_wyrm
+	  //src.act.attr 010
+	  src.act.name TFG Shard Evento
+	  src.act.color <tag.cortemp>
+	  src.act.equip
+	  
+	  src.newitem i_leather_tunic_wyrm
+	  //src.act.attr 010
+	  src.act.name TFG Shard Evento
+	  src.act.color <tag.cortemp>
+	  src.act.equip
+	  
+	  src.newitem i_leather_sleeves_wyrm
+	  //src.act.attr 010
+	  src.act.name TFG Shard Evento
+	  src.act.color <tag.cortemp>
+	  src.act.equip
+	  
+	  src.newitem i_leather_gorget_wyrm
+	  //src.act.attr 010
+	  src.act.name TFG Shard Evento
+	  src.act.color <tag.cortemp>
+	  src.act.equip
+	  
+	  src.newitem i_leather_gloves_wyrm
+	  //src.act.attr 010
+	  src.act.name TFG Shard Evento
+	  src.act.color <tag.cortemp>
+	  src.act.equip
+	  
+	  src.newitem i_color_orc_helm_12
+	  //src.act.attr 010
+	  src.act.name TFG Shard Evento
+	  src.act.color <tag.cortemp>
+	  src.act.equip
+	  
+	  	  src.newitem i_Vanquish_war_fork
+	  //src.act.attr 010
+	  src.act.name TFG Shard Evento
+	  src.act.color <tag.cortemp>
+	  src.act.equip
+	  
+  src.campmine_renew_resources
+	 
+
+  // body 
+  SRC.BODY c_woman
+
+ if (<SRC.KILLS> > <SERV.MURDERMINCOUNT>)
+		src.go 1343,1737,20,1
+  else
+		src.go 1427,1723,20,1
+  endif 
+src.invul 1
+
+  SRC.RESENDALL
+  src.events +e_evento_bluepk_espera
+  src.events +e_evento_bluepk
+  
+IF (<tag.contagem> == <tag.maximo>)
+  FORINSTANCES i_anuncia_bluepk
+	REMOVE
+  ENDFOR
+  SERV.B @55 Evento Completo!
+    REMOVE
+ENDIF
+return 1
+
+[ITEMDEF i_anuncia_bluepk]
+ID=i_crystal_ball
+NAME=Blue x PK [DO NOT REMOVE]
+WEIGHT=200
+TYPE=t_eq_script
+
+ON=@Create
+    ATTR=attr_decay|attr_invis
+    TIMER=60
+	TAG.MINUTOS=15
+
+ON=@TIMER
+if <tag0.start>
+	  REF1=<TAG.GATE>
+	  SERV.B @55 Restam <eval <ref1.tag.maximo> - <ref1.tag.contagem>> vagas para o Blues x PKs Ponte de Britain! Gate na Commerce Room!
+	  SERV.B @55 Vagas PK: <eval <ref1.tag.maxpk> - <ref1.tag.contagempk>>  / Vagas Blue: <eval <ref1.tag.maxblue> - <ref1.tag.contagemblue>>
+	TIMER 15
+else
+	TAG.MINUTOS -= 1
+	if <tag0.minutos> > 0
+		SERV.B @55 Um novo PKs x Blues Ponte de Britain vai comecar em <dtag.minutos> minutos. O loot e da staff, chamem seus amigos!
+		TIMER 60
+	else
+		TAG.START = 1
+		SERV.B @55 Foram liberadas <dtag.max> vagas para o PKs x Blues Ponte de Britain. Gate na Commerce Room!
+		TIMER = 15
+		  serv.newitem i_gate_pkxblue
+		  new.tag.maximo <tag.max>
+		  new.tag.maxpk <eval <tag.max> / 2>
+		  new.tag.maxblue <eval <tag.max> / 2>
+          new.p 2341,541,1
+		  new.link <uid>
+          new.updatex
+		  ref1 = <new.uid>
+		  tag.gate = <ref1.uid>
+	endif
+endif
+RETURN 1
+
+[EVENTS e_evento_bluepk_espera]
+ON=@Click
+msg @,,1 [PKs x Blues Espera]
+
+On=@GetHit
+return 1
+
+On=@HIT
+return 1
+
+On=@HitTry
+return 1
+
+On=@SpellCast
+return 1
+
+
+[EVENTS e_evento_bluepk]
+//ON=@Death
+
+ON=@Logout
+  message @32,,1 [Logout!]
+
+ON=@Login
+  message @478,,1 [Login!]
+
+ON=@EnvironChange
+if (<map> != 1)
+  if (<hits> <= 0)
+		src.resurrect 
+		src.hits = <src.maxhits>
+  endif
+    stripremove
+  src.kills=<tag.askills> 	
+  src.karma=<tag.askarma> 	
+  src.fame=<tag.asfame>   	
+  src.deaths=<tag.asdeaths> 	
+  src.memoryfindtype.memory_harmedby.remove
+  src.memoryfindtype.memory_iaggressor.remove
+  src.memoryfindtype.memory_fight.remove
+  src.memoryfindtype.memory_sawcrime.remove
+  src.memoryfindtype.memory_aggreived.remove
+  src.memoryfindtype.memory_war_targ.remove
+  src.memoryfindtype.memory_harmedby.remove
+  src.memoryfindtype.memory_iaggressor.remove
+  src.memoryfindtype.memory_fight.remove
+  src.memoryfindtype.memory_sawcrime.remove
+  src.memoryfindtype.memory_aggreived.remove
+  src.memoryfindtype.memory_war_targ.remove
+  tag.askills=
+  tag.askarma=
+  tag.asfame=
+  tag.asdeaths=
+  tag.name.alt=
+  src.criminal 0
+  invis 0
+    findlayer.21.remove
+    findlayer.25.remove
+    findlayer.31.remove
+    newitem i_gold
+    act.link 0<tag.lastbackpack>
+    act.link.cont <uid>
+    act.remove
+	events -e_evento_bluepk_espera
+    events -e_evento_bluepk
+    tag.team
+    if (<findlayer.21> = 0)
+      SERV.ALLCLIENTS MSTAFF2 @0790 [SYSTEM]: Err... <name> saiu do evento e nao foi possivel recuperar sua backpack!
+      SERV.ALLCLIENTS MSTAFF2 @0790 [SYSTEM]: Root: <uid> - Act: <act.uid> - Src: <src.uid> - Action: <action> - Backpack: <tag.lastbackpack>
+    endif
+BODY=<OBODY>
+RESENDALL
+REEQUIPALL 
+   tag.lastbackpack=
+   tag.onevent=
+   TAG.NOPREMIO=   // pra que eu sirvo?
+   TAG.NAME.HUE=
+   endif	
+  return 0
+  
+[FUNCTION novobluepk]
+  serv.newitem i_anuncia_bluepk
+  new.p 2341,541,1
+  new.tag.max <args>
+  new.update
+  		SERV.B @55 Um novo PKs x Blues Ponte de Britain vai comecar em 15 minutos. Chamem seus amigos!
+
+[FUNCTION startbluepk]
+FORPLAYERS 400 
+	MSG @31,,1 Comeca em 10 segundos!
+	timerf 10,startbluepk2
+ENDFOR
+FORITEMS 400
+	if (<baseid> == i_hedge_bluepk)
+		timerf 10,remove
+	endif
+ENDFOR
+return 1
+
+[FUNCTION startbluepk3]
+FORPLAYERS 400 
+	MSG @31,,1 Comeca em 10 segundos!
+	timerf 10,startbluepk2
+ENDFOR
+FORITEMS 400
+	if (<baseid> == i_hedge_bluepk3)
+		timerf 10,remove
+	endif
+ENDFOR
+return 1
+
+[FUNCTION startbluepk2]
+INVUL 0
+EVENTS -e_evento_bluepk_espera
+MSG @31,,1 Ready! GOOOOO!
+
+[ITEMDEF i_hedge_bluepk]
+ID=i_plant_hedge_1
+NAME=PKs x Blues
+
+[ITEMDEF i_hedge_bluepk3]
+ID=i_plant_hedge_1
+NAME=PKs x Blues
+
+[ITEMDEF i_chest_metal_eventos]
+NAME=Bau de Recursos
+ID=i_chest_metal
+
+ON=@CREATE
+ATTR=010
+COLOR=0481
+
+[TEMPLATE tm_baurecursos]
+CONTAINER=i_chest_metal_eventos
+item=i_potion_refreshtotal,2000
+item=i_potion_poisongreat,100
+item=i_potion_mana_boost_great,2000
+item=i_potion_life_boost_great,2000
+item=i_potion_refilling_great,2000
+item=i_potion_curegreat,2000
+item=i_scroll_flamestrike,1000
+item=i_bandage,10000
+item=i_arrow,5000
+item=tm_bau_bagsrecursos
+
+[ITEMDEF i_box_wood_eventos]
+NAME=Bags de Reagentes
+ID=i_box_wood
+
+ON=@CREATE
+COLOR=0481
+
+[TEMPLATE tm_bau_bagsrecursos]
+CONTAINER=i_box_wood_eventos
+item=tm_bag_o_regs_tfg
+item=tm_bag_o_regs_tfg
+item=tm_bag_o_regs_tfg
+item=tm_bag_o_regs_tfg
+item=tm_bag_o_regs_tfg
+item=tm_bag_o_regs_tfg
+item=tm_bag_o_regs_tfg
+item=tm_bag_o_regs_tfg
+item=tm_bag_o_regs_tfg
+item=tm_bag_o_regs_tfg
+item=tm_bag_o_regs_tfg
+item=tm_bag_o_regs_tfg
+item=tm_bag_o_regs_tfg
+item=tm_bag_o_regs_tfg
+item=tm_bag_o_regs_tfg
+item=tm_bag_o_regs_tfg
+item=tm_bag_o_regs_tfg
+item=tm_bag_o_regs_tfg
+item=tm_bag_o_regs_tfg
+item=tm_bag_o_regs_tfg
+item=tm_bag_o_regs_tfg
+item=tm_bag_o_regs_tfg
+item=tm_bag_o_regs_tfg
+item=tm_bag_o_regs_tfg
+item=tm_bag_o_regs_tfg
+item=tm_bag_o_regs_tfg
+item=tm_bag_o_regs_tfg
+item=tm_bag_o_regs_tfg
+item=tm_bag_o_regs_tfg
+item=tm_bag_o_regs_tfg
+
+
+[FUNCTION quemeventopkvivo]
+FORPLAYERS 400
+	if <tag.name.hue> == 31
+		if <hits> > 0
+			s <name> hits <hits> PK
+		endif
+	endif 
+ENDFOR
+return 1
+
+[FUNCTION quemeventoblue]
+FORPLAYERS 400
+	if <tag.name.hue> == 91
+			s <name> hits <hits> BLUE
+	endif 
+ENDFOR
+return 1
+
+
+[FUNCTION quemeventobluevivo]
+FORPLAYERS 400
+	if (<tag.name.hue> == 91) && (<hits> > 0)
+			s <name> hits <hits> BLUE
+	endif 
+ENDFOR
+return 1
+
+[FUNCTION bluescommerce]
+FORPLAYERS 400
+	if (<tag.name.hue> == 91) 
+			go commerce room
+			local.ct ++
+	endif 
+ENDFOR
+src.sysmessage @,,1 <dlocal.ct> blues enviados.
+return 1
+
+[FUNCTION pkssalapremio]
+FORPLAYERS 400
+	if (<tag.name.hue> == 31) 
+			ref250 = <var.premio_ctf>
+			ref250.dupe
+			trysrc <uid> new.bounce
+			new.name Premio Pk x Blue
+			go 5946,1942
+			local.ct ++
+	endif 
+ENDFOR
+src.sysmessage @,,1 <dlocal.ct> pks enviados.
+return 1
+
+[FUNCTION tiramortos]
+FORPLAYERS 400
+	if (<hits> < 1)
+			go help room
+			local.ct ++
+	endif 
+ENDFOR
+src.sysmessage @,,1 <dlocal.ct> mortos enviados.
+return 1
+
+
+[FUNCTION todosregiao]
+FORPLAYERS 500
+	s <name>
+ENDFOR
+return 1
+
+[FUNCTION removellamas]
+FORINSTANCES i_llama_evento
+remove
+ENDFOR
+
+[EOF]

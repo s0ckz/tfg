@@ -1,0 +1,234 @@
+﻿[SPEECH spk_mago_elemental]
+
+/////////////////////
+On=*llama* 
+if <src.findid.i_pot_ar.tag0.quest_correto_2>
+	message @,,1 Caro <src.name>, você ja coletou os quatro elementos. Ache o espirito da Llama e toque-o para ressucita-lo!
+	message @,,1 Ela foi vista perto de uma das cidades mais movimentadas de Britannia, onde trabalhadores buscam metais para nobres guerreiros como você. Ela estava perto da agua, e alguns piratas ja estao tentando ressucita-la!
+else
+	message @,,1 Caro Guerreiro! O espirito de uma llama que a muito tempo nao era mais vista em nosso mundo foi visto vagando perto de uma das cidades mais movimentadas de Britannia!
+	message @,,1 Nao podemos deixa-la sumir mais uma vez! Para trazer esse espirito de volta a vida é necessario juntar quatro elementos magicos!
+	message @,,1 Se o nobre guerreiro quiser nos ajudar a traze-la de volta, pergunte-me sobre o primeiro elemento.
+endif 
+
+///////////////////////
+ON=*primeiro elemento*
+if <src.findid.i_pot_agua.tag0.quest_correto_2>
+	message @,,1 Você ja me apresentou este elemento! Pergunte-me sobre o segundo elemento!
+	return 1
+elif <src.findid.i_pot_agua.tag0.quest_cheio>
+	message @,,1 Vejo que traz algo! Mostre-me sua coleta!
+	return 1
+endif
+message @,,1 O primeiro elemento para ressucitar o espirito da Llama é a agua. Você precisara ir a um dos 9 santuarios de nosso mundo. Trata-se do santuario que fica elevado sobre um lago. Use esta tigela para coletar a agua deste lago e me mostre o que coletou.
+f_novatigela 1,<src.uid>
+
+
+//////////////////////
+ON=*segundo elemento*
+if <src.findid.i_pot_fogo.tag0.quest_correto_2>
+	message @,,1 Você ja me apresentou este elemento! Pergunte-me sobre o terceiro elemento!
+	return 1
+elif <src.findid.i_pot_fogo.tag0.quest_cheio>
+	message @,,1 Vejo que traz algo! Mostre-me sua coleta!
+	return 1
+endif
+if <src.findid.i_pot_agua.tag0.quest_correto_2>
+	message @,,1 O segundo elemento necessario é o fogo. Use essa tigela para coletar a materia do rio de lava que atravessa uma perigosa caverna!
+	f_novatigela 2,<src.uid>
+else
+	message @,,1 Nobre Guerreiro <src.name>, você ainda nao me apresentou o primeiro elemento!
+endif 
+
+//////////////////////
+ON=*terceiro elemento*
+if <src.findid.i_pot_terra.tag0.quest_correto_2>
+	message @,,1 Você ja me apresentou este elemento! Pergunte-me sobre o quarto elemento!
+	return 1
+elif <src.findid.i_pot_terra.tag0.quest_cheio>
+	message @,,1 Vejo que traz algo! Mostre-me sua coleta!
+	return 1
+endif
+if <src.findid.i_pot_fogo.tag0.quest_correto_2>
+	message @,,1 O terceiro elemento necessario é a terra. Use essa tigela para coletar a terra de uma das fazendas da cidade mais agricola de Britannia!
+	f_novatigela 3,<src.uid>
+else
+	message @,,1 Nobre Guerreiro <src.name>, você ainda nao me apresentou o segundo elemento!
+endif 
+
+/////////////////////
+ON=*quarto elemento*
+if <src.findid.i_pot_ar.tag0.quest_correto_2>
+	message @,,1 Você ja me apresentou este elemento! Pergunte-me sobre a llama!
+	return 1
+elif <src.findid.i_pot_ar.tag0.quest_cheio>
+	message @,,1 Vejo que traz algo! Mostre-me sua coleta!
+	return 1
+endif
+if <src.findid.i_pot_terra.tag0.quest_correto_2>
+	message @,,1 O quarto elemento necessario é o ar. Use essa garrafa perto de uma grande cachoeira para coletar um pouco de ar puro!
+	f_novatigela 4,<src.uid>
+else
+	message @,,1 Nobre Guerreiro <src.name>, você ainda nao me apresentou o terceiro elemento!
+endif 
+
+
+
+
+
+
+
+
+/////////////////
+//
+//  Funcoes
+//
+//
+////////////////
+
+
+
+[FUNCTION f_novatigela]
+local.tipo = <argv[0]>
+ref1 = <argv[1]>
+if (<local.tipo>==1)
+	forinstances i_pot_agua
+		if (<tag0.quest_player> == <ref1.uid>) && !(<tag0.quest_cheio>)
+			remove
+		endif
+	endfor
+	serv.newitem i_pot_agua
+	new.tag.quest_player = <ref1>
+	new.cont <ref1.findlayer.21>
+	new.updatex
+elif (<local.tipo>==2)
+	forinstances i_pot_fogo
+		if (<tag0.quest_player> == <ref1.uid>) && !(<tag0.quest_cheio>)
+			remove
+		endif
+	endfor
+	serv.newitem i_pot_fogo
+	new.tag.quest_player = <ref1>
+	new.cont <ref1.findlayer.21>
+	new.updatex
+elif (<local.tipo>==3)
+	forinstances i_pot_terra
+		if (<tag0.quest_player> == <ref1.uid>) && !(<tag0.quest_cheio>)
+			remove
+		endif
+	endfor
+	serv.newitem i_pot_terra
+	new.tag.quest_player = <ref1>
+	new.cont <ref1.findlayer.21>
+	new.updatex
+elif (<local.tipo>==4)
+	forinstances i_pot_ar
+		if (<tag0.quest_player> == <ref1.uid>) && !(<tag0.quest_cheio>)
+			remove
+		endif
+	endfor
+	serv.newitem i_pot_ar
+	new.tag.quest_player = <ref1>
+	new.cont <ref1.findlayer.21>
+	new.updatex
+endif
+
+
+[FUNCTION f_coletartigela]
+local.tipo = <argv[0]>
+local.terreno = <argv[1]>
+local.region = <argv[2]>
+//
+if (<local.tipo> == 1)
+	//s <local.terreno>
+	if (<local.terreno> == t_water)
+		dispid = i_bowl_pewter_carrots // tigela cheia
+		updatex
+		tag.quest_cheio = 1
+		if (<local.region> == a_spirituality_1)
+			tag.quest_correto = 1
+		endif
+		src.sysmessage @,,1 Você encheu a tigela, leve-a ao mago ! 
+	else
+		src.sysmessage @,,1 Você deve usar isto na agua !
+	endif
+elif (<local.tipo> == 2)
+	if (<local.terreno> == t_lava)
+		dispid = i_bowl_pewter_carrots // tigela cheia
+		updatex
+		tag.quest_cheio = 1
+		if (<local.region> == a_fire_dungeon_4)
+			tag.quest_correto = 1
+		endif
+		src.sysmessage @,,1 Você encheu a tigela, leve-a ao mago !
+	else
+		src.sysmessage @,,1 Você deve usar isto na fogo ou na lava !
+	endif
+elif (<local.tipo> == 3)
+	if (<local.terreno> == t_dirt)
+		dispid = i_bowl_pewter_carrots // tigela cheia
+		updatex
+		tag.quest_cheio = 1
+		if (<local.region> == a_townskarabrae) || (<local.region> == a_field_1)
+			tag.quest_correto = 1
+		endif
+		src.sysmessage @,,1 Você encheu a tigela, leve-a ao mago !
+	else
+		src.sysmessage @,,1 Você deve usar isto na terra fertil !
+	endif
+elif (<local.tipo> == 4)
+		tag.quest_cheio = 1
+		if (<local.region> == a_great_northern_lake_1) || (<local.region> == a_great_waterfall_1)
+			tag.quest_correto = 1
+		endif
+		src.sysmessage @,,1 Você coletou o ar deste lugar, leve-a ao mago !
+endif
+return 1
+
+
+////////////////
+//
+//   Llama Spirit
+//
+//
+/////////////////
+
+
+[CHARDEF c_llama_spirit]
+NAME=a Llama Spirit
+ID=C_llama
+
+ON=@CREATE
+COLOR = 0778f
+STR = 100
+HITS = 100
+EVENTS +E_poison_immune
+
+ON=@DCLICK
+	if (<src.findid.i_pot_agua.tag0.quest_correto_2> && <src.findid.i_pot_fogo.tag0.quest_correto_2> && <src.findid.i_pot_terra.tag0.quest_correto_2> && <src.findid.i_pot_ar.tag0.quest_correto_2>)
+		src.say Anh Mi Sah Ko 
+		src.anim 17
+		anim 7
+		SRC.EFFECT 3,i_fx_bless_effect,6,15,1
+		EFFECT 3,i_fx_bless_effect,6,15,1
+		src.say An Corp
+		serv.b @24 O nobre guerreito <src.name> ressucitou uma Gay Llama! 
+		serv.newnpc c_gay_llama
+		new.invis 1
+		new.p <p>
+		ref1 = <new.uid>
+		timerf 1,remove
+		ref1.timerf 1,invis 0
+	else
+		src.sysmessage @,,1 Suas maos atravessam este espirito e voce nao sabe o que fazer.
+	endif
+return 1
+	
+ON=@GETHIT
+	src.sysmessage @,,1 Suas maos atravessam esse espirito.
+	return 1
+	
+ON=@ATTACK
+return 1
+	
+	

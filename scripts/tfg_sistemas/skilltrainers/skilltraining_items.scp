@@ -1,0 +1,76 @@
+[defname def_skillcolor_trainers]
+def_skillcolor_0	00 //alchemy
+def_skillcolor_7	08ff //BS
+def_skillcolor_8	0847 // BC
+def_skillcolor_11	084c // carpentry
+def_skillcolor_13	084d // cooking
+def_skillcolor_18	0852 // Fishing
+def_skillcolor_23	0493 // inscript
+def_skillcolor_34	077c //tailor
+def_skillcolor_35	0796 // taming
+def_skillcolor_37	0b9e// Tinkering
+def_skillcolor_44	0ba9 //Lumber
+def_skillcolor_45	07a1 //Mining
+def_skillcolor_30	0a45 // Poison
+
+[function f_criar_skill_ring]
+serv.newitem i_ring_of_skill
+new.tag.level <argv[1]>
+new.tag.skill <argv[0]>
+new.name Ring of the <serv.skill.<argv[0]>.title>
+new.color <def.def_skillcolor_<argv[0]>>
+new.cont <src>
+
+[function f_criar_skill_keg] // f_criar_skill_keg <level>,<skillnumber>
+serv.newitem i_keg_alchemist
+new.tag.level <argv[1]>
+new.tag.skill <argv[0]>
+new.name Keg of the <serv.skill.<argv[0]>.title>
+new.color <def.def_skillcolor_<argv[0]>>
+new.cont <src>
+
+[function f_criar_stealing_cloak] // f_criar_stealing_cloak <level>
+serv.newitem i_thief_cloak
+new.tag.level <argv[1]>
+new.tag.skill 33
+new.name Keg of the <serv.skill.<argv[0]>.title>
+new.color <def.def_skillcolor_<argv[0]>>
+new.cont <src>
+
+[Itemdef i_keg_alchemist]
+id=i_keg
+name=Blank Alchemist Keg
+type=t_potion_keg
+weight=3
+
+on=@dclick
+    message You feel that some powerful substance is within...
+    return 1
+
+[Itemdef i_ring_of_skill]
+id=i_ring_gold
+name=Blank Skill Ring
+type=t_jewlery
+
+
+[Itemdef i_smoke_bomb]
+ID=i_bottle_2
+NAME=Poisonous Smoke Bomb
+TYPE=t_potion
+SKILLMAKE=Alchemy 85.0, Stealing 90.0, poisoning 90.0
+RESOURCES=300 i_potion_explosion, 300 i_potion_poisonless, 1 i_bottle_2
+
+On=@create
+    color <def.def_skillcolor_33>
+
+ON=@dclick
+    if ((<src.poisoning> < 1000) && (<src.poisoning> > 900) && (<src.stealing> < 950) && (<src.stealing> > 900))
+        src.sysmessage You lack hability to use this wisely...give me a target but assume thy risk...
+        SRC.TARGETG
+    elif ((<src.stealing> < 901) || (<src.poisoning> < 901))
+        src.sysmessage Ya shouldnt be playing with such a dangerous artifact...
+        return 1
+    else
+        boom
+    endif
+

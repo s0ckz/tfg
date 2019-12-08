@@ -1,0 +1,541 @@
+[DEFNAME CHRISTMAS_2018_SETTINGS]
+CHRISTMAS_2018_COLOR_1 0ad5
+CHRISTMAS_2018_COLOR_2 0b0e
+CHRISTMAS_2018_COLOR_COUNT 2
+
+[ITEMDEF i_christmas_2018_jin_baori]
+ID=i_jinbaori
+TYPE=t_clothing
+LAYER=layer_ears
+NAME=Christmas 2018 Jin-Baori
+TEVENTS=t_global_bound_item
+
+ON=@Create
+	COLOR=<DEF.CHRISTMAS_2018_COLOR_<R1,<DEF.CHRISTMAS_2018_COLOR_COUNT>>>
+	EVENTS +t_drop_challenge
+
+	SERV.LOG A <NAME> has been created.
+
+[ITEMDEF i_christmas_2018_strength_sash]
+ID=i_sash
+NAME=Christmas 2018 Strength Sash
+TYPE=t_clothing
+WEIGHT=0
+
+ON=@Create
+	COLOR=<DEF.CHRISTMAS_2018_COLOR_<R1,<DEF.CHRISTMAS_2018_COLOR_COUNT>>>
+	EVENTS +t_drop_challenge
+
+	TIMER 2592000
+
+	SERV.LOG A <NAME> has been created.
+
+ON=@DClick
+	ATTR <ATTR> | attr_newbie | attr_blessed
+
+ON=@Equip
+	SRC.MODSTR += 5
+
+on=@Unequip
+	SRC.MODSTR -= 5
+
+ON=@Timer
+	REMOVE
+
+ON=@Damage
+	RETURN 1
+
+[ITEMDEF i_christmas_2018_intelligence_cloak]
+ID=i_cape
+NAME=Christmas 2018 Intelligence Cloak
+TYPE=t_clothing
+WEIGHT=0
+
+ON=@Create
+	COLOR=<DEF.CHRISTMAS_2018_COLOR_<R1,<DEF.CHRISTMAS_2018_COLOR_COUNT>>>
+	EVENTS +t_drop_challenge
+
+	TIMER 2592000
+
+	SERV.LOG A <NAME> has been created.
+
+ON=@DClick
+	ATTR <ATTR> | attr_newbie | attr_blessed
+
+ON=@Equip
+	SRC.MODINT += 5
+
+on=@Unequip
+	SRC.MODINT -= 5
+
+ON=@Timer
+	REMOVE
+
+ON=@Damage
+	RETURN 1
+
+[ITEMDEF i_christmas_2018_dexterity_sandals]
+ID=i_sandals
+NAME=Christmas 2018 Sandals
+TYPE=t_clothing
+WEIGHT=0
+
+ON=@Create
+	COLOR=<DEF.CHRISTMAS_2018_COLOR_<R1,<DEF.CHRISTMAS_2018_COLOR_COUNT>>>
+	EVENTS +t_drop_challenge
+
+	TIMER 2592000
+
+	SERV.LOG A <NAME> has been created.
+
+ON=@DClick
+	ATTR <ATTR> | attr_newbie | attr_blessed
+
+ON=@Equip
+	SRC.MODDEX += 5
+
+on=@Unequip
+	SRC.MODDEX -= 5
+
+ON=@Timer
+	REMOVE
+
+ON=@Damage
+	RETURN 1
+
+[ITEMDEF i_christmas_2018_ethereal_mount_talisman]
+ID=i_talisman4
+NAME=Christmas 2018 Ethereal Mount Talisman
+TEVENTS=t_global_bound_item
+
+ON=@Create
+	COLOR=<DEF.CHRISTMAS_2018_COLOR_<R1,<DEF.CHRISTMAS_2018_COLOR_COUNT>>>
+	EVENTS +t_drop_challenge
+
+	SERV.LOG A <NAME> has been created.
+
+ON=@DClick
+	IF (<TOPOBJ.UID> != <SRC.UID>)
+		SRC.SYSMESSAGE @,,1 This item must be inside your backpack or bank to be used.
+		RETURN 1
+	ENDIF
+
+	ATTR <ATTR> | attr_newbie
+
+[ITEMDEF i_christmas_2018_bottle_hair_dye]
+ID=i_bottle_hair_dye
+NAME=Christmas 2018 Hair Dye
+
+ON=@Create
+	EVENTS +t_drop_challenge
+
+	COLOR=<DEF.CHRISTMAS_2018_COLOR_<R1,<DEF.CHRISTMAS_2018_COLOR_COUNT>>>
+
+	SERV.LOG A <NAME> has been created.
+
+ON=@DClick
+	IF (<TOPOBJ.UID> != <SRC.UID>)
+		SRC.SYSMESSAGE @,,1 This item must be inside your backpack or bank to be used.
+		RETURN 1
+	ENDIF
+
+	IF (<SRC.FINDLAYER.layer_hair.UID>)
+		SRC.FINDLAYER.layer_hair.COLOR <COLOR>
+	ELSE
+		SRC.SYSMESSAGE @,,1 <DEFMSG.itemuse_dye_nohair>
+		RETURN 1
+	ENDIF
+
+	IF (<SRC.FINDLAYER.layer_beard.UID>)
+		SRC.FINDLAYER.layer_beard.COLOR <COLOR>
+	ENDIF
+
+	REMOVE
+
+	RETURN 1
+
+[ITEMDEF i_christmas_2018_dye_tub]
+ID=0fab
+NAME=Christmas 2018 Dye Tub
+TYPE=T_NORMAL
+VALUE=20
+
+ON=@Create
+	MOREX = 1
+	COLOR = <DEF.CHRISTMAS_2018_COLOR_<R1,<DEF.CHRISTMAS_2018_COLOR_COUNT>>>
+	EVENTS +t_drop_challenge
+
+ON=@Click
+	MESSAGE @,,1 <QVAL (<MOREX> < 2) ? [<DMOREX> charge] : [<DMOREX> charges] >
+
+ON=@DClick
+IF (<ATTR> == attr_move_never)
+	SRC.SYSMESSAGE @,,1 This item is locked.
+	RETURN 1
+ELSEIF (<MOREX> < 1)
+	REMOVE
+	RETURN 1
+ELSE
+	TARGET @,,1 Select what you want to dye.
+ENDIF
+RETURN 1
+
+ON=@Targon_Item
+IF (<ARGO.UID> == <UID>)
+	SRC.SYSMESSAGE @,,1 This dye tub is already colored.
+	RETURN 1
+ENDIF
+
+IF (<ARGO.BASEID> == <BASEID>) && (<ARGO.COLOR> == <COLOR>)
+  ARGO.MOREX += <MOREX>
+  SRC.SYSMESSAGE @,,1 You merged both dye tubs.
+  REMOVE
+  RETURN 1
+ENDIF
+
+if (<ARGO.BASEID> == i_dye_tub) && !(<ARGO.COLOR>)
+	if (<ARGO.CONT> == <SRC.FINDLAYER(21).UID>)
+		ARGO.REMOVE
+		SERV.NEWITEM i_christmas_2018_dye_tub
+		NEW.COLOR <COLOR>
+		NEW.MOREX = 1
+		NEW.LINK <SRC>
+		NEW.EVENTS -t_drop_challenge
+		SRC.NEW.BOUNCE
+
+		SRC.SYSMESSAGE @,,1 You added one charge to this blank dye tube.
+
+		MOREX -= 1
+
+		IF (<MOREX> <= 0) || (<MOREX> > 100)
+			REMOVE
+		ENDIF
+
+		RETURN 1
+	ELSE
+		SRC.SYSMESSAGE @,,1 The dye tub must be inside your bag.
+	ENDIF
+ENDIF
+
+LOCAL.CHARGE_COST 1
+
+IF (<MOREX> <= 0) || (<MOREX> > 100)
+	REMOVE
+	RETURN 1
+ELSEIF (<ARGO.TYPE> != t_clothing)
+	SRC.SYSMESSAGE @,,1 You can't dye this item.
+	RETURN 1
+ELSEIF (<ARGO.ATTR> & attr_newbie) && !(STRMATCH(i_paragon_*, <ARGO.BASEID>))
+	LOCAL.CHARGE_COST 4
+ENDIF
+
+IF (<LOCAL.CHARGE_COST> > <MOREX>)
+	SRC.SYSMESSAGE @,,1 You must have <DLOCAL.CHARGE_COST> charges to dye this item.
+	RETURN 1
+ENDIF
+
+IF (<ARGO.TOPOBJ> == <SRC.UID>)
+	ARGO.COLOR <COLOR>
+	MOREX -= <LOCAL.CHARGE_COST>
+	IF (<MOREX> <= 0) || (<MOREX> > 100)
+		REMOVE
+	ENDIF
+
+	RETURN 1
+ELSE
+	SRC.SYSMESSAGE @,,1 The item to be dyed must be inside your backpack or bank.
+	RETURN 1
+ENDIF
+
+ON=@TargOn_Char
+	RETURN 1
+
+[ITEMDEF i_christmas_2018_death_robe]
+ID=i_deathshroud
+NAME=Christmas 2018 Death Robe
+TYPE=T_armor
+DYE=0
+ARMOR=100
+WEIGHT=1
+CATEGORY=Provisions - Clothes
+SUBSECTION=Shirts & Robes
+DESCRIPTION=Slayer Robe
+
+ON=@CREATE
+	HITPOINTS=999
+	Attr=attr_newbie
+	COLOR=<DEF.CHRISTMAS_2018_COLOR_<R1,<DEF.CHRISTMAS_2018_COLOR_COUNT>>>
+
+ON=@CLICK
+MESSAGE @<Color> <CONT.NAME>'s Death Robe
+Return 1
+
+
+[itemdef i_mt_christmas_2018_llama]
+ID=i_mt_llama
+LAYER=layer_horse
+TAG.ICON=i_pet_llama
+
+ON=@Create
+	COLOR=<DEF.CHRISTMAS_2018_COLOR_<R1,<DEF.CHRISTMAS_2018_COLOR_COUNT>>>
+
+[itemdef i_mt_christmas_2018_ostard_zostrich]
+ID=i_mt_ostard_zostrich
+LAYER=layer_horse
+TAG.ICON=i_pet_ostard_zostrich
+
+ON=@Create
+	COLOR=<DEF.CHRISTMAS_2018_COLOR_<R1,<DEF.CHRISTMAS_2018_COLOR_COUNT>>>
+
+[itemdef i_mt_christmas_2018_ostard_forest]
+ID=i_mt_ostard_forest
+LAYER=layer_horse
+TAG.ICON=i_pet_ostard_forest
+
+ON=@Create
+	COLOR=<DEF.CHRISTMAS_2018_COLOR_<R1,<DEF.CHRISTMAS_2018_COLOR_COUNT>>>
+
+[itemdef i_mt_christmas_2018_ostard_desert]
+ID=i_mt_ostard_desert
+LAYER=layer_horse
+TAG.ICON=i_pet_ostard_desert
+
+ON=@Create
+	COLOR=<DEF.CHRISTMAS_2018_COLOR_<R1,<DEF.CHRISTMAS_2018_COLOR_COUNT>>>
+
+[itemdef i_mt_christmas_2018_horse_brown_dk]
+ID=i_mt_horse_brown_dk
+LAYER=layer_horse
+TAG.ICON=i_pet_horse_brown_dk
+
+ON=@Create
+	COLOR=<DEF.CHRISTMAS_2018_COLOR_<R1,<DEF.CHRISTMAS_2018_COLOR_COUNT>>>
+
+[itemdef i_mt_christmas_2018_horse_tan]
+ID=i_mt_horse_tan
+LAYER=layer_horse
+TAG.ICON=i_pet_horse_tan
+
+ON=@Create
+	COLOR=<DEF.CHRISTMAS_2018_COLOR_<R1,<DEF.CHRISTMAS_2018_COLOR_COUNT>>>
+
+[itemdef i_mt_christmas_2018_giant_beetle]
+ID=i_mt_giant_beetle
+LAYER=layer_horse
+TAG.ICON=i_pet_giantbeetle
+
+ON=@Create
+	COLOR=<DEF.CHRISTMAS_2018_COLOR_<R1,<DEF.CHRISTMAS_2018_COLOR_COUNT>>>
+
+[ITEMDEF i_christmas_2018_gift_box]
+ID=0232a
+NAME=Christmas 2018 Gift Box
+TYPE=t_normal
+
+ON=@Create
+	COLOR=<DEF.CHRISTMAS_2018_COLOR_<R1,<DEF.CHRISTMAS_2018_COLOR_COUNT>>>
+	EVENTS +t_drop_challenge
+
+	SERV.LOG A <NAME> has been created.
+
+ON=@DClick
+	SRC.SYSMESSAGE Give it to Santa Claus ! He's looking for those gifts.
+	RETURN 1
+
+[SPEECH spk_christmas_2018_santa_claus]
+
+ON=*
+	MESSAGE @021 Oh my god ! There are lots of Guardian Knights around the world that stole the gifts I need to distribute around the world ! Bring them to me if you find any and I'll give you some of my treasures.
+
+[CHARDEF c_christmas_2018_santa_claus]
+ID=c_man
+NAME=Santa Claus
+TSPEECH=spk_christmas_2018_santa_claus
+
+ON=@Create
+   COLOR=colors_skin
+   NPC=brain_human
+   STR={66 77}
+   DEX={75 100}
+   INT={45 55}
+   flags = <flags>|statf_invul
+
+   DETECTINGHIDDEN={20.0 30.0}
+   FENCING={20.0 30.0}
+   ITEMID={50.0 75.0}
+   LOCKPICKING={50.0 75.0}
+   WRESTLING={20.0 30.0}
+
+   ITEMNEWBIE=i_hair_long
+   COLOR=0481
+   ITEMNEWBIE=i_beard_long
+   COLOR=0481
+   ITEM=i_robe
+   COLOR=080a
+   ITEM=i_boots_thigh
+   COLOR=1
+
+ON=@ReceiveItem
+	IF (<ARGO.BASEID> != i_christmas_2018_gift_box) && (<ARGO.TYPE> != t_container)
+		MESSAGE @021 I only accept my lost gift boxes or containers with the Seven Christmas Specials Mounts.
+
+		RETURN 1
+	ENDIF
+
+	IF (<ARGO.BASEID> == i_christmas_2018_gift_box)
+		SERV.LOG <SRC.NAME> will receive a treasure from <NAME>.
+
+		MESSAGE @021 Thank you, my dear ! Here's your treasure.
+
+		SERV.NEWITEM <EVAL {i_christmas_2018_dye_tub 75 i_christmas_2018_bottle_hair_dye 60 i_christmas_2018_intelligence_cloak 9 i_christmas_2018_dexterity_sandals 9 i_christmas_2018_strength_sash 9 i_christmas_2018_jin_baori 3 i_christmas_2018_ethereal_mount_talisman 1}>
+		NEW.EVENTS -t_drop_challenge
+		NEW.CONT <SRC.FINDLAYER.layer_pack>
+		ARGO.REMOVE
+	ELSEIF (<ARGO.TYPE> == t_container)
+		LOCAL.MOUNTS_COUNT 0
+		LOCAL.MOUNT_COLOR
+		REF1 <UID>
+
+		FORCONT <ARGO.UID> 10
+ 			IF (<BASEID> != i_pet_llama) && (<BASEID> != i_pet_ostard_zostrich) && (<BASEID> != i_pet_ostard_forest) && (<BASEID> != i_pet_ostard_desert) && (<BASEID> != i_pet_horse_brown_dk) && (<BASEID> != i_pet_horse_tan) && (<BASEID> != i_pet_giantbeetle)
+				REF1.MESSAGE @021 The bag must contain Christmas 2018 Special Mount only.
+				RETURN 1
+			ENDIF
+
+			IF (<COLOR> != <DEF.CHRISTMAS_2018_COLOR_1>) && (<COLOR> != <DEF.CHRISTMAS_2018_COLOR_2>)
+				REF1.MESSAGE @021 The bag must contain Christmas 2018 Special Mount only.
+				RETURN 1
+			ENDIF
+
+			IF !(<LOCAL.MOUNT_COLOR>)
+				LOCAL.MOUNT_COLOR <COLOR>
+			ELSEIF (<LOCAL.MOUNT_COLOR> != <COLOR>)
+				REF1.MESSAGE @021 All the mounts must be the same color.
+				RETURN 1
+			ENDIF
+
+			IF (<AMOUNT> > 1) || (<LOCAL.MOUNT_<BASEID>> != 0)
+				REF1.MESSAGE @021 I don't want more than one mount of each type!
+				RETURN 1
+			ENDIF
+
+			LOCAL.MOUNTS_COUNT += 1
+
+			LOCAL.MOUNT_<BASEID> = 1
+		ENDFOR
+
+		IF (<LOCAL.MOUNTS_COUNT> != 7)
+			MESSAGE @021 The bag must contain seven different mounts.
+			RETURN 1
+		ENDIF
+
+		MESSAGE @021 Here you go, <SRC.NAME> ! Congratulations.
+
+		SERV.NEWITEM i_ethereal_horse_brown_dk
+		NEW.COLOR <LOCAL.MOUNT_COLOR>
+		NEW.TAG.SPECIAL_COLOR <LOCAL.MOUNT_COLOR>
+		NEW.CONT <SRC.FINDLAYER.layer_pack>
+
+		SERV.NEWITEM <EVAL {i_paragon_cape 1 i_paragon_half_apron 1}>
+		NEW.CONT <SRC.FINDLAYER.layer_pack>
+
+		SERV.LOG <SRC.NAME> will receive a prize from Santa Claus. Bag UID: <ARGO.UID>.
+
+		ARGO.REMOVE
+
+		RETURN 1
+	ENDIF
+
+
+	RETURN 1
+
+[FUNCTION f_christmas_2018_decision]
+LOCAL.CHANCE 120
+
+IF (<STR> > 300)
+	LOCAL.CHANCE /= 10
+ENDIF
+
+IF !(<R<LOCAL.CHANCE>>)
+	SERV.NEWNPC c_christmas_2018_guardian
+	NEW.P <P>
+	NEW.HOMEDIST 12
+
+	SERV.LOG A new <NEW.NAME> has been spawned at <NEW.P>.
+ENDIF
+
+[FUNCTION f_christmas_2018_remove_all_guardians]
+FORINSTANCES c_christmas_2018_guardian
+	REMOVE
+ENDFOR
+
+[CHARDEF c_christmas_2018_guardian]
+NAME=Christmas 2018 Guardian Knight
+ID=C_MAN
+AVERSIONS=t_TRAP,t_eerie_stuff
+TSPEECH=spk_human_prime
+DAM=17,20
+TSPEECH=jobMageEvil
+CATEGORY=Guardians
+SUBSECTION=Guardians
+DESCRIPTION=Guardian
+TAG.name.hue=026
+
+ON=@Create
+ TAG.LOOTPROPRIO 1
+ //TAG.PARAIMUNE 1
+ COLOR=0481
+ STR={100 110}
+ DEX={120 150}
+ INT={800 950}
+ MANA=0
+ MAXMANA=0
+ MAXHITS=600
+
+ //events=+e_antibow
+ events=+e_poison_immune
+ events=+e_mage_spell_attack_boss
+
+ MAGERY=100.0
+ EVALUATINGINTEL={55.0 78.0}
+ INSCRIPTION={76.0 90.0}
+ WRESTLING={80.0 100.0}
+ SWORDSMANSHIP={100.0 100.0}
+ MAGICRESISTANCE={95.0 100.0}
+ MEDITATION={99.0 100.0}
+ TACTICS={100.0 100.0}
+ FENCING=1000
+ NPC=brain_monster
+ KARMA={-6000 -6999}
+ ITEMNEWBIE=random_facial_hair
+ COLOR=match_hair
+// ITEMNEWBIE=i_spellbook
+       // ADDSPELL=s_flamestrike
+        //ADDSPELL=s_paralyze
+        //ADDSPELL=s_magic_arrow
+  ITEMNEWBIE=i_christmas_2018_death_robe
+  ITEMNEWBIE=i_Vanquish_kryss_guardian
+
+ON=@NPCRestock
+	ITEM={i_mt_christmas_2018_llama 1 i_mt_christmas_2018_ostard_zostrich 1 i_mt_christmas_2018_ostard_forest 1 i_mt_christmas_2018_ostard_desert 1 i_mt_christmas_2018_horse_brown_dk 1 i_mt_christmas_2018_horse_tan 1 i_mt_christmas_2018_giant_beetle 1}
+
+ON=@Death
+	IF !(<R7>)
+		SERV.NEWITEM <FINDLAYER.layer_horse.TAG.ICON>
+		NEW.CONT <UID>
+		NEW.COLOR <FINDLAYER.layer_horse.COLOR>
+		NEW.NAME Christmas 2018 Special Mount
+
+		SERV.LOG A new <NEW.NAME> has been created.
+	ENDIF
+
+	IF !(<R12>)
+		SERV.NEWITEM i_christmas_2018_gift_box
+		NEW.CONT <UID>
+	ENDIF
+
+	SERV.NEWITEM i_gold
+	NEW.AMOUNT 35000
+	NEW.CONT <UID>
+
+[EOF]

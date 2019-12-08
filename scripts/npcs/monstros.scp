@@ -1,0 +1,1109 @@
+[CHARDEF c_guardian_angel1]
+NAME=Guardian
+ID=C_MAN
+dam=10
+AVERSIONS=t_TRAP,t_eerie_stuff
+TSPEECH=spk_human_prime
+TSPEECH=jobMageEvil
+TAG.name.hue=0ab4
+
+ON=@Create
+ TAG.LOOTPROPRIO 1
+ //TAG.PARAIMUNE 1
+ COLOR=0481
+ STR={270 350}
+ DEX={99 140}
+ INT={800 950}
+ MAXMANA=0
+ MAXHITS=1400
+
+ events=+e_antibow
+ events=+e_poison_immune
+
+ MAGERY={111.0 150.0}
+ EVALUATINGINTEL={55.0 78.0}
+ INSCRIPTION={76.0 90.0}
+ WRESTLING={80.0 100.0}
+ SWORDSMANSHIP={100.0 100.0}
+ MAGICRESISTANCE={95.0 100.0}
+ MEDITATION={99.0 100.0}
+ TACTICS={100.0 100.0}
+ NPC=brain_monster
+ KARMA={-6000 -6999}
+ //ITEMNEWBIE=I_VANQUISH_KATANA
+ ITEMNEWBIE=random_facial_hair
+ COLOR=match_hair
+ ITEMNEWBIE=i_spellbook
+        ADDSPELL=s_flamestrike
+        ADDSPELL=s_paralyze
+        ADDSPELL=s_magic_arrow
+  ITEMNEWBIE=i_death_robe
+  COLOR=0ab4
+  ITEMNEWBIE=I_VANQUISH_KATANA
+
+ON=@NPCRestock
+ ITEM=i_mt_horse_gray
+   COLOR=02b
+
+ON=@CLICK
+	MESSAGE @0ab4 <name>
+	return 1
+
+ON=@GETHIT
+IF (<MANA> == 0) && !(<weapon>)
+  Equipweapon
+endif
+IF <ACTION> == MAGERY
+	IF <R3> == 1
+		SAY Nao serei dispelado!
+	ENDIF
+	HITS -= <ARGN1>
+	RETURN 1
+ENDIF
+
+[DEFNAME ore_guardian_knight_settings]
+ORE_GUARDIAN_KNIGHT_MOUNT_COUNT 6
+
+ORE_GUARDIAN_KNIGHT_MOUNT_1_ITEM i_mt_ostard_desert
+ORE_GUARDIAN_KNIGHT_MOUNT_1_COLOR 2826
+
+ORE_GUARDIAN_KNIGHT_MOUNT_2_ITEM i_mt_bear_polar
+ORE_GUARDIAN_KNIGHT_MOUNT_2_COLOR 2959
+
+ORE_GUARDIAN_KNIGHT_MOUNT_3_ITEM i_mt_ostard_zostrich
+ORE_GUARDIAN_KNIGHT_MOUNT_3_COLOR 2766
+
+ORE_GUARDIAN_KNIGHT_MOUNT_4_ITEM i_mt_ostard_forest
+ORE_GUARDIAN_KNIGHT_MOUNT_4_COLOR 1915
+
+ORE_GUARDIAN_KNIGHT_MOUNT_5_ITEM i_mt_llama
+ORE_GUARDIAN_KNIGHT_MOUNT_5_COLOR 1953
+
+ORE_GUARDIAN_KNIGHT_MOUNT_6_ITEM i_mt_horse_tan
+ORE_GUARDIAN_KNIGHT_MOUNT_6_COLOR 2984
+
+ORE_GUARDIAN_KNIGHT_WEAKNESS_ORE_ODDS {1 14 2 13 3 12 4 11 5 10 6 9 7 8 8 7 9 6 10 5 11 4 12 3 13 2 14 1}
+
+ORE_GUARDIAN_KNIGHT_WEAKNESS_ORE_1_NAME Rusty Weakness
+ORE_GUARDIAN_KNIGHT_WEAKNESS_ORE_1_COLOR color_o_rusty
+
+ORE_GUARDIAN_KNIGHT_WEAKNESS_ORE_2_NAME Old Copper Weakness
+ORE_GUARDIAN_KNIGHT_WEAKNESS_ORE_2_COLOR color_o_oldcopper
+
+ORE_GUARDIAN_KNIGHT_WEAKNESS_ORE_3_NAME Dull Copper Weakness
+ORE_GUARDIAN_KNIGHT_WEAKNESS_ORE_3_COLOR color_o_dullcopper
+
+ORE_GUARDIAN_KNIGHT_WEAKNESS_ORE_4_NAME Copper Weakness
+ORE_GUARDIAN_KNIGHT_WEAKNESS_ORE_4_COLOR color_o_copper
+
+ORE_GUARDIAN_KNIGHT_WEAKNESS_ORE_5_NAME Bronze Weakness
+ORE_GUARDIAN_KNIGHT_WEAKNESS_ORE_5_COLOR color_o_bronze
+
+ORE_GUARDIAN_KNIGHT_WEAKNESS_ORE_6_NAME Shadow Weakness
+ORE_GUARDIAN_KNIGHT_WEAKNESS_ORE_6_COLOR color_o_shadow
+
+ORE_GUARDIAN_KNIGHT_WEAKNESS_ORE_7_NAME Agapite Weakness
+ORE_GUARDIAN_KNIGHT_WEAKNESS_ORE_7_COLOR color_o_agapite
+
+ORE_GUARDIAN_KNIGHT_WEAKNESS_ORE_8_NAME Rose Weakness
+ORE_GUARDIAN_KNIGHT_WEAKNESS_ORE_8_COLOR color_o_rose
+
+ORE_GUARDIAN_KNIGHT_WEAKNESS_ORE_9_NAME Valorite Weakness
+ORE_GUARDIAN_KNIGHT_WEAKNESS_ORE_9_COLOR color_o_valorite
+
+ORE_GUARDIAN_KNIGHT_WEAKNESS_ORE_10_NAME Verite Weakness
+ORE_GUARDIAN_KNIGHT_WEAKNESS_ORE_10_COLOR color_o_verite
+
+ORE_GUARDIAN_KNIGHT_WEAKNESS_ORE_11_NAME Blood Rock Weakness
+ORE_GUARDIAN_KNIGHT_WEAKNESS_ORE_11_COLOR color_o_bloodrock
+
+ORE_GUARDIAN_KNIGHT_WEAKNESS_ORE_12_NAME Black Rock Weakness
+ORE_GUARDIAN_KNIGHT_WEAKNESS_ORE_12_COLOR color_o_blackrock
+
+ORE_GUARDIAN_KNIGHT_WEAKNESS_ORE_13_NAME Mytheril Weakness
+ORE_GUARDIAN_KNIGHT_WEAKNESS_ORE_13_COLOR color_o_mytheril
+
+ORE_GUARDIAN_KNIGHT_WEAKNESS_ORE_14_NAME Adamantium Weakness
+ORE_GUARDIAN_KNIGHT_WEAKNESS_ORE_14_COLOR color_o_adamantium
+
+[FUNCTION spawn_ore_guardian_knight]
+SERV.NEWNPC c_ore_guardian_knight
+IF (<ARGV> >= 2)
+  NEW.P <ARGS>
+ELSE
+  NEW.P <P>
+ENDIF
+
+SERV.LOG Spawning a new <NEW.NAME> at <NEW.P>.
+
+NEW.HOME <NEW.P>
+NEW.HOMEDIST 6
+NEW.UPDATEX
+
+LOCAL.WEAKNESS <EVAL <DEF.ORE_GUARDIAN_KNIGHT_WEAKNESS_ORE_ODDS>>
+
+NEW.TAG.COATED_ORE_WEAPON_WEAKNESS <DEF.ORE_GUARDIAN_KNIGHT_WEAKNESS_ORE_<DLOCAL.WEAKNESS>_COLOR>
+NEW.COLOR <DEF.ORE_GUARDIAN_KNIGHT_WEAKNESS_ORE_<DLOCAL.WEAKNESS>_COLOR>
+NEW.TAG.TITLE <DEF.ORE_GUARDIAN_KNIGHT_WEAKNESS_ORE_<DLOCAL.WEAKNESS>_NAME>
+
+LOCAL.RANDOM <R1,<DEF.ORE_GUARDIAN_KNIGHT_MOUNT_COUNT>>
+LOCAL.UID <NEW.UID>
+
+SERV.NEWITEM <DEF.ORE_GUARDIAN_KNIGHT_MOUNT_<DLOCAL.RANDOM>_ITEM>
+NEW.COLOR=<DEF.ORE_GUARDIAN_KNIGHT_MOUNT_<DLOCAL.RANDOM>_COLOR>
+NEW.CONT <LOCAL.UID>
+
+UID.<LOCAL.UID>.FINDLAYER.layer_robe.COLOR <NEW.COLOR>
+
+[CHARDEF c_ore_guardian_knight]
+NAME=Ore Guardian Knight
+ID=C_MAN
+AVERSIONS=t_TRAP,t_eerie_stuff
+TSPEECH=spk_human_prime
+DAM=17,20
+TSPEECH=jobMageEvil
+CATEGORY=Guardians
+SUBSECTION=Guardians
+DESCRIPTION=Guardian
+TAG.name.hue=026
+
+ON=@Click
+  MESSAGE @40,,1 [<TAG.TITLE>]
+
+ON=@Create
+ TAG.LOOTPROPRIO 1
+ //TAG.PARAIMUNE 1
+ COLOR=0481
+ STR={100 110}
+ DEX={120 150}
+ INT={800 950}
+ MANA=0
+ MAXMANA=0
+ MAXHITS=5000
+
+ //events=+e_antibow
+ events=+e_poison_immune
+
+ MAGERY={11.0 15.0}
+ EVALUATINGINTEL={55.0 78.0}
+ INSCRIPTION={76.0 90.0}
+ WRESTLING={80.0 100.0}
+ SWORDSMANSHIP={100.0 100.0}
+ MAGICRESISTANCE={95.0 100.0}
+ MEDITATION={99.0 100.0}
+ TACTICS={100.0 100.0}
+ FENCING=1000
+ NPC=brain_monster
+ KARMA={-6000 -6999}
+ ITEMNEWBIE=random_facial_hair
+ COLOR=match_hair
+// ITEMNEWBIE=i_spellbook
+       // ADDSPELL=s_flamestrike
+        //ADDSPELL=s_paralyze
+        //ADDSPELL=s_magic_arrow
+  ITEMNEWBIE=i_death_robe
+  COLOR=07e5
+  ITEMNEWBIE=i_Vanquish_kryss_guardian
+
+ON=@NPCRestock
+ ITEM=i_gold,60000
+ ITEM=i_gold,30000
+
+ON=@Death
+ SERV.NEWNPC <SERV.ITEMDEF.<UID.<FINDLAYER.LAYER_HORSE>.BASEID>.TDATA3>
+ NEW.P <P>
+ NEW.HOME <P>
+ NEW.HOMEDIST 6
+ NEW.TAMING 1050
+ NEW.NAME Ore Guardian Knight Mount
+ NEW.COLOR <FINDLAYER.LAYER_HORSE.COLOR>
+ NEW.UPDATEX
+
+SERV.LOG A <NAME> was killed at <P>.
+
+[CHARDEF c_guardian]
+DEFNAME=c_guardian
+NAME=Guardian Knight
+ID=C_MAN
+AVERSIONS=t_TRAP,t_eerie_stuff
+TSPEECH=spk_human_prime
+DAM=17,20
+TSPEECH=jobMageEvil
+CATEGORY=Guardians
+SUBSECTION=Guardians
+DESCRIPTION=Guardian
+TAG.name.hue=026
+
+ON=@Create
+ TAG.LOOTPROPRIO 1
+ //TAG.PARAIMUNE 1
+ COLOR=0481
+ STR={100 110}
+ DEX={120 150}
+ INT={800 950}
+ MANA=0
+ MAXMANA=0
+ MAXHITS=1100
+
+ //events=+e_antibow
+ events=+e_poison_immune
+
+ MAGERY={11.0 15.0}
+ EVALUATINGINTEL={55.0 78.0}
+ INSCRIPTION={76.0 90.0}
+ WRESTLING={80.0 100.0}
+ SWORDSMANSHIP={100.0 100.0}
+ MAGICRESISTANCE={95.0 100.0}
+ MEDITATION={99.0 100.0}
+ TACTICS={100.0 100.0}
+ FENCING=1000
+ NPC=brain_monster
+ KARMA={-6000 -6999}
+ ITEMNEWBIE=random_facial_hair
+ COLOR=match_hair
+// ITEMNEWBIE=i_spellbook
+       // ADDSPELL=s_flamestrike
+        //ADDSPELL=s_paralyze
+        //ADDSPELL=s_magic_arrow
+  ITEMNEWBIE=i_death_robe
+  COLOR=07e5
+  ITEMNEWBIE=i_Vanquish_kryss_guardian
+
+ON=@NPCRestock
+ ITEM=i_gold,900
+ ITEM=i_mt_horse_gray
+   COLOR=07e5
+
+[ITEMDEF i_Vanquish_kryss_guardian]
+ID=i_kryss
+NAME=Kryss of Vanquish
+RESOURCES=8 i_ingot_iron
+WEIGHT=8
+TYPE=T_WEAPON_FENCE
+FLIP=1
+DAM=9,14
+SPEED=70
+SKILL=Fencing
+REQSTR=10
+TWOHANDS=N
+SKILLMAKE=BLACKSMITHING 200.0
+
+ON=@Create
+COLOR=0a20
+	HITPOINTS={50 60}
+	ATTR=020
+	MOREY=1000
+
+ON=@EQUIP
+	 COLOR=Vanquish
+	MOREY=1000
+
+[CHARDEF c_guardian_nightmare]
+DEFNAME=c_guardian_nightmare
+NAME=Guardian
+ID=C_MAN
+DESIRES=i_gold,t_wand,t_reagent,t_bone
+AVERSIONS=t_TRAP,t_eerie_stuff
+TSPEECH=spk_human_prime
+TSPEECH=jobMageEvil
+CATEGORY=Guardians
+SUBSECTION=Guardians
+DESCRIPTION=Guardian Night
+TAG.name.hue=0770
+ON=@Create
+ COLOR=01
+ STR={110 125}
+ DEX={81 95}
+ INT={400 550}
+        MAXHITS=400
+ //ALIGNMENT=EVIL
+        MAGERY={99.0 100.0}
+ EVALUATINGINTEL={55.0 78.0}
+ INSCRIPTION={76.0 90.0}
+ WRESTLING={80.0 90.0}
+ MAGICRESISTANCE={95.0 100.0}
+ MEDITATION={99.0 100.0}
+ TACTICS={75.0 85.0}
+ NPC=brain_human
+ KARMA={-3000 -3999}
+ ITEMNEWBIE=random_facial_hair
+ COLOR=match_hair
+ ITEMNEWBIE=i_spellbook
+        ADDSPELL=s_poison
+        ADDSPELL=s_flamestrike
+        ADDSPELL=s_paralyze
+        ADDSPELL=s_cure
+        ADDSPELL=s_magic_arrow
+
+ON=@NPCSeeNewPlayer
+IF (<DISTANCE>>10)  // If the player is more than 5 steps away
+RETURN 1   // Dont' remember him so the event fires when he gets closer
+ENDIF
+// We can only get this far if he is closer than 5 steps away
+SAY Vamos ver se voce e pareo!
+INVIS 0
+ATTACK  // Attacks the SRC of the event
+RETURN 0
+
+ON=@NPCRestock
+ ITEM=i_death_robe
+ COLOR=0770
+ ITEM=i_sandals
+ CATEGORY=Civilized
+ SUBSECTION=Outlaws & Rogues
+ DESCRIPTION=Evil Mage (Male)
+        ITEM=i_mt_horse_gray
+         COLOR=0770
+
+ON=@DEATHCORPSE
+   serv.newnpc c_m_nightmare
+   serv.lastnewchar.more1=c_m_nightmare
+
+[ITEMDEF i_death_robe]
+DEFNAME=i_death_robe
+ID=i_deathshroud
+NAME=Death Shroud
+TYPE=T_armor
+DYE=0
+ARMOR=50
+WEIGHT=1
+CATEGORY=Provisions - Clothes
+SUBSECTION=Shirts & Robes
+DESCRIPTION=Slayer Robe
+
+ON=@CREATE
+HITPOINTS=999
+COLOR=01
+Attr=attr_newbie
+
+ON=@CLICK
+MESSAGE @<Color> <CONT.NAME>'s Shroud
+Return 1
+
+[TEMPLATE loot_awyrm1]
+ ITEM=i_gold,{8000 10000}
+// ITEM=i_fire_p
+
+[TEMPLATE loot_awyrm2]
+ ITEM=i_gold,{8000 10000}
+// ITEM=i_lgreen_p
+
+[TEMPLATE loot_awyrm3]
+ ITEM=i_gold,{8000 10000}
+// ITEM=i_green_p
+
+[TEMPLATE loot_awyrm4]
+ ITEM=i_gold,{8000 10000}
+ //ITEM=i_metal_p
+
+[TEMPLATE loot_awyrm5]
+ ITEM=i_gold,{8000 10000}
+ //ITEM=i_ice_p
+
+[TEMPLATE loot_awyrm6]
+ ITEM=i_gold,{8000 10000}
+// ITEM=i_lava_p
+
+[TEMPLATE loot_awyrm7]
+ ITEM=i_gold,{8000 10000}
+// ITEM=i_water_p
+
+[TEMPLATE loot_awyrm8]
+ ITEM=i_gold,{8000 10000}
+ //ITEM=i_heaven_p
+
+[TEMPLATE loot_awyrm9]
+ ITEM=i_gold,{8000 10000}
+ //ITEM=i_night_p
+
+[TEMPLATE loot_awyrm10]
+ ITEM=i_gold,{8000 10000}
+ //ITEM=i_magma_p
+
+[TEMPLATE loot_awyrm11]
+ ITEM=i_gold,{8000 10000}
+ //ITEM=i_purple_p
+
+[TEMPLATE loot_awyrm12]
+ ITEM=i_gold,{8000 10000}
+ //ITEM=i_fire_p
+
+[TEMPLATE loot_awyrmgeral]
+ ITEM=i_gold,{11000 16000}
+
+// ancient wyrms
+
+[CHARDEF c_awyrm]
+NAME=Ancient Wyrm
+ID=c_dragon_green
+SOUND=snd_MONSTER_DAEMON1
+ICON=i_pet_dragon
+DAM=60
+ARMOR=60
+CAN=MT_WALK|MT_FLY
+AVERSIONS=r_water,r_mountains
+DESCRIPTION=True Fire Monster
+SUBSECTION=awyrms
+CATEGORY=Novos monstros
+RESOURCES=10 i_ribs_raw,67 i_hides_wyrm,8 i_reag_dragon_blood
+
+ON=@Create
+TAG.LOOTPROPRIO 1
+COLOR=0520
+STR={3500 4000}
+DEX={200 400}
+INT={800 900}
+MAXHITS=4000
+Events = +e_poison_immune
+PARRYING={90.0 100.0}
+MAGERY={110.0 200.0}
+MAGICRESISTANCE={99.0 100.0}
+TACTICS={90.0 100.0}
+WRESTLING={199.0 220.0}
+NPC=brain_dragon
+FAME={9000 9500}
+KARMA={-8000 -9999}
+ITEMNEWBIE=i_spellbook
+ADDSPELL=s_poison
+ADDSPELL=s_flamestrike
+ADDSPELL=s_paralyze
+ADDSPELL=s_cure
+ADDSPELL=s_magic_arrow
+ADDSPELL=s_mass_dispel
+ADDSPELL=s_dispel
+ADDSPELL=s_chain_lightning
+TAG.PARAIMUNE 1
+EVENTS = +E_ANTIBOW
+
+
+ON=@NPCRestock
+ ITEM=loot_awyrmgeral
+
+ON=@Death
+ NEWITEM=i_fx_explode
+ act.TYPE=T_EXPLOSION
+ act.ATTR=ATTR_MOVE_NEVER | ATTR_DECAY
+ act.LINK=<uid>
+ act.morex=10 // damage
+ act.morey=090 // wFlags DAMAGE_GENERAL
+ act.morez=2 // iDist
+ act.p=<p>
+ act.TIMERD=1 // immediate decay
+
+ON=@CLICK
+ MESSAGE @<color> <name>
+ Return 1
+
+
+
+[CHARDEF c_awyrm_lgreen]
+NAME=Lightgreen Ancient Wyrm
+ID=c_dragon_green
+SOUND=snd_MONSTER_DAEMON1
+ICON=i_pet_dragon
+DAM=60
+ARMOR=60
+CAN=MT_WALK|MT_FLY|MT_FIRE_IMMUNE
+AVERSIONS=r_water,r_mountains
+
+DESCRIPTION=True Poison Monster
+SUBSECTION=awyrms
+CATEGORY=Novos monstros
+
+ON=@Create
+TAG.LOOTPROPRIO 1
+COLOR=lgreen
+STR={1500 2000}
+DEX={200 400}
+INT={400 500}
+Events = +e_poison_immune
+PARRYING={90.0 100.0}
+MAGERY={90.0 100.0}
+MAGICRESISTANCE={90.0 100.0}
+TACTICS={90.0 100.0}
+WRESTLING={90.0 100.0}
+
+NPC=brain_monster
+
+FAME={9000 10000}
+KARMA={-8000 -9999}
+
+ON=@HIT
+IF !(<REGION.SAFE>)
+ACT.HITS=0
+ACT.FIX
+ENDIF
+
+ON=@NPCRestock
+ ITEM=loot_awyrm2
+
+ON=@Death
+ NEWITEM=i_fx_explode
+ act.TYPE=T_EXPLOSION
+ act.ATTR=ATTR_MOVE_NEVER | ATTR_DECAY
+ act.LINK=<uid>
+ act.morex=10 // damage
+ act.morey=090 // wFlags DAMAGE_GENERAL
+ act.morez=2 // iDist
+ act.p=<p>
+ act.TIMERD=1 // immediate decay
+
+ON=@CLICK
+ MESSAGE @<color> <name>
+ Return 1
+
+[CHARDEF c_awyrm_green]
+NAME=Green Ancient Wyrm
+ID=c_dragon_green
+SOUND=snd_MONSTER_DAEMON1
+ICON=i_pet_dragon
+DAM=60
+ARMOR=60
+CAN=MT_WALK|MT_FLY|MT_FIRE_IMMUNE
+AVERSIONS=r_water,r_mountains
+DESCRIPTION=True Poison Monster
+SUBSECTION=awyrms
+CATEGORY=Novos monstros
+
+ON=@Create
+TAG.LOOTPROPRIO 1
+COLOR=green
+STR={1500 2000}
+DEX={200 400}
+INT={400 500}
+Events = +e_poison_immune
+PARRYING={90.0 100.0}
+MAGERY={90.0 100.0}
+MAGICRESISTANCE={90.0 100.0}
+TACTICS={90.0 100.0}
+WRESTLING={90.0 100.0}
+
+NPC=brain_monster
+
+FAME={9000 10000}
+KARMA={-8000 -9999}
+
+ON=@HIT
+IF !(<REGION.SAFE>)
+ACT.HITS=0
+ACT.FIX
+ENDIF
+
+ON=@NPCRestock
+ ITEM=loot_awyrm3
+
+ON=@Death
+ NEWITEM=i_fx_explode
+ act.TYPE=T_EXPLOSION
+ act.ATTR=ATTR_MOVE_NEVER | ATTR_DECAY
+ act.LINK=<uid>
+ act.morex=10 // damage
+ act.morey=090 // wFlags DAMAGE_GENERAL
+ act.morez=2 // iDist
+ act.p=<p>
+ act.TIMERD=1 // immediate decay
+
+ON=@CLICK
+ MESSAGE @<color> <name>
+ Return 1
+
+[CHARDEF c_awyrm_metal]
+NAME=Metal Ancient Wyrm
+ID=c_dragon_green
+SOUND=snd_MONSTER_DAEMON1
+ICON=i_pet_dragon
+DAM=60
+ARMOR=60
+CAN=MT_WALK|MT_FLY|MT_FIRE_IMMUNE
+AVERSIONS=r_water,r_mountains
+DESCRIPTION=True Poison Monster
+SUBSECTION=awyrms
+CATEGORY=Novos monstros
+
+ON=@Create
+TAG.LOOTPROPRIO 1
+COLOR=metal
+STR={1500 2000}
+DEX={200 400}
+INT={400 500}
+Events = +e_poison_immune
+PARRYING={90.0 100.0}
+MAGERY={90.0 100.0}
+MAGICRESISTANCE={90.0 100.0}
+TACTICS={90.0 100.0}
+WRESTLING={90.0 100.0}
+
+NPC=brain_monster
+
+FAME={9000 10000}
+KARMA={-8000 -9999}
+
+ON=@HIT
+IF !(<REGION.SAFE>)
+ACT.HITS=0
+ACT.FIX
+ENDIF
+
+ON=@NPCRestock
+ ITEM=loot_awyrm4
+
+ON=@Death
+ NEWITEM=i_fx_explode
+ act.TYPE=T_EXPLOSION
+ act.ATTR=ATTR_MOVE_NEVER | ATTR_DECAY
+ act.LINK=<uid>
+ act.morex=10 // damage
+ act.morey=090 // wFlags DAMAGE_GENERAL
+ act.morez=2 // iDist
+ act.p=<p>
+ act.TIMERD=1 // immediate decay
+ON=@CLICK
+ MESSAGE @<color> <name>
+ Return 1
+
+
+[CHARDEF c_awyrm_Ice]
+NAME=Ice Ancient Wyrm
+ID=c_dragon_green
+SOUND=snd_MONSTER_DAEMON1
+ICON=i_pet_dragon
+DAM=60
+ARMOR=60
+CAN=MT_WALK|MT_FLY|MT_FIRE_IMMUNE
+AVERSIONS=r_water,r_mountains
+DESCRIPTION=True Ice Monster
+SUBSECTION=awyrms
+CATEGORY=Novos monstros
+
+ON=@Create
+TAG.LOOTPROPRIO 1
+COLOR=ice
+STR={1500 2000}
+DEX={200 400}
+INT={400 500}
+Events = +e_poison_immune
+PARRYING={90.0 100.0}
+MAGERY={90.0 100.0}
+MAGICRESISTANCE={90.0 100.0}
+TACTICS={90.0 100.0}
+WRESTLING={90.0 100.0}
+
+NPC=brain_monster
+
+FAME={9000 10000}
+KARMA={-8000 -9999}
+
+ON=@HIT
+IF !(<REGION.SAFE>)
+ACT.HITS=0
+ACT.FIX
+ENDIF
+
+ON=@NPCRestock
+ ITEM=loot_awyrm5
+
+ON=@Death
+ NEWITEM=i_fx_explode
+ act.TYPE=T_EXPLOSION
+ act.ATTR=ATTR_MOVE_NEVER | ATTR_DECAY
+ act.LINK=<uid>
+ act.morex=10 // damage
+ act.morey=090 // wFlags DAMAGE_GENERAL
+ act.morez=2 // iDist
+ act.p=<p>
+ act.TIMERD=1 // immediate decay
+ON=@CLICK
+ MESSAGE @<color> <name>
+ Return 1
+
+[CHARDEF c_awyrm_Lava]
+NAME=Lava Ancient Wyrm
+ID=c_dragon_green
+SOUND=snd_MONSTER_DAEMON1
+ICON=i_pet_dragon
+DAM=60
+ARMOR=60
+CAN=MT_WALK|MT_FLY|MT_FIRE_IMMUNE
+AVERSIONS=r_water,r_mountains
+DESCRIPTION=True Lava Monster
+SUBSECTION=awyrms
+CATEGORY=Novos monstros
+
+ON=@Create
+TAG.LOOTPROPRIO 1
+COLOR=lava
+STR={1500 2000}
+DEX={200 400}
+INT={400 500}
+Events = +e_poison_immune
+PARRYING={90.0 100.0}
+MAGERY={90.0 100.0}
+MAGICRESISTANCE={90.0 100.0}
+TACTICS={90.0 100.0}
+WRESTLING={90.0 100.0}
+
+NPC=brain_monster
+
+FAME={9000 10000}
+KARMA={-8000 -9999}
+
+ON=@HIT
+IF !(<REGION.SAFE>)
+ACT.HITS=0
+ACT.FIX
+ENDIF
+
+ON=@NPCRestock
+ ITEM=loot_awyrm6
+
+ON=@Death
+ NEWITEM=i_fx_explode
+ act.TYPE=T_EXPLOSION
+ act.ATTR=ATTR_MOVE_NEVER | ATTR_DECAY
+ act.LINK=<uid>
+ act.morex=10 // damage
+ act.morey=090 // wFlags DAMAGE_GENERAL
+ act.morez=2 // iDist
+ act.p=<p>
+ act.TIMERD=1 // immediate decay
+ON=@CLICK
+ MESSAGE @<color> <name>
+ Return 1
+
+[CHARDEF c_awyrm_Water]
+NAME=Water Ancient Wyrm
+ID=c_dragon_green
+SOUND=snd_MONSTER_DAEMON1
+ICON=i_pet_dragon
+DAM=60
+ARMOR=60
+CAN=MT_WALK|MT_FLY|MT_FIRE_IMMUNE
+AVERSIONS=r_water,r_mountains
+DESCRIPTION=True Water Monster
+SUBSECTION=awyrms
+CATEGORY=Novos monstros
+
+ON=@Create
+TAG.LOOTPROPRIO 1
+COLOR=water
+STR={1500 2000}
+DEX={200 400}
+INT={400 500}
+Events = +e_poison_immune
+PARRYING={90.0 100.0}
+MAGERY={90.0 100.0}
+MAGICRESISTANCE={90.0 100.0}
+TACTICS={90.0 100.0}
+WRESTLING={90.0 100.0}
+
+NPC=brain_monster
+
+FAME={9000 10000}
+KARMA={-8000 -9999}
+
+ON=@HIT
+IF !(<REGION.SAFE>)
+ACT.HITS=0
+ACT.FIX
+ENDIF
+
+ON=@NPCRestock
+ ITEM=loot_awyrm7
+
+ON=@Death
+ NEWITEM=i_fx_explode
+ act.TYPE=T_EXPLOSION
+ act.ATTR=ATTR_MOVE_NEVER | ATTR_DECAY
+ act.LINK=<uid>
+ act.morex=10 // damage
+ act.morey=090 // wFlags DAMAGE_GENERAL
+ act.morez=2 // iDist
+ act.p=<p>
+ act.TIMERD=1 // immediate decay
+ON=@CLICK
+ MESSAGE @<color> <name>
+ Return 1
+
+[CHARDEF c_awyrm_heaven]
+NAME=Heaven Ancient Wyrm
+ID=c_dragon_green
+SOUND=snd_MONSTER_DAEMON1
+ICON=i_pet_dragon
+DAM=60
+ARMOR=60
+CAN=MT_WALK|MT_FLY|MT_FIRE_IMMUNE
+AVERSIONS=r_water,r_mountains
+DESCRIPTION=True Sky Monster
+SUBSECTION=awyrms
+CATEGORY=Novos monstros
+
+ON=@Create
+TAG.LOOTPROPRIO 1
+COLOR=0ab4
+STR={2700 3500}
+DEX={2000 3200}
+INT={1000 1200}
+Events = +e_poison_immune
+events= +e_antibow
+PARRYING={90.0 100.0}
+MAGERY={90.0 100.0}
+MAGICRESISTANCE={100.0 100.0}
+TACTICS={90.0 100.0}
+WRESTLING={90.0 100.0}
+
+NPC=brain_monster
+
+FAME={9000 10000}
+KARMA={-8000 -9999}
+
+ON=@HIT
+IF !(<REGION.SAFE>)
+ACT.HITS=0
+ACT.FIX
+ENDIF
+
+ON=@NPCRestock
+ ITEM=loot_awyrm
+ ITEM=I_BOW_HEAVEN,R3
+
+ON=@Death
+ NEWITEM=i_fx_explode
+ act.TYPE=T_EXPLOSION
+ act.ATTR=ATTR_MOVE_NEVER | ATTR_DECAY
+ act.LINK=<uid>
+ act.morex=10 // damage
+ act.morey=090 // wFlags DAMAGE_GENERAL
+ act.morez=2 // iDist
+ act.p=<p>
+ act.TIMERD=1 // immediate decay
+ON=@CLICK
+ MESSAGE @<color> <name>
+ Return 1
+
+[CHARDEF c_awyrm_night]
+NAME=Night Ancient Wyrm
+ID=c_dragon_green
+SOUND=snd_MONSTER_DAEMON1
+ICON=i_pet_dragon
+DAM=60
+ARMOR=60
+CAN=MT_WALK|MT_FLY|MT_FIRE_IMMUNE
+AVERSIONS=r_water,r_mountains
+DESCRIPTION=True Night Monster
+SUBSECTION=awyrms
+CATEGORY=Novos monstros
+
+ON=@Create
+TAG.LOOTPROPRIO 1
+COLOR=night
+STR={2000 2500}
+DEX={1000 1200}
+INT={1000 1200}
+Events = +e_poison_immune
+PARRYING={90.0 100.0}
+MAGERY={90.0 100.0}
+MAGICRESISTANCE={90.0 100.0}
+TACTICS={90.0 100.0}
+WRESTLING={90.0 100.0}
+
+NPC=brain_monster
+
+FAME={9000 10000}
+KARMA={-8000 -9999}
+
+ON=@HIT
+IF !(<REGION.SAFE>)
+ACT.HITS=0
+ACT.FIX
+ENDIF
+
+ON=@NPCRestock
+ ITEM=loot_awyrm9
+
+ON=@Death
+ NEWITEM=i_fx_explode
+ act.TYPE=T_EXPLOSION
+ act.ATTR=ATTR_MOVE_NEVER | ATTR_DECAY
+ act.LINK=<uid>
+ act.morex=10 // damage
+ act.morey=090 // wFlags DAMAGE_GENERAL
+ act.morez=2 // iDist
+ act.p=<p>
+ act.TIMERD=1 // immediate decay
+ON=@CLICK
+ MESSAGE @<color> <name>
+ Return 1
+
+[CHARDEF c_awyrm_magma]
+NAME=Magma Ancient Wyrm
+ID=c_dragon_green
+SOUND=snd_MONSTER_DAEMON1
+ICON=i_pet_dragon
+DAM=60
+ARMOR=60
+CAN=MT_WALK|MT_FLY|MT_FIRE_IMMUNE
+DESIRES=c_DAEMON,i_gold,t_wand
+AVERSIONS=r_water,r_mountains
+DESCRIPTION=True Vulcano Monster
+SUBSECTION=awyrms
+CATEGORY=Novos monstros
+
+ON=@Create
+TAG.LOOTPROPRIO 1
+COLOR=magma
+STR={2000 2500}
+DEX={1000 1200}
+INT={1000 1200}
+Events = +e_poison_immune
+PARRYING={90.0 100.0}
+MAGERY={90.0 100.0}
+MAGICRESISTANCE={90.0 100.0}
+TACTICS={90.0 100.0}
+WRESTLING={90.0 100.0}
+NPC=brain_monster
+FAME={9000 10000}
+KARMA={-8000 -9999}
+
+ON=@HIT
+IF !(<REGION.SAFE>)
+ACT.HITS=0
+ACT.FIX
+ENDIF
+
+ON=@NPCRestock
+ ITEM=loot_awyrm10
+
+ON=@Death
+ NEWITEM=i_fx_explode
+ act.TYPE=T_EXPLOSION
+ act.ATTR=ATTR_MOVE_NEVER | ATTR_DECAY
+ act.LINK=<uid>
+ act.morex=10 // damage
+ act.morey=090 // wFlags DAMAGE_GENERAL
+ act.morez=2 // iDist
+ act.p=<p>
+ act.TIMERD=1 // immediate decay
+ON=@CLICK
+ MESSAGE @<color> <name>
+ Return 1
+
+[CHARDEF c_awyrm_purple]
+NAME=Purple Ancient Wyrm
+ID=c_dragon_green
+SOUND=snd_MONSTER_DAEMON1
+ICON=i_pet_dragon
+DAM=60
+ARMOR=60
+CAN=MT_WALK|MT_FLY|MT_FIRE_IMMUNE
+DESIRES=c_DAEMON,i_gold,t_wand
+AVERSIONS=r_water,r_mountains
+
+DESCRIPTION=True Purple Monster
+SUBSECTION=awyrms
+CATEGORY=Novos monstros
+
+ON=@Create
+TAG.LOOTPROPRIO 1
+COLOR=purple
+STR={2000 2500}
+DEX={1000 1200}
+INT={1000 1200}
+Events = +e_poison_immune
+PARRYING={90.0 100.0}
+MAGERY={90.0 100.0}
+MAGICRESISTANCE={90.0 100.0}
+TACTICS={90.0 100.0}
+WRESTLING={90.0 100.0}
+
+NPC=brain_monster
+
+FAME={9000 10000}
+KARMA={-8000 -9999}
+
+ON=@HIT
+IF !(<REGION.SAFE>)
+ACT.HITS=0
+ACT.FIX
+ENDIF
+
+ON=@NPCRestock
+ ITEM=loot_awyrm11
+
+ON=@Death
+ NEWITEM=i_fx_explode
+ act.TYPE=T_EXPLOSION
+ act.ATTR=ATTR_MOVE_NEVER | ATTR_DECAY
+ act.LINK=<uid>
+ act.morex=10 // damage
+ act.morey=090 // wFlags DAMAGE_GENERAL
+ act.morez=2 // iDist
+ act.p=<p>
+ act.TIMERD=1 // immediate decay
+ON=@CLICK
+ MESSAGE @<color> <name>
+ Return 1
+
+//////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
+
+[EVENTS e_poison_immune]
+
+ON=@GETHIT
+
+IF (<ARGN2>&08)
+ say Poison? Easily cured. Haha!
+ say An Nox
+ ANIM=12
+ SpellEffect s_cure,1000
+ SOUND=snd_SPELL_CURE
+ RETURN 1
+ENDIF
+RETURN 0
+
+ON=@SpellEffect
+
+IF !(<FINDID.i_paralyze_disable_effect.UID>) && ((<ARGN>==38) || (<ARGN>==47))
+ say Wanna beat me using magic?! Never!
+ say @<SERV.WOPColor>,<SERV.WOPFont> An Ort
+ ANIM=12
+ SpellEffect s_mass_dispel,1000
+ SOUND=snd_SPELL_DISPEL
+ RETURN 1
+ENDIF
+RETURN 0
+
+
+
+[EVENTS e_paralyze_immune]
+
+ON=@SpellEffect
+
+IF (<argn1> == 47) || (<argn1> == 38)
+ speak Querem me paralisar? Hahaha!
+ speak Vas An Ort
+ ANIM=12
+ SpellEffect s_mass_dispel,1000,<uid>
+ SOUND=snd_SPELL_DISPEL
+ RETURN 1
+ENDIF
+RETURN 0
+
+[TYPEDEF t_spell]
+
+ON=@STEP
+IF (<BASEID> = i_fx_field_paralyze)
+ IF (<SRC.TAG0.PARAIMUNE>)
+  SRC.SAY Querem me paralisar? Hahaha!
+  SRC.SAY An Ort
+  SRC.ANIM=12
+  SRC.SpellEffect s_dispel,1000,<src.uid>
+  SRC.SOUND=snd_SPELL_DISPEL
+  RETURN 1
+ ENDIF
+ENDIF
+RETURN 0
+
+
+
+[EOF]

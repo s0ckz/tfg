@@ -1,0 +1,98 @@
+[function f_validate_event_subscription]
+IF !(<ARGS>)
+	RETURN 1
+ENDIF
+
+LOCAL.EVENT_ID = <ARGV[0]>
+LOCAL.LOGIN = <ARGV[1]>
+
+IF (<DB.CONNECTED>)
+	DB.QUERY "SELECT * FROM events WHERE id = '<dLOCAL.EVENT_ID>'"
+
+	IF (<DB.ROW.NUMROWS> > 0)
+		LOCAL.EVENT_LIMIT = "<DB.ROW.0.LIMIT>"
+		LOCAL.EVENT_NAME = "<DB.ROW.0.NAME>"
+	ELSE
+		RETURN 2
+	ENDIF
+
+	DB.QUERY "SELECT COUNT(*) SUBSCRIPTIONS_COUNT FROM event_subscriptions WHERE event_id = '<dLOCAL.EVENT_ID>' AND confirmed = 1"
+
+	IF (<DB.ROW.NUMROWS> > 0)
+		LOCAL.CONFIRMED_SUBSCRIPTIONS_COUNT = <DB.ROW.0.SUBSCRIPTIONS_COUNT>
+	ELSE
+		RETURN 2
+	ENDIF
+
+	IF (<dLOCAL.CONFIRMED_SUBSCRIPTIONS_COUNT> >= <dLOCAL.EVENT_LIMIT>)
+		DB.EXECUTE "DELETE FROM event_subscriptions WHERE event_id = '<dLOCAL.EVENT_ID>' AND login = '<LOCAL.LOGIN>' AND confirmed = 0"
+		RETURN 4
+	ENDIF
+
+	IF !(<SERV.ACCOUNT.<LOCAL.LOGIN>>)
+		DB.EXECUTE "DELETE FROM event_subscriptions WHERE event_id = '<dLOCAL.EVENT_ID>' AND login = '<LOCAL.LOGIN>' AND confirmed = 0"
+		RETURN 5
+	ENDIF
+
+	LOCAL.GLOBAL_ID = <SERV.ACCOUNT.<LOCAL.LOGIN>.TAG0.GLOBAL>
+
+	IF !(<dLOCAL.GLOBAL_ID>)
+		DB.EXECUTE "DELETE FROM event_subscriptions WHERE event_id = '<dLOCAL.EVENT_ID>' AND login = '<LOCAL.LOGIN>' AND confirmed = 0"
+		RETURN 6
+	ENDIF
+
+	DB.QUERY "SELECT * FROM event_subscriptions WHERE event_id = '<dLOCAL.EVENT_ID>' AND IdContaPainel = '<dLOCAL.GLOBAL_ID>' AND confirmed = 1"
+
+	IF (<DB.ROW.NUMROWS> > 0)
+		DB.EXECUTE "DELETE FROM event_subscriptions WHERE event_id = '<dLOCAL.EVENT_ID>' AND login = '<LOCAL.LOGIN>' AND confirmed = 0"
+		RETURN 7
+	ENDIF
+
+	DB.QUERY "SELECT * FROM event_subscriptions WHERE event_id = '<dLOCAL.EVENT_ID>' AND login = '<LOCAL.LOGIN>' AND confirmed = 0"
+
+	IF (<DB.ROW.NUMROWS> == 0)
+		RETURN 3
+	ENDIF
+
+	DB.EXECUTE "UPDATE event_subscriptions SET confirmed = 1, IdContaPainel = '<dLOCAL.GLOBAL_ID>' WHERE event_id = '<dLOCAL.EVENT_ID>' AND login = '<LOCAL.LOGIN>'"
+
+	SERV.LOG Inscricao para <LOCAL.EVENT_NAME> confirmada para <LOCAL.LOGIN>.
+
+	RETURN 0
+ELSE
+	RETURN 2
+ENDIF
+
+[function f_validate_event_removal]
+LOCAL.EVENT_ID = <ARGV[0]>
+LOCAL.LOGIN = <ARGV[1]>
+local.GLOBAL_ID = <SERV.ACCOUNT.<LOCAL.LOGIN>.TAG0.GLOBAL>
+
+if <db.CONNECTED>
+
+	DB.QUERY "SELECT * FROM events WHERE id = '<dLOCAL.EVENT_ID>'"
+
+	IF (<DB.ROW.NUMROWS> > 0)
+		LOCAL.EVENT_LIMIT = "<DB.ROW.0.LIMIT>"
+		LOCAL.EVENT_NAME = "<DB.ROW.0.NAME>"
+	ELSE
+		RETURN 2
+	ENDIF
+
+	DB.QUERY "SELECT COUNT(*) SUBSCRIPTIONS_COUNT FROM event_subscriptions WHERE confirmed = 1, IdContaPainel = '<dLOCAL.GLOBAL_ID>' WHERE event_id = '<dLOCAL.EVENT_ID>' AND login = '<LOCAL.LOGIN>'"
+
+	IF (<DB.ROW.NUMROWS> == 0)
+		RETURN 1
+	ELIF (<DB.ROW.NUMROWS> == 1)
+		DB.EXECUTE "DELETE FROM event_subscriptions WHERE confirmed = 1 IdContaPainel = '<dLOCAL.GLOBAL_ID>' AND event_id = '<dLOCAL.EVENT_ID>' AND login = '<LOCAL.LOGIN>'"
+		SERV.LOG Inscricao para <LOCAL.EVENT_NAME> REMOVIDA para <LOCAL.LOGIN>.
+		RETURN 0
+	else 
+		return 3
+	endif
+
+ELSE
+	return 4
+endif
+
+[EOF]

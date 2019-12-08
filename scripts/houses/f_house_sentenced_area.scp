@@ -1,0 +1,19 @@
+[FUNCTION f_house_sentenced_area]
+FORITEMS 120
+	IF (<ARGV[7]> == <REGION.UID>) && (<ARGV[7]> != <UID>) && (<ARGV[7]> != <LINK>)
+		REMOVE
+	ENDIF
+ENDFOR
+
+FOR X <ARGV[0]> <ARGV[2]>
+if <eval <local.x> % 2>
+  FOR Y <ARGV[1]> <ARGV[3]>
+    if <eval <local.y> % 2>
+     SERV.NEWITEM i_sentenced_house_area
+     NEW.P <eval <argv[4]> + <LOCAL.X>>,<eval <argv[5]> + <LOCAL.Y>>,<ARGV[6]>
+     NEW.UPDATEX
+    endif
+  ENDFOR
+endif
+ENDFOR
+RETURN 1

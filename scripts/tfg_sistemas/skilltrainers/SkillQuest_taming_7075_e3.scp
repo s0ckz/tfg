@@ -1,0 +1,127 @@
+[CHARDEF c_paolo_tavernkeeper]
+NAME=Paolo the Tavernkeeper
+ID=C_MAN
+DESIRES=i_gold,e_notoriety
+AVERSIONS=t_TRAP,t_eerie_stuff
+TSPEECH=spk_human_prime
+TSPEECH=jobTAVERNKEEPER
+TSPEECH=spk_shopkeep
+TSPEECH=spk_paolo_tavernkeeper
+TEVENTS=e_Human_HearUnk
+TEVENTS=e_Human_Needs
+TEVENTS=e_Human_ConvInit
+TEVENTS=e_Human_Greet
+TEVENTS=e_Human_Space
+TEVENTS=e_Human_Refuse
+TEVENTS=e_Human_Environ
+
+ON=@Create
+	tag.name.hue=0481
+	NPC=brain_vendor
+	COLOR=colors_skin
+	STR={61 75}
+	DEX={66 80}
+	INT={51 68}
+	FENCING={15.0 38.0}
+	PARRYING={15.0 38.0}
+	SWORDSMANSHIP={15.0 38.0}
+	WRESTLING={15.0 38.0}
+	MACEFIGHTING={15.0 38.0}
+	TACTICS={15.0 38.0}
+	ITEMNEWBIE=random_male_hair
+	COLOR=colors_hair
+	ITEMNEWBIE=random_facial_hair
+	COLOR=match_hair
+
+ON=@NPCRestock
+	ITEM=RANDOM_LIGHT
+	ITEM=i_shirt_plain
+	COLOR=colors_all
+	ITEM=random_pants
+	COLOR=colors_all
+	ITEM=random_shoes
+	COLOR=colors_neutral
+	ITEM=i_apron_half
+	ITEM=random_coin_purse
+	SELL=VENDOR_S_TAVERNKEEPER
+	BUY=VENDOR_B_TAVERNKEEPER
+	CATEGORY=Civilized
+	SUBSECTION=Tradesmen
+	DESCRIPTION=Tavernkeeper (male)
+
+
+[speech spk_paolo_tavernkeeper]
+on=*If from the wine you drink*
+    Message @,,1 Any woman you shall have
+    Message @,,1 Who told you that? Must have been Hal, hahaha. That old man...
+    Message @,,1 How can I help you? First, what is your name?
+    src.tag0.tam75e3 = 1
+
+on=*here* 
+on=*liche*
+on=*consegui*
+on=*ola*
+on=*oi*
+on=*<src.name>*
+    if (<src.tag0.tam75e3> == 1)
+        Message @,,1 Hello there <src.name>, well, you know I can get arrested for this, right?! I cant take risks like that..
+        Message @,,1 So, to the point, I need you to do something for me. These new mercenaries in this town are weirder and weirder.
+        Message @,,1 I dropped, by accident, Liche Remains that I used to fertilize Mead, then served like that and it was a SUCCESS!!
+        Message @,,1 Can you belive it? So I need you to bring me <eval <def.quest_taming_7075_liche_remains>> Liche Remains. Go!
+        timerf 5, src.smsg @,,1 Find <eval <def.quest_taming_7075_liche_remains>> Liche Remains for Paolo and get back to him with it.
+        return 1
+    elif (<src.tag0.tam75e3> == 2)
+        Message @,,1 Hello, you're back <src.name>, good! Wow, you have it! Thanks!! I'm going to be so rich! Hahaha! Ok, It is worth the risk. 
+        Message @,,1 Now give it to me, please mate.
+    elif (<src.tag0.tam75e3> == 3)
+        Message @,,1 I was serving at the emissaries reunion and one of them got really drunk after the meeting. So, after everyone left, he kept mumbling about so many things..
+        Message @,,1 At the moment I hadn't made sense of any of that, but now I guess it might help you.
+        Message @,,1 He spoke about ruins, antiques, chair, old furniture...
+        Message @,,1 Oh, about spirit too. Must be something at this location, ok? Did it help? Thanks for making me even richer! Now go your way...
+    endif
+
+[events e_quest_taming_7075_liche_target]
+On=@DeathCorpse
+//argo corpo / more2 -> quem matou
+//src quem morreu
+
+    ref1 <argo.more2>
+    if (<ref1.dtag0.licheremains> < <ddef.quest_taming_7075_liche_remains>)
+        if (<r1,100> > 20)
+            serv.newitem i_liche_remains
+            ref1.tag0.licheremains += 1
+            ref1.bounce <new>
+        endif
+    else
+        ref1.smsg @,,1 Seems like you already got enought Remains for Paolo.
+    endif
+
+[ITEMDEF i_liche_remains]
+ID=i_ham_slices
+name=Liche Remains
+weight=0.1
+
+on=@Create
+    attr=attr_newbie
+    color colors_green
+
+ON=@DROPON_CHAR
+IF (<ARGO.BASEID>==c_paolo_tavernkeeper)
+    if (<Amount> == <eval <def.quest_taming_7075_liche_remains>>)
+        SRC.SYSMESSAGE @,,1 You have given Paolo what he wanted.
+        src.tag0.licheremains
+        src.tag0.tam75e3 = 3
+        ARGO.Message @,,1 I was serving at the emissaries reunion and one of them got really drunk after the meeting. So, after everyone left, he kept mumbling about so many things..
+        ARGO.TIMERF 2, Message @,,1 At the moment I hadn't made sense of any of that, but now I guess it might help you.
+        ARGO.TIMERF 4, Message @,,1 He spoke about ruins, antiques, chair, old furniture...
+        ARGO.TIMERF 6, Message @,,1 Oh, about spirit too. Must be something at this location, ok? Did it help? Thanks for making me even richer! Now go your way...
+        src.tag0.tam75e4 = 1
+        REMOVE
+        RETURN 1
+    else
+        argo.message @,,1 That is not the correct amount, I want <qval <eval (<ddef.quest_taming_7075_liche_remains> < <amount>) > ? only : exactly> <ddef.quest_taming_7075_liche_remains> Liche Remains...
+        return 1
+    endif
+ENDIF
+
+[eof]

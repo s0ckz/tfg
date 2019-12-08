@@ -1,0 +1,157 @@
+[COMMENT script_tabela_stealing]
+CREATE TABLE `stealing_skills` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `loginconta` varchar(16) NOT NULL,
+  `ano` INT NOT NULL,
+  `skill` INT NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+[COMMENT script_coluna_recuperacao]
+ALTER TABLE `stealing_skills` ADD COLUMN `recuperado` tinyint(1) NOT NULL DEFAULT 0;
+
+// pra checagem de integridade - nao recupera
+[COMMENT script_players_2016_sem_aparecer_2017]
+select s1.id, s1.loginconta, s1.skill from stealing_skills s1 left join stealing_skills s2 on s1.id != s2.id and s1.loginconta = s2.loginconta and s2.ano = 2017 where s1.ano = 2016 and s2.loginconta is null;
+
+[COMMENT script_players_somente_2017]
+select s1.id, s1.loginconta, s1.skill from stealing_skills s1 left join stealing_skills s2 on s1.id != s2.id and s1.loginconta = s2.loginconta and s2.ano = 2016 where s1.ano = 2017 and s2.loginconta is null and s1.skill > 700 and s1.recuperado = 0;
+
+[COMMENT script_players_2016_2017_ressarcir_ps]
+select s1.id, s1.loginconta, s1.skill skill_2016, s2.skill from stealing_skills s1 left join stealing_skills s2 on s1.id != s2.id and s1.loginconta = s2.loginconta and s2.ano = 2017 where s1.ano = 2016 and s2.skill > 700 and s1.recuperado = 0;
+
+[COMMENT script_players_2016_2017_recuperar_skill]
+select s1.loginconta, s1.skill skill_2016, s2.skill from stealing_skills s1 left join stealing_skills s2 on s1.id != s2.id and s1.loginconta = s2.loginconta and s2.ano = 2017 where s1.ano = 2016 and s1.skill > 700 and s2.skill <= 700 and s1.recuperado = 0;
+
+[FUNCTION f_fill_stealing_skills_table]
+IF (<ARGV> != 1)
+	RETURN 1
+ENDIF
+
+LOCAL.YEAR <ARGS>
+DB.EXECUTE DELETE FROM stealing_skills WHERE ano = "<dLOCAL.YEAR>"
+
+FOR X 0 <EVAL <SERV.ACCOUNTS> - 1>
+    IF (<SERV.ACCOUNT.<dLOCAL.X>.CHARS> > 0)
+    	IF (<SERV.ACCOUNT.<dLOCAL.X>.PLEVEL> == 1)
+	        FOR Y 0 <EVAL <SERV.ACCOUNT.<dLOCAL.X>.CHARS> -1>
+	            REF1 = <SERV.ACCOUNT.<dLOCAL.X>.CHAR.<dLOCAL.Y>>
+
+//              REF1.modstr 100
+//              REF1.moddex 100
+//              REF1.modint 100
+//              REF1.STRIPREMOVE
+
+              IF (<REF1.ACCOUNT.PLEVEL> == 1)
+              	DB.EXECUTE INSERT INTO stealing_skills (loginconta, ano, skill) VALUES("<REF1.ACCOUNT>", "<dLOCAL.YEAR>", "<EVAL <REF1.STEALING>>")
+              ENDIF
+	        ENDFOR
+	    ENDIF
+    ENDIF
+ENDFOR
+
+DB.EXECUTE UPDATE stealing_skills SET skill = LEAST(1000, skill);
+
+SERV.LOG Finished filling stealing skills table for <dLOCAL.YEAR>.
+
+[FUNCTION recover_power_scrolls_for_stealing]
+DB.QUERY "select s1.id, s1.loginconta, s1.skill from stealing_skills s1 left join stealing_skills s2 on s1.id != s2.id and s1.loginconta = s2.loginconta and s2.ano = 2016 where s1.ano = 2017 and s2.loginconta is null and s1.skill > 700 and s1.recuperado = 0;"
+IF (<DB.ROW.NUMROWS> > 0)
+  FOR 0 <EVAL <DB.ROW.NUMROWS> - 1>
+    LOCAL.ID = "<DB.ROW.<DLOCAL._FOR>.id>"
+    LOCAL.ACCOUNT = "<DB.ROW.<DLOCAL._FOR>.loginconta>"
+    LOCAL.SKILL = <FVAL <DB.ROW.<DLOCAL._FOR>.skill>>
+
+    REF1 = <f_get_char_account_uid <LOCAL.ACCOUNT>>
+
+    SERV.NEWITEM i_chest_metal
+    NEW.CONT <REF1.FINDLAYER.layer_bankbox.UID>
+    NEW.NAME Scrolls PS <SERV.RTIME.FORMAT %d/%m/%Y %H:%M:%S>
+    LOCAL.ITEMS_CONTAINER <NEW.UID>
+
+    SERV.LOG Recovering power scrolls for <LOCAL.ACCOUNT> / is <REF1.STEALING>% / was <FVAL <LOCAL.SKILL>>%
+    WHILE (<LOCAL.SKILL> > 70.0)
+      LOCAL.POWER_SCROLL_SKILL 0.5
+
+      IF (<EVAL <LOCAL.SKILL> - <LOCAL.POWER_SCROLL_SKILL>> < 70.0)
+        LOCAL.POWER_SCROLL_SKILL <FVAL <EVAL <LOCAL.SKILL> - 70.0>>
+        LOCAL.SKILL = 70.0
+      ELSE
+        LOCAL.SKILL -= <LOCAL.POWER_SCROLL_SKILL>
+      ENDIF
+
+      SERV.NEWITEM i_power_scroll
+      NEW.MORE2 <FVAL <LOCAL.POWER_SCROLL_SKILL>>
+      NEW.CONT <LOCAL.ITEMS_CONTAINER>
+
+      REF1.STEALING -= <LOCAL.POWER_SCROLL_SKILL>
+    ENDWHILE
+
+    DB.EXECUTE "UPDATE stealing_skills SET recuperado = 1 WHERE id = <dLOCAL.ID>"
+
+    SERV.LOG Stealing skill for <LOCAL.ACCOUNT> is now <REF1.STEALING>%
+  ENDFOR
+ENDIF
+
+DB.QUERY "select s1.id, s1.loginconta, s1.skill skill_2016, s2.skill from stealing_skills s1 left join stealing_skills s2 on s1.id != s2.id and s1.loginconta = s2.loginconta and s2.ano = 2017 where s1.ano = 2016 and s2.skill > 700 and s1.recuperado = 0;"
+IF (<DB.ROW.NUMROWS> > 0)
+  FOR 0 <EVAL <DB.ROW.NUMROWS> - 1>
+    LOCAL.ID = "<DB.ROW.<DLOCAL._FOR>.id>"
+    LOCAL.ACCOUNT = "<DB.ROW.<DLOCAL._FOR>.loginconta>"
+    LOCAL.SKILL = <FVAL <DB.ROW.<DLOCAL._FOR>.skill>>
+    LOCAL.SKILL_2016 = <FVAL <DB.ROW.<DLOCAL._FOR>.skill_2016>>
+
+    REF1 = <f_get_char_account_uid <LOCAL.ACCOUNT>>
+
+    SERV.NEWITEM i_chest_metal
+    NEW.CONT <REF1.FINDLAYER.layer_bankbox.UID>
+    NEW.NAME Scrolls PS <SERV.RTIME.FORMAT %d/%m/%Y %H:%M:%S>
+    LOCAL.ITEMS_CONTAINER <NEW.UID>
+
+    SERV.LOG Recovering power scrolls for <LOCAL.ACCOUNT> / is <REF1.STEALING>% / was <FVAL <LOCAL.SKILL>>% 2017 / was <FVAL <LOCAL.SKILL_2016>>% 2016
+    WHILE (<LOCAL.SKILL> > 70.0)
+      LOCAL.POWER_SCROLL_SKILL 0.5
+
+      IF (<EVAL <LOCAL.SKILL> - <LOCAL.POWER_SCROLL_SKILL>> < 70.0)
+        LOCAL.POWER_SCROLL_SKILL <FVAL <EVAL <LOCAL.SKILL> - 70.0>>
+        LOCAL.SKILL = 70.0
+      ELSE
+        LOCAL.SKILL -= <LOCAL.POWER_SCROLL_SKILL>
+      ENDIF
+
+      SERV.NEWITEM i_power_scroll
+      NEW.MORE2 <FVAL <LOCAL.POWER_SCROLL_SKILL>>
+      NEW.CONT <LOCAL.ITEMS_CONTAINER>
+    ENDWHILE
+
+    IF (<LOCAL.SKILL_2016> < 70.0)
+      LOCAL.SKILL 70.0
+    ELSE
+      LOCAL.SKILL <LOCAL.SKILL_2016>
+    ENDIF
+
+    REF1.STEALING = <LOCAL.SKILL>
+
+    DB.EXECUTE "UPDATE stealing_skills SET recuperado = 1 WHERE id = <dLOCAL.ID>"
+
+    SERV.LOG Stealing skill for <LOCAL.ACCOUNT> is now <REF1.STEALING>%
+  ENDFOR
+ENDIF
+
+DB.QUERY "select s1.loginconta, s1.skill skill_2016, s2.skill from stealing_skills s1 left join stealing_skills s2 on s1.id != s2.id and s1.loginconta = s2.loginconta and s2.ano = 2017 where s1.ano = 2016 and s1.skill > 700 and s2.skill <= 700 and s1.recuperado = 0;"
+IF (<DB.ROW.NUMROWS> > 0)
+  FOR 0 <EVAL <DB.ROW.NUMROWS> - 1>
+    LOCAL.ID = "<DB.ROW.<DLOCAL._FOR>.id>"
+    LOCAL.ACCOUNT = "<DB.ROW.<DLOCAL._FOR>.loginconta>"
+    LOCAL.SKILL = <FVAL <DB.ROW.<DLOCAL._FOR>.skill>>
+    LOCAL.SKILL_2016 = <FVAL <DB.ROW.<DLOCAL._FOR>.skill_2016>>
+
+    REF1 = <f_get_char_account_uid <LOCAL.ACCOUNT>>
+    REF1.STEALING = <LOCAL.SKILL_2016>
+
+    DB.EXECUTE "UPDATE stealing_skills SET recuperado = 1 WHERE id = <dLOCAL.ID>"
+
+    SERV.LOG Stealing skill for <LOCAL.ACCOUNT> is now <REF1.STEALING>%
+  ENDFOR
+ENDIF
+[EOF]

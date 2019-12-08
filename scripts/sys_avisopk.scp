@@ -1,0 +1,77 @@
+[DIALOG d_wodaviso]
+0,0
+page 0
+resizepic 120 106 3600 311 254
+resizepic 124 117 3500 299 240
+resizepic 213 130 9200 143 30
+dtext 0 0 0 
+dtext 229 135 567 :: TFG Shard ::
+button 167 254 1209 1210 1 0 1
+dtext 200 186 47 Voce esta em:
+IF !(STRCMPI("<REGION.NAME>", "Britain Fields")) || !(STRCMPI("<REGION.NAME>", "Britain Territory"))
+dtext 200 206 47 Ponte de Britain
+ELIF !(STRCMPI("<REGION.NAME>", "Ponte Minoc"))
+dtext 200 206 47 Ponte de Minoc
+ELSE
+dtext 200 206 47 <REGION.NAME>
+ENDIF
+dtext 200 250 47 Chamar jogadores
+resizepic 147 275 9200 254 65
+dtext 159 299 37 o shard, dizendo que voce ta
+dtext 159 283 37 Mandara uma mensagem para todo
+dtext 160 314 37 esperando player no local.
+gumppic 314 187 106
+
+[DIALOG d_wodaviso button]
+ON=1
+IF (<VAR0.MENSAGEM_TODOS> == 1)
+	SRC.SYSMESSAGE @079c,3 Alguem ja mandou esta mensagem a pouco tempo.
+RETURN 1
+ELSE
+SERV.B <CALLMESSAGE>.
+VAR.MENSAGEM_TODOS = 1
+TIMER = 200
+ENDIF
+
+[FUNCTION CALLMESSAGE]
+LOCAL.MSG=<QVAL (<EVAL QVAL(<SRC.KILLS>,2,1,0,0)>)?"@079c O Player <SRC.name> esta chamando os PKS para" :"@07a2 O Player <SRC.name> esta chamando os BLUES para">
+IF !(STRCMPI("<REGION.NAME>", "Britain Fields")) || !(STRCMPI("<REGION.NAME>", "Britain Territory"))
+LOCAL.LSET ++
+LOCAL.LUGAR="a ponte de Britain"
+ELIF !(STRCMPI("<REGION.NAME>", "Ponte Minoc"))
+LOCAL.LSET ++
+LOCAL.LUGAR="a ponte de Minoc"
+ELIF !(STRCMPI("<REGION.NAME>", "Trinsic Territory"))
+LOCAL.LSET ++
+LOCAL.LUGAR="a casa do Ortis"
+ENDIF
+RETURN <QVAL (<LOCAL.LSET>)? "<LOCAL.MSG> <LOCAL.LUGAR>" : "<LOCAL.MSG> <REGION.NAME>">
+
+[ITEMDEF i_anuncioats]
+ID=i_gravestone_18
+NAME=Anuncio TfGShard
+TYPE=t_normal
+
+ON=@CREATE
+COLOR=07A1
+ATTR=010
+
+ON=@Click
+MESSAGE @077A <NAME>
+RETURN 1
+
+ON=@DCLICK
+IF (<SRC.DISTANCE> > 3)
+	SRC.SYSMESSAGE @079c,3,1 Se aproxime mais...
+RETURN 1
+ELIF (<SRC.HITS> < <SRC.STR>)
+	SRC.SYSMESSAGE @079c,3,1 Voce tem que ta com HITS full!
+RETURN 1
+ELSE
+	SDIALOG d_wodaviso
+RETURN 1
+ENDIF
+
+ON=@TIMER
+	VAR.MENSAGEM_TODOS =
+RETURN 1

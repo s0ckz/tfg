@@ -1,0 +1,122 @@
+[plevel 4]
+fireworks
+
+[itemdef i_fireworks_wand]
+id=i_wand_3
+name=fireworks wand
+dam 0
+tag.tooltip.description Hulka vyvolavajici ohnostroj. Lze ji zakoupit u reward stone.
+
+on=@create
+hits 100
+maxhits 100
+tag.protected 1
+tag.cler 1
+tag.mage 1
+tag.nekr 1
+tag.war 1
+tag.pal 1
+tag.rang 1
+tag.vamp 1
+tag.chg 20
+
+on=custom_tooltip
+tag.tooltip.special Nabiti: <eval <tag0.chg>> / 0
+
+on=@dclick
+if (<cont> == <src.uid>)
+    tag0.chg -= 1
+    src.fireworks
+    if !(<tag.chg>)
+        emote se rozbila
+        remove
+    endif
+    return 1    
+endif
+
+[FUNCTION fireworks]
+anim=17
+serv.newitem=i_fireworks_timer
+new.p=<p>
+new.link=<uid>
+new.more=60
+new.trigger @timer
+forchars 10
+    sysmessage @097, Fireworks! 
+endfor
+
+[itemdef i_fireworks_timer]
+id=i_memory
+type=t_eq_script
+name=fireworksTimer
+
+on=@click
+return 1
+
+on=@timer
+if !(<more>)
+    remove
+    return 1
+endif
+fireworks_fall <eval {-10 10} + <link.p.x>>,<eval {-10 10} + <link.p.y>>,<link.p.z>,<link>
+more -= 1
+timerd=3
+return 1
+
+[function fireworks_fall]
+dorand 2
+    flexeffect 0,i_fx_fireball,9,16,0,0,0,1,<eval <argv[0]>+2>,<eval <argv[1]>+5>,<eval <argv[2]>+7>,<eval <argv[0]>-2>,<eval <argv[1]>-2>,<eval <argv[2]>+30>,10
+    flexeffect 0,i_fx_firesnake,9,16,0,0,0,1,<eval <argv[0]>+2>,<eval <argv[1]>+5>,<eval <argv[2]>+7>,<eval <argv[0]>-2>,<eval <argv[1]>-2>,<eval <argv[2]>+30>,10
+enddo
+serv.newitem=i_nodraw
+obj=<new.uid>
+new.type=t_fireworks_target
+new.attr=092
+new.p=<eval <argv[0]>+2>,<eval <argv[1]>+2>,<eval <argv[2]>+30>,<p.m>
+new.link=<argv[3]>
+new.timerd=6
+return 1
+
+[typedef t_fireworks_target]
+on=@timer
+serv.newitem=i_nodraw
+new.type=t_fireworks_object
+new.attr=012
+new.p=<p>
+new.nudgeup 20
+dorand 10
+    new.effect 2, i_fx_explosion_2, 0, 15, 0, <r455>, <r1,5>
+    new.effect 2, i_fx_explode, 0, 15, 0, <r455>, <r1,5>
+    new.effect 2, i_fx_explosion_3, 0, 15, 0, <r455>, <r1,5>
+    new.effect 2, i_fx_explode_ball, 0, 15, 0, <r455>, <r1,5>
+    new.effect 2, i_fx_smoke, 0, 15, 0, <r455>, <r1,5>
+    new.effect 2, i_fx_bless_effect, 0, 15, 0, <r455>, <r1,5>
+    new.effect 2, i_fx_curse, 0, 15, 0, <r455>, <r1,5>
+    new.effect 2, i_fx_sparkle, 0, 15, 0, <r455>, <r1,5>
+    new.effect 2, i_fx_sparkle_2, 0, 15, 0, <r455>, <r1,5>
+    new.effect 2, i_fx_glow_spike, 0, 15, 0, <r455>, <r1,5>
+enddo
+new.link=<link>
+new.more1=1
+new.trigger=@timer
+remove
+return 1
+
+[typedef t_fireworks_object]
+on=@timer
+if ( <more1> )
+    sound=011d
+    timer=2
+    more1=0
+    local.meteor=<link>
+    return 1
+endif
+remove
+return 1
+
+[function flexeffect]
+forchars <argv[14]>
+   if !(<NPC>)
+       sendpacket 0c0 <argv[0]> d0 d0 w<argv[1]> w<argv[8]> w<argv[9]> <argv[10]> w<argv[11]> w<argv[12]> <argv[13]> <argv[2]> <argv[3]> w0 <argv[6]> <argv[4]> d<argv[5]> d<argv[7]>
+   endif
+endfor

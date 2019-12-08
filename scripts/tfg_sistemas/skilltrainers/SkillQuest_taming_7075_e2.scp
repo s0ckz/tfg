@@ -1,0 +1,131 @@
+[CHARDEF c_hal_treddo]
+NAME=Hal Treddo
+ID=C_MAN
+DESIRES=i_gold,e_notoriety
+AVERSIONS=t_TRAP,t_eerie_stuff
+TSPEECH=spk_hal_treddo
+TEVENTS=e_Human_Needs
+TEVENTS=e_Human_Refuse
+TEVENTS=e_Human_Environ
+
+ON=@Create
+    NPC=brain_human
+    FLAGS=04
+    COLOR=083ea
+    STR={61 75}
+    DEX=0
+    INT=0
+    HITS=100
+
+ON=@NPCRestock
+    ITEM=i_robe
+    COLOR=0a22
+    ITEM=i_shepherds_crook
+    ITEM=i_shoes_plain
+    COLOR=15
+
+ON=@CLICK
+    MESSAGE @0a22,,1 Hal Treddo, Animal Trainer
+    return 1
+
+[speech spk_hal_treddo]
+on=*quest*
+on=*ola*
+on=hi
+on=*hello*
+on=*help*
+on=*oi*
+on=*ajuda*
+on=*norton*
+if (<src.tag0.tam75e2> == 0)
+    Say=Hello fellow traveler, I guess you want to hear more about some animals whereabouts? Say your name first.
+elif (<src.tag0.tam75e2> == 1)
+    say=Are you going to help me? Go!
+elif (<src.tag0.tam75e2> == 2)
+    //completou a quest. Move on 
+    Message @,,1 Thank you very much <src.name>! Now our animals will have some sort of rest.
+    Message @,,1 Well, I found out that one of the emissaries, in a very dark manner, captured Sky and Night Animals. I followed his footsteps until certain point...
+    timerf 3, Message @,,1 The trail leads us to Serpent's Hold, I couldn't enter 'cause I saw some of Lord Tresshorn's soldiers.
+    timerf 5, Message @,,1 I suggest you talk to Paolo, the Tavernkeeper, and say this to him "If from the wine you drink"...
+    timerf 7,  @,,1 He will understand that code, take my word for it..hehe. Now go! Farewell and Thank You
+    src.tag0.tam75e2 += 1
+
+elif (<src.tag0.tam75e2> > 2)
+    if (<src.tag0.tam75e3>)
+        //quest completa, já "premiado". Ja falou com Paolo
+        dorand 2
+            Message @,,1 Im glad you found Paolo!
+            MESSAGE @,,1 I have already told you everything I could.
+        enddo
+    else
+        //quest completa, já "premiado". Porem nao falou com Paolo ainda
+        Message @,,1 Thank you very much <src.name>! Now our animals will have some sort of rest.
+        Message @,,1 Well, I found out that one of the emissaries, in a very dark manner, captured Sky and Night Animals. I followed his footsteps until certain point...
+        Message @,,1 The trail leads us to Serpent's Hold, I couldn't enter 'cause I saw some of Lord Tresshorn's soldiers.
+        Message @,,1 I suggest you talk to Paolo, the Tavernkeeper, and say this to him "If from the wine you drink"...
+        Message @,,1 He will understand that code, take my word for it..hehe. Now go! Farewell and Thank You
+    endif
+endif
+
+
+on=*<src.name>*
+if (<src.tag0.tam75e2> == 1)
+    if !(<TAG0.TALKING>)
+        TAG.TALKING 1
+        ref1 <src>
+        say <ref1.name> I find very noble of you to want to help our community, however I also have several problems...
+        TIMERF 3, Message @,,1 Right now I can't help you 'cause I'm still gathering strengh to diminish Ogre Lords attacks against wild animals. THEY EAT EVERYTHING! All I find are remains... //'
+        TIMERF 4, Message @,,1 Please help me with that and I shall tell you everything I know...
+        TIMERF 5, TAG.Talking
+    endif
+endif
+
+if (<src.tag0.tam75e2> == 2)
+    //completou a quest. Move on 
+    Message @,,1 Thank you very much <src.name>! Now our animals will have some sort of rest.
+    Message @,,1 Well, I found out that one of the emissaries, in a very dark manner, captured Sky and Night Animals. I followed his footsteps until certain point...
+    timerf 3, Message @,,1 The trail leads us to Serpent's Hold, I couldn't enter 'cause I saw some of Lord Tresshorn's soldiers.
+    timerf 5, Message @,,1 I suggest you talk to Paolo, the Tavernkeeper, and say this to him "If from the wine you drink"...
+    timerf 7,  @,,1 He will understand that code, take my word for it..hehe. Now go! Farewell and Thank You
+    src.tag0.tam75e2 += 1
+endif
+
+if (<src.tag0.tam75e2> == 3)
+    say=Thank you very much, noble adventurer.
+endif
+
+IF !(<TAG0.TALKING>)
+    TAG.TALKING 1
+    ref1 <src>
+    say <ref1.name> I find very noble of you to want to help our community, however I also have several problems...
+    TIMERF 3, Say Right now I can't help you 'cause I'm still gathering strengh to diminish Ogre Lords attacks against wild animals. THEY EAT EVERYTHING! All I find are remains... //'
+    TIMERF 7, Say Please help me with that and I shall tell you everything I know...
+    TIMERF 8, TAG.Talking
+    ref1.timerf 8, f_quest_taming_7075_2
+   //TIMERF 8,f_msg1
+ENDIF
+
+[FUNCTION f_quest_taming_7075_2]
+src.tag0.tam75e2 = 1
+src.sysmessage @,,1 Kill <eval <def.quest_taming_7075_ogrelords>> Ogre Lords and help Hal Treddo protect the wilderness!
+src.sysmessage @,,1 You have 4 days to complete your task. Click on the Quest Button or type .tamequest
+
+[events e_quest_taming_7075_ogre_target]
+
+On=@DeathCorpse
+    //argo corpse
+    //src quem morreu
+    ref1 <argo.more2>
+
+    if (<ref1.isevent.e_quest_taming_7075>) && (<ref1.tag0.tam75e2> == 1)
+        uid.<argo.more2>.tag0.quest_taming_7075_ogrelords += 1
+        ref1.smsg @,,1 Kill confirmed! Ogre Lord kill count: <ref1.dtag0.quest_taming_7075_ogrelords>
+        if (<ref1.tag0.quest_taming_7075_ogrelords> >= <def.quest_taming_7075_ogrelords>)
+            ref1.smsg @,,1 You have finished helping Hal Treddo! Go talk to him!
+            ref1.tag0.tam75e2 = 2
+        endif
+    elif (<ref1.isevent.e_quest_taming_7075>) && (<ref1.tag0.tam75e2> == 2)
+        ref1.smsg @,,1 You have finished helping Hal Treddo! Go talk to him!
+    endif
+
+[eof]

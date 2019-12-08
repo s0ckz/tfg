@@ -1,0 +1,1788 @@
+//****************************************************************************
+// SphereServer �1997-2009
+// This script is part from the Sphere Community Script Pack.
+// You can download the full pack from: www.sphereserver.net
+//****************************************************************************
+// FILE LAST UPDATED: 20-Apr-2017
+VERSION=0.56d
+//
+// SCRIPT CREDITS
+// --------------
+// Saci_BR - Main system
+// Coruja (coruja747) - Rewrote all main system, making it optimized and without bugs
+// s0ckz - Adapted to Sphere 0.56d and bugs fixed
+// Lightsource - Tfg Kiosk System Implementation
+//
+// SCRIPT DOCUMENTATION
+// --------------------
+// Version 1.4
+// This system is based on the official OSI Custom Vendor system.
+// The player buy a vendor deed (Contract of Employment) from an
+// tavernkeeper or innkeeper, and place it on his house.
+//
+// Houses can be turned into shops with many vendors from different players.
+// For this, the house owner must buy a Vendor Rental Contract and place inside the house.
+// Then, the owner of the contract configure and offer it to someone. This will create
+// a new custom vendor for the RENTER, and it will stand on the house until the contract
+// time expire or the vendor salary doesn't get paid.
+//
+// Custom Vendors needs a diary salary to keep working. And the value of the salary
+// is calculated based on the total amount of VALUE that the vendor is selling on
+// his inventory.
+// Salary is paid automatically by the vendor, and it uses the gold on vendor bankbox.
+// Only the vendor owner can give it more gold, and the gold is increased too when someone
+// buy something from the vendor.
+// If the vendor can't pay his salary, it will place all inventory items on his owner
+// bankbox, and then the vendor will disappear.
+//
+
+// TODO TFG:
+// 1. Tá checando se o player tá num t_multi, precisa ver direito se eh casa, porque help room etc. pode ser um t_multi
+// 2. Ajustar valor maximo que pede
+
+[DEFNAME Kiosk_max_vendors]
+//numero maximo de vendors por tamanho de kiosk
+maxvendors_m_small_kiosk  4
+maxvendors_m_medium_kiosk 6
+maxvendors_m_large_kiosk  8
+
+[DEFNAME AOS_CUSTOM_VENDOR_SYSTEM]
+///////////////////////////////////////////////////////////////
+//////// AOS Custom Vendor System
+///////////////////////////////////////////////////////////////
+// Max ammount of vendors that a player can own
+// 0 = Infinite
+scp.Vendor_PlayerMaxOwn=1
+
+// Max ammount of vendors that a player can rent
+// 0 = Infinite
+scp.Vendor_PlayerMaxRent=0
+
+// Max characters allowed in items description
+scp.Vendor_MaxItemDescript=40
+
+// Where the vendor search for gold on buy
+// 1 = Bag and bank / 0 = Only in bag
+scp.Vendor_GetMoneyFromBank=1
+
+// Vendors will be redeeded when dismissed?
+// <boolean> (1 = On / 0 = Off). Default = 0
+scp.Vendor_Redeed=0
+
+// Max weight that vendors can carry
+// Default = 390
+scp.Vendor_MaxWeight=780
+
+// New vendors comes with this shop name
+scp.Vendor_DefaultShopName=Unnamed Shop
+
+// Players can place vendors only on houses?
+// <boolean> (0 = No / 1 = Yes)
+scp.Vendor_HousingOnly=1
+
+// Name of area to permit place vendors
+// Example: "Britain" (0 = Everywhere)
+scp.Vendor_PlacementRegion=0
+
+// Basic salary per day, in gp
+scp.Vendor_SalaryBasic=200
+
+// Raise 1gp on salary for each total of X gp's vending
+// Default = 165
+scp.Vendor_SalaryAdditional=600
+
+// How many times the salary get paid on a day? Default = 12
+// NOTE: This will just make the salary get paid on small amounts X times per day.
+scp.Vendor_SalaryPaymentDiv=1
+
+// Contract in pack error
+scp.vendor_contractinpack=This deed should be in your pack.
+
+// Uncomment if you don't use AOS House System
+SCP.HOUSE_USEVENDORS=0
+
+[DEFNAME VENDOR_SYSTEM]
+//Script variables (DO NOT MAKE CHANGES HERE)
+MALESTYLE			i_hair_short,i_hair_long,i_hair_ponytail,i_hair_mohawk,i_hair_pageboy,i_hair_afro,i_hair_receding,i_hair_2_pigtails,i_hair_krisna,i_beard_long,i_beard_short,i_beard_goatee,i_beard_mustache,i_beard_short_med,i_beard_long_med,i_beard_vandyke
+vendor_random_male_tops		{i_doublet 1 i_tunic 1 i_robe 1}
+vendor_random_female_pants	{i_pants_short 1 i_pants_long 1 i_kilt 1 i_skirt_long 1}
+BFONT_SHOPNAME			<basefont color="#ff8880">
+BFONT_MBLUE			<basefont color="#888FFF">
+// added for 0.56d compatibility
+random_male_pants      { i_pants_short 1 i_pants_long 1 i_kilt 1 }
+random_female_tops     { i_shirt_plain 1 i_shirt_fancy 1 i_doublet 1 i_tunic 1 i_dress_full 1 i_dress_plain 1 i_robe 1 }
+
+//////////////////////////////////////////////////////////////////////////////////
+
+[ITEMDEF i_deed_vendor]
+NAME=Contract Of Employment
+ID=i_deed
+TYPE=t_normal
+VALUE=1200
+
+ON=@DClick
+SRC.CLOSEALLDIALOGS
+IF (<TOPOBJ> != <SRC>)
+SRC.SMSG <def.scp.vendor_contractinpack>
+return 1
+ELIF !(<SRC.ISGM>)
+	IF !(<CanOwnVendor>)
+	SRC.SMSG @,,1 You reach the limit of vendors.
+	return 1
+	ENDIF
+  IF (<DEF.scp.Vendor_PlacementRegion> != 0)
+    IF !STRMATCH("<SRC.REGION.REGION.NAME>","<DEF.scp.Vendor_PlacementRegion>")
+      SRC.SMSG @,,1 Vendors are unable to be created there
+      return 1
+    ENDIF
+  ENDIF
+  IF (<DEF.scp.Vendor_HousingOnly>)
+    REF1=<SRC.REGION.UID>
+    IF (!STRMATCH("t_multi*","<REF1.TYPE>")) || (!STRMATCH("*r_kiosk*","<REF1.TEVENTS>"))
+      SRC.SMSG @,,1 Vendors can only be placed in kiosks. Get inside one first.
+      return 1
+    ELIF (<REF1.MORE1> != <SRC>) && (!(<REF1.TAG0.public>) || !(<REF1.TAG0.acceptnew>))
+      SRC.SMSG @,,1 Only the house owner can directly place vendors.  Please ask the house owner to allow for new vendors.
+      return 1
+    ENDIF
+  ENDIF
+  FOROBJS 1
+    IF (<BASEID>==i_vendor_rental_contract)
+     SRC.SMSG @,,1 You cannot place a vendor or barkeep on top of a rental contract!
+     return 1
+    ELIF (<ISEVENT.e_custom_vendor>)
+     SRC.SMSG @,,1 You cannot place a vendor or barkeep at this location.
+     return 1
+    ENDIF
+  ENDFOR
+ENDIF
+	TARGETG
+	RETURN 1
+
+ON=@TARGON_GROUND
+SERV.NEWNPC c_pig
+NEW.FLAGS = statf_insubstantial|statf_invul|statf_freeze
+NEW.P = <SRC.TARGP>
+ref1 = <new>
+
+if (strmatch(*kiosk*, <uid.<ref1.region.uid>.baseid>))
+  src.CTAG0.kiosk <ref1.region.uid>
+  src.ctag0.kioskP <src.targp>
+  src.ctag0.vendordeed <uid>
+  ref1.remove
+  if (<uid.<src.ctag0.kiosk>.f_vendors_number> >= <def.maxvendors_<uid.<src.ctag0.kiosk>.baseid>>)
+    src.smsg @,,1 That kiosk cannot get any new vendors. Come back later or find another kiosk.
+    return 1
+  endif
+  if !(<uid.<src.ctag0.kiosk>.tag0.acceptnew>)
+    src.smsg @,,1 That kiosk is not acccepting new vendors.
+    return 1
+  endif
+  SRC.dialog d_kiosk_query
+  return 1
+else
+  src.smsg @,,1 You should target a valid location, in a Vendor Kiosk.
+  return 1
+endif
+
+[DIALOG d_kiosk_query]
+0,0
+page 0
+resizepic 70 64 9380 377 284
+text 192 102 0 0
+text 144 135 0 1
+resizepic 172 160 9300 188 28
+text 178 163 0 2
+text 254 163 0 3
+text 288 163 0 4
+text 199 188 0 5
+text 260 188 0 6
+text 199 207 0 7
+text 260 207 0 8
+button 147 264 247 248 1 0 1
+button 317 263 243 241 1 0 0
+gumppic 96 99 9004
+text 212 234 0 9
+text 111 292 0 10
+
+[DIALOG d_kiosk_query text]
+Vendor Kiosk info
+The Kiosk you have selected costs:
+<uid.<src.CTAG0.kiosk>.dtag0.price>
+gps
+per day*
+Public?
+<qval <eval <uid.<src.CTAG0.kiosk>.dtag0.public> == 1> ? Yes : No>
+Owner:
+<qval <eval <uid.<src.CTAG0.kiosk>.dtag0.public> == 0> ? <uid.<uid.<src.CTAG0.kiosk>.more1>.name> : Public >
+Do you agree?
+*You will NOT get your deed back on dismiss.
+
+[DIALOG d_kiosk_query button]
+ON=1
+// botao sim
+//
+ref1 <uid.<src.ctag0.kiosk>> //kiosk
+SERV.NEWNPC c_vendor_player
+NEW.P=<src.ctag0.kioskP>
+new.tag0.kiosk <src.ctag0.kiosk>
+NEW.VendorPrepare
+ref2 <new> //vendor
+uid.<src.ctag0.vendordeed>.REMOVE
+ref1.tag0.vendors += 1
+for 1 <def.maxvendors_<uid.<src.ctag0.kiosk>.baseid>>
+  //ver em qual slot entra
+  if !(<ref1.tag0.slot_<dlocal._for>_usado>)
+    ref1.tag0.slot_<dlocal._for>_usado <ref2>
+    ref2.tag0.slot <dlocal._for>
+    return 1
+  endif
+endfor
+return 1
+
+ON=0
+// botao nao
+
+
+[DIALOG d_kiosk_config]
+0,0
+page 0
+resizepic 82 64 9380 416 340
+text 214 103 0 0
+button 444 67 4019 4020 1 0 0
+gumppic 120 110 92
+text 238 133 0 1
+resizepic 120 167 9300 343 71
+text 130 170 0 2
+text 129 189 0 3
+resizepic 207 198 9300 85 32
+dtextentrylimited 213 205 70 20 0 1 5
+text 297 205 0 5
+text 327 205 0 6
+button 394 206 239 240 1 0 1
+resizepic 341 251 9300 122 66
+text 349 254 0 7
+button 354 282 <qval <eval <uid.<src.ctag0.kiosk>.tag0.slot_1_usado> != 0> ? 2361 : 2362> 2362 1 0 4 //slot1 - 2361 verde (alugado) 2362 azul (disponivel) 2360 vermelho
+button 371 282 <qval <eval <uid.<src.ctag0.kiosk>.tag0.slot_2_usado> != 0> ? 2361 : 2362> 2362 1 0 5 //slot2
+if (<def.maxvendors_<uid.<src.ctag0.kiosk>.baseid>> == 2)
+  gumppic 388 282 2360
+  gumppic 405 282 2360
+  gumppic 422 282 2360
+  gumppic 439 282 2360
+elif (<def.maxvendors_<uid.<src.ctag0.kiosk>.baseid>> == 4)
+  button 388 282 <qval <eval <uid.<src.ctag0.kiosk>.tag0.slot_3_usado> != 0> ? 2361 : 2362> 2362 1 0 6 //slot3
+  button 405 282 <qval <eval <uid.<src.ctag0.kiosk>.tag0.slot_4_usado> != 0> ? 2361 : 2362> 2362 1 0 7 //slot4
+  gumppic 422 282 2360
+  gumppic 439 282 2360
+elif (<def.maxvendors_<uid.<src.ctag0.kiosk>.baseid>> == 6)
+  button 388 282 <qval <eval <uid.<src.ctag0.kiosk>.tag0.slot_3_usado> != 0> ? 2361 : 2362> 2362 1 0 6 //slot3
+  button 405 282 <qval <eval <uid.<src.ctag0.kiosk>.tag0.slot_4_usado> != 0> ? 2361 : 2362> 2362 1 0 7 //slot4
+  button 422 282 <qval <eval <uid.<src.ctag0.kiosk>.tag0.slot_5_usado> != 0> ? 2361 : 2362> 2362 1 0 8 //slot5
+  button 439 282 <qval <eval <uid.<src.ctag0.kiosk>.tag0.slot_6_usado> != 0> ? 2361 : 2362> 2362 1 0 9 //slot6
+endif
+text 356 294 0 8
+text 371 294 0 9
+text 388 294 0 10
+text 405 294 0 11
+text 422 294 0 12
+text 439 294 0 13
+tilepichue 287 386 7847 13
+tilepichue 299 386 7847 37
+tilepichue 311 386 7847 92
+tilepichue 323 386 7847 2
+tilepichue 335 386 7847 42
+tilepichue 347 386 7847 47
+tilepichue 359 386 7847 52
+tilepichue 371 386 7847 61
+tilepichue 383 386 7847 42
+tilepichue 395 386 7847 27
+tilepichue 407 386 7847 47
+tilepichue 419 386 7847 52
+tilepichue 431 386 7847 68
+tilepichue 443 386 7847 6
+tilepichue 455 386 7847 36
+resizepic 120 310 9300 70 59
+button 165 342 2117 2118 1 0 2
+tilepic 124 334 5359
+text 128 314 0 14
+gumppic 209 314 2361
+gumppic 209 334 2362
+gumppic 209 354 2360
+text 227 309 0 15
+text 227 329 0 16
+text 227 349 0 17
+resizepic 120 251 9300 202 52
+text 194 252 0 18
+button 289 274 <qval <eval  <uid.<src.ctag0.kiosk>.tag0.acceptnew> == 0> ? 9026 : 9027> <qval <eval  <uid.<src.ctag0.kiosk>.tag0.acceptnew> == 1> ? 9026 : 9027> 1 0 3 1 0 3
+text 127 273 0 19
+
+[DIALOG d_kiosk_config text]
+Vendor Kiosk Setup
+Owner's View
+Enter how much will it cost to rent one slot
+ per day:
+textentry id.0
+gps
+per day
+Manage Slots
+1
+2
+3
+4
+5
+6
+Redeed
+Rented Slot
+Empty Slot
+Slot Unavailable
+Status
+Accept new vendors?
+
+[DIALOG d_kiosk_config button]
+ON=1
+// botao sim
+//
+
+IF ( <ISEMPTY <ARGTXT[1]>> )
+	SRC.SYSMESSAGE @,,1 Operation canceled. Set a price at the price field.
+	Return 1
+ ELIF !(STRMATCH(*[0-9]*, <ARGTXT[1]>))
+	SRC.SYSMESSAGE @,,1 Type only numbers.
+	RETURN 1
+ELIF (<EVAL <ARGTXT[1]>> > 999999)
+	SRC.SYSMESSAGE @0481,,1 Value too high.
+	RETURN 1
+ELIF (<EVAL <ARGTXT[1]>> < 0)
+	SRC.SYSMESSAGE @0481,,1 Only positive numbers.
+	RETURN 1
+ENDIF
+
+if (<uid.<src.ctag0.kiosk>.tag0.pricechanged>)
+  src.smsg @,,1 Voce deve aguardar para alterar esse preço novamente
+  return 1
+endif
+
+IF (<ISNUM <ARGTXT[1]>>)
+	uid.<src.ctag0.kiosk>.tag0.price <eval <ARGTXT[1]>>
+  src.smsg @,,1 Price per day of <uid.<src.ctag0.kiosk>.name> set to <uid.<src.ctag0.kiosk>.dtag0.price>
+  uid.<src.ctag0.kiosk>.tag0.pricechanged = 1
+  uid.<src.ctag0.kiosk>.timerf 432000, tag0.pricechanged
+  src.smsg @,,1 Você só poderá alterar esse preço novamente em 5 dias.
+  return 1
+ENDIF
+
+ON=2
+// redeed
+
+if (<uid.<src.ctag0.kiosk>.f_vendors_number> > 0)
+    //tem vendor no kiosk ainda
+    src.sysmessage @,,1 There are vendors working on your kiosk yet.
+    return 1
+else
+  //kiosk vazio
+  if (<uid.<src.ctag0.kiosk>.baseid> == m_small_kiosk)
+    serv.newitem i_deed_small_kiosk
+    src.bounce <new>
+    uid.<src.ctag0.kiosk>.remove
+    src.sysmessage @,,1 you have redeeded your kiosk.
+    return 1
+  elif (<uid.<src.ctag0.kiosk>.baseid> == m_medium_kiosk)
+    serv.newitem i_deed_medium_kiosk
+    src.bounce <new>
+    uid.<src.ctag0.kiosk>.remove
+    src.sysmessage @,,1 you have redeeded your kiosk.
+    return 1
+  elif (<uid.<src.ctag0.kiosk>.baseid> == m_large_kiosk)
+    serv.newitem i_deed_large_kiosk
+    src.bounce <new>
+    uid.<src.ctag0.kiosk>.remove
+    src.sysmessage @,,1 you have redeeded your kiosk.
+    return 1
+  endif
+  src.sysmessage @,,1 Error. Kiosk Redeed. send a page.
+  return 1
+endif
+
+ON=3
+// ativar/desativar novos vendors
+//
+uid.<src.ctag0.kiosk>.tag0.acceptnew = <qval <eval  <uid.<src.ctag0.kiosk>.tag0.acceptnew> == 1> ? 0 : 1>
+src.dialog d_kiosk_config
+
+ON=0
+// botao nao
+//
+
+ON=4
+// Slot1
+//
+if !(<uid.<src.ctag0.kiosk>.tag0.slot_1_usado>)
+  src.smsg @,,1 Esse slot está vazio.
+  src.dialog d_kiosk_config
+  return 1
+endif
+src.ctag0.slotselecionado 1
+src.dialog d_config_slot
+
+ON=5
+// Slot2
+//
+if !(<uid.<src.ctag0.kiosk>.tag0.slot_2_usado>)
+  src.smsg @,,1 Esse slot está vazio.
+  src.dialog d_kiosk_config
+  return 1
+endif
+src.ctag0.slotselecionado 2
+src.dialog d_config_slot
+
+ON=6
+// Slot3
+//
+if !(<uid.<src.ctag0.kiosk>.tag0.slot_3_usado>)
+  src.smsg @,,1 Esse slot está vazio.
+  src.dialog d_kiosk_config
+  return 1
+endif
+src.ctag0.slotselecionado 3
+src.dialog d_config_slot
+
+ON=7
+// Slot4
+//
+if !(<uid.<src.ctag0.kiosk>.tag0.slot_4_usado>)
+  src.smsg @,,1 Esse slot está vazio.
+  src.dialog d_kiosk_config
+  return 1
+endif
+src.ctag0.slotselecionado 4
+src.dialog d_config_slot
+
+ON=8
+// Slot5
+//
+if !(<uid.<src.ctag0.kiosk>.tag0.slot_5_usado>)
+  src.smsg @,,1 Esse slot está vazio.
+  src.dialog d_kiosk_config
+  return 1
+endif
+src.ctag0.slotselecionado 5
+src.dialog d_config_slot
+
+ON=9
+// Slot6
+//
+if !(<uid.<src.ctag0.kiosk>.tag0.slot_6_usado>)
+  src.smsg @,,1 Esse slot está vazio.
+  src.dialog d_kiosk_config
+  return 1
+endif
+src.ctag0.slotselecionado 6
+src.dialog d_config_slot
+
+
+[DIALOG d_config_slot]
+0,0
+page 0
+resizepic 82 64 9380 416 302
+text 214 103 0 0
+button 450 68 4019 4020 1 0 0
+gumppic 120 110 9005
+text 167 126 0 1
+resizepic 324 181 9300 134 66
+text 226 150 0 2
+text 342 150 0 3
+button 378 211 2472 2473 1 0 1
+text 332 187 0 4
+text 155 179 0 5
+text 120 234 0 6
+text 120 253 0 7
+text 120 284 0 8
+text 120 306 0 9
+tilepichue 287 347 7847 13
+tilepichue 299 347 7847 37
+tilepichue 311 347 7847 92
+tilepichue 323 347 7847 2
+tilepichue 335 347 7847 42
+tilepichue 347 347 7847 47
+tilepichue 359 347 7847 52
+tilepichue 371 347 7847 61
+tilepichue 383 347 7847 42
+tilepichue 395 347 7847 27
+tilepichue 407 347 7847 47
+tilepichue 419 347 7847 52
+tilepichue 431 347 7847 68
+tilepichue 443 347 7847 6
+tilepichue 455 347 7847 36
+text 117 206 0 10
+text 242 207 0 11
+
+[DIALOG d_config_slot text]
+Vendor Kiosk Setup
+Owner's View - Slot Management
+Manage Slot #
+<src.dctag0.slotselecionado>
+Remove Vendor
+<uid.<uid.<src.ctag0.kiosk>.tag0.slot_<src.dctag0.slotselecionado>_usado>.owner.name>'s Vendor
+If you remove a vendor
+you agree to and will:
+- Refund one full day,
+- Pay 15k to the vendor owner as penalty.
+Day time left:
+24hrs
+
+[DIALOG d_config_slot button]
+ON=0
+// Copy of botao nao
+//
+
+ON=1
+// botao remover
+//
+src.smsg @,,1 Funcao desativada temporariamente.
+return 1
+
+[FUNCTION f_vendors_number]
+FORCHARS 7
+  if !(<isplayer>)
+    if (<ISEVENT.e_custom_vendor>)
+      local.count ++
+    endif
+  endif
+endfor
+
+return <dlocal.count>
+
+[itemdef i_vendor_sign]
+name=Kiosk Sign
+id=0c0a
+type=t_sign_gump
+
+on=@Click
+message @,,1 [Price per day: <link.dtag0.price>gps]
+if <uid.<link.more>> == 05b58c
+  message @,,1 Public Vendor Kiosk
+  return 1
+endif
+message @,,1 <uid.<link.more>.name>'s Kiosk
+return 1
+
+on=@DClick
+IF (<SRC.UID> == <LINK.MORE>) || (<src.account.plevel> > 1)
+  src.CLOSEALLDIALOGS
+  src.ctag.kiosk = <link>
+  src.dialog d_kiosk_config
+  return 1
+endif
+
+[FUNCTION VendorPrepare]
+UPDATE
+TAG.Salary.Time=<eval <SERV.TIME>+(864000/<DEF.scp.Vendor_SalaryPaymentDiv>)>
+SAY @,,1 Ah! It feels good to be working again!
+TIMERF 1,SetCustomVendorOwner <SRC>
+IF (<TAG0.Rent.End>)
+ SRC.TAG0.VENDORS.RENT ++
+ELSE
+ SRC.TAG0.VENDORS ++
+ENDIF
+
+[FUNCTION SetCustomVendorOwner]
+SERV.NEWITEM i_memory
+NEW.LINK=<ARGS>
+NEW.COLOR=<DEF.MEMORY_IPET>
+NEW.EQUIP
+
+[FUNCTION CanOwnVendor]
+IF (<DEF.scp.Vendor_PlayerMaxOwn>)
+ IF (<SRC.TAG0.VENDORS> >= <DEF.scp.Vendor_PlayerMaxOwn>)
+  return 0
+ ENDIF
+ENDIF
+return 1
+
+[FUNCTION CanRentVendor]
+IF (<DEF.scp.Vendor_PlayerMaxRent>)
+ IF (<SRC.TAG0.VENDORS.RENT> >= <DEF.scp.Vendor_PlayerMaxRent>)
+  return 0
+ ENDIF
+ENDIF
+return 1
+
+//////////////////////////////////////////////////////////////////////////////////
+
+[CHARDEF c_vendor_player]
+NAME=#NAMES_HUMANMALE
+ID=c_woman
+DESIRES=i_gold
+CAN=MT_NONMOVER
+
+ON=@Create
+NPC=brain_human
+IF !(<DEF.scp.Vendor_Redeed>)
+ GOLD += 200
+ENDIF
+COLOR=colors_skin
+FLAGS=<FLAGS>|statf_invul|statf_freeze
+SPEECH=s_player_vendors
+EVENTS=+e_custom_vendor
+MODMAXWEIGHT=<DEF.scp.Vendor_MaxWeight>
+TAG.Salary=<DEF.scp.Vendor_SalaryBasic>
+TAG.NameShop=<DEF.scp.Vendor_DefaultShopName>
+VendorWear
+EQUIPHALO
+STR=100
+ALLSKILLS=0.0
+ITEMNEWBIE=i_bankbox
+ITEMNEWBIE=i_backpack
+EVENTS=+t_bag_vendor
+
+//////////////////////////////////////
+
+[EVENTS e_custom_vendor]
+ON=@Click
+MSG @035,,1 <NAME>
+MSG @,,1 Shop Name: <TAG.NAMESHOP>
+return 1
+
+ON=@ClientToolTip
+SRC.ADDCLILOC 1062449,<TAG.NAMESHOP>
+
+ON=@ContextMenuRequest
+IF (<TAG0.Rent.End>)
+ IF (<TAG0.Rent.Renter>==<SRC>)
+  SRC.AddContextEntry 661,6209
+ ELIF (<TAG0.Rent.Landlord>==<SRC>) || (<SRC.ISGM>)
+  SRC.AddContextEntry 662,6218
+  SRC.AddContextEntry 661,6209
+ ENDIF
+ENDIF
+SRC.AddContextEntry 660,6123
+return 1
+
+ON=@ContextMenuSelect
+IF (<ARGN>==660)
+ SRC.OPENPAPERDOLL <I.UID>
+ELIF (<ARGN>==661)
+ SDIALOG d_vendor_rental_contract
+ SRC.SMSG @,,1 This rental contract on this vendor will expire in <VendorReturnContractTime>
+ELIF (<ARGN>==662)
+ SRC.SMSG @,,1 Enter the amount of gold you wish to offer the renter in exchange for immediate termination of this contract?
+ SRC.CTAG.VENDOR=<UID>
+ SRC.PROMPTCONSOLE VendorRentalContractTerminatePrice
+ENDIF
+
+ON=@DClick
+FACE <SRC>
+IF (<ISMYPET>)
+  VendorSalaryCalc
+  SDIALOG d_custom_vendor 1,1
+  return 1
+ELSE
+  FINDLAYER.21.OPEN
+  MSG @,,1 Take a look at my goods.
+  return 1
+ENDIF
+
+ON=@ReceiveItem
+IF !(<ISMYPET>)
+  MSG @,,1 I can only take item from the shop owner.
+  return 1
+ELIF (<ARGO.TYPE>==t_gold)
+  IF (<GOLD> < 1000000)
+    MSG @,,1 I'll take that to fund my services.
+    GOLD += <ARGO.AMOUNT>
+    ARGO.REMOVE
+  ELSE
+    SRC.SMSG @,,1 Your vendor has sufficient funds for operation and cannot accept this gold.
+  ENDIF
+  return 1
+ELSE
+  IF (<eval <WEIGHT>+<SRC.TARG.WEIGHT>> > <MAXWEIGHT>)
+    SAY @,,1 I can't carry anymore.
+    return 1
+  ELSE
+    VendorReceiveItem
+    SRC.TARG.MOREM ++
+    SRC.TARG.CONT=<FINDLAYER.21>
+    SRC.TARG.MOREM --
+  ENDIF
+ENDIF
+
+ON=@ItemEquip
+IF (<OWNER>)
+ ACT.VendorRemoveItemSellingProps
+ ACT.TAG.FromPlayer=1
+ENDIF
+
+ON=@ItemUnequip
+ACT.TAG.FromPlayer=
+
+ON=@Attack
+return 1
+
+ON=@HitTry
+return 1
+
+ON=@GetHit
+return 1
+
+ON=@PetDesert
+return 1
+
+ON=@SpellEffect
+return 1
+
+ON=@Hunger
+return 1
+
+ON=@Destroy
+IF (<TAG0.Rent.End>)
+ OWNER.TAG.VENDORS.RENT --
+ELSE
+ OWNER.TAG.VENDORS --
+ENDIF
+
+ON=@CustomVendorDismiss
+IF (<DEF.scp.Vendor_Redeed>)
+ IF (<TAG0.Rent.End>)
+  VendorCreateRentalContract
+ ELSE
+  SERV.NEWITEM i_deed_vendor,1,<QVAL (<TAG0.SendDeedToOwnerBackpack>)? <OWNER.FINDLAYER.21>:<FINDLAYER.21>>
+ ENDIF
+ENDIF
+uid.<tag0.kiosk>.tag0.slot_<dtag0.slot>_usado
+TIMERF 1,VendorGetItemsBack
+TIMERF 2,REMOVE
+
+
+[EVENTS e_vendor_player]
+ON=@ItemPickUp_Pack
+ACT.f_fix_attr_newbie
+
+ON=@ItemPickUp_Ground
+ACT.f_fix_attr_newbie
+
+ON=@ItemDropOn_Item
+IF (<ARGO.TOPOBJ.ISCHAR>)
+  REF1=<ARGO.TOPOBJ>
+  IF (<REF1.ISMYPET>) && (<REF1.TAG0.Salary>)
+   IF <SRC.TARG.TYPE> == t_gold
+    REF1.SAY @,,1 I can't sell that.
+    return 1
+   ELIF (<eval <REF1.WEIGHT>+<SRC.TARG.WEIGHT>> > <REF1.MAXWEIGHT>)
+    REF1.SAY @,,1 I can't carry anymore.
+    return 1
+   ELIF (<isnum <ARGO.TAG.PRICE>>)
+     REF1.SAY @,,1 You can only dro!p items in Not-For-Sale containers.
+     return 1
+   ELSE
+    REF1.VendorReceiveItem
+   ENDIF
+  ENDIF
+ENDIF
+
+ON=@Logout
+EVENTS=-e_vendor_player
+
+ON=@EnvironChange
+FORCHARS 10
+  IF (<TAG0.Salary>)
+    IF (<ISMYPET>)
+      return 0
+    ENDIF
+  ENDIF
+ENDFOR
+EVENTS=-e_vendor_player
+
+
+[FUNCTION VendorReceiveItem]
+IF !(<SRC.TARG.ISEVENT.t_vendor_sell>)
+  IF (<SRC.TARG.TYPE>==t_container)
+    IF (<SRC.TARG.FINDTYPE t_container>)
+      SRC.SMSG @,,1 You cannot place a container that has other containers in it on a vendor.
+      SRC.TARG.BOUNCE
+      return 1
+    ENDIF
+  ENDIF
+
+  IF (<isnum <UID.<SRC.TARG.CONT>.TAG.PRICE>>)
+    IF (<SRC.TARG.TOPOBJ> != <SRC.TARG.CONT>)
+      SRC.SMSG @,,1 You can only drop items in Not-For-Sale containers.
+      SRC.TARG.BOUNCE
+      return 1
+    ENDIF
+  ENDIF
+
+  IF (<SRC.TARG.TYPE>==t_container)
+    SRC.TARG.TIMERF 1,EVENTS=+t_bag_vendor
+  ENDIF
+
+  SRC.TARG.TIMERF 1,EVENTS=+t_vendor_sell
+  SRC.TARG.TAG.PRICE=1000000
+  SRC.SMSG @,,1 Type in a price and description for <SRC.TARG.NAME> (ESC = not-for-sale)
+  SRC.CTAG.ITEM=<SRC.TARG>
+  PROMPTCONSOLE VendorSetPrice
+ENDIF
+
+
+[TYPEDEF t_bag_vendor]
+ON=@PickUp_Self
+ARGO.TAG.BAGBACK=<TOPOBJ>
+
+
+[TYPEDEF t_vendor_sell]
+ON=@ClientToolTip
+SRC.ADDCLILOC <QVAL (<isnum <TAG.PRICE>>)? <QVAL (<dTAG0.PRICE> != 0)? 1043304,<dTAG.PRICE>:1043306> : 1043307> // Price: Not for sale. // Price: FREE! // Price: ~1_COST~
+IF !(<ISEMPTY <TAG.DESCRIPTION>>)
+ SRC.ADDCLILOC 1043305,<TAG.DESCRIPTION>	//<br>Seller's Description:<br>"~1_DESC~"
+ENDIF
+
+ON=@Click
+MSG @,,1 Price: <QVAL (<isnum <TAG0.PRICE>>)? <QVAL (<dTAG0.PRICE> != 0)? <dTAG.PRICE>:FREE!>:Not for sale.> //Price: FREE! / Price: Not for sale.
+IF !(<isempty <TAG.DESCRIPTION>>)
+ MSG @,,1 Seller's Description: <TAG.DESCRIPTION>	//Seller's Description:
+ENDIF
+IF !(<TOPOBJ.ISMYPET>)
+  IF (<isnum <TAG0.PRICE>>)
+    SRC.SMSG @,,1 To purchase this item just say "<topobj.name> buy".
+  ENDIF
+ENDIF
+
+ON=@DClick
+IF (<TYPE>==t_container)
+  OPEN
+  return 1
+ENDIF
+
+ON=@ContextMenuRequest
+IF !(<TOPOBJ.ISMYPET>)
+  IF (<isnum <TAG0.PRICE>>)
+    SRC.AddContextEntry 200,6103,020,32767			//Buy
+  ELSE
+    SRC.SMSG @,,1 This item is not for sale.
+  ENDIF
+ENDIF
+
+ON=@ContextMenuSelect
+IF (<ARGN>==200)
+  IF (<isnum <TAG0.PRICE>>)
+    SDIALOG d_custom_vendor_sell_confirm
+  ENDIF
+ENDIF
+
+ON=@DropOn_Item
+IF (<CONT>)
+  IF (<TAG0.BAGBACK>)
+    IF (<isnum <ARGO.TAG.PRICE>>)
+      SRC.SMSG @,,1 You can only drop items in Not-For-Sale container.
+      MOREM ++
+      CONT=<UID.<TAG.BAGBACK>.FINDLAYER.21>
+      MOREM --
+    ELIF (<ARGO.TOPOBJ> != <TAG.BAGBACK>)
+      IF (<ARGO.TOPOBJ.TAG0.Salary>)
+        CONT=<SRC.FINDLAYER.21>
+      ENDIF
+      VendorRemoveItemSellingProps
+    ENDIF
+    TAG.BAGBACK=
+  ENDIF
+ENDIF
+
+ON=@DropOn_Ground
+VendorRemoveItemSellingProps
+
+ON=@DropOn_Char
+VendorRemoveItemSellingProps
+
+ON=@Equip
+VendorRemoveItemSellingProps
+
+ON=@Timer
+return 1
+
+
+[FUNCTION f_fix_attr_newbie]
+IF (<ATTR> & attr_newbie)
+ ATTR = <ATTR> &~ attr_decay
+ TAG.ATTR=<ATTR>
+ EVENTS=+t_fix_attr
+ENDIF
+
+[TYPEDEF t_fix_attr]
+ON=@DropOn_Item
+ATTR=<TAG.ATTR>
+TAG.ATTR=
+EVENTS=-t_fix_attr
+
+ON=@DropOn_Char
+ATTR=<TAG.ATTR>
+TAG.ATTR=
+EVENTS=-t_fix_attr
+
+ON=@DropOn_Ground
+ATTR=<TAG.ATTR>
+TAG.ATTR=
+EVENTS=-t_fix_attr
+
+
+//////////////////////////////////////////////////////////////////////////////////
+
+[SPEECH s_player_vendors]
+ON=*browse
+SRC.EVENTS=+e_vendor_player
+FINDLAYER.21.OPEN
+MSG @,,1 Take a look at <QVAL (<OWNER>==<SRC>)? your:my> goods.
+
+ON=*buy
+IF (<SRC.CANSEELOS <UID>>)
+  IF !(<ISMYPET>)
+    SRC.TARGETF Vendor_TargBuy <UID>
+    SRC.SMSG @,,1 Select the item you wish to buy.
+  ELSE
+    MSG @,,1 You own this shop, just take what you want.
+  ENDIF
+ENDIF
+
+ON=*collect
+IF !(<ISMYPET>)
+  MSG @,,1 You don't own this shop.
+  return 1
+ELSEIF !(<GOLD>)
+  MSG @,,1 I am holding no gold for you.
+  return 1
+ELSE
+  MSG @,,1 How much of the <GOLD> that I'm holding would you like?
+  SRC.SMSG @,,1 Enter the amount of gold you wish to withdraw (ESC = CANCEL):
+  SRC.CTAG.VENDOR=<UID>
+  SRC.PROMPTCONSOLE VendorWithdrawGold
+ENDIF
+
+
+[FUNCTION Vendor_TargBuy]
+REF1=<ARGS>
+IF (<ARGO.TOPOBJ> != <REF1>)
+ SMSG @,,1 That is not accessible.
+ELIF (<ARGO.ISEVENT.t_vendor_Sell>) && STRCMP("<ARGO.TAG0.PRICE>","notforsell")
+ ARGO.SDIALOG d_custom_vendor_sell_confirm
+ELSE
+ REF1.MSG @,,1 You can't buy that.
+ENDIF
+
+//////////////////////////////////////////////////////////////////////////////////
+
+[FUNCTION VendorWear]
+FOR 0 24
+  IF (<FINDLAYER.<LOCAL._FOR>>)
+    IF (<LOCAL._FOR> != 15) && (<LOCAL._FOR> != 21)
+      FINDLAYER.<LOCAL._FOR>.REMOVE
+    ENDIF
+  ENDIF
+ENDFOR
+Src.message @,,1 I Need clothes!
+LOCAL.COLOR=<def.colors_hair>
+IF (<BODY>==c_man)
+  NEWLOOT=random_male_hair
+  NEW.COLOR <LOCAL.COLOR>
+  NEWLOOT=random_facial_hair
+  NEW.COLOR <LOCAL.COLOR>
+ // NEWLOOT=random_male_pants
+  //NEW.COLOR colors_all
+  //NEWLOOT=vendor_random_male_tops
+  //NEW.COLOR colors_all
+ELSE
+  NEWLOOT=random_female_hair
+  NEW.COLOR <LOCAL.COLOR>
+ // NEWLOOT=random_female_tops
+  //NEW.COLOR colors_all
+  //NEWLOOT=vendor_random_female_pants
+  //NEW.COLOR colors_all
+ENDIF
+//DORAND 2
+  //NEWLOOT random_boots_human
+//  NEWLOOT random_footwear_human
+//ENDDO
+//NEW.COLOR colors_all
+//IF !(<R3>)
+ // NEWLOOT=random_hats
+  //NEW.COLOR colors_all
+//ENDIF
+//IF !(<R3>)
+  //NEWLOOT i_cape
+ // NEW.COLOR colors_all
+//ENDIF
+
+
+[FUNCTION VendorSalary]
+SERV.NEWITEM i_gold
+FOR 0 1
+ NEW.P 1,1,1,<LOCAL._FOR>
+ NEW.VendorCheck
+ENDFOR
+NEW.REMOVE
+
+[FUNCTION VendorCheck]
+FORINSTANCES c_vendor_player
+  VendorSalaryPayment
+ENDFOR
+
+[FUNCTION VendorSalaryPayment]
+ref1 <uid.<tag0.kiosk>>
+ref2 <uid.<ref1.more1>>
+IF (<TAG0.Salary.Time> < <SERV.TIME>)
+  VendorSalaryCalc
+  LOCAL.Salary=<eval <TAG0.Salary>/<DEF.scp.Vendor_SalaryPaymentDiv>>
+  local.custototal <eval <LOCAL.SALARY> + <ref1.tag0.price>>
+  IF (<GOLD> >= <local.custototal>)
+    GOLD -= <LOCAL.custototal>
+    ref2.gold += <ref1.dtag0.price>
+    ref2.smsg @,,1 <ref1.dtag0.price> Gold has been added to your account for <owner.name>'s Vendor
+    serv.writefile vendorsgold.txt <ref1.dtag0.price> Gold has been added to <ref2.name> account for <owner.name>'s Vendor -- em <serv.rtime>
+    TAG.Salary.Time=<eval <SERV.TIME>+(864000/<DEF.scp.Vendor_SalaryPaymentDiv>)>
+  ELSE
+    TRIGGER @CustomVendorDismiss
+    return 1
+  ENDIF
+ENDIF
+IF !(<TAG0.Rent.End>)
+  return 1
+ELIF (<TAG0.Rent.End> < <SERV.TIME>)
+  IF (<eval <TAG0.Rent.Renew.Landlord>+<TAG0.Rent.Renew.Renter>>==2)
+    REF1=<TAG0.Rent.Landlord>
+    REF2=<TAG0.Rent.Renter>
+    IF (<REF2.BANKBALANCE> >= <TAG0.Rent.Renew.Price>)
+     REF2.GOLD -= <dTAG0.Rent.Renew.Price>
+     REF1.GOLD += <dTAG0.Rent.Renew.Price>
+     TAG.Rent.End=<eval <SERV.TIME>+(<TAG.Rent.Lenght>*864000)>
+     return 1
+    ENDIF
+  ENDIF
+  TRIGGER @CustomVendorDismiss
+ENDIF
+
+[FUNCTION VendorSalaryCalc]
+FORCONT <FINDLAYER.21> 200
+ IF (<isnum <TAG0.PRICE>>)
+  LOCAL.TOTAL += <TAG0.PRICE>
+ ENDIF
+ENDFOR
+//TAG.Salary=<eval <DEF.scp.Vendor_SalaryBasic>+(<LOCAL.TOTAL>/<DEF.scp.Vendor_SalaryAdditional>)>
+TAG.Salary=<eval <DEF.scp.Vendor_SalaryBasic>>
+
+[FUNCTION VendorGetItemsBack]
+NEWGOLD <GOLD>
+FOR 1 24
+ IF (<FINDLAYER.<LOCAL._FOR>.TAG0.FromPlayer>)
+  FINDLAYER.<LOCAL._FOR>.TAG.FromPlayer=
+  FINDLAYER.<LOCAL._FOR>.CONT=<FINDLAYER.21>
+ ENDIF
+ENDFOR
+FORCONT <FINDLAYER.21>
+ VendorRemoveItemSellingProps
+ENDFOR
+IF (<FINDLAYER.21.COUNT>) && (<OWNER>)
+ FINDLAYER.21.ATTR=0
+ FINDLAYER.21.CONT=<OWNER.FINDLAYER.29>
+ENDIF
+
+
+[FUNCTION VendorRemoveItemSellingProps]
+TAG.PRICE=
+TAG.DESCRIPTION=
+TAG.BAGBACK=
+EVENTS=-t_vendor_sell
+IF (<TYPE>==t_container)
+ EVENTS=-t_bag_vendor
+ FORCONT <UID>
+  VendorRemoveItemSellingProps
+ ENDFOR
+ELIF (<TYPE>==t_book)
+ MORE=0
+ENDIF
+
+
+[FUNCTION VendorSetPrice]
+REF1=<CTAG.ITEM>
+CTAG.ITEM=
+IF !(<REF1.TOPOBJ.TAG0.Salary>)
+  REF1.VendorRemoveItemSellingProps
+ELSE
+  IF (<isempty <ARGS>>)
+    IF (<REF1.TYPE>==t_container)
+      SMSG @,,1 The container will not be selled.
+      REF1.TAG.PRICE=notforsell
+    ELIF (<REF1.TYPE>==t_book)
+      REF1.TAG.PRICE=notforsell
+      REF1.MORE=1
+    ELSE
+      SMSG @,,1 Only the following may be made not-for-sale: books, containers, keyrings, and items in for-sale containers.
+    ENDIF
+  ELSE
+    LOCAL.PRICE=<STRARG <ARGS>>
+    IF !(<isnum <LOCAL.PRICE>>)
+      SMSG @,,1 Invalid price, using default value.
+    ELIF <local.price> < 0
+      SMSG @,,1 You cannot set negative price on items, using default value.
+    ELIF (<LOCAL.PRICE> > 20000000)
+      SMSG @,,1 You cannot price items above 20,000,000 gold.  The price has been adjusted.
+      REF1.TAG.PRICE=20000000
+    ELSE
+      SMSG @,,1 You set <dLOCAL.PRICE>gp's for the item.
+      REF1.TAG.PRICE=<dLOCAL.PRICE>
+    ENDIF
+    LOCAL.DESCRIPTION=<STREAT <ARGS>>
+    IF (<eval STRLEN(<LOCAL.DESCRIPTION>)> > 1)
+      IF (<eval STRLEN(<LOCAL.DESCRIPTION>)> <= <DEF.scp.Vendor_MaxItemDescript>)
+        REF1.TAG.DESCRIPTION=<LOCAL.DESCRIPTION>
+        SMSG @,,1 Description set.
+      ELSE
+        SMSG @,,1 Your description was so big, it wasn't set.
+      ENDIF
+    ENDIF
+    REF1.ResendToolTip
+  ENDIF
+ENDIF
+
+
+[FUNCTION VendorRename]
+REF1=<CTAG.VENDOR>
+IF (<isempty <ARGS>>) || (<isnum <ARGS>>) || (<eval STRLEN(<ARGS>)> > 20) || (<eval STRLEN(<ARGS>)> < 4) || STRMATCH(*<ASC [[]>*,<ASC <ARGS>>) || STRMATCH(*<ASC ]>*,<ASC <ARGS>>) || STRMATCH(*<ASC [(]>*,<ASC <ARGS>>) || STRMATCH(*<ASC ->*,<ASC <ARGS>>) || STRMATCH(*<ASC [}`>?´;:^%$*¨!<#._~|=+&/æ{]>*,<ASC <ARGS>>) || STRMATCH(*<ASC @>*,<ASC <ARGS>>)
+  SMSG @,,1 That name is unacceptable.
+  return 1
+ENDIF
+TRY REF1.<CTAG.RENAME>=<ARGS>
+REF1.UPDATE
+SMSG @,,1 Your <QVAL !STRCMP("<CTAG.RENAME>","NAME")? vendor:shop> has been renamed.
+CTAG.VENDOR=
+CTAG.RENAME=
+
+
+[FUNCTION VendorWithdrawGold]
+REF1=<CTAG.VENDOR>
+IF (<isempty <ARGS>>)
+  SMSG @,,1 You withdraw nothing.
+ELIF (<isnum <ARGS>>)
+  IF (<ARGS> > 0) && (<ARGS> <= <REF1.GOLD>)
+    NEWGOLD <dARGS>
+    REF1.GOLD -= <dARGS>
+    SMSG @,,1 You withdraw <dARGS>gp's from the vendor.
+  ELSE
+    REF1.MSG @,,1 I'm sorry, but I'm only holding <dREF1.GOLD> gold for you.
+  ENDIF
+ENDIF
+CTAG.VENDOR=
+
+
+[FUNCTION VendorChangeBody]
+IF (<ARGS>==1)
+ BODY=c_man
+ //NAME=#NAMES_HUMANMALE
+ELSE
+ FINDLAYER.LAYER_BEARD.REMOVE
+ BODY=c_woman
+ //NAME=#NAMES_HUMANFEMALE
+ENDIF
+UPDATE
+
+
+[FUNCTION HuePicker]
+SRC.SENDPACKET 095 D<ARGS> W0000 W0FAB
+SRC.CTAG.HUEPICKER=<ARGS>
+
+[FUNCTION f_hue_picker]
+REF1=<LOCAL.CHAR>
+IF (<REF1.CTAG0.HUEPICKER>)
+ UID.<REF1.CTAG0.HUEPICKER>.COLOR=<LOCAL.7><STRSUB 1 0 <LOCAL.8>>
+ REF1.CTAG.HUEPICKER=
+ENDIF
+
+//////////////////////////////////////////////////////////////////////////////////
+
+[DIALOG d_custom_vendor]
+50,150
+
+page 1
+IF (<ARGS>==1)
+ resizepic 25 10 5054 530 180
+ gumppictiled 35 20 510 160 2624
+ //checkertrans 35 20 510 160
+ gumppic 10 0 028dc
+ gumppic 537 175 028dc
+ gumppic 10 175 028dc
+ gumppic 537 0 028dc
+ IF (<eval <GOLD>/<TAG0.Salary>>==0)
+  dhtmlgump 40 35 260 20 0 0 <DEF.BFONT_WHITE>Gold needed for 1 day of vendor salary:
+  dhtmlgump 300 35 90 20 0 0 <DEF.BFONT_LRED><eval <TAG0.Salary>-<GOLD>>
+ ELSE
+  dhtmlgump 40 35 260 20 0 0 <DEF.BFONT_WHITE># of days Vendor salary is paid for:
+  dhtmlgump 300 35 90 20 0 0 <DEF.BFONT_WHITE><eval <GOLD>/<TAG0.Salary>>
+ ENDIF
+ dhtmlgump 40 58 260 20 0 0 <DEF.BFONT_WHITE>My charge per real world day is:
+ dhtmlgump 300 58 90 20 0 0 <DEF.BFONT_WHITE><dTAG0.Salary> + <uid.<dtag0.kiosk>.dtag0.price> (kiosk)
+ dhtmlgump 40 82 260 20 0 0 <DEF.BFONT_WHITE>Gold held in my account:
+ dhtmlgump 300 82 90 20 0 0 <DEF.BFONT_WHITE><GOLD>
+ dhtmlgump 40 106 90 20 0 0 <DEF.BFONT_WHITE>Shop Name:
+ dhtmlgump 120 106 180 20 0 0 <DEF.CENTER><DEF.BFONT_SHOPNAME><TAG.NAMESHOP><DEF.CENTERE>
+ dhtmlgump 408 21 120 20 0 0 <DEF.BFONT_WHITE>See goods
+ dhtmlgump 408 41 120 20 0 0 <DEF.BFONT_WHITE>Customize
+ dhtmlgump 408 61 120 20 0 0 <DEF.BFONT_WHITE>Rename Shop
+ dhtmlgump 408 81 120 20 0 0 <DEF.BFONT_WHITE>Rename Vendor
+ dhtmlgump 408 101 120 20 0 0 <DEF.BFONT_WHITE>Open Paperdoll
+ dhtmlgump 408 121 120 20 0 0 <DEF.BFONT_WHITE>Collect Gold
+ dhtmlgump 408 141 120 20 0 0 <DEF.BFONT_WHITE>Dismiss Vendor
+ dhtmlgump 408 161 120 20 0 0 <DEF.BFONT_WHITE>CANCEL
+ FOR 1 8
+  button 390 <eval (20*<LOCAL._FOR>)+2> 015e1 015e5 1 0 <LOCAL._FOR>
+ ENDFOR
+ IF (<TAG0.Rent.End>)
+  dtext 38 132 0480 Location rental will expire in <VendorReturnContractTime>
+ ENDIF
+ENDIF
+
+page 2
+IF (<ARGS>==2)
+ resizepic 0 0 013be 370 370
+ gumppictiled 10 10 350 20 2624
+ gumppictiled 10 40 350 20 2624
+ gumppictiled 10 70 350 260 2624
+ gumppictiled 10 340 350 20 2624
+ checkertrans 10 10 350 350
+ dhtmlgump 10 10 350 18 0 0 <DEF.BFONT_WHITE><DEF.CENTER>VENDOR CUSTOMIZATION MENU
+ dhtmlgump 10 40 150 18 0 0 <DEF.BFONT_lGRAY><DEF.CENTER>HAIR
+ button 10 250 0fa5 0fa7 1 0 98
+ dhtmlgump 45 252 100 20 0 0 <DEF.BFONT_WHITE>Color
+ ARGS=<DEF.MALESTYLE>
+ FOR 0 <eval <ARGV>-8>
+  dhtmlgump 45 <eval 72+(20*<LOCAL._FOR>)> 100 20 0 0 <DEF.BFONT_WHITE><STRTOUPPER <STRSUB 0 1 <SERV.ITEMDEF.<ARGV[<DLOCAL._FOR>]>.NAME>>><STRSUB 1 <QVAL (STRMATCH(*hair*,<SERV.ITEMDEF.<ARGV[<DLOCAL._FOR>]>.NAME>))?<eval <STRPOS 4 h <SERV.ITEMDEF.<ARGV[<DLOCAL._FOR>]>.NAME>>-1> : 0> <SERV.ITEMDEF.<ARGV[<DLOCAL._FOR>]>.NAME>>
+  button 10 <eval 70+(20*<LOCAL._FOR>)> 0fa5 0fa7 1 0 <eval 100+<LOCAL._FOR>>
+ ENDFOR
+ IF (<BODY>==c_man)
+  dhtmlgump 160 40 200 18 0 0 <DEF.BFONT_lGRAY><DEF.CENTER>BEARD
+  FOR 0 <eval <ARGV>-8>
+   IF (<LOCAL._FOR> < 7)
+    dhtmlgump 195 <eval 72+(20*<LOCAL._FOR>)> 100 20 0 0 <DEF.BFONT_WHITE><STRTOUPPER <STRSUB 0 1 <SERV.ITEMDEF.<ARGV[<eval <DLOCAL._FOR>+9>]>.NAME>>><STRSUB 1 <QVAL (STRMATCH(*beard*,<SERV.ITEMDEF.<ARGV[<eval <DLOCAL._FOR>+9>]>.NAME>))?<eval <STRPOS 4 b <SERV.ITEMDEF.<ARGV[<eval <DLOCAL._FOR>+9>]>.NAME>>-1> : 0> <SERV.ITEMDEF.<ARGV[<eval <DLOCAL._FOR>+9>]>.NAME>>
+    button 160 <eval 70+(20*<LOCAL._FOR>)> 0fa5 0fa7 1 0 <eval 110+<LOCAL._FOR>>
+   ENDIF
+  ENDFOR
+  button 160 230 0fa5 0fa7 1 0 97
+  dhtmlgump 195 232 100 20 0 0 <DEF.BFONT_WHITE>Color
+  button 160 210 0fb1 0fb3 1 0 99
+  dhtmlgump 195 212 100 20 0 0 <DEF.BFONT_WHITE>Remove
+ ENDIF
+ button 10 340 0fa5 0fa7 1 0 60
+ dhtmlgump 45 341 90 18 0 0 <DEF.BFONT_WHITE>CLOSE
+ENDIF
+
+
+[DIALOG d_custom_vendor button]
+ON=1
+HEAR browse
+
+ON=2
+SDIALOG d_custom_vendor 2,2
+
+ON=3 4
+IF (<ARGN>==3)
+  SRC.SMSG @,,1 Enter a new name for your shop (20 chars max):
+  SRC.CTAG.RENAME=TAG.NAMESHOP
+ELIF (<ARGN>==4)
+  SRC.SMSG @,,1 Enter a new name for your vendor (20 characters max):
+  SRC.CTAG.RENAME=NAME
+ENDIF
+SRC.CTAG.VENDOR=<UID>
+SRC.PROMPTCONSOLE VendorRename
+
+ON=5
+SRC.OPENPAPERDOLL <UID>
+DIALOG d_custom_vendor 1,1
+
+ON=6
+HEAR collect
+
+ON=7
+IF (<FINDLAYER.21.RESCOUNT>)
+  MSG @,,1 You cannot dismiss me while I am holding your goods.
+  return 1
+ELIF !(<TAG0.SendDeedToOwnerBackpack>)
+  TAG.SendDeedToOwnerBackpack=1
+  TRIGGER @CustomVendorDismiss
+ENDIF
+
+ON=95 120
+IF (<ARGN> < 97)
+  VendorChangeBody <eval 96-<ARGN>>
+ELIF (<ARGN>==97)
+  HUEPICKER <FINDLAYER.LAYER_BEARD>
+ELIF (<ARGN>==98)
+  IF (<FINDLAYER.LAYER_HAIR>)
+    IF (<FINDLAYER.LAYER_HAIR.BASEID> != i_hair_krisna)
+      HUEPICKER <FINDLAYER.LAYER_HAIR>
+    ENDIF
+  ENDIF
+ELIF (<ARGN>==99)
+  FINDLAYER.LAYER_BEARD.REMOVE
+ELIF (<ARGN> < 110)
+  FINDLAYER.LAYER_HAIR.REMOVE
+  ARGS=<eval <ARGN>-100>,<DEF.MALESTYLE>
+ELSE
+  IF (<BODY>==c_man)
+    FINDLAYER.LAYER_BEARD.REMOVE
+    ARGS=<eval <ARGN>-101>,<DEF.MALESTYLE>
+  ENDIF
+ENDIF
+IF !(<isempty <ARGS>>)
+ SERV.NEWITEM <ARGV[<eval <ARGV[0]>+1>]>
+ NEW.CONT <UID>
+ENDIF
+DIALOG d_custom_vendor 2,2
+
+ON=60
+DIALOG d_custom_vendor 1,1
+
+//////////////////////////////////////////////////////////////////////////////////
+
+[DIALOG d_custom_vendor_sell_confirm]
+200,200
+
+page 0
+resizepic 0 20 5054 300 150
+gumppictiled 10 30 280 130 2624
+checkertrans 10 30 280 130
+dhtmlgump 25 30 250 20 0 0 <DEF.BFONT_WHITE>You have agreed to purchase:
+dcroppedtext 25 55 250 20 47 <AMOUNT> <NAME> <QVAL (<isempty <TAG.DESCRIPTION>>)? :(<TAG.DESCRIPTION>)>
+dhtmlgump 25 80 250 20 0 0 <DEF.BFONT_WHITE>for the amount of:
+dtext 25 105 47 <DTAG.PRICE> gp's
+
+page 1
+button 150 140 4005 4007 1 0 0
+dhtmlgump 185 140 100 20 0 0 <DEF.BFONT_WHITE>CANCEL
+button 20 140 4005 4007 1 0 1
+dhtmlgump 55 140 100 20 0 0 <DEF.BFONT_WHITE>OKAY
+
+
+[DIALOG d_custom_vendor_sell_confirm button]
+ON=0
+SRC.SMSG @,,1 Cancelled purchase.
+
+ON=1
+IF (<isempty <TAG.PRICE>>)
+ return 1
+ELSE
+ IF (<DEF.scp.Vendor_GetMoneyFromBank>) && (<SRC.BANKBALANCE> >= <TAG0.PRICE>)
+  SRC.GOLD -= <TAG0.PRICE>
+  GOLD -= <eval <TAG0.PRICE> * 3 / 100>
+ ELSE
+  SRC.SMSG @,,1 You cannot afford this item.
+  RETURN 1
+ ENDIF
+ TOPOBJ.GOLD += <TAG0.PRICE>
+ SRC.SMSG @,,1 You take the item.
+ VendorRemoveItemSellingProps
+ CONT=<SRC.FINDLAYER.layer_pack>
+ENDIF
+
+//////////////////////////////////////////////////////////////////////////////////
+
+
+[ITEMDEF i_vendor_rental_contract]
+ID=i_deed
+TYPE=t_normal
+NAME=Vendor Rental Contract
+VALUE=1200
+
+ON=@Create
+COLOR=1650
+TAG.Rent.Lenght=7
+TAG.Rent.Price=<VALUE>
+
+ON=@DClick
+IF (<CONT> != <SRC.FINDLAYER.21>)
+ IF (<TAG0.Rent.Landlord>==<SRC>)
+  SDIALOG d_vendor_rental_contract
+ ELSE
+  SRC.SMSG @,,1 That must be in your pack for you to use it.
+ ENDIF
+ return 1
+ENDIF
+TARGETG
+SRC.SMSG @,,1 Target the exact location you with to rent out.
+return 1
+
+ON=@ContextMenuRequest
+IF (<CONT>) || (<TAG0.Rent.Landlord>==<SRC>) || (<SRC.ISGM>)
+ SRC.AddContextEntry 912,6209
+ENDIF
+
+ON=@ContextMenuSelect
+IF (<ARGN>==912)
+ SDIALOG d_vendor_rental_contract
+ENDIF
+
+ON=@TargOn_Ground
+SERV.NEWNPC c_pig
+NEW.FLAGS=statf_insubstantial|statf_invul
+NEW.P=<SRC.TARGP>
+IF (<NEW.CanPlaceRentalContract>)
+ TAG.Rent.Landlord=<SRC>
+ P=<NEW.P>
+ IF (<DEF.SCP.HOUSE_USEVENDORS>)		//AOS House System script compatibility
+  HouseSetLockedProps 1
+ ENDIF
+ENDIF
+NEW.REMOVE
+return 1
+
+ON=@TargOn_Char
+SERV.NEWNPC c_pig
+NEW.FLAGS=statf_insubstantial|statf_invul
+NEW.P=<SRC.TARGP>
+IF (<NEW.CanPlaceRentalContract>)
+ TAG.Rent.Landlord=<SRC>
+ P=<NEW.P>
+ IF (<DEF.SCP.HOUSE_USEVENDORS>)		//AOS House System script compatibility
+  HouseSetLockedProps 1
+ ENDIF
+ENDIF
+NEW.REMOVE
+return 1
+
+ON=@TargOn_Cancel
+SRC.SMSG @,,1 You decide not to place the contract at this time.
+return 1
+
+/////////////////////////////////////////
+
+[FUNCTION RenderRentalContractDialog]
+resizepic 5 -3 2520 330 366
+gumppic 0 0 8000
+gumppictiled 20 37 300 308 8002
+gumppic 20 325 8003
+gumppictiled 65 8 257 10 58
+gumppictiled 70 55 230 2 9157
+gumppic 35 8 57
+gumppic 290 8 59
+gumppic 32 33 9781
+dhtmlgump 70 35 270 20 0 0 Vendor Rental Contract
+
+
+[DIALOG d_vendor_rental_contract]
+100,100
+
+page 0
+RenderRentalContractDialog
+
+page 1
+IF (<TAG0.Rent.Landlord> != 0)
+ gumppic 65 60 0827
+ dhtmlgump 79 58 100 20 0 0 Landlord:
+ dtext 150 58 064 <UID.<TAG.Rent.Landlord>.NAME>
+ gumppictiled 70 80 230 2 023C5
+ENDIF
+
+dhtmlgump 50 95 150 20 0 0 Contract Length
+dhtmlgump 230 95 100 20 0 0 <VendorReturnContractLenght <TAG0.Rent.Lenght>>
+dhtmlgump 50 115 150 20 0 0 Price Per Rental
+dtext 230 115 064 <QVAL (<TAG0.Rent.Price>)? <dTAG0.Rent.Price> : FREE>
+gumppictiled 50 160 250 2 023BF
+
+IF !(<TAG0.Rent.Landlord>) || (<TAG0.Rent.Renter>==<SRC>) || (<TAG0.Rent.Landlord>==<SRC>) || (<SRC.ISGM>)
+ gumppic 49 170 061
+ dhtmlgump 60 170 250 20 0 0 Renew On Expiration?
+ dhtmlgump 85 190 250 20 0 0 Landlord:
+ dhtmlgump 230 190 50 20 0 0 <QVAL (<TAG0.Rent.Renew.Landlord>)? YES:NO>
+ dhtmlgump 85 210 250 20 0 0 Renter:
+ dhtmlgump 230 210 50 20 0 0 <QVAL (<TAG0.Rent.Renew.Renter>)? YES:NO>
+ IF (<eval <TAG0.Rent.Renew.Landlord>+<TAG0.Rent.Renew.Renter>>==2)
+  gumppic 49 233 0939
+  dhtmlgump 70 230 250 20 0 0 Contract WILL renew
+ ELSE
+  gumppic 49 233 0938
+  dhtmlgump 70 230 250 20 0 0 Contract WILL NOT renew
+ ENDIF
+ENDIF
+
+gumppictiled 30 283 257 30 05d
+gumppic 285 283 05e
+gumppic 20 288 0232c
+IF (<ISITEM>)
+  IF !(<TAG0.Rent.Landlord>) || (<TAG0.Rent.Landlord>==<SRC>) || (<SRC.ISGM>)
+   button 30 96 015E1 015E5 0 2 0
+   button 30 116 015E1 015E5 1 0 1	//Price Per Rental
+   button 30 192 015E1 015E5 1 0 4	//Landlord renew
+   IF !(<CONT>)
+    dhtmlgump 85 294 230 20 0 0 Offer Contract To Someone
+    button 67 295 015E1 015E5 1 0 3	//Offer Contract
+   ENDIF
+  ELIF (<TAG0.Rent.Renter>==<SRC>)
+   button 30 212 015E1 015E5 1 0 5	//Renter renew
+  ELSE		//Contract Offer
+   button 67 180 0482 0483 1 0 6
+   dhtmlgump 100 180 230 20 0 0 I accept!
+   button 67 210 047F 0480 1 0 7
+   dhtmlgump 100 210 230 20 0 0 No thanks I decline.
+  ENDIF
+ELSE
+  IF (<IsLandlord <SRC>>)
+   button 30 192 015E1 015E5 1 0 4	//Landlord renew
+   button 30 250 015E1 015E1 1 0 2	//Renew Price
+  ELIF (<TAG0.Rent.Renter>==<SRC>)
+   button 30 212 015E1 015E5 1 0 5	//Renter renew
+  ENDIF
+  dhtmlgump 85 250 250 20 0 0 Renewal Price
+  dtext 230 250 064 <dTAG0.Rent.Renew.Price>
+  dhtmlgump 60 294 270 20 0 0 Renter:
+  dtext 120 293 064 <UID.<TAG.Rent.Renter>.NAME>
+ENDIF
+
+page 2
+FOR 4
+ button 30 <eval 56+(<LOCAL._FOR>*20)> 015E1 015E5 1 0 <eval 9+<LOCAL._FOR>>
+ dhtmlgump 50 <eval 55+(<LOCAL._FOR>*20)> 150 20 0 0 <VendorReturnContractLenght <eval <LOCAL._FOR>*7>>
+ENDFOR
+
+
+[DIALOG d_vendor_rental_contract BUTTON]
+ON=1 2		// Rental Price
+SRC.CTAG.VendorContractRef=<UID>
+PROMPTCONSOLE VendorRentalContractPrice
+IF (<ARGN>==1)
+ SRC.SMSG @,,1 Please enter the amount of gold that should be charged for this contract (ESC to cancel):
+ELIF (<ARGN>==2)
+ SRC.SMSG @,,1 Enter contract renewal price:
+ENDIF
+
+ON=3		// Offer Contract
+SRC.CTAG.VendorContractRef=<UID>
+TARGETF VendorContractOffer
+SRC.SMSG @,,1 Please target the person you with to offer this contract to.
+
+ON=4 5		// Renew Acception
+REF1=<UID.<TAG0.House>.MORE2>
+IF !(<REF1.TAG0.DEMOLITION_PENDING>)
+ IF (<ARGN>==4)
+   IF (<IsLandlord <SRC>>)
+    TAG.Rent.Renew.Landlord=<QVAL (<TAG0.Rent.Renew.Landlord>)? 0:1>
+   ENDIF
+ ELIF (<ARGN>==5)
+   TAG.Rent.Renew.Renter=<QVAL (<TAG0.Rent.Renew.Renter>)? 0:1>
+ ENDIF
+ENDIF
+SDIALOG d_vendor_rental_contract
+
+ON=6 7		// Contract Accecption
+IF (<CONT>)
+ return 1
+ENDIF
+REF1=<TAG0.Rent.Landlord>
+IF (<ARGN>==6)
+  IF !(<CanRentVendor>)
+   SRC.SMSG @,,1 You reach the limit of vendors.
+   REF1.SMSG @,,1 <SRC.NAME> has declined your vendor rental offer.
+   return 1
+  ELIF (<SRC.GOLD> < <TAG0.Rent.Price>)
+   SRC.SMSG @,,1 You do not have enough gold in your bank account to cover the cost of the contract.
+   REF1.SMSG @,,1 <SRC.NAME> has declined your vendor rental offer.
+   return 1
+  ENDIF
+  SRC.GOLD -= <dTAG0.Rent.Price>
+  SRC.UPDATE
+  SRC.SMSG @,,1 <dTAG0.Rent.Price> gold has been withdrawn from your bank box.
+  SRC.SMSG @,,1 You have accepted the offer and now own a vendor in this house. Rental contract options and details may be viewed on this vendor via the 'Contract Options' context menu.
+  REF1.GOLD += <dTAG0.Rent.Price>
+  REF1.UPDATE
+  REF1.SMSG @,,1 <SRC.NAME> has accepted your vendor rental offer.  Rental contract details and options may be viewed on this vendor via the 'Contract Options' context menu.
+  SERV.NEWNPC c_vendor_player
+  NEW.P=<P>
+  NEW.TAG.Rent.Landlord=<REF1>
+  NEW.TAG.Rent.Renter=<SRC>
+  NEW.TAG.Rent.Price=<TAG.Rent.Price>
+  NEW.TAG.Rent.Lenght=<TAG.Rent.Lenght>
+  NEW.TAG.Rent.End=<eval <SERV.TIME>+(<TAG.Rent.Lenght>*864000)+36000>
+  NEW.TAG.Rent.Renew.Price=<TAG.Rent.Price>
+  NEW.TAG.Rent.Renew.Landlord=<TAG.Rent.Renew.Landlord>
+  NEW.TAG.Rent.Renew.Renter=
+  NEW.VendorPrepare
+  REMOVE
+  return 1
+ELIF (<ARGN>==7)
+  SRC.SMSG @,,1 You decline the offer for a vendor space rental.
+  REF1.SMSG @,,1 <SRC.NAME> has declined your vendor rental offer.
+  return 1
+ENDIF
+
+ON=10 14	// Rental Lenght
+TAG.Rent.Lenght=<eval (<ARGN>-9)*7>
+SDIALOG d_vendor_rental_contract
+
+
+
+
+[DIALOG d_vendor_terminate_contract]
+50,50
+resizepic 0 0 013BE 420 320
+gumppictiled 10 10 400 300 0A40
+checkertrans 10 10 400 300
+
+dhtmlgump 10 10 400 150 0 1 The landlord for this vendor is offering you a partial refund of your rental fee in exchange for immediate termination of your rental contract.<DEF.BR><DEF.BR>If you accept this offer, the vendor will be immediately dismissed.  You will then be able to claim the inventory and any funds the vendor may be holding for you via a context menu on the house sign for this house.
+dhtmlgump 10 180 150 20 0 0 <DEF.BFONT_WHITE>Vendor Name:
+dtext 160 180 0480 <NAME>
+dhtmlgump 10 200 150 20 0 0 <DEF.BFONT_WHITE>Shop Name:
+dtext 160 200 0480 <TAG.NameShop>
+dhtmlgump 10 220 150 20 0 0 <DEF.BFONT_WHITE>Refund Amount:
+dtext 160 220 0480 <dTAG0.Rent.Price.TerminateRefund>
+
+button 10 268 0FA5 0FA7 1 0 1
+dhtmlgump 45 268 350 20 0 0 <DEF.BFONT_WHITE>Agree and <DEF.B>dismiss vendor<DEF.BE>
+button 10 288 0FA5 0FA7 1 0 0
+dhtmlgump 45 288 350 20 0 0 <DEF.BFONT_WHITE>No, I want to <DEF.B>keep my vendor<DEF.BE>
+
+[DIALOG d_vendor_terminate_contract BUTTON]
+ON=0
+UID.<TAG0.Rent.Landlord>.SMSG @,,1 The renter declined your offer
+
+ON=1
+SRC.GOLD += <TAG0.Rent.Price.TerminateRefund>
+SRC.SMSG @,,1 <dTAG0.Rent.Price.TerminateRefund> gold has been deposited into your bank box.
+SRC.SMSG @,,1 Remember to claim your vendor's belongings from the house sign!
+SRC.UPDATE
+TRIGGER @CustomVendorDismiss
+
+/////////////////////////////////////////
+
+[FUNCTION CanPlaceRentalContract]
+REF1=<REGION.UID>
+REF2=<REF1.MORE2>
+IF (<REF1.MORE1> != <SRC>)
+  SRC.SMSG @,,1 The location being rented out must be inside of your house.
+  return 0
+ELIF (<SRC.REGION.UID> != <REF1>)
+  SRC.SMSG @,,1 You must be located inside of the house in which you are trying to place the contract.
+  return 0
+ELIF !(<SRC.CanSeeLOS <UID>>)
+  SRC.SMSG @,,1 You have no line of sign to this location.
+  return 0
+ELIF (<IsStuck>)
+  SRC.SMSG @,,1 That location is cluttered.  Please clear out any objects there and try again.
+  return 0
+ELIF (<DEF.SCP.HOUSE_USEVENDORS>)		//AOS House System script compatibility
+  IF (<DEF.SCP.House_VendorsPublic>) && !(<REF2.TAG0.PUBLIC>)
+    SRC.SMSG @,,1 Rental contracts can only be placed in public houses.
+    return 0
+  ELIF !(<REF2.House_AvaibleLockdowns>)
+    SRC.SMSG @,,1 You do not have enought storage available to place this contract.
+    return 0
+  ELIF (<REF2.TAG0.DEMOLITION_PENDING>)
+    SRC.SMSG @,,1 You cannot place a contract in a condemned house.
+    return 0
+  ENDIF
+ENDIF
+FOROBJS 1
+  IF (<BASEID>==i_vendor_rental_contract)
+   SRC.SMSG @,,1 That location is cluttered.  Please clear out any objects there and try again.
+   return 0
+  ELIF (<ISEVENT.e_custom_vendor>)
+   SRC.SMSG @,,1 You may not place a rental contract at this location while other beings occupy it.
+   return 0
+  ENDIF
+ENDFOR
+return 1
+
+
+[FUNCTION VendorContractOffer]
+REF1=<CTAG.VendorContractRef>
+CTAG.VendorContractRef=
+IF !(<ARGO.ISPLAYER>) || (<ARGO>==<SRC>)
+ SRC.SMSG @,,1 That is not a valid target for a rental contract!
+ return 1
+ELIF (<ARGO.DISTANCE> > 5)
+ SRC.SMSG @,,1 Target is too far away.
+ return 1
+ELSE
+ REF1.TRYSRC <ARGO> SDIALOG d_vendor_rental_contract
+ ARGO.SMSG @,,1 <SRC.NAME> is offering you a vendor rental.  If you choose to accept this offer, you have 30 seconds to do so.
+ SRC.SMSG @,,1 Please wait while that person considers your offer.
+ENDIF
+
+
+[FUNCTION VendorReturnContractLenght]
+IF (<ARGS> != 30)
+ LOCAL.Lenght=<eval <ARGS>/7>
+ IF (<LOCAL.Lenght>==1)
+  return <dLOCAL.Lenght> Week
+ ELSE
+  return <dLOCAL.Lenght> Weeks
+ ENDIF
+ENDIF
+
+
+[FUNCTION VendorReturnContractTime]
+LOCAL.TIME=<eval (<TAG0.Rent.End>-<SERV.TIME>)/10>
+LOCAL.DAYS=<eval <LOCAL.TIME>/86400>
+LOCAL.HOURS=<eval (<LOCAL.TIME>%86400)/3600>
+return <dLOCAL.DAYS> day<QVAL (<LOCAL.DAYS> != 1)? s :>and <dLOCAL.HOURS> hour<QVAL (<LOCAL.HOURS> != 1)? s.:.>
+
+
+[FUNCTION VendorRentalContractPrice]
+REF1=<CTAG.VendorContractRef>
+CTAG.VendorContractRef=
+IF !(<isempty <ARGS>>)
+ IF (<isnum <ARGS>>) && (<ARGS> > 0)
+  IF (<ARGS> > 10000000)
+   ARGS=10000000
+  ENDIF
+  IF !(<REF1.TAG0.Rent.Renter>)
+   REF1.TAG.Rent.Price=<ARGS>
+  ELSE
+   REF1.TAG.Rent.Renew.Renter=
+   REF1.TAG.Rent.Renew.Price=<ARGS>
+  ENDIF
+ ENDIF
+ENDIF
+REF1.SDIALOG d_vendor_rental_contract
+
+
+[FUNCTION VendorRentalContractTerminatePrice]
+REF1=<SRC.CTAG.VENDOR>
+REF2=<REF1.OWNER>
+IF (<isempty <ARGS>>) || !(<isnum <ARGS>>) || (<eval STRLEN(<ARGS>)> > 7)
+ SMSG @,,1 You did not enter a valid amount.  Offer canceled.
+ return 1
+ELIF (<SRC.GOLD> < <ARGS>)
+ SMSG @,,1 You do not have that much money in your bank account.
+ return 1
+ELIF !(<REF2.ISONLINE>) || (<REF2.DISTANCE <REF1>> > 5)
+ SMSG @,,1 The renter must be closer to the vendor in order for you to make this offer.
+ return 1
+ELIF (<REF2.ISDIALOGOPEN.d_vendor_terminate_contract>)
+ SMSG @,,1 You already send an offer, please wait while the renter considers your offer.
+ return 1
+ENDIF
+SMSG @,,1 Please wait while the renter considers your offer.
+REF1.TAG.Rent.Price.TerminateRefund=<ARGS>
+REF1.TRYSRC <REF2> SDIALOG d_vendor_terminate_contract
+CTAG.VENDOR=
+
+
+[FUNCTION VendorCreateRentalContract]
+SERV.NEWITEM i_vendor_rental_contract
+FOR 0 <eval <TAGCOUNT>-1>
+ IF !STRCMP("rent","<STRSUB 0 4 <TAGAT.<LOCAL._FOR>.KEY>>")
+  NEW.TAG.<TAGAT.<LOCAL._FOR>>
+ ENDIF
+ENDFOR
+NEW.CLEARTAGS Rent.Renew
+NEW.TAG.Rent.Renter=
+NEW.TAG.Rent.End=
+NEW.P=<P>
+IF (<DEF.SCP.HOUSE_USEVENDORS>)		//AOS House System script compatibility
+ NEW.HouseSetLockedProps 1
+ENDIF
+
+
+[FUNCTION IsLandlord]
+IF ((<TAG0.Rent.Landlord>==<SRC>) && (<UID.<TAG0.House>.MORE1>==<SRC>)) || (<SRC.ISGM>)
+ return 1
+ENDIF
+return 0
+
+
+
+[EOF]

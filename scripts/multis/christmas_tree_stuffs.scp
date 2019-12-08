@@ -1,0 +1,343 @@
+[ITEMDEF i_hand_cart_2]
+ID=01a82
+NAME=Carrinho de Mao
+TYPE=t_normal
+
+
+ON=@CREATE
+ATTR 010
+ON=@DCLICK
+IF !(<TAG0.OWNER>)
+	SRC.SYSMESSAGE Voce eh o dono deste carrinho agora.
+	TAG.OWNER <SRC.UID>
+	LINK.TAG.OWNER <SRC.UID>
+ENDIF
+IF !(<SRC.UID>==<TAG0.OWNER>)
+	SRC.SYSMESSAGE Voce nao eh o dono deste carro
+	RETURN 1
+ELSE
+	SRC.SYSMESSAGE VOCE COMECA A CARREGAR O CARRO
+	P <SRC.P>
+	LINK.P <P>
+	LINK.MOVE 0 -1
+	TIMERD 1
+ENDIF
+
+
+ON=@TIMER
+REF69 <TAG0.OWNER>
+MOVETO <REF69.P>
+LINK.MOVETO <REF69.P>
+IF (<REF69.DIR>==4) || (<REF69.DIR>==0)
+DISPID 01a82
+LINK.DISPID 01a83
+LINK.MOVE 0 -1
+ELIF (<REF69.DIR>==2) || (<REF69.DIR>==6)
+DISPID i_cart_ore_nw_1
+LINK.DISPID i_cart_ore_nw_2
+LINK.MOVE -1
+ENDIF
+TIMERD 1
+RETURN 1
+
+
+[ITEMDEF i_hand_cart]
+ID=i_bag
+NAME=Carrinho de Mao
+
+ON=@CREATE
+DISPID 01a83
+ATTR 010
+TIMERF 1,f_create_hand <UID>
+
+//ON=@DCLICK
+//TAG.OWNER <SRC.UID>
+//SRC.SYSMESSAGE VOCE COMECA A CARREGAR O CARRO
+//P <SRC.P>
+//TIMER 1
+//RETURN 1
+
+[FUNCTION f_create_hand]
+REF69 <ARGS>
+SERV.NEWITEM i_hand_Cart_2
+NEW.P <REF69.P>
+NEW.MOVE 0 1
+NEW.LINK <REF69.UID>
+REF69.LINK <NEW.UID>
+
+[FUNCTION f_makegifts]
+SERV.NEWITEM i_xmas_gift1
+NEW.P <eval (<p.x>+1)> <eval (<p.y> +2)>
+NEW.Z <eval (<z>+4)>
+SERV.NEWITEM i_xmas_gift2
+NEW.P <eval <p.x>+2> <eval <p.y> +2>
+NEW.Z <eval (<z>+4)>
+SERV.NEWITEM i_xmas_gift3
+NEW.P <eval <p.x>+1> <eval <p.y> +2>
+NEW.Z <z>
+SERV.NEWITEM i_xmas_gift4
+NEW.P <eval <p.x>+2> <eval <p.y> +1>
+NEW.Z <z>
+SERV.NEWITEM i_xmas_gift5
+NEW.P <eval <p.x>+2> <eval <p.y> +2>
+NEW.Z <eval (<z>+9)>
+SERV.NEWITEM i_xmas_gift6
+NEW.P <eval <p.x>+2> <eval <p.y> +1>
+NEW.Z <eval (<z>+4)>
+fireworks
+
+
+[ITEMDEF i_deed_xmas_tree]
+//CARPET_DEED_TEMPLATE_0 1
+DEFNAME=i_deed_xmas_tree
+NAME=Deed to a Christmas Tree
+ID=i_deed
+
+CATEGORY=Provisions - Deeds
+SUBSECTION=Misc
+DESCRIPTION=Christmas Tree
+
+ON=@Create
+	COLOR=1932
+
+ON=@DClick
+	COLOR=0
+
+MORE=m_multi_christmas
+
+[ITEMDEF i_xmas_gift1]
+NAME=Presente de Natal
+ID=i_pouch
+
+WEIGHT=1
+ON=@Create
+COLOR=0794
+ATTR 010
+
+ON=@DCLICK
+IF (<TAG0.OPEN>)
+SRC.MESSAGE Este presente ja foi aberto.
+Return 1
+Else
+SRC.SOUND=01d2
+SERV.NEWITEM=wrapped_xmas_gift_1
+NEW.CONT <SRC.UID>
+TAG.OPEN 1
+SRC.SYSMESSAGE=Voce abriu um presente !! Feliz Natal !!
+ENDIF
+RETURN 1
+
+[ITEMDEF i_xmas_gift2]
+NAME=Presente de Natal
+ID=i_pouch
+
+WEIGHT=1
+ON=@Create
+COLOR=0796 //095a
+ATTR 010
+ON=@DCLICK
+IF (<TAG0.OPEN>)
+SRC.MESSAGE Este presente ja foi aberto.
+Return 1
+Else
+SRC.SOUND=01d2
+SERV.NEWITEM=wrapped_xmas_gift_2
+NEW.CONT <SRC.UID>
+TAG.OPEN 1
+SRC.SYSMESSAGE=Voce abriu um presente !! Feliz Natal !!
+ENDIF
+RETURN 1
+
+[ITEMDEF i_xmas_gift3]
+NAME=Presente de Natal
+ID=i_basket_square
+
+WEIGHT=1
+ON=@Create
+COLOR=0798
+ATTR 010
+ON=@DCLICK
+IF (<TAG0.OPEN>)
+SRC.MESSAGE Este presente ja foi aberto.
+Return 1
+Else
+SRC.SOUND=01d2
+SERV.NEWITEM=wrapped_xmas_gift_3
+NEW.CONT <SRC.UID>
+TAG.OPEN 1
+SRC.SYSMESSAGE=Voce abriu um presente !! Feliz Natal !!
+ENDIF
+RETURN 1
+
+[ITEMDEF i_xmas_gift4]
+NAME=Presente de Natal
+ID=i_basket_square
+
+WEIGHT=1
+ON=@Create
+COLOR=043
+ATTR 010
+
+ON=@DCLICK
+IF (<TAG0.OPEN>)
+SRC.MESSAGE Este presente ja foi aberto.
+Return 1
+Else
+SRC.SOUND=01d2
+SERV.NEWITEM=wrapped_xmas_gift_4
+NEW.CONT <SRC.UID>
+TAG.OPEN 1
+SRC.SYSMESSAGE=Voce abriu um presente !! Feliz Natal !!
+ENDIF
+RETURN 1
+
+[ITEMDEF i_xmas_gift5]
+NAME=Presente de Natal
+ID=i_box_brass
+
+WEIGHT=1
+ON=@Create
+COLOR=0482
+ATTR 010
+ON=@DCLICK
+IF (<TAG0.OPEN>)
+SRC.MESSAGE Este presente ja foi aberto.
+Return 1
+Else
+SRC.SOUND=01d2
+SERV.NEWITEM=wrapped_xmas_gift_5
+NEW.CONT <SRC.UID>
+TAG.OPEN 1
+SRC.SYSMESSAGE=Voce abriu um presente !! Feliz Natal !!
+ENDIF
+RETURN 1
+[ITEMDEF i_xmas_gift6]
+NAME=Presente de Natal
+ID=0e7d
+
+WEIGHT=1
+ON=@Create
+COLOR=015
+ATTR 010
+ON=@DCLICK
+IF (<TAG0.OPEN>)
+SRC.MESSAGE Este presente ja foi aberto.
+Return 1
+Else
+SRC.SOUND=01d2
+SERV.NEWITEM=wrapped_xmas_gift_6
+NEW.CONT <SRC.UID>
+TAG.OPEN 1
+SRC.SYSMESSAGE=Voce abriu um presente !! Feliz Natal !!
+ENDIF
+RETURN 1
+
+////////////gift boxes///////////
+[ITEMDEF i_xmas_gift_box1]
+NAME=Presente de Natal Aberto
+ID=i_pouch
+
+WEIGHT=1
+ON=@Create
+COLOR=0794
+CATEGORY=Athena's
+SUBSECTION=Christmas Decorations
+DESCRIPTION=Christmas Gift Box 1
+
+[ITEMDEF i_xmas_gift_box2]
+NAME=Presente de Natal Aberto
+ID=i_pouch
+
+WEIGHT=1
+ON=@Create
+COLOR=0796
+CATEGORY=Athena's
+SUBSECTION=Christmas Decorations
+DESCRIPTION=Christmas Gift Box 2
+
+
+[ITEMDEF i_xmas_gift_box3]
+NAME=Presente de Natal Aberto
+ID=i_basket_square
+
+WEIGHT=1
+ON=@Create
+COLOR=0798
+CATEGORY=Athena's
+SUBSECTION=Christmas Decorations
+DESCRIPTION=Christmas Gift Box 3
+
+[ITEMDEF i_xmas_gift_box4]
+NAME=Presente de Natal Aberto
+ID=i_basket_square
+
+WEIGHT=1
+ON=@Create
+COLOR=043
+CATEGORY=Athena's
+SUBSECTION=Christmas Decorations
+DESCRIPTION=Christmas Gift Box 4
+
+[ITEMDEF i_xmas_gift_box5]
+NAME=Presente de Natal Aberto
+ID=i_box_brass
+
+WEIGHT=1
+ON=@Create
+COLOR=0482
+CATEGORY=Athena's
+SUBSECTION=Christmas Decorations
+DESCRIPTION=Christmas Gift Box 5
+
+[ITEMDEF i_xmas_gift_box6]
+NAME=Presente de Natal Aberto
+ID=0e7d
+
+WEIGHT=1
+ON=@Create
+COLOR=015
+RETURN 1
+CATEGORY=Athena's
+SUBSECTION=Christmas Decorations
+DESCRIPTION=Christmas Gift Box 6
+
+/////////gift templates////////////////
+[template wrapped_xmas_gift_1]
+NAME=Presente de Natal Aberto
+container=i_xmas_gift_box1
+ITEM=I_ingot_bloodrock,{9 35}
+ITEM=I_ingot_blackrock,{9 35}
+ITEM=I_ingot_Mytheril,{9 35}
+
+
+[template wrapped_xmas_gift_2]
+NAME=Presente de Natal Aberto
+container=i_xmas_gift_box2
+ITEM=I_panotrue_w,2
+ITEM=I_panotrue_b,2
+ITEM=I_panotrue_g,2
+
+
+[template wrapped_xmas_gift_3]
+NAME=Presente de Natal Aberto
+container=i_xmas_gift_box3
+ITEM=i_gold,{40000 65000}
+
+[template wrapped_xmas_gift_5]
+NAME=Presente de Natal Aberto
+container=i_xmas_gift_box5
+ITEM=i_potion_mana_boost_great,{100 350}
+ITEM=i_potion_life_boost_great,{100 350}
+ITEM=i_potion_refilling_great,{100 350}
+ITEM=i_potion_refreshtotal,{100 350}
+
+[template wrapped_xmas_gift_6]
+NAME=Presente de Natal Aberto
+container=i_xmas_gift_box6
+ITEM=i_scroll_flamestrike,{300 500}
+ITEM=i_scroll_chain_lightning,{300 500}
+ITEM=i_mask_orc
+ITEM=i_mask_bear
+ITEM=i_mask_deer
+
+[EOF]

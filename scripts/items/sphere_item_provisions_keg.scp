@@ -1,0 +1,441 @@
+//////////////////////////////////////////////
+[itemdef i_keg_shrink]
+NAME=Keg of Shrink
+ID=01ad6
+TYPE=t_potion_keg
+VALUE=300
+
+ON=@CREATE
+TAG.POTTYPE=i_potion_shrink
+MORE1=1000
+COLOR COLOR_O_SHRINK
+
+
+[itemdef i_keg_invis]
+NAME=Keg of Invisibility
+ID=01ad6
+TYPE=t_potion_keg
+VALUE=300
+
+ON=@CREATE
+TAG.POTTYPE=i_potion_Invisibility
+MORE1=1000
+COLOR COLOR_O_INVIS
+
+
+
+[itemdef i_keg_glb]
+NAME=Keg of Great Life Boost
+ID=01ad6
+TYPE=t_potion_keg
+VALUE=300
+
+ON=@CREATE
+TAG.POTTYPE=i_potion_life_boost_great
+MORE1=1000
+COLOR COLOR_O_LIFEBOOST
+
+
+[itemdef i_keg_gmb]
+NAME=Keg of Great Mana Boost
+ID=01ad6
+TYPE=t_potion_keg
+VALUE=300
+
+ON=@CREATE
+TAG.POTTYPE=i_potion_mana_boost_great
+MORE1=1000
+COLOR COLOR_O_MANABOOST
+
+
+[itemdef i_keg_grf]
+NAME=Keg of Great Refilling
+ID=01ad6
+TYPE=t_potion_keg
+VALUE=300
+
+ON=@CREATE
+TAG.POTTYPE=i_potion_refilling_great
+MORE1=1000
+COLOR COLOR_O_REFILING
+
+
+[itemdef i_keg_gheal]
+NAME=Keg of Greater Heal
+ID=01ad6
+TYPE=t_potion_keg
+VALUE=300
+
+ON=@CREATE
+TAG.POTTYPE=i_potion_healgreat
+MORE1=1000
+COLOR COLOR_O_HEAL
+
+
+[itemdef i_keg_gcure]
+NAME=Keg of Greater Cure
+ID=01ad6
+TYPE=t_potion_keg
+VALUE=300
+
+ON=@CREATE
+TAG.POTTYPE=i_potion_curegreat
+MORE1=1000
+COLOR COLOR_O_CURE
+
+
+[itemdef i_keg_refreshtotal]
+NAME=Keg of Total Refresh
+ID=01ad6
+TYPE=t_potion_keg
+VALUE=300
+
+ON=@CREATE
+TAG.POTTYPE=i_potion_refreshtotal
+MORE1=1000
+COLOR COLOR_O_REFRESH
+
+
+[itemdef i_keg_manatotal]
+NAME=Keg of Total Mana Refresh
+ID=01ad6
+TYPE=t_potion_keg
+VALUE=300
+
+ON=@CREATE
+TAG.POTTYPE=i_potion_manatotal
+MORE1=1000
+COLOR COLOR_O_MANAREFRESH
+
+
+[ITEMDEF i_keg_lexplo]
+NAME=Keg of Lesser Explosion
+ID=01ad6
+TYPE=t_normal
+VALUE=300
+
+ON=@CREATE
+MORE1=1000
+COLOR COLOR_O_EXPLO
+
+ON=@CLICK
+MESSAGE <NAME> (<EVAL <MORE1>> Pocoes)
+RETURN 1
+
+
+ON=@DCLICK
+IF (<SRC.RESTEST 1 i_bottle_empty>)
+IF <MORE1> > 0
+MORE1 -=1
+SRC.CONSUME 1 i_bottle_empty
+SRC.NEWITEM i_potion_explosionless
+NEW.BOUNCE
+ELSE
+TRY UID.<UID>.REMOVE
+ENDIF
+ENDIF
+RETURN 1
+
+[ITEMDEF i_keg_gexplo]
+NAME=Keg of Greater Explosion
+ID=01ad6
+TYPE=t_normal
+VALUE=300
+
+ON=@CREATE
+MORE1=1000
+COLOR COLOR_O_EXPLO
+
+ON=@CLICK
+MESSAGE <NAME> (<EVAL <MORE1>> Pocoes)
+RETURN 1
+
+
+ON=@DCLICK
+IF (<SRC.RESTEST 1 i_bottle_empty>)
+IF <MORE1> > 0
+MORE1 -=1
+SRC.CONSUME 1 i_bottle_empty
+SRC.NEWITEM i_potion_explosiongreat
+NEW.BOUNCE
+ELSE
+TRY UID.<UID>.REMOVE
+ENDIF
+ENDIF
+RETURN 1
+
+[TYPEDEF t_potion_keg]
+ON=@CLICK
+MESSAGE <NAME> (<EVAL <MORE1>> Pocoes)
+RETURN 1
+
+ON=@DCLICK
+
+IF <SRC.RESCOUNT.I_BOTTLE_EMPTY>
+ LOCAL.AMT <MIN <SRC.RESCOUNT.I_BOTTLE_EMPTY>,<MORE1>>
+ SRC.CONSUME <LOCAL.AMT> I_BOTTLE_EMPTY
+ SERV.NEWITEM <TAG0.POTTYPE>
+ NEW.AMOUNT <LOCAL.AMT>
+ NEW.CONT <SRC.FINDLAYER.21>
+ MORE1 -= <LOCAL.AMT>
+ IF !<MORE1>
+	REMOVE
+ ENDIF
+RETURN 1
+ELSE
+SRC.SYSMESSAGE You lack empty bottles.
+RETURN 1
+endif
+
+
+
+[itemdef i_keg_shrink1]
+NAME=Keg of Shrink
+ID=01ad6
+TYPE=t_potion_keg
+SKILLMAKE=ALCHEMY 70.0
+VALUE=300
+
+ON=@CREATE
+COLOR COLOR_O_SHRINK
+TAG.POTTYPE=i_potion_shrink
+MORE1=100
+
+
+[itemdef i_keg_invis1]
+NAME=Keg of Invisibility
+ID=01ad6
+TYPE=t_potion_keg
+VALUE=300
+
+ON=@CREATE
+COLOR COLOR_O_INVIS
+TAG.POTTYPE=i_potion_Invisibility
+MORE1=100
+
+
+
+[itemdef i_keg_glb1]
+NAME=Keg of Great Life Boost
+ID=01ad6
+TYPE=t_potion_keg
+VALUE=300
+
+ON=@CREATE
+COLOR COLOR_O_LIFEBOOST
+TAG.POTTYPE=i_potion_life_boost_great
+MORE1=100
+
+[itemdef i_keg_gmb1]
+NAME=Keg of Great Mana Boost
+ID=01ad6
+TYPE=t_potion_keg
+VALUE=300
+
+ON=@CREATE
+color color_o_manaboost
+TAG.POTTYPE=i_potion_mana_boost_great
+MORE1=100
+
+[itemdef i_keg_grf1]
+NAME=Keg of Great Refilling
+ID=01ad6
+TYPE=t_potion_keg
+VALUE=300
+
+ON=@CREATE
+COLOR COLOR_O_REFILING
+TAG.POTTYPE=i_potion_refilling_great
+MORE1=100
+
+
+[itemdef i_keg_gheal1]
+NAME=Keg of Greater Heal
+ID=01ad6
+TYPE=t_potion_keg
+VALUE=300
+
+ON=@CREATE
+COLOR COLOR_O_HEAL
+TAG.POTTYPE=i_potion_healgreat
+MORE1=100
+
+[itemdef i_keg_gcure1]
+NAME=Keg of Greater Cure
+ID=01ad6
+TYPE=t_potion_keg
+VALUE=300
+
+ON=@CREATE
+COLOR COLOR_O_CURE
+TAG.POTTYPE=i_potion_curegreat
+MORE1=100
+
+[itemdef i_keg_refreshtotal1]
+NAME=Keg of Total Refresh
+ID=01ad6
+TYPE=t_potion_keg
+VALUE=300
+
+ON=@CREATE
+COLOR COLOR_O_REFRESH
+TAG.POTTYPE=i_potion_refreshtotal
+MORE1=100
+
+[itemdef i_keg_manatotal1]
+NAME=Keg of Total Mana Refresh
+ID=01ad6
+TYPE=t_potion_keg
+VALUE=300
+
+ON=@CREATE
+COLOR COLOR_O_MANAREFRESH
+TAG.POTTYPE=i_potion_manatotal
+MORE1=100
+
+[ITEMDEF i_keg_lexplo1]
+NAME=Keg of Lesser Explosion
+ID=01ad6
+RESOURCES=300 i_reag_sulfur_ash
+SKILLMAKE=ALCHEMY 70.0
+TYPE=t_normal
+VALUE=300
+
+ON=@CREATE
+MORE1=100
+COLOR COLOR_O_EXPLO
+
+ON=@CLICK
+MESSAGE <NAME> (<EVAL <MORE1>> Pocoes)
+RETURN 1
+ 
+ON=@DCLICK
+IF (<SRC.RESTEST 1 i_bottle_empty>)
+IF <MORE1> > 0
+MORE1 -=1
+SRC.CONSUME 1 i_bottle_empty
+SRC.NEWITEM i_potion_explosionless
+NEW.BOUNCE
+ELSE
+TRY UID.<UID>.REMOVE
+ENDIF
+ENDIF
+RETURN 1
+
+[ITEMDEF i_keg_gexplo1]
+NAME=Keg of Greater Explosion
+ID=01ad6
+TYPE=t_normal
+VALUE=300
+
+ON=@CREATE
+MORE1=100
+COLOR COLOR_O_EXPLO
+
+
+
+ON=@CLICK
+MESSAGE <NAME> (<EVAL <MORE1>> Pocoes)
+RETURN 1
+
+
+ON=@DCLICK
+IF (<SRC.RESTEST 1 i_bottle_empty>)
+IF <MORE1> > 0
+MORE1 -=1
+SRC.CONSUME 1 i_bottle_empty
+SRC.NEWITEM i_potion_explosiongreat
+NEW.BOUNCE
+ELSE
+TRY UID.<UID>.REMOVE
+ENDIF
+ENDIF
+RETURN 1
+
+[FUNCTION MAX]
+RETURN <QVAL (<ARGV[0]> > <ARGV[1]>)?<ARGV[0]>:<ARGV[1]>>
+
+[FUNCTION MIN]
+RETURN <QVAL (<ARGV[0]> < <ARGV[1]>)?<ARGV[0]>:<ARGV[1]>>
+
+[ITEMDEF i_keg_potion]
+NAME=empty potion Keg
+ID=i_KEG_WOOD
+TYPE=t_script
+VALUE={200 300}
+WEIGHT=40
+RESOURCES=8 i_board_2, 1 i_BARREL_TAP, 1 i_BARREL_HOOPS
+SKILLMAKE=TINKERING 65.0,t_tinker_tools
+CATEGORY=Unique Items
+SUBSECTION=Tinker
+DESCRIPTION=empty potion Keg
+
+ON=@Create
+	MOREP=0 0 0	//number of potions stored in keg
+	MORE1=0 	//store BASEID of first potion (i_potion_heal)
+	MORE2=0		//store skillvalue off added potion
+
+ON=@DCLICK
+	SRC.SYSMESSAGE What potion would you like to fill the keg with?
+	TARGET
+	return 1
+
+ON=@TARGON_ITEM
+	if (<src.action> != -1 )
+		SRC.SYSMESSAGE You can't use this yet!
+		return 1
+	elif <src.targ.baseid>==i_bottle_empty
+		if 0 >= <morex>
+			SRC.SYSMESSAGE You can't use this on a empty keg!
+			return 1
+		endif
+		if ( <src.targ.topobj.uid> != <src.uid> )
+			SRC.SYSMESSAGE The empty bottle should be in your backpack!
+			return 1
+		endif
+		SRC.SYSMESSAGE You fill an empty bottle.
+		SOUND=snd_Z_END_LIQUID
+		SRC.NEWITEM=<MORE1>
+		SRC.ACT.MORE2=<MORE2> //restore skillvalue 
+		SRC.ACT.ATTR=0
+		SRC.ACT.TIMER=-1
+		SRC.ACT.BOUNCE
+		MOREX = <MOREX> - 1
+		IF (<MOREX> == 0)
+			NAME=	//set original name
+			MORE1=0	//clear potion id	
+			MORE2=0	//clear makeskillvalue
+		ELSE
+			NAME=a <SRC.ACT.NAME> Keg(<MOREX>)
+		endif
+		src.targ.CONSUME 1
+		RETURN 1
+	elif <SRC.TARG.TYPE> != T_POTION
+		SRC.SYSMESSAGE Thats not a potion!
+		RETURN 1
+	elif <MORE1> && (<SRC.TARG.BASEID>!=<MORE1>)
+		SRC.SYSMESSAGE You can't mix potion types!
+		RETURN 1
+	elif (<MOREX> > 99) //max 100 potion
+		SRC.SYSMESSAGE There's no space for further potions!
+		RETURN 1
+	elif (<MOREX>==0)
+		MORE1=<SRC.TARG.BASEID> // store potion baseid i_potion_xxx
+	elif (<MORE1>!=<SRC.TARG.BASEID>)
+		SRC.SYSMESSAGE You can't fill up the keg with this potions! //'
+		RETURN 1
+	endif
+	MORE2=(<MORE2>*<MOREX>)
+	MOREX=(<MOREX> + 1)
+	MORE2=(<MORE2> + <SRC.TARG.MORE2>) //store average makeskillvalue
+	MORE2=(<MORE2> / <MOREX>)
+	NAME=a <SRC.TARG.NAME> Keg(<MORE1>)
+	SRC.SOUND=snd_Z_END_LIQUID
+	SRC.SYSMESSAGE You fill up the keg with a <SRC.TARG.NAME> Potion!
+	
+	SRC.TARG.REMOVE
+	SRC.NEWITEM=i_bottle_empty
+	SRC.ACT.ATTR=0
+	SRC.ACT.TIMER=-1
+	SRC.ACT.BOUNCE
+	return 1

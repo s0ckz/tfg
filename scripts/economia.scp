@@ -1,0 +1,326 @@
+[ITEMDEF i_pedra_economia_naam] 
+ID=0ed6
+NAME=Pedra de ECONOMIA
+TYPE=T_NORMAL 
+//DEFNAME=i_travel_player 
+
+ON=@CREATE 
+COLOR=0480
+
+On=@TIMER
+ESCREVEGOLD
+APAGAEXTRAGOLDSYS <TAG.ECONOMIC>
+TIMER=43200
+RETURN 1
+
+ON=@DCLICK
+TAG.PAGEBAUS 1
+SRC.CTAG.PAGEPLAYS 1
+//dialog d_economiaplays
+dialog d_economia,1
+RETURN 1
+
+[FUNCTION APAGAEXTRAGOLDSYS]
+IF <dARGV> > 40
+FOR 1 2
+ARRAYMODIFY TAG.ECONOMIC,0,X
+ENDFOR
+ENDIF
+RETURN 1
+
+[FUNCTION ARRAYMODIFY]
+IF !(STRCMPI("<ARGV[2]>","X"))
+TRY <ARGV[0]>=<ARRAYERASE <ARGV[0]>,<ARGV[1]>,<<ARGV[0]>>>
+ELSE
+LOCAL.POS=<ARGV[1]>
+ENDIF
+RETURN 1
+
+[FUNCTION ARRAYERASE]
+LOCAL.POS=<eval <ARGV[1]> + 2>
+FOR <eval <ARGV> - 1> 2
+IF !(<dLOCAL._FOR>==<dLOCAL.POS>)
+IF (<dLOCAL._FOR>==<eval <ARGV> - 1>)
+LOCAL.RETURN=<ARGV[<dLOCAL._FOR>]>
+ELSE
+LOCAL.RETURN=<ARGV[<dLOCAL._FOR>]>,<LOCAL.RETURN>
+ENDIF
+ENDIF
+ENDFOR
+RETURN <LOCAL.RETURN>
+
+[FUNCTION ESCREVEGOLD]
+FORINSTANCES i_gold
+      LOCAL.AMT += <AMOUNT>
+ENDFOR
+ARRAYWRITE TAG.ECONOMIC,x,<SERV.RTIME %d/%m/%y as %H:%M>,<LOCAL.AMT>
+
+[FUNCTION GOLDATUAL]
+FORINSTANCES i_gold
+      LOCAL.AMT += <AMOUNT>
+ENDFOR
+RETURN <pontuanumero <dLOCAL.AMT>> gp's
+
+[FUNCTION GOLDSEMNPCS]
+FORINSTANCES i_gold
+IF (<topobj.ischar>)
+IF !(<topobj.isplayer>)
+      LOCAL.NPCS ++
+      LOCAL.AMT += <AMOUNT>
+ENDIF
+ENDIF
+ENDFOR
+RETURN <pontuanumero <dLOCAL.AMT>> gp's <DEF.BR> <DEF.EM>(gold de <dLOCAL.NPCS> npc's)<DEF.EME>
+
+[FUNCTION GOLDSEMPLAYERS]
+FORINSTANCES i_gold
+IF (<topobj.ischar>)
+IF (<topobj.isplayer>)
+      LOCAL.AMT += <AMOUNT>
+ENDIF
+ENDIF
+ENDFOR
+RETURN <pontuanumero <dLOCAL.AMT>> gp's
+
+[FUNCTION GOLDSEMLOCAIS]
+FORINSTANCES i_gold
+IF !(<topobj.ischar>)
+      LOCAL.AMT += <AMOUNT>
+ENDIF
+ENDFOR
+RETURN <pontuanumero <dLOCAL.AMT>> gp's
+
+[FUNCTION GOLDEMCHEQUES]
+FORINSTANCES i_deed_cheque
+      LOCAL.AMT += <tag0.valor>
+ENDFOR
+RETURN <pontuanumero <dLOCAL.AMT>> gp's
+
+
+[FUNCTION ARRAYWRITE]
+IF !(STRCMPI("<ARGV[1]>","X"))
+ARRAYWRITEEND <ARGS>
+RETURN 1
+ELSE
+LOCAL.POS=<ARGV[1]>
+ENDIF
+
+
+[FUNCTION ARRAYWRITEEND]
+FOR 2 <eval <ARGV> - 1>
+IF <ISEMPTY <<ARGV[0]>>>
+TRY <ARGV[0]>=<ARGV[<dLOCAL._FOR>]>
+ELSE
+TRY <ARGV[0]>=<<ARGV[0]>>,<ARGV[<dLOCAL._FOR>]>
+ENDIF
+ENDFOR
+RETURN 1
+
+[FUNCTION RENDERECONOMIA]
+LOCAL.DEFCIT=<eval <eval (5*<ARGV[0]>) - 5> + 1>
+LOCAL.TOGO=<eval <ARGV> - <LOCAL.DEFCIT>>
+FOR <dLOCAL.TOGO> <QVAL <eval QVAL(<eval <LOCAL.TOGO> - 5>,0,0,0,1)>? <eval <LOCAL.TOGO> - 5>: 1>
+IF !(<eval <LOCAL._FOR> % 2> == 0)
+LOCAL.DIFERENCA=<eval <ARGV[<eval <LOCAL._FOR> + 1>]> - <ARGV[<eval <LOCAL._FOR> - 1>]>>
+IF <LOCAL.CT>
+LOCAL.RETURN=<LOCAL.RETURN><DEF.BR><DEF.BFONT_BLACK><DEF.B><DEF.U><ARGV[<dLOCAL._FOR>]><DEF.UE><DEF.BE><DEF.BR><pontuanumero <dARGV[<eval <LOCAL._FOR> + 1>]>> gp's
+ELSE
+LOCAL.RETURN=<DEF.BFONT_BLACK><DEF.B><DEF.U><ARGV[<dLOCAL._FOR>]><DEF.UE><DEF.BE><DEF.BR><pontuanumero <dARGV[<eval <LOCAL._FOR> + 1>]>> gp's
+LOCAL.CT ++
+ENDIF
+IF (<dLOCAL._FOR> > 1)
+LOCAL.RETURN=<LOCAL.RETURN><DEF.BR><DEF.B><QVAL <Eval QVAL(<LOCAL.DIFERENCA>,0,0,1,1)>? <DEF.BFONT_RED>(+<pontuanumero <dLOCAL.DIFERENCA>> gp's): <DEF.BFONT_GREEN>(-<pontuanumero <eval <LOCAL.DIFERENCA> * -1>> gp's)><DEF.BFONTE><DEF.BE><def.br>---------
+ENDIF
+ENDIF
+ENDFOR
+RETURN <LOCAL.RETURN>
+
+[FUNCTION pontuanumero]
+LOCAL.PONTOS=<eval <eval STRLEN(<ARGS>)> / 3>
+IF <eval STRLEN(<dARGS>)> > 3
+FOR 1 <eval <LOCAL.PONTOS> + 1>
+IF (<dLOCAL._FOR>==1)
+LOCAL.RETURN=<STRSUB <eval <eval STRLEN(<ARGS>)> - 3> 3 <ARGS>>y
+ELIF (<dLOCAL._FOR>==<eval <LOCAL.PONTOS> + 1>)
+IF <eval <eval STRLEN(<ARGS>)> - (<LOCAL.PONTOS>*3)> > 0
+LOCAL.RETURN=<STRSUB 0 <eval <eval STRLEN(<ARGS>)> - (<LOCAL.PONTOS>*3)> <ARGS>>.<LOCAL.RETURN>
+ENDIF
+LOCAL.RETURN=<STRSUB 0 <eval <eval STRLEN(<LOCAL.RETURN>)> - 1> <LOCAL.RETURN>>
+ELSE
+IF <eval <eval STRLEN(<dARGS>)> - (<LOCAL.PONTOS>*3)> > 0 
+LOCAL.RETURN=<STRSUB <eval <eval STRLEN(<ARGS>)> - (3*<dLOCAL._FOR>)> 3 <ARGS>>.<LOCAL.RETURN>
+ELSE
+LOCAL.RETURN=<STRSUB <eval <eval STRLEN(<ARGS>)> - (3*<dLOCAL._FOR>)> 3 <ARGS>>.<LOCAL.RETURN>
+ENDIF
+ENDIF
+ENDFOR
+ELSE
+RETURN <ARGS>
+ENDIF
+RETURN <LOCAL.RETURN>
+
+[DIALOG d_economia]
+100,100
+page 0
+resizepic 0 0 9200 410 479
+dtext 124 10 0 Monitorar a Economia
+button 110 450 4005 4006 1 0 3
+dtext 140 450 32 Informacoes avancadas = pequena travada.
+page 1
+dhtmlgump 8 40 391 408 1 1 <DEF.BFONT_RED><dEF.B>Gold Atual: <GOLDATUAL><DEF.BE><DEF.BR><DEF.BFONT_BLACK>---------<DEF.BR><def.b><def.u>ULTIMOS 10 DIAS:<DEF.UE><DEF.BE><DEF.BR>---------<DEF.BR><RENDERECONOMIA 1,<TAG.ECONOMIC>>
+button 8 450 4005 4006 1 0 1
+dtext 38 450 478 Page 2
+page 2
+dhtmlgump 8 40 391 408 1 1 <DEF.BFONT_RED><dEF.B>Gold Atual: <GOLDATUAL><DEF.BE><DEF.BR><DEF.BFONT_BLACK>---------<DEF.BR><def.b><def.u>ULTIMOS 10 DIAS:<DEF.UE><DEF.BE><DEF.BR>---------<DEF.BR><RENDERECONOMIA 2,<TAG.ECONOMIC>>
+button 8 450 4014 4015 1 0 2
+dtext 38 450 478 Page 1
+
+[DIALOG d_economia text]
+Monitorar a Economia
+HtmlGump id.1
+
+[DIALOG d_economia button]
+ON=0
+SRC.SYSMESSAGE @,,1 Voce fechou o controle de economias.
+
+
+on=1
+sdialog d_economia,<eval <ARGN> + 1>
+
+on=2
+sdialog d_economia,<eval <ARGN> - 1>
+
+on=3
+sdialog d_ecoavancada
+
+[DIALOG d_ecoavancada]
+100,100
+page 0
+resizepic 0 0 9200 312 230
+dhtmlgump 8 33 295 144 1 1 <DEF.BFONT_RED><dEF.B>Gold Atual: <GOLDATUAL><def.BE><def.BR><DEF.BFONT_GREEN>Em NPC's: <GOLDSEMNPCS><def.br>Em Jogadores: <GOLDSEMPLAYERS><def.br>Em Locais: <GOLDSEMLOCAIS><def.br> Em cheques: <GOLDEMCHEQUES>
+dtext 94 6 0 Economia Avancada
+button 10 182 4005 4006 1 0 1
+dtext 43 182 478 Controle de Baus
+button 10 205 4005 4006 1 0 2
+dtext 43 205 478 Controle de Players
+
+[DIALOG d_ecoavancada text]
+HtmlGump id.0
+Economia Avancada
+
+[DIALOG d_ecoavancada button]
+ON=0
+SRC.SYSMESSAGE @,,1 Voce fechou o controle de economias.
+
+on=1
+IF (<SRC.ACCOUNT.PLEVEL> > 3)
+tag.pagebaus = 1
+dialog d_economiabaus
+ELSE
+SRC.SYSMESSAGE @,,1 So para admins.
+RETURN 1
+ENDIF
+
+on=2
+IF (<SRC.ACCOUNT.PLEVEL> > 3)
+ PROMPTCONSOLE dialogplaysgold @,,1 Qual o minimo de gold para ser listado?
+ELSE
+SRC.SYSMESSAGE @,,1 So para admins.
+RETURN 1
+ENDIF
+
+[FUNCTION dialogplaysgold]
+SRC.CTAG.PAGEPLAYS 1
+SRC.CTAG.SEARCHGOLDPLAY <ARGS>
+SRC.DIALOG d_economiaplays,0,<ARGS>
+
+[DIALOG d_economiabaus]
+0,0
+page 0
+resizepic 0 0 9200 410 479
+dtext 124 10 0 Monitorar a Economia - BAUS
+page 1
+dhtmlgump 8 40 391 408 1 1 <DEF.BFONT_RED><RENDERBAUS>
+button 8 450 4005 4006 1 0 1
+dtext 38 450 478 Proxima
+
+[DIALOG d_economiabaus button]
+ON=0
+SRC.SYSMESSAGE @,,1 Voce fechou o controle de economias.
+TAG.PAGEBAUS 1
+
+on=1
+TAG.PAGEBAUS ++
+dialog d_economiabaus
+
+[FUNCTION RENDERBAUS]
+REF1=<UID>
+LOCAL.MINCT=<eval <eval <Ref1.TAG0.PAGEBAUS> * 10> - 10>
+LOCAL.MAXCT=<eval <Ref1.TAG0.PAGEBAUS> * 10>
+FORINSTANCES i_gold
+IF !(<topobj.ischar>)
+      IF <AMOUNT> > 1
+      LOCAL.CT ++ 
+      IF (<LOCAL.CT> > <LOCAL.MAXCT>) 
+      RETURN <LOCAL.RESULT>
+      ELIF (<LOCAL.CT> > <LOCAL.MINCT>)
+      IF !<LOCAL.ST>
+      LOCAL.RESULT=<dLOCAL.CT> : <TOPOBJ.NAME> uid: <TOPOBJ.UID> em <TOPOBJ.P> QT:<dAMOUNT>
+      LOCAL.ST ++
+      ELSE
+      LOCAL.RESULT=<LOCAL.RESULT><DEF.BR><dLOCAL.CT> : <TOPOBJ.NAME> uid: <TOPOBJ.UID> em <TOPOBJ.P> QT:<dAMOUNT>
+      ENDIF
+      ENDIF
+      ENDIF
+ENDIF
+ENDFOR
+RETURN <LOCAL.RESULT><DEF.BR>Fim da BUSCA.
+
+[FUNCTION RENDERCHARSGOLD]
+REF1=<UID>
+LOCAL.MINCT=<eval <eval <Ref1.CTAG0.PAGEPLAYS>*15> - 15>
+LOCAL.MAXCT=<eval <Ref1.CTAG0.PAGEPLAYS>*15>
+FORPLAYERS 6144
+//REF2=<UID>
+//LOCAL.AMT=<GOLD>
+ //FORCONT <REF2.FINDLAYER.29.UID> 1000
+ //IF (<BASEID>==i_gold)
+ //LOCAL.AMT += <AMOUNT> 
+ //ENDIF
+ //ENDFOR
+IF (<GOLD> > <ARGS>)
+LOCAL.CT ++
+      IF (<LOCAL.CT> > <dLOCAL.MAXCT>) 
+      RETURN <LOCAL.RESULT>
+      ELIF (<LOCAL.CT> > <LOCAL.MINCT>)
+      IF !<LOCAL.ST>
+      LOCAL.ST ++
+      LOCAL.RESULT=<dLOCAL.CT> : <NAME> ...> QT:  <pontuanumero <dGOLD>> gp's
+      ELSE
+      LOCAL.RESULT=<LOCAL.RESULT><DEF.BR><dLOCAL.CT> : <NAME> ...> QT: <pontuanumero <dGOLD>> gp's
+      ENDIF
+      ENDIF
+ENDIF
+ENDFOR
+RETURN <LOCAL.RESULT>
+
+[DIALOG d_economiaplays]
+0,0
+page 0
+resizepic 0 0 9200 410 479
+dtext 124 10 0 Monitorar a Economia - Players
+page 1
+dhtmlgump 8 40 391 408 1 1 <DEF.BFONT_RED><RENDERCHARSGOLD <dARGS>>
+button 8 450 4005 4006 1 0 1
+dtext 38 450 478 Proxima
+
+[DIALOG d_economiaplays button]
+ON=0
+SRC.SYSMESSAGE @,,1 Voce fechou o controle de economias.
+CTAG.PAGEPLAYS=
+
+on=1
+CTAG.PAGEPLAYS ++
+sdialog d_economiaplays,0,<SRC.CTAG.SEARCHGOLDPLAY>
+
+[EOF]

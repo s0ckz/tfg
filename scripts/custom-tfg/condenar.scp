@@ -1,0 +1,170 @@
+
+[FUNCTION Notice]
+if (<ISPLAYER>)
+		TAG.NOTICE=<ARGS>
+		EVENTS +e_notice
+		if (<ISONLINE>)
+			TIMERF 1,DIALOG d_notice
+		endif
+endif
+
+
+[EVENTS e_notice]
+ON=@Login
+SDIALOG d_notice
+
+
+[DIALOG d_notice]
+160,150
+noclose
+
+resizepic 0 0 5054 320 180
+gumppictiled 10 10 300 20 2624
+checkertrans 10 10 300 20
+dhtmlgump 10 10 300 20 0 0 <DEF.L1>basefont color="#f70000"<DEF.R1><DEF.CENTER>NOTICE
+gumppictiled 10 40 300 100 2624
+checkertrans 10 40 300 100
+gumppictiled 10 150 300 20 2624
+checkertrans 10 150 300 20
+button 10 150 4005 4007 1 0 0
+dtext 40 150 1152 OKAY
+dhtmlgump 10 40 300 100 0 1 <DEF.L1>basefont color="#ffc600"<DEF.R1><TAG0.NOTICE>
+
+[DIALOG d_notice BUTTON]
+ON=0
+TAG.NOTICE=
+EVENTS -e_notice
+
+[DIALOG d_notice2]
+160,150
+noclose
+
+resizepic 0 0 5054 320 180
+gumppictiled 10 10 300 20 2624
+checkertrans 10 10 300 20
+dhtmlgump 10 10 300 20 0 0 <DEF.L1>basefont color="#f70000"<DEF.R1><DEF.CENTER>NOTICE
+gumppictiled 10 40 300 100 2624
+checkertrans 10 40 300 100
+gumppictiled 10 150 300 20 2624
+checkertrans 10 150 300 20
+button 10 150 4005 4007 1 0 0
+dtext 40 150 1152 OKAY
+dhtmlgump 10 40 300 100 0 1 <DEF.L1>basefont color="#ffc600"<DEF.R1><ARGS>
+
+[DIALOG d_notice2 BUTTON]
+ON=0
+
+
+[FUNCTION descondenar]
+SRC.SYSMESSAGE @,,1 Clique na pedra em frente a casa.
+TARGETF descondenarGO
+
+[FUNCTION condenar]
+SDIALOG d_condenar
+
+[DIALOG d_condenar]
+100,100
+page 0
+resizepic 0 0 9300 262 210
+dtext 112 20 32 Condenar Casa
+gumppic 17 9 2529
+gumppic 95 18 93
+dtext 6 66 32 Esta casa sera condenada por:
+dtext 6 112 32 O tempo para remocao e:
+resizepic 6 134 9300 189 25
+resizepic 6 88 9300 239 25 
+dtext 201 136 32 hrs
+button 147 178 4005 4006 1 0 1
+dtext 183 180 32 CONDENAR
+dtextentry 12 90 225 20 32 1 
+dtextentry 8 135 184 20 32 2 
+
+[DIALOG d_condenar text]
+Condenar Casa
+Esta casa sera condenada por:
+O tempo para remocao e:
+Textentry id.0
+Textentry id.0
+hrs
+CONDENAR
+
+[DIALOG d_condenar button]
+ON=0
+SRC.SYSMESSAGE @,,1 Voce nao condenou nenhuma casa.
+
+on=1
+IF <ISEMPTY <ARGTXT[1]>> || <ISEMPTY <ARGTXT[2]>>
+SRC.SYSMESSAGE @,,1 Preencha todos os campos.
+SDIALOG d_condenar
+ELIF !<ISNUM <ARGTXT[2]>>
+SRC.SYSMESSAGE @,,1 O segundo campo deve ser um numero.
+SDIALOG d_condenar
+ELSE
+SRC.SYSMESSAGE @,,1 Selecione a placa da casa.
+TARGETF condenarcasago <ARGTXT[1]>,<ARGTXT[2]>,<SRC.NAME>
+ENDIF
+
+[FUNCTION condenarcasago]
+
+
+IF (<ARGO.TYPE>==t_sign_gump)
+ARGO.COLOR 32
+ARGO.EVENTS +t_placa_condenada
+ARGO.TAG.CONINFO <ARGV[0]>,<ARGV[1]>,<ARGV[2]>,<SERV.RTIME.FORMAT %d/%m/%Y %H:%M:%S>
+ARGO.DYEPORTA 32,<ARGO.REGION.UID>
+SERV.NEWITEM i_timer_condenada
+NEw.P <ARGO.P>
+NEW.ATTR=attr_invis|attr_move_never
+NEW.LINK <ARGO.LINK>
+NEW.TIMER=<EVAL <ARGV[1]> * 3600>
+ARGO.TAG.CONINFO <ARGO.TAG.CONINFO>,<NEW.UID>
+REF1=<UID.<ARGO.LINK.MORE1>>
+REF1.NOTICE "Sua casa '<ARGO.NAME>' foi condenada pelo staffer <ARGV[2]> em <SERV.RTIME.FORMAT %d/%m/%Y %H:%M:%S> pelo seguinte motivo: '<ARGV[0]>'. O prazo para remocao da casa e de <ARGV[1]> hrs. Atenciosamente, Equipe TFG Shard." 
+ELSE
+SRC.SYSMESSAGE @,,1 Nao e uma placa.
+ENDIF
+
+[FUNCTION DYEPORTA]
+FORITEMS 20
+    IF (<TYPE>==t_door_locked) || (<TYPE>==t_newporta)
+    IF (<REGION.UID>==<ARGV[1]>)
+    COLOR <ARGV[0]>
+    ENDIF
+    ENDIF
+ENDFOR
+
+[TYPEDEF t_placa_condenada]
+on=@Click
+MESSAGE @32,,1 [CONDENADA]
+MESSAGE @32,,1 <name>
+RETURN 1
+
+On=@DCLICK
+SRC.NOTICIARCASA <TAG.CONINFO>,<NAME>
+
+[FUNCTION NOTICIARCASA]
+DIALOG d_notice2,0,"A casa '<ARGV[5]>' foi condenada pelo staffer <ARGV[2]> em <ARGV[3]> pelo seguinte motivo: '<ARGV[0]>'. O prazo para remocao da casa era de <ARGV[1]> hrs. Restam <QVAL <EVAL QVAL(<UID.<ARGV[4]>.TIMER>,3600,0,1,1)>? <EVAL <UID.<ARGV[4]>.TIMER> / 3600> hrs e <EVAL <EVAL <UID.<ARGV[4]>.TIMER> - <EVAL <EVAL <UID.<ARGV[4]>.TIMER> / 3600> * 3600>> / 60> min: <EVAL <UID.<ARGV[4]>.TIMER> / 60>  min>.  Atenciosamente, Equipe TFG Shard." 
+
+[FUNCTION descondenarGO]
+IF (<ARGO.BASEID>==i_timer_condenada)
+ARGO.LINK.LINK.COLOR=
+ARGO.LINK.LINK.EVENTS -t_placa_condenada
+ARGO.LINK.LINK.TAG.CONINFO=
+ARGO.LINK.LINK.DYEPORTA 0,<ARGO.REGION.UID>
+REF1=<UID.<ARGO.LINK.MORE1>>
+REF1.NOTICE "Sua casa '<ARGO.NAME>' foi liberada pelo staffer <SRC.NAME> em <SERV.RTIME.FORMAT %d/%m/%Y %H:%M:%S>. Atenciosamente, Equipe TFG Shard." 
+ARGO.REMOVE
+ELSE
+SRC.SYSMESSAGE @,,1 Voce tem que usar este comando na pedra em frente a casa.
+ENDIF 
+
+[ITEMDEF i_timer_condenada]
+ID=i_rock_plain
+Name=Casa Condenada
+
+on=@TIMER
+REF1=<UID.<LINK.MORE1>>
+REF1.NOTICE "Sua casa '<NAME>' que estava irregular foi removida em <SERV.RTIME.FORMAT %d/%m/%Y %H:%M:%S>. Atensiosamente, Equipe TFG Shard"
+LINK.REMOVE
+
+[EOF]

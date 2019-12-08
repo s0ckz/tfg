@@ -1,0 +1,1887 @@
+// NEEDS: _multis.scp - use EXTRACT to get multis for other multi part items:
+// loom
+// cannon
+// beds
+// tables
+// ankhs
+// vat
+// forges
+// caskets
+// teleporters
+// trees
+
+[MULTIDEF 064]
+DEFNAME=m_multi_house_stone_plaster_small
+Name=Small Stone and Plaster House
+nameloc=1011303	// Stone and plaster house
+TYPE=T_MULTI
+VALUE=80000
+CATEGORY=Multis
+SUBSECTION=Houses
+dupelist=065
+DESCRIPTION=Small Stone and Plaster House
+MULTIREGION=-3,-3,3,4
+COMPONENT=i_door_wood,0,3,7
+COMPONENT=i_tile_house_entrance,0,3,7
+COMPONENT=i_tile_house_exit,0,4,4
+COMPONENT=i_tile_house_exit,-1,4,4
+COMPONENT=i_tile_house_exit,1,4,4
+COMPONENT=i_sign_house_2,2,4,5
+TSPEECH=spk_house_cmds
+TEVENTS=R_HOUSE_PRIVATE
+
+[multidef 065]
+//Small Stone and Plaster House
+dupeitem=064
+
+[MULTIDEF 066]
+DEFNAME=m_multi_house_stone_small
+Name=Small Stone House
+nameloc=1011304	// Field stone house? Nome no sphere 56d eh diferente do 56b
+TYPE=T_MULTI
+VALUE=80000
+dupelist=067
+CATEGORY=Multis
+SUBSECTION=Houses
+DESCRIPTION=Small Stone House
+MULTIREGION=-3,-3,3,4
+COMPONENT=i_door_wood,0,3,7
+COMPONENT=i_sign_house_2,2,4,5
+COMPONENT=i_tile_house_entrance,0,3,7
+COMPONENT=i_tile_house_exit,0,4,4
+COMPONENT=i_tile_house_exit,-1,4,4
+COMPONENT=i_tile_house_exit,1,4,4
+TSPEECH=spk_house_cmds
+TEVENTS=r_house_private
+
+[multidef 067]
+//Field Stone House
+dupeitem=066
+
+[MULTIDEF 068]
+DEFNAME=m_multi_house_stone_brick_small
+Name=Small Brick House
+nameloc=1011305	// Small brick house
+TYPE=T_MULTI
+VALUE=80000
+dupelist=069
+CATEGORY=Multis
+SUBSECTION=Houses
+DESCRIPTION=Small Brick House
+MULTIREGION=-3,-3,3,4
+COMPONENT=i_door_wood,0,3,7
+COMPONENT=i_sign_house_2,2,4,5
+COMPONENT=i_tile_house_entrance,0,3,7
+COMPONENT=i_tile_house_exit,0,4,4
+COMPONENT=i_tile_house_exit,-1,4,4
+COMPONENT=i_tile_house_exit,1,4,4
+TSPEECH=spk_house_cmds
+TEVENTS=r_house_private
+
+[multidef 069]
+//Small Brick House
+dupeitem=068
+
+[MULTIDEF 06a]
+DEFNAME=m_multi_house_stone_wood_small
+Name=Small Wooden House
+nameloc=1011306
+TYPE=T_MULTI
+VALUE=80000
+dupelist=06b
+nameloc=1011306	// Wooden house
+CATEGORY=Multis
+SUBSECTION=Houses
+DESCRIPTION=Small Wood House
+MULTIREGION=-3,-3,3,4
+COMPONENT=i_door_wood,0,3,7
+COMPONENT=i_sign_house_2,2,4,5
+COMPONENT=i_tile_house_entrance,0,3,7
+COMPONENT=i_tile_house_exit,0,4,4
+COMPONENT=i_tile_house_exit,-1,4,4
+COMPONENT=i_tile_house_exit,1,4,4
+TSPEECH=spk_house_cmds
+TEVENTS=r_house_private
+
+[multidef 06b]
+//Wooden House
+dupeitem=06a
+
+[MULTIDEF 06c]
+DEFNAME=m_multi_house_wood_plaster_small
+Name=Small Wood and Plaster House
+nameloc=1011307
+TYPE=T_MULTI
+VALUE=80000
+dupelist=06d
+CATEGORY=Multis
+SUBSECTION=Houses
+DESCRIPTION=Small Wood and Plaster House
+MULTIREGION=-3,-3,3,4
+COMPONENT=i_door_wood,0,3,7
+COMPONENT=i_sign_house_2,2,4,5
+COMPONENT=i_tile_house_entrance,0,3,7
+COMPONENT=i_tile_house_exit,0,4,4
+COMPONENT=i_tile_house_exit,-1,4,4
+COMPONENT=i_tile_house_exit,1,4,4
+TSPEECH=spk_house_cmds
+TEVENTS=r_house_private
+
+[MULTIDEF 06d]
+DUPEITEM=06c
+
+[MULTIDEF 06e]
+DEFNAME=m_multi_house_wood_thatched_small
+Name=Small Wood House Thatched Roof
+nameloc=1011308	// Thatched-roof cottage
+TYPE=T_MULTI
+VALUE=80000
+dupelist=06f
+CATEGORY=Multis
+SUBSECTION=Houses
+DESCRIPTION=Small Wood House Thatched Roof
+MULTIREGION=-3,-3,3,4
+COMPONENT=i_door_wood,0,3,7
+COMPONENT=i_sign_house_2,2,4,5
+COMPONENT=i_tile_house_entrance,0,3,7
+COMPONENT=i_tile_house_exit,0,4,4
+COMPONENT=i_tile_house_exit,-1,4,4
+COMPONENT=i_tile_house_exit,1,4,4
+TSPEECH=spk_house_cmds
+TEVENTS=r_house_private
+
+[MULTIDEF 06f]
+DUPEITEM=06e
+
+[MULTIDEF 070]
+DEFNAME=m_multi_tent_blue
+Name=Blue Tent
+TYPE=T_MULTI
+VALUE=35000
+dupelist=071
+CATEGORY=Multis
+SUBSECTION=Tents
+DESCRIPTION=Blue Tent
+MULTIREGION=-3,-3,4,4
+COMPONENT=0e43,0,-1,7
+TSPEECH=spk_house_cmds
+
+[MULTIDEF 071]
+DUPEITEM=070
+
+[MULTIDEF 072]
+DEFNAME=m_multi_tent_green
+Name=Green Tent
+TYPE=T_MULTI
+VALUE=35000
+CATEGORY=Multis
+SUBSECTION=Tents
+DESCRIPTION=Green Tent
+MULTIREGION=-3,-3,4,4
+COMPONENT=0e43,0,-1,7	// box
+TSPEECH=spk_house_cmds
+
+[MULTIDEF 073]
+DUPEITEM=072
+
+[MULTIDEF 074]
+DEFNAME=m_multi_house_3room
+Name=Three Room House
+nameloc=1011309
+TYPE=T_MULTI
+VALUE=265000
+dupelist=075
+CATEGORY=Multis
+SUBSECTION=Houses
+DESCRIPTION=Three Room House
+MULTIREGION=-7,-7,6,6
+COMPONENT=i_door_wood,-1, 6, 7 // Front door 1
+COMPONENT=06A7,0, 6, 7 // Front door 2
+COMPONENT=i_tile_house_entrance,-1,6,7
+COMPONENT=i_tile_house_entrance,0,6,7
+COMPONENT=i_tile_house_exit,-2,7,4
+COMPONENT=i_tile_house_exit,-1,7,4
+COMPONENT=i_tile_house_exit,0,7,4
+COMPONENT=i_tile_house_exit,1,7,4
+COMPONENT=i_door_wood,-3,-1, 7
+COMPONENT=i_door_wood,3,-1, 7
+COMPONENT=i_sign_house_2,3, 7, 5	// Place the sign.
+TSPEECH=spk_house_cmds
+TEVENTS=r_house_private
+
+[MULTIDEF 075]
+DUPEITEM=074
+
+[MULTIDEF 076]
+DEFNAME=m_multi_house_wood_plaster_2story
+Name=Two Story Wood and Plaster House
+nameloc=1011310 // Two-story wood and plaster house
+TYPE=T_MULTI
+VALUE=225000
+dupelist=077
+CATEGORY=Multis
+SUBSECTION=Houses
+DESCRIPTION=Two Story Wood and Plaster House
+MULTIREGION=-7,-7,6,7
+COMPONENT=i_door_wood,-3, 6, 7 // Front door 1
+COMPONENT=06A7,-2, 6, 7 // Front door 2
+COMPONENT=i_tile_house_entrance,-3,6,7
+COMPONENT=i_tile_house_entrance,-2,6,7
+COMPONENT=i_tile_house_exit,-4,7,4
+COMPONENT=i_tile_house_exit,-3,7,4
+COMPONENT=i_tile_house_exit,-2,7,4
+COMPONENT=i_tile_house_exit,-1,7,4
+COMPONENT=i_door_wood,-2, 0, 27
+COMPONENT=i_door_wood,-3, 0, 7
+COMPONENT=i_sign_house_2, 1, 7, 5	// Place the sign.
+TSPEECH=spk_house_cmds
+TEVENTS=r_house_private
+
+[MULTIDEF 077]
+DUPEITEM=076
+
+[MULTIDEF 078]
+DEFNAME=m_multi_house_stone_plaster_2story
+Name=Two Story Stone and Plaster House
+nameloc=1011311	// Two-story stone and plaster house
+TYPE=T_MULTI
+VALUE=225000
+dupelist=079
+CATEGORY=Multis
+SUBSECTION=Houses
+DESCRIPTION=Two Story Stone and Plaster House
+MULTIREGION=-7,-7,6,7
+COMPONENT=i_door_wood,-3, 6, 7 // Front door 1
+COMPONENT=06A7,-2, 6, 7 // Front door 2
+COMPONENT=i_tile_house_entrance,-3,6,7
+COMPONENT=i_tile_house_entrance,-2,6,7
+COMPONENT=i_tile_house_exit,-4,7,4
+COMPONENT=i_tile_house_exit,-3,7,4
+COMPONENT=i_tile_house_exit,-2,7,4
+COMPONENT=i_tile_house_exit,-1,7,4
+COMPONENT=i_door_wood,-3, 0, 27
+COMPONENT=i_door_wood,-3, 0, 7
+COMPONENT=i_sign_house_2, 1, 7, 5 // Place the sign.
+TSPEECH=spk_house_cmds
+TEVENTS=r_house_private
+
+[MULTIDEF 079]
+//Two Story Stone and Plaster House
+DUPEITEM=078
+
+[MULTIDEF 03e]
+DEFNAME=m_multi_marble_tower_with_fence
+Name=Marble Tower with Fence
+TYPE=T_MULTI
+VALUE=600000
+weight=10
+CATEGORY=Multis
+SUBSECTION=TFG Houses
+DESCRIPTION=Marble Tower with Fence
+MULTIREGION=-11,-8,12,7
+COMPONENT=067D,	 1, 3, 46
+COMPONENT=067D,	 1, 3, 26
+COMPONENT=i_door_metal,	 3,-3, 7
+COMPONENT=0677,	 1, 5, 7	// Front door 2.
+COMPONENT=i_door_metal,	 0, 5, 7	// Front door 1.
+COMPONENT=i_tile_house_entrance,1,5,7
+COMPONENT=i_tile_house_entrance,0,5,7
+COMPONENT=i_tile_house_exit,2,6,2
+COMPONENT=i_tile_house_exit,1,6,3
+COMPONENT=i_tile_house_exit,0,6,3
+COMPONENT=i_tile_house_exit,-1,6,2
+COMPONENT=i_sign_house_2,	 4, 6, 5	// Place the sign.
+COMPONENT=2123,8,12,0
+COMPONENT=2123,7,12,0
+COMPONENT=2123,6,12,0
+COMPONENT=2123,5,12,0
+COMPONENT=2123,4,12,0
+COMPONENT=2123,3,12,0
+COMPONENT=2123,2,12,0
+COMPONENT=084e,1,12,0
+COMPONENT=i_tile_house_fence_entrance,1,12,0
+COMPONENT=i_gate_iron_2,0,12,0
+COMPONENT=i_tile_house_fence_entrance,0,12,0
+COMPONENT=2123,-1,12,0
+COMPONENT=2123,-2,12,0
+COMPONENT=2123,-3,12,0
+COMPONENT=2123,-4,12,0
+COMPONENT=2123,-5,12,0
+COMPONENT=2123,-6,12,0
+COMPONENT=2121,-7,12,0
+COMPONENT=2121,-7,11,0
+COMPONENT=2121,-7,10,0
+COMPONENT=2121,-7,9,0
+COMPONENT=2121,-7,8,0
+COMPONENT=2121,-7,7,0
+COMPONENT=2121,-7,6,0
+COMPONENT=2121,8,11,0
+COMPONENT=2121,8,10,0
+COMPONENT=2121,8,9,0
+COMPONENT=2122,8,12,0
+COMPONENT=2121,8,8,0
+COMPONENT=2121,8,7,0
+COMPONENT=2121,8,6,0
+TSPEECH=spk_house_cmds
+TEVENTS=r_house_private
+
+[MULTIDEF 07a]
+DEFNAME=m_multi_tower
+Name=Tower
+nameloc=1011312	// Tower
+TYPE=T_MULTI
+VALUE=775000
+weight=10
+dupelist=07b
+CATEGORY=Multis
+SUBSECTION=Houses
+DESCRIPTION=Tower
+MULTIREGION=-11,-7,12,8
+COMPONENT=067D,	 1, 4, 46
+COMPONENT=067D,	 1, 4, 26
+COMPONENT=i_door_metal,	 3,-2, 7
+COMPONENT=0677,	 1, 6, 7	// Front door 2.
+COMPONENT=i_door_metal,	 0, 6, 7	// Front door 1.
+COMPONENT=i_tile_house_entrance,1,6,7
+COMPONENT=i_tile_house_entrance,0,6,7
+COMPONENT=i_tile_house_exit,2,7,3
+COMPONENT=i_tile_house_exit,1,7,4
+COMPONENT=i_tile_house_exit,0,7,4
+COMPONENT=i_tile_house_exit,-1,7,3
+COMPONENT=i_sign_house_2,	 4, 7, 5	// Place the sign.
+TSPEECH=spk_house_cmds
+TEVENTS=r_house_private
+
+[MULTIDEF 07b]
+DUPEITEM=07a
+
+[MULTIDEF 07c]
+DEFNAME=m_multi_keep
+Name=Keep
+nameloc=1011313	// Small stone keep
+TYPE=T_MULTI
+VALUE=1000000
+dupelist=07d
+CATEGORY=Multis
+SUBSECTION=Houses
+DESCRIPTION=Keep
+MULTIREGION=-11,-11,12,12
+COMPONENT=0677,	 1, 10, 7	// Front door 2.
+COMPONENT=i_door_metal,	 0, 10, 7	// Front door 1.
+COMPONENT=i_tile_house_entrance,1,10,7
+COMPONENT=i_tile_house_entrance,0,10,7
+COMPONENT=i_tile_house_exit,2,11,3
+COMPONENT=i_tile_house_exit,1,11,3
+COMPONENT=i_tile_house_exit,0,11,3
+COMPONENT=i_tile_house_exit,-1,11,3
+COMPONENT=i_sign_house_2, 4, 11, 5	// Place the sign.
+TSPEECH=spk_house_cmds
+TEVENTS=r_house_private
+
+[MULTIDEF 07d]
+DUPEITEM=07c
+
+[MULTIDEF 07e]
+DEFNAME=m_multi_castle
+Name=Castle
+nameloc=1011314	// Castle
+TYPE=T_MULTI
+VALUE=1250000
+dupelist=07f
+CATEGORY=Multis
+SUBSECTION=Houses
+DESCRIPTION=Castle
+MULTIREGION=-15,-15,15,16
+COMPONENT=0677, 1, 5, 7
+COMPONENT=i_door_metal, 0, 5, 7
+COMPONENT=0677, 1, 15, 7	// Front door 2.
+COMPONENT=i_door_metal, 0, 15, 7	// Front door 1.
+COMPONENT=i_tile_house_entrance,1,15,7
+COMPONENT=i_tile_house_entrance,0,15,7
+COMPONENT=i_tile_house_exit,2,16,3
+COMPONENT=i_tile_house_exit,1,16,3
+COMPONENT=i_tile_house_exit,0,16,3
+COMPONENT=i_tile_house_exit,-1,16,3
+COMPONENT=i_sign_house_2, 4, 16, 5	// Place the sign.
+TSPEECH=spk_house_cmds
+TEVENTS=r_house_private
+
+[MULTIDEF 07f]
+//Name=Castle
+DUPEITEM=07e
+
+[MULTIDEF 08c]
+// minor support diff from 4087
+DEFNAME=m_multi_shop_blacksmithy_large
+Name=Large Blacksmithy Shop
+nameloc=1011315	// Large house with patio
+TYPE=T_MULTI
+VALUE=215000
+dupelist=08d
+CATEGORY=Multis
+SUBSECTION=Houses
+DESCRIPTION=Large Blacksmithy Shop
+MULTIREGION=-7,-7,7,7
+COMPONENT=i_door_wood,	 4, -1, 7
+COMPONENT=06ad,	 1,  4, 7
+COMPONENT=06ad,	 1, -4, 7
+COMPONENT=06A7,	-3, 6, 7	// Front door 2.
+COMPONENT=i_door_wood,	-4, 6, 7	// Front door 1.
+COMPONENT=i_tile_house_entrance,-3,6,7
+COMPONENT=i_tile_house_entrance,-4,6,7
+COMPONENT=i_tile_house_exit,-2,7,3
+COMPONENT=i_tile_house_exit,-3,7,3
+COMPONENT=i_tile_house_exit,-4,7,3
+COMPONENT=i_tile_house_exit,-5,7,3
+COMPONENT=i_sign_house_2,	 0, 7, 5	// Place the sign.
+TSPEECH=spk_house_cmds
+TEVENTS=r_house_private
+
+[MULTIDEF 08d]
+//Large House with Patio
+DUPEITEM=08c
+
+// Marble House with Patio
+// aka Villa.
+[MULTIDEF 096]
+DEFNAME=m_multi_house_patio_marble
+Name=Large Marble Patio House
+nameloc=1011316	// Marble house with patio
+TYPE=T_MULTI
+VALUE=280000
+CATEGORY=Multis
+SUBSECTION=Houses
+DESCRIPTION=Large Marble Patio House
+MULTIREGION=-7,-7,7,7
+COMPONENT=i_door_metal, -4, 3, 4 // Front Door 1
+COMPONENT=0677, -3, 3, 4 // Front Door 2
+COMPONENT=i_tile_house_entrance,-4,3,4
+COMPONENT=i_tile_house_entrance,-3,3,4
+COMPONENT=i_tile_house_exit,-2,4,4
+COMPONENT=i_tile_house_exit,-3,4,4
+COMPONENT=i_tile_house_exit,-4,4,4
+COMPONENT=i_tile_house_exit,-5,4,4
+COMPONENT=i_sign_house_2, 0, 7, 0
+TSPEECH=spk_house_cmds
+TEVENTS=r_house_private
+
+[MULTIDEF 098]
+// Small Tower
+DEFNAME=m_multi_tower_wizard
+Name=Wizards Tower
+nameloc=1011317	// Small stone tower
+TYPE=T_MULTI
+VALUE=135000
+CATEGORY=Multis
+SUBSECTION=Houses
+DESCRIPTION=Wizards Tower
+MULTIREGION=-3,-3,4,4
+COMPONENT=i_door_metal, 3, 3, 5 // Front Door
+COMPONENT=i_tile_house_entrance,3,3,4
+COMPONENT=i_tile_house_exit,2,4,2
+COMPONENT=i_tile_house_exit,3,4,2
+COMPONENT=i_tile_house_exit,4,4,2
+COMPONENT=i_sign_house_2, 1, 4, 5
+TSPEECH=spk_house_cmds
+TEVENTS=r_house_private
+
+[MULTIDEF 09a]
+DEFNAME=m_multi_cabin_log_2story
+Name=Two Story Log Cabin
+nameloc=1011318	// Two-story log cabin
+TYPE=T_MULTI
+VALUE=235000
+CATEGORY=Multis
+SUBSECTION=Houses
+DESCRIPTION=Two Story Log Cabin
+MULTIREGION=-3,-6,4,7
+COMPONENT=06e5, 1, 4, 8 // Front Door
+COMPONENT=i_tile_house_entrance,1,4,8
+COMPONENT=i_tile_house_exit,1,5,6
+COMPONENT=06e5, 1, 0, 29
+COMPONENT=i_sign_house_2, 4, 7, 9
+COMPONENT=08a4, 3, -3, 8   //temp wood ladder, rope not working
+COMPONENT=08a2, 3, -4, 20  //temp wood ladder, rope not working
+TSPEECH=spk_house_cmds
+TEVENTS=r_house_private
+
+[MULTIDEF 09c]
+DEFNAME=m_multi_house_patio_sand
+Name=Sandstone Patio House
+nameloc=1011320	// Sandstone house with patio
+TYPE=T_MULTI
+VALUE=200000
+CATEGORY=Multis
+SUBSECTION=Houses
+DESCRIPTION=Sandstone Patio House
+MULTIREGION=-5,-4,6,4
+COMPONENT=i_door_wood_2, -1, 3, 6
+COMPONENT=i_tile_house_entrance,-1,3,6
+COMPONENT=i_tile_house_exit,-2,4,2
+COMPONENT=i_tile_house_exit,-1,4,4
+COMPONENT=i_tile_house_exit,0,4,2
+COMPONENT=i_sign_house_2, 2, 4, 1
+TSPEECH=spk_house_cmds
+TEVENTS=r_house_private
+
+
+[MULTIDEF 099]
+DEFname=m_multi_log_house_W
+Name=Log House West
+TYPE=T_MULTI
+VALUE=0
+CATEGORY=Multis
+SUBSECTION=TFG Houses
+DESCRIPTION=Log House West
+MULTIREGION=-5,-7,5,7
+
+[MULTIDEF 0A1]
+DEFname=m_multi_log_house
+Name=Log House
+TYPE=T_MULTI
+VALUE=0
+CATEGORY=Multis
+SUBSECTION=TFG Houses
+DESCRIPTION=Log House
+MULTIREGION=-5,-7,5,7
+COMPONENT=06A7,2,-1,5
+COMPONENT=06A7,-1,6,5 // Front Door 1
+COMPONENT=06A5,-2, 6, 5 // Front Door 2
+COMPONENT=i_tile_house_entrance,-1,6,5
+COMPONENT=i_tile_house_entrance,-2,6,5
+COMPONENT=i_tile_house_exit,-3,7,2
+COMPONENT=i_tile_house_exit,-2,7,2
+COMPONENT=i_tile_house_exit,-1,7,2
+COMPONENT=i_tile_house_exit,0,7,2
+COMPONENT=i_sign_house_2,-3,7,4
+COMPONENT=0B98,-3,7,5 //wooden post above sign
+TSPEECH=spk_house_cmds
+TEVENTS=r_house_private
+
+[MULTIDEF 0109]
+DEFname=m_multi_3_story_log_house
+Name=Three Story Log House
+TYPE=T_MULTI
+VALUE=0
+MULTIREGION=-6,-5,6,5
+COMPONENT=06D5,0,4,1
+COMPONENT=06D7,1,4,1
+COMPONENT=i_tile_house_entrance,0,4,1
+COMPONENT=i_tile_house_entrance,1,4,1
+COMPONENT=i_tile_house_exit,-2,5,-1
+COMPONENT=i_tile_house_exit,-1,5,-1
+COMPONENT=i_tile_house_exit,0,5,-1
+COMPONENT=i_tile_house_exit,1,5,-1
+COMPONENT=06D5,-3,2,22
+COMPONENT=i_sign_house_2,-2,5,1
+COMPONENT=0B98,-2,5,1,1
+CATEGORY=Multis
+SUBSECTION=TFG Houses
+DESCRIPTION=3 Story Log House
+TSPEECH=spk_house_cmds
+TEVENTS=r_house_private
+
+[MULTIDEF 031]
+DEFname=m_multi_two_story_porch_house
+Name=Two Story Plaster House with Porch
+TYPE=T_MULTI
+VALUE=540000
+CATEGORY=Multis
+SUBSECTION=TFG Houses
+DESCRIPTION=Two Story Plaster House with Porch
+MULTIREGION=-5,-4,5,4
+COMPONENT=06A5,2,0,25
+COMPONENT=06A5,2,2,5
+COMPONENT=i_tile_house_entrance,2,2,5
+COMPONENT=i_tile_house_exit,1,3,5
+COMPONENT=i_tile_house_exit,2,3,5
+COMPONENT=i_tile_house_exit,3,3,5
+COMPONENT=06AD,-1,2,25
+COMPONENT=i_sign_house_2,-1,4,5
+COMPONENT=0B98,-1,4,5 //wooden post above sign
+TSPEECH=spk_house_cmds
+TEVENTS=r_house_private
+
+ON=@CREATE
+	TAG.AHS = 1
+
+[MULTIDEF 032]
+DEFname=m_multi_large_log_cabin_ranch
+Name=Large Log Cabin Ranch
+TYPE=T_MULTI
+VALUE=500000
+CATEGORY=Multis
+SUBSECTION=TFG Houses
+DESCRIPTION=Large Log Cabin Ranch
+MULTIREGION=-11,-11,10,12
+COMPONENT=0839,3,12,0
+COMPONENT=083B,4,12,0
+COMPONENT=06A5,3,2,5 // Front door 1
+COMPONENT=06A7,4,2,5 // Front door 2
+COMPONENT=i_tile_house_entrance,3,2,5
+COMPONENT=i_tile_house_entrance,4,2,5
+COMPONENT=i_tile_house_exit,2,3,0
+COMPONENT=i_tile_house_exit,3,3,2
+COMPONENT=i_tile_house_exit,4,3,2
+COMPONENT=i_tile_house_exit,5,3,0
+COMPONENT=i_sign_house_2,2,3,1
+TSPEECH=spk_house_cmds
+TEVENTS=r_house_private
+
+[MULTIDEF 0228]
+Defname=m_multi_country_house
+name=Country Side House
+type=t_multi
+value=700000
+CATEGORY=Multis
+SUBSECTION=Custom Houses
+DESCRIPTION=Country Side House
+Multiregion=-8,-8,9,9
+COMPONENT=06A5,0,8,5 // Front door 1
+COMPONENT=06A7,1,8,5 // Front door 2
+COMPONENT=06A5,-5,-3,5
+COMPONENT=06A5,6,-3,5
+COMPONENT=i_tile_house_entrance,0,8,5
+COMPONENT=i_tile_house_entrance,1,8,5
+COMPONENT=i_tile_house_exit,-1,9,1
+COMPONENT=i_tile_house_exit,0,9,1
+COMPONENT=i_tile_house_exit,1,9,1
+COMPONENT=i_tile_house_exit,2,9,1
+COMPONENT=i_sign_house_2,3,9,5
+COMPONENT=0B98,3,9,5 //wooden post above sign
+TSPEECH=spk_house_cmds
+TEVENTS=r_house_private
+
+[MULTIDEF 04F]
+Defname=m_multi_twin_fortress
+name=Twin Fortress
+type=t_multi
+value=800000
+CATEGORY=Multis
+SUBSECTION=Custom Houses
+DESCRIPTION=Twin Fortress
+Multiregion=-14,-4,19,10
+COMPONENT=06C5,-6,7,0 // Front door 1
+COMPONENT=06C7,-5,7,0 // Front door 2
+COMPONENT=06C5,10,7,0 // Front door 3
+COMPONENT=06C7,11,7,0 // Front door 4
+COMPONENT=i_gate_iron_2,2,10,0
+COMPONENT=i_tile_house_fence_entrance,2,10,0
+COMPONENT=084e,3,10,0
+COMPONENT=i_tile_house_fence_entrance,3,10,0
+COMPONENT=i_gate_iron_2,2,7,0
+COMPONENT=084e,3,7,0
+COMPONENT=i_tile_house_entrance,-6,7,0
+COMPONENT=i_tile_house_entrance,-5,7,0
+COMPONENT=i_tile_house_entrance,10,7,0
+COMPONENT=i_tile_house_entrance,11,7,0
+COMPONENT=i_tile_house_exit,-7,8,0
+COMPONENT=i_tile_house_exit,-6,8,0
+COMPONENT=i_tile_house_exit,-5,8,0
+COMPONENT=i_tile_house_exit,-4,8,0
+COMPONENT=i_tile_house_exit,9,8,0
+COMPONENT=i_tile_house_exit,10,8,0
+COMPONENT=i_tile_house_exit,11,8,0
+COMPONENT=i_tile_house_exit,12,8,0
+COMPONENT=i_sign_house_2,13,8,0
+TSPEECH=spk_house_cmds
+TEVENTS=r_house_private
+
+[MULTIDEF 024]
+DEFname=m_multi_two_story_wood_small_house
+Name=Two Story Wood and Plaster Small House
+TYPE=T_MULTI
+VALUE=0
+CATEGORY=Multis
+SUBSECTION=TFG Houses
+DESCRIPTION=Two Story Plaster House with Porch
+MULTIREGION=-3,-5,5,5
+//COMPONENT=06A5,2,0,25
+//COMPONENT=06A5,2,1,5
+//COMPONENT=06AD,-1,2,25
+//COMPONENT=i_sign_house_2,-1,4,5
+//COMPONENT=0B98,-1,4,5 //wooden post above sign
+TSPEECH=spk_house_cmds
+TEVENTS=r_house_private
+
+[MULTIDEF 052]
+DEFname=m_multi_log_cabin_horse_places
+Name=Log Cabin with Horse Slots
+TYPE=T_MULTI
+VALUE=400000
+CATEGORY=Multis
+SUBSECTION=TFG Houses
+DESCRIPTION=Log Cabin with Horse Slots
+MULTIREGION=-9,-9,9,9
+COMPONENT=06a5,-3,5,6
+COMPONENT=06ad,1,0,6
+COMPONENT=0866,6,5,1
+COMPONENT=i_tile_house_entrance,-3,5,6
+COMPONENT=i_tile_house_exit,-4,6,2
+COMPONENT=i_tile_house_exit,-3,6,2
+COMPONENT=i_tile_house_exit,-2,6,2
+COMPONENT=i_tile_house_entrance,1,0,6
+COMPONENT=i_tile_house_exit,2,-1,2
+COMPONENT=i_tile_house_exit,2,0,2
+COMPONENT=i_tile_house_exit,2,1,2
+COMPONENT=i_sign_house_2,-4,6,5
+TSPEECH=spk_house_cmds
+TEVENTS=r_house_private
+
+[MULTIDEF 058]
+DEFname=m_multi_tfg_world_championship_1x1_prize_house
+Name=TFG World Championship 1x1 Prize House
+TYPE=T_MULTI
+VALUE=2000000
+CATEGORY=Multis
+SUBSECTION=TFG Houses
+DESCRIPTION=TFG World Championship 1x1 Prize House
+MULTIREGION=-6,-8,7,9
+COMPONENT=06e5,1,4,5
+COMPONENT=i_tile_house_entrance,1,4,5
+COMPONENT=i_tile_house_exit,0,5,2
+COMPONENT=i_tile_house_exit,1,5,2
+COMPONENT=i_tile_house_exit,2,5,2
+COMPONENT=i_sign_house_2,0,5,5
+TSPEECH=spk_house_cmds
+TEVENTS=r_house_private
+
+[MULTIDEF 0203]
+DEFname=m_multi_warrior_tower
+Name=Warrior Tower
+TYPE=T_MULTI
+VALUE=600000
+CATEGORY=Multis
+SUBSECTION=TFG Houses
+DESCRIPTION=Warrior Tower
+MULTIREGION=-4,-5,4,5
+COMPONENT=i_sign_house_2,3,4,11
+COMPONENT=i_door_metal,0,3,13
+COMPONENT=i_tile_house_entrance,0,3,13
+COMPONENT=i_tile_house_exit,0,4,10
+COMPONENT=i_tile_house_exit,1,4,8
+TSPEECH=spk_house_cmds
+TEVENTS=R_HOUSE_PRIVATE
+
+ON=@CREATE
+	TAG.AHS = 1
+
+[MULTIDEF 02a]
+DEFname=m_multi_sandstone_porch_house_small
+Name=Small Sandstone Porch House
+TYPE=T_MULTI
+VALUE=400000
+CATEGORY=Multis
+SUBSECTION=TFG Houses
+DESCRIPTION=Small Sandstone Porch House
+MULTIREGION=-5,-6,4,5
+COMPONENT=i_sign_house_2,3,2,1
+COMPONENT=i_door_wood,-1,1,5
+COMPONENT=06a7,0,1,5
+COMPONENT=i_tile_house_entrance,-1,1,5
+COMPONENT=i_tile_house_entrance,0,1,5
+COMPONENT=i_tile_house_exit,-2,2,5
+COMPONENT=i_tile_house_exit,-1,2,5
+COMPONENT=i_tile_house_exit,0,2,5
+COMPONENT=i_tile_house_exit,1,2,5
+TSPEECH=spk_house_cmds
+TEVENTS=R_HOUSE_PRIVATE
+
+ON=@CREATE
+	TAG.AHS = 1
+
+[MULTIDEF 01e]
+DEFname=m_multi_sandstone_2_story_House_small
+Name=Small Two Story Sandstone House
+TYPE=T_MULTI
+VALUE=520000
+CATEGORY=Multis
+SUBSECTION=TFG Houses
+DESCRIPTION=Small Two Story Sandstone House
+MULTIREGION=-4,-4,4,3
+COMPONENT=i_sign_house,4,-2,5
+COMPONENT=06ed,3,0,5
+COMPONENT=i_tile_house_entrance,3,0,5
+COMPONENT=i_tile_house_exit,4,-1,1
+COMPONENT=i_tile_house_exit,4,0,1
+COMPONENT=i_tile_house_exit,4,1,1
+TSPEECH=spk_house_cmds
+TEVENTS=R_HOUSE_PRIVATE
+
+ON=@CREATE
+	TAG.AHS = 1
+
+[MULTIDEF 01a]
+DEFname=m_multi_stone_Large_old_house
+Name=Stone Large Old House
+TYPE=T_MULTI
+VALUE=600000
+CATEGORY=Multis
+SUBSECTION=TFG Houses
+DESCRIPTION=Stone Large Old House
+MULTIREGION=-7,-5,6,5
+COMPONENT=i_sign_house,6,-2,5
+COMPONENT=06ef,5,-1,5
+COMPONENT=06ed,5,0,5
+COMPONENT=i_tile_house_entrance,5,-1,5
+COMPONENT=i_tile_house_entrance,5,0,5
+COMPONENT=i_tile_house_exit,6,-2,2
+COMPONENT=i_tile_house_exit,6,-1,2
+COMPONENT=i_tile_house_exit,6,0,2
+COMPONENT=i_tile_house_exit,6,1,2
+TSPEECH=spk_house_cmds
+TEVENTS=R_HOUSE_PRIVATE
+
+ON=@CREATE
+	TAG.AHS = 1
+
+[MULTIDEF 03a]
+DEFname=m_multi_fancy_marble
+defname2=i_fancy_marble
+Name=Fancy Three Story Marble
+TYPE=T_MULTI
+MULTIREGION=-7-7,8,8
+
+[MULTIDEF 037]
+DEFname=m_multi_fancy_plaster_2_story
+DEFname2=i_fancy_plaster_2_story
+Name=Wooden Two Story Plaster House
+TYPE=T_MULTI
+MULTIREGION=-11,-7,12,8
+
+[MULTIDEF 044]
+DEFname=m_multi_fancy_flower_2_story
+defname2=i_fancy_flower_2_story
+Name=Wooden Flower Two Story Plaster House
+TYPE=T_MULTI
+MULTIREGION=-5,-5,5,5
+
+[MULTIDEF 056]
+DEFname=m_multi_guild_house
+defname2=i_guild_house
+Name=Guild House
+TYPE=T_MULTI
+MULTIREGION=-10,-10,10,9
+
+[MULTIDEF 02c]
+DEFname=m_multi_sandstone_two_room_house
+Name=Two Room Sandstone House
+TYPE=T_MULTI
+VALUE=0
+CATEGORY=Multis
+SUBSECTION=TFG Houses
+DESCRIPTION=2 Room Sandstone
+MULTIREGION=-6,-8,5,7
+
+[MULTIDEF 026]
+DEFname=m_multi_sandstone_cabin_horse_place
+Name=Sandstone Cabin with Horse Slot
+TYPE=T_MULTI
+VALUE=300000
+CATEGORY=Multis
+SUBSECTION=TFG Houses
+DESCRIPTION=Sandstone Cabin with Horse Slot
+MULTIREGION=-4,-7,4,7
+COMPONENT=06BF, 3, -3, 5 // Front door
+COMPONENT=0843, 3, 5, 0 // Horse slot door
+COMPONENT=i_tile_house_entrance,3,-3,5
+// COMPONENT=i_tile_house_entrance,3,5,0
+COMPONENT=i_tile_house_exit,4,-2,2
+COMPONENT=i_tile_house_exit,4,-3,2
+COMPONENT=i_tile_house_exit,4,-4,2
+// COMPONENT=i_tile_house_exit,4,4,0
+// COMPONENT=i_tile_house_exit,4,5,0
+// COMPONENT=i_tile_house_exit,4,6,0
+COMPONENT=i_sign_house, 4, -4, 1
+TSPEECH=spk_house_cmds
+TEVENTS=r_house_private
+
+[MULTIDEF 09e]
+DEFNAME=m_multi_villa_2story
+Name=Two Story Villa
+nameloc=1011319	// Two-story villa
+TYPE=T_MULTI
+VALUE=205000
+CATEGORY=Multis
+SUBSECTION=Houses
+DESCRIPTION=Two Story Villa
+MULTIREGION=-5,-5,5,6
+COMPONENT=i_door_wood, -3, -1, 25
+COMPONENT=06b3, 1, 0, 25
+COMPONENT=i_door_wood, 3, 1, 5
+COMPONENT=06a7, 4, 1, 5
+COMPONENT=i_tile_house_entrance,3,1,5
+COMPONENT=i_tile_house_entrance,4,1,5
+COMPONENT=i_tile_house_exit,2,2,5
+COMPONENT=i_tile_house_exit,3,2,5
+COMPONENT=i_tile_house_exit,4,2,5
+COMPONENT=i_tile_house_exit,5,2,5
+COMPONENT=i_sign_house_2, 1, 6, 2
+TSPEECH=spk_house_cmds
+TEVENTS=r_house_private
+
+[MULTIDEF 021a]
+DEFname=m_multi_evil_easter_2018_prize_house
+Name=Evil Easter 2018 Prize House
+TYPE=T_MULTI
+VALUE=2000000
+CATEGORY=Multis
+SUBSECTION=TFG Houses
+DESCRIPTION=Evil Easter 2018 Prize House
+MULTIREGION=0,0,17,18
+COMPONENT=06e5,13,8,7
+COMPONENT=06e7,14,8,7
+COMPONENT=06ef,11,11,7
+COMPONENT=06ed,11,12,7
+COMPONENT=06ef,8,6,7
+COMPONENT=06ed,8,7,7
+COMPONENT=06e5,6,4,7
+COMPONENT=06e7,7,4,7
+COMPONENT=06e5,6,6,27
+COMPONENT=06ed,8,4,27
+COMPONENT=06e5,6,6,27
+COMPONENT=06ed,8,4,27
+COMPONENT=06e5,4,9,47
+COMPONENT=06ed,5,5,47
+COMPONENT=06ef,15,4,47
+COMPONENT=06ed,15,5,47
+COMPONENT=i_tile_house_entrance,13,8,7
+COMPONENT=i_tile_house_entrance,14,8,7
+COMPONENT=i_tile_house_entrance,11,11,7
+COMPONENT=i_tile_house_entrance,11,12,7
+COMPONENT=i_tile_house_exit,12,9,7
+COMPONENT=i_tile_house_exit,13,9,7
+COMPONENT=i_tile_house_exit,14,9,7
+COMPONENT=i_tile_house_exit,15,9,7
+COMPONENT=i_sign_house_2,16,9,7
+COMPONENT=i_tile_house_exit,12,10,7
+COMPONENT=i_tile_house_exit,12,11,7
+COMPONENT=i_tile_house_exit,12,12,7
+COMPONENT=i_tile_house_exit,12,13,7
+TSPEECH=spk_house_cmds
+TEVENTS=r_house_private
+
+[MULTIDEF 01e8]
+DEFname=m_multi_halloween_2018_prize_house
+Name=Halloween 2018 Prize House
+TYPE=T_MULTI
+VALUE=2000000
+CATEGORY=Multis
+SUBSECTION=TFG Houses
+DESCRIPTION=Halloween 2018 Prize House
+MULTIREGION=-13,-13,13,13
+COMPONENT=06cf,7,-2,1
+COMPONENT=06cd,7,-1,1
+COMPONENT=i_tile_house_entrance,7,-3,1
+COMPONENT=i_tile_house_entrance,7,-2,1
+COMPONENT=i_tile_house_entrance,7,-1,1
+COMPONENT=i_tile_house_entrance,7,0,1
+COMPONENT=i_tile_house_exit,8,-3,1
+COMPONENT=i_tile_house_exit,8,-2,1
+COMPONENT=i_tile_house_exit,8,-1,1
+COMPONENT=i_tile_house_exit,8,0,1
+COMPONENT=i_sign_house,8,-3,1
+TSPEECH=spk_house_cmds
+TEVENTS=r_house_private
+
+[MULTIDEF 01f9]
+DEFname=m_multi_halloween_2018_prize_house2
+Name=Halloween 2018 Prize House
+TYPE=T_MULTI
+VALUE=2000000
+CATEGORY=Multis
+SUBSECTION=TFG Houses
+DESCRIPTION=Halloween 2018 Prize House
+MULTIREGION=-13,-12,12,12
+COMPONENT=0675,-2,7,0
+COMPONENT=0677,-1,7,0
+COMPONENT=0675,-5,1,0
+COMPONENT=0677,-4,1,0
+COMPONENT=0675,-4,-2,40
+COMPONENT=0677,-3,-2,40
+COMPONENT=0675,3,-2,40
+COMPONENT=0677,4,-2,40
+COMPONENT=0675,0,4,60
+COMPONENT=i_tile_house_entrance,-2,7,0
+COMPONENT=i_tile_house_entrance,-1,7,0
+COMPONENT=i_tile_house_exit,-3,8,0
+COMPONENT=i_tile_house_exit,-2,8,0
+COMPONENT=i_tile_house_exit,-1,8,0
+COMPONENT=i_tile_house_exit,0,8,0
+COMPONENT=i_sign_house_2,0,8,0
+TSPEECH=spk_house_cmds
+TEVENTS=r_house_private
+
+//////////////////////////////////////////////////////
+////////////////// Casas com Fences //////////////////
+//////////////////////////////////////////////////////
+
+[MULTIDEF 0214]
+DEFNAME=m_commerce_room
+NAME=Commerce Room
+TYPE=T_MULTI
+VALUE=100000
+MULTIREGION=-11,-12,11,12
+CATEGORY=MULTIS
+SUBSECTION=Custom Structures
+DESCRIPTION=commerce room
+
+
+[MULTIDEF 0b4]
+DEFNAME=m_help_room
+NAME=help room
+TYPE=T_MULTI
+VALUE=10000
+MULTIREGION=-6,-6,6,6
+CATEGORY=MULTIS
+SUBSECTION=Custom Structures
+DESCRIPTION=help room
+
+
+[MULTIDEF 0b5]
+DEFname=m_arena_1_1
+NAME=arena 1 1
+TYPE=T_MULTI
+VALUE=11111
+MULTIREGION=-19,-6,19,7
+COMPONENT=i_sign_house,14,-5,0,0
+CATEGORY=MULTIS
+SUBSECTION=Custom Structures
+DESCRIPTION=arena 1 1
+
+
+[MULTIDEF 0b6]
+DEFname=m_arena_2_2
+NAME=arena 2 2
+TYPE=T_MULTI
+VALUE=222222
+MULTIREGION=-13,-15,13,16
+CATEGORY=MULTIS
+SUBSECTION=Custom Structures
+DESCRIPTION=arena 2 2
+
+
+[MULTIDEF 0B7]
+DEFname=m_arena_3_3
+NAME=arena 3 3
+TYPE=T_MULTI
+VALUE=3333333
+MULTIREGION=-14,-14,14,15
+CATEGORY=MULTIS
+SUBSECTION=Custom Structures
+DESCRIPTION=arena 3 3
+
+[MULTIDEF 0B8]
+DEFname=m_boxe
+NAME=boxe
+TYPE=T_MULTI
+VALUE=444444
+MULTIREGION=-8,-9,8,9
+CATEGORY=MULTIS
+SUBSECTION=Custom Structures
+DESCRIPTION=boxe
+
+[MULTIDEF m_multi_house_wood_plaster_small_fence]
+ID=m_multi_house_wood_plaster_small
+Name=Small Wood and Plaster House with Fence
+TYPE=T_MULTI
+VALUE=110000
+MULTIREGION=-3,-3,3,4
+COMPONENT=i_door_wood,0,3,7
+COMPONENT=i_sign_house_2,2,4,5
+COMPONENT=i_tile_house_entrance,0,3,7
+COMPONENT=i_tile_house_exit,0,4,4
+COMPONENT=i_tile_house_exit,-1,4,4
+COMPONENT=i_tile_house_exit,1,4,4
+COMPONENT=2123,2,7,0
+COMPONENT=2123,1,7,0
+COMPONENT=i_gate_iron_2,0,7,0
+COMPONENT=i_tile_house_fence_entrance,0,7,0
+COMPONENT=2123,-1,7,0
+COMPONENT=2123,-2,7,0
+COMPONENT=2121,-3,7,0
+COMPONENT=2121,-3,6,0
+COMPONENT=2121,-3,5,0
+COMPONENT=2121,-3,4,0
+COMPONENT=2121,3,6,0
+COMPONENT=2121,3,5,0
+COMPONENT=2121,3,4,0
+COMPONENT=2122,3,7,0
+TSPEECH=spk_house_cmds
+TEVENTS=r_house_private
+
+[MULTIDEF m_multi_house_stone_plaster_small_fence]
+ID=m_multi_house_stone_plaster_small
+Name=Small Stone and Plaster House with Fence
+TYPE=T_MULTI
+VALUE=110000
+MULTIREGION=-3,-3,3,4
+COMPONENT=i_door_wood,0,3,7
+COMPONENT=i_sign_house_2,2,4,5
+COMPONENT=i_tile_house_entrance,0,3,7
+COMPONENT=i_tile_house_exit,0,4,4
+COMPONENT=i_tile_house_exit,-1,4,4
+COMPONENT=i_tile_house_exit,1,4,4
+COMPONENT=2123,2,7,0
+COMPONENT=2123,1,7,0
+COMPONENT=i_gate_iron_2,0,7,0
+COMPONENT=i_tile_house_fence_entrance,0,7,0
+COMPONENT=2123,-1,7,0
+COMPONENT=2123,-2,7,0
+COMPONENT=2121,-3,7,0
+COMPONENT=2121,-3,6,0
+COMPONENT=2121,-3,5,0
+COMPONENT=2121,-3,4,0
+COMPONENT=2121,3,6,0
+COMPONENT=2121,3,5,0
+COMPONENT=2121,3,4,0
+COMPONENT=2122,3,7,0
+TSPEECH=spk_house_cmds
+TEVENTS=r_house_private
+
+
+[MULTIDEF m_multi_house_stone_small_fence]
+ID=m_multi_house_stone_small
+Name=Small Stone House with Fence
+TYPE=T_MULTI
+VALUE=110000
+MULTIREGION=-3,-3,3,4
+COMPONENT=i_door_wood,0,3,7
+COMPONENT=i_sign_house_2,2,4,5
+COMPONENT=i_tile_house_entrance,0,3,7
+COMPONENT=i_tile_house_exit,0,4,4
+COMPONENT=i_tile_house_exit,-1,4,4
+COMPONENT=i_tile_house_exit,1,4,4
+COMPONENT=2123,2,7,0
+COMPONENT=2123,1,7,0
+COMPONENT=i_gate_iron_2,0,7,0
+COMPONENT=i_tile_house_fence_entrance,0,7,0
+COMPONENT=2123,-1,7,0
+COMPONENT=2123,-2,7,0
+COMPONENT=2121,-3,7,0
+COMPONENT=2121,-3,6,0
+COMPONENT=2121,-3,5,0
+COMPONENT=2121,-3,4,0
+COMPONENT=2121,3,6,0
+COMPONENT=2121,3,5,0
+COMPONENT=2121,3,4,0
+COMPONENT=2122,3,7,0
+TSPEECH=spk_house_cmds
+TEVENTS=r_house_private
+
+[MULTIDEF m_multi_house_brick_small_fence]
+ID=m_multi_house_stone_brick_small
+Name=Small Brick House with Fence
+TYPE=T_MULTI
+VALUE=110000
+MULTIREGION=-3,-3,3,4
+COMPONENT=i_door_wood,0,3,7
+COMPONENT=i_sign_house_2,2,4,5
+COMPONENT=i_tile_house_entrance,0,3,7
+COMPONENT=i_tile_house_exit,0,4,4
+COMPONENT=i_tile_house_exit,-1,4,4
+COMPONENT=i_tile_house_exit,1,4,4
+COMPONENT=2123,2,7,0
+COMPONENT=2123,1,7,0
+COMPONENT=i_gate_iron_2,0,7,0
+COMPONENT=i_tile_house_fence_entrance,0,7,0
+COMPONENT=2123,-1,7,0
+COMPONENT=2123,-2,7,0
+COMPONENT=2121,-3,7,0
+COMPONENT=2121,-3,6,0
+COMPONENT=2121,-3,5,0
+COMPONENT=2121,-3,4,0
+COMPONENT=2121,3,6,0
+COMPONENT=2121,3,5,0
+COMPONENT=2121,3,4,0
+COMPONENT=2122,3,7,0
+TSPEECH=spk_house_cmds
+TEVENTS=r_house_private
+
+[MULTIDEF m_multi_house_wood_small_fence]
+ID=m_multi_house_stone_wood_small
+Name=Small Wooden House with Fence
+TYPE=T_MULTI
+VALUE=110000
+MULTIREGION=-3,-3,3,4
+COMPONENT=i_door_wood,0,3,7
+COMPONENT=i_sign_house_2,2,4,5
+COMPONENT=i_tile_house_entrance,0,3,7
+COMPONENT=i_tile_house_exit,0,4,4
+COMPONENT=i_tile_house_exit,-1,4,4
+COMPONENT=i_tile_house_exit,1,4,4
+COMPONENT=2123,2,7,0
+COMPONENT=2123,1,7,0
+COMPONENT=i_gate_iron_2,0,7,0
+COMPONENT=i_tile_house_fence_entrance,2,0,7,0
+COMPONENT=2123,-1,7,0
+COMPONENT=2123,-2,7,0
+COMPONENT=2121,-3,7,0
+COMPONENT=2121,-3,6,0
+COMPONENT=2121,-3,5,0
+COMPONENT=2121,-3,4,0
+COMPONENT=2121,3,6,0
+COMPONENT=2121,3,5,0
+COMPONENT=2121,3,4,0
+COMPONENT=2122,3,7,0
+TSPEECH=spk_house_cmds
+TEVENTS=r_house_private
+
+[MULTIDEF m_multi_house_wood_tatched_small_fence]
+ID=m_multi_house_wood_thatched_small
+Name=Small Wood House Thatched Roof
+TYPE=T_MULTI
+VALUE=110000
+MULTIREGION=-3,-3,3,4
+COMPONENT=i_door_wood,0,3,7
+COMPONENT=i_sign_house_2,2,4,5
+COMPONENT=i_tile_house_entrance,0,3,7
+COMPONENT=i_tile_house_exit,0,4,4
+COMPONENT=i_tile_house_exit,-1,4,4
+COMPONENT=i_tile_house_exit,1,4,4
+COMPONENT=2123,2,7,0
+COMPONENT=2123,1,7,0
+COMPONENT=i_gate_iron_2,0,7,0
+COMPONENT=i_tile_house_fence_entrance,0,7,0
+COMPONENT=2123,-1,7,0
+COMPONENT=2123,-2,7,0
+COMPONENT=2121,-3,7,0
+COMPONENT=2121,-3,6,0
+COMPONENT=2121,-3,5,0
+COMPONENT=2121,-3,4,0
+COMPONENT=2121,3,6,0
+COMPONENT=2121,3,5,0
+COMPONENT=2121,3,4,0
+COMPONENT=2122,3,7,0
+TSPEECH=spk_house_cmds
+TEVENTS=r_house_private
+
+[MULTIDEF m_multi_house_3room_fence]
+ID=m_multi_house_3room
+Name=Three Room House with Fence
+TYPE=T_MULTI
+VALUE=325000
+CATEGORY=Multis
+SUBSECTION=Houses
+DESCRIPTION=Three Room House
+MULTIREGION=-7,-7,6,6
+COMPONENT=i_door_wood,-1, 6, 7 // Front door 1
+COMPONENT=06A7,0, 6, 7 // Front door 2
+COMPONENT=i_tile_house_entrance,-1,6,7
+COMPONENT=i_tile_house_entrance,0,6,7
+COMPONENT=i_tile_house_exit,-2,7,4
+COMPONENT=i_tile_house_exit,-1,7,4
+COMPONENT=i_tile_house_exit,0,7,4
+COMPONENT=i_tile_house_exit,1,7,4
+COMPONENT=i_door_wood,-3,-1, 7
+COMPONENT=i_door_wood,3,-1, 7
+COMPONENT=i_sign_house_2,3, 7, 5	// Place the sign.
+COMPONENT=2123,6,13,0
+COMPONENT=2123,5,13,0
+COMPONENT=2123,4,13,0
+COMPONENT=2123,3,13,0
+COMPONENT=2123,2,13,0
+COMPONENT=2123,1,13,0
+COMPONENT=2123,0,13,0
+COMPONENT=084e,-1,13,0
+COMPONENT=i_tile_house_fence_entrance,-1,13,0
+COMPONENT=i_gate_iron_2,-2,13,0
+COMPONENT=i_tile_house_fence_entrance,-2,13,0
+COMPONENT=2123,-3,13,0
+COMPONENT=2123,-4,13,0
+COMPONENT=2123,-5,13,0
+COMPONENT=2123,-6,13,0
+COMPONENT=2121,-7,13,0
+COMPONENT=2121,-7,12,0
+COMPONENT=2121,-7,11,0
+COMPONENT=2121,-7,10,0
+COMPONENT=2121,-7,9,0
+COMPONENT=2121,-7,8,0
+COMPONENT=2121,-7,7,0
+COMPONENT=2121,6,12,0
+COMPONENT=2121,6,11,0
+COMPONENT=2121,6,10,0
+COMPONENT=2122,6,13,0
+COMPONENT=2121,6,9,0
+COMPONENT=2121,6,8,0
+COMPONENT=2121,6,7,0
+TSPEECH=spk_house_cmds
+TEVENTS=r_house_private
+
+
+[MULTIDEF m_multi_house_wood_plaster_2story_fence]
+ID=m_multi_house_wood_plaster_2story
+Name=Two Story Wood and Plaster House with Fence
+TYPE=T_MULTI
+VALUE=350000
+CATEGORY=Multis
+SUBSECTION=Houses
+DESCRIPTION=Two Story Wood and Plaster House
+MULTIREGION=-7,-7,6,7
+COMPONENT=i_door_wood,-3, 6, 7 // Front door 1
+COMPONENT=06A7,-2, 6, 7 // Front door 2
+COMPONENT=i_tile_house_entrance,-3,6,7
+COMPONENT=i_tile_house_entrance,-2,6,7
+COMPONENT=i_tile_house_exit,-4,7,4
+COMPONENT=i_tile_house_exit,-3,7,4
+COMPONENT=i_tile_house_exit,-2,7,4
+COMPONENT=i_tile_house_exit,-1,7,4
+COMPONENT=i_door_wood,-2, 0, 27
+COMPONENT=i_door_wood,-3, 0, 7
+COMPONENT=i_sign_house_2, 1, 7, 5	// Place the sign.
+COMPONENT=2123,6,13,0
+COMPONENT=2123,5,13,0
+COMPONENT=2123,4,13,0
+COMPONENT=2123,3,13,0
+COMPONENT=2123,2,13,0
+COMPONENT=2123,1,13,0
+COMPONENT=2123,0,13,0
+COMPONENT=084e,-1,13,0
+COMPONENT=i_tile_house_fence_entrance,-1,13,0
+COMPONENT=i_gate_iron_2,-2,13,0
+COMPONENT=i_tile_house_fence_entrance,-2,13,0
+COMPONENT=2123,-3,13,0
+COMPONENT=2123,-4,13,0
+COMPONENT=2123,-5,13,0
+COMPONENT=2123,-6,13,0
+COMPONENT=2121,-7,13,0
+COMPONENT=2121,-7,12,0
+COMPONENT=2121,-7,11,0
+COMPONENT=2121,-7,10,0
+COMPONENT=2121,-7,9,0
+COMPONENT=2121,-7,8,0
+COMPONENT=2121,-7,7,0
+COMPONENT=2121,6,12,0
+COMPONENT=2121,6,11,0
+COMPONENT=2121,6,10,0
+COMPONENT=2122,6,13,0
+COMPONENT=2121,6,9,0
+COMPONENT=2121,6,8,0
+COMPONENT=2121,6,7,0
+TSPEECH=spk_house_cmds
+TEVENTS=r_house_private
+
+
+[MULTIDEF m_multi_house_stone_plaster_2story_fence]
+ID=m_multi_house_stone_plaster_2story
+Name=Two Story Stone and Plaster House with Fence
+TYPE=T_MULTI
+VALUE=350000
+CATEGORY=Multis
+SUBSECTION=Houses
+DESCRIPTION=Two Story Wood and Plaster House
+MULTIREGION=-7,-7,6,7
+COMPONENT=i_door_wood,-3, 6, 7 // Front door 1
+COMPONENT=06A7,-2, 6, 7 // Front door 2
+COMPONENT=i_tile_house_entrance,-3,6,7
+COMPONENT=i_tile_house_entrance,-2,6,7
+COMPONENT=i_tile_house_exit,-4,7,4
+COMPONENT=i_tile_house_exit,-3,7,4
+COMPONENT=i_tile_house_exit,-2,7,4
+COMPONENT=i_tile_house_exit,-1,7,4
+COMPONENT=i_door_wood,-2, 0, 27
+COMPONENT=i_door_wood,-3, 0, 7
+COMPONENT=i_sign_house_2, 1, 7, 5	// Place the sign.
+COMPONENT=2123,6,13,0
+COMPONENT=2123,5,13,0
+COMPONENT=2123,4,13,0
+COMPONENT=2123,3,13,0
+COMPONENT=2123,2,13,0
+COMPONENT=2123,1,13,0
+COMPONENT=2123,0,13,0
+COMPONENT=084e,-1,13,0
+COMPONENT=i_tile_house_fence_entrance,-1,13,0
+COMPONENT=i_gate_iron_2,-2,13,0
+COMPONENT=i_tile_house_fence_entrance,-2,13,0
+COMPONENT=2123,-3,13,0
+COMPONENT=2123,-4,13,0
+COMPONENT=2123,-5,13,0
+COMPONENT=2123,-6,13,0
+COMPONENT=2121,-7,13,0
+COMPONENT=2121,-7,12,0
+COMPONENT=2121,-7,11,0
+COMPONENT=2121,-7,10,0
+COMPONENT=2121,-7,9,0
+COMPONENT=2121,-7,8,0
+COMPONENT=2121,-7,7,0
+COMPONENT=2121,6,12,0
+COMPONENT=2121,6,11,0
+COMPONENT=2121,6,10,0
+COMPONENT=2122,6,13,0
+COMPONENT=2121,6,9,0
+COMPONENT=2121,6,8,0
+COMPONENT=2121,6,7,0
+TSPEECH=spk_house_cmds
+TEVENTS=r_house_private
+
+[MULTIDEF m_multi_tower_fence]
+ID=m_multi_tower
+Name=Tower with Fence
+TYPE=T_MULTI
+VALUE=945000
+CATEGORY=Multis
+SUBSECTION=Houses
+DESCRIPTION=Tower
+MULTIREGION=-11,-7,12,8
+COMPONENT=067D,	 1, 4, 46
+COMPONENT=067D,	 1, 4, 26
+COMPONENT=i_door_metal,	 3,-2, 7
+COMPONENT=0677,	 1, 6, 7	// Front door 2.
+COMPONENT=i_door_metal,	 0, 6, 7	// Front door 1.
+COMPONENT=i_tile_house_entrance,1,6,7
+COMPONENT=i_tile_house_entrance,0,6,7
+COMPONENT=i_tile_house_exit,2,7,3
+COMPONENT=i_tile_house_exit,1,7,4
+COMPONENT=i_tile_house_exit,0,7,4
+COMPONENT=i_tile_house_exit,-1,7,3
+COMPONENT=i_sign_house_2,	 4, 7, 5	// Place the sign.
+COMPONENT=2123,8,13,0
+COMPONENT=2123,7,13,0
+COMPONENT=2123,6,13,0
+COMPONENT=2123,5,13,0
+COMPONENT=2123,4,13,0
+COMPONENT=2123,3,13,0
+COMPONENT=2123,2,13,0
+COMPONENT=084e,1,13,0
+COMPONENT=i_tile_house_fence_entrance,1,13,0
+COMPONENT=i_gate_iron_2,0,13,0
+COMPONENT=i_tile_house_fence_entrance,0,13,0
+COMPONENT=2123,-1,13,0
+COMPONENT=2123,-2,13,0
+COMPONENT=2123,-3,13,0
+COMPONENT=2123,-4,13,0
+COMPONENT=2123,-5,13,0
+COMPONENT=2123,-6,13,0
+COMPONENT=2121,-7,13,0
+COMPONENT=2121,-7,12,0
+COMPONENT=2121,-7,11,0
+COMPONENT=2121,-7,10,0
+COMPONENT=2121,-7,9,0
+COMPONENT=2121,-7,8,0
+COMPONENT=2121,-7,7,0
+COMPONENT=2121,8,12,0
+COMPONENT=2121,8,11,0
+COMPONENT=2121,8,10,0
+COMPONENT=2122,8,13,0
+COMPONENT=2121,8,9,0
+COMPONENT=2121,8,8,0
+COMPONENT=2121,8,7,0
+TSPEECH=spk_house_cmds
+TEVENTS=r_house_private
+
+[MULTIDEF m_multi_keep_fence]
+ID=m_multi_keep
+Name=Keep with Fence
+TYPE=T_MULTI
+VALUE=1200000
+CATEGORY=Multis
+SUBSECTION=Houses
+DESCRIPTION=Keep
+MULTIREGION=-11,-11,12,12
+COMPONENT=0677,	 1, 10, 7	// Front door 2.
+COMPONENT=i_door_metal,	 0, 10, 7	// Front door 1.
+COMPONENT=i_tile_house_entrance,1,10,7
+COMPONENT=i_tile_house_entrance,0,10,7
+COMPONENT=i_tile_house_exit,2,11,3
+COMPONENT=i_tile_house_exit,1,11,3
+COMPONENT=i_tile_house_exit,0,11,3
+COMPONENT=i_tile_house_exit,-1,11,3
+COMPONENT=i_sign_house_2, 4, 11, 5	// Place the sign.
+COMPONENT=2123,12,19,0
+COMPONENT=2123,11,19,0
+COMPONENT=2123,10,19,0
+COMPONENT=2123,9,19,0
+COMPONENT=2123,8,19,0
+COMPONENT=2123,7,19,0
+COMPONENT=2123,6,19,0
+COMPONENT=2123,5,19,0
+COMPONENT=2123,4,19,0
+COMPONENT=2123,3,19,0
+COMPONENT=2123,2,19,0
+COMPONENT=084e,1,19,0
+COMPONENT=i_tile_house_fence_entrance,1,19,0
+COMPONENT=i_gate_iron_2,0,19,0
+COMPONENT=i_tile_house_fence_entrance,0,19,0
+COMPONENT=2123,-1,19,0
+COMPONENT=2123,-2,19,0
+COMPONENT=2123,-3,19,0
+COMPONENT=2123,-4,19,0
+COMPONENT=2123,-5,19,0
+COMPONENT=2123,-6,19,0
+COMPONENT=2123,-7,19,0
+COMPONENT=2123,-8,19,0
+COMPONENT=2123,-9,19,0
+COMPONENT=2123,-10,19,0
+COMPONENT=2121,-11,19,0
+COMPONENT=2121,-11,18,0
+COMPONENT=2121,-11,17,0
+COMPONENT=2121,-11,16,0
+COMPONENT=2121,-11,15,0
+COMPONENT=2121,-11,14,0
+COMPONENT=2121,-11,13,0
+COMPONENT=2122,12,19,0
+COMPONENT=2121,12,18,0
+COMPONENT=2121,12,17,0
+COMPONENT=2121,12,16,0
+COMPONENT=2121,12,15,0
+COMPONENT=2121,12,14,0
+COMPONENT=2121,12,13,0
+TSPEECH=spk_house_cmds
+TEVENTS=r_house_private
+
+[MULTIDEF m_multi_castle_fence]
+ID=m_multi_castle
+Name=Castle with Fence
+TYPE=T_MULTI
+VALUE=1800000
+CATEGORY=Multis
+SUBSECTION=Houses
+DESCRIPTION=Castle
+MULTIREGION=-15,-15,15,16
+COMPONENT=0677, 1, 5, 7
+COMPONENT=i_door_metal, 0, 5, 7
+COMPONENT=0677, 1, 15, 7	// Front door 2.
+COMPONENT=i_door_metal, 0, 15, 7	// Front door 1.
+COMPONENT=i_tile_house_entrance,1,15,7
+COMPONENT=i_tile_house_entrance,0,15,7
+COMPONENT=i_tile_house_exit,2,16,3
+COMPONENT=i_tile_house_exit,1,16,3
+COMPONENT=i_tile_house_exit,0,16,3
+COMPONENT=i_tile_house_exit,-1,16,3
+COMPONENT=i_sign_house_2, 4, 16, 5	// Place the sign.
+COMPONENT=2123,15,22,0
+COMPONENT=2123,14,22,0
+COMPONENT=2123,13,22,0
+COMPONENT=2123,12,22,0
+COMPONENT=2123,11,22,0
+COMPONENT=2123,10,22,0
+COMPONENT=2123,9,22,0
+COMPONENT=2123,8,22,0
+COMPONENT=2123,7,22,0
+COMPONENT=2123,6,22,0
+COMPONENT=2123,5,22,0
+COMPONENT=2123,4,22,0
+COMPONENT=2123,3,22,0
+COMPONENT=2123,2,22,0
+COMPONENT=084e,1,22,0
+COMPONENT=i_tile_house_fence_entrance,1,22,0
+COMPONENT=i_gate_iron_2,0,22,0
+COMPONENT=i_tile_house_fence_entrance,0,22,0
+COMPONENT=2123,-1,22,0
+COMPONENT=2123,-2,22,0
+COMPONENT=2123,-3,22,0
+COMPONENT=2123,-4,22,0
+COMPONENT=2123,-5,22,0
+COMPONENT=2123,-6,22,0
+COMPONENT=2123,-7,22,0
+COMPONENT=2123,-8,22,0
+COMPONENT=2123,-9,22,0
+COMPONENT=2123,-10,22,0
+COMPONENT=2123,-11,22,0
+COMPONENT=2123,-12,22,0
+COMPONENT=2123,-13,22,0
+COMPONENT=2123,-14,22,0
+COMPONENT=2121,-15,22,0
+COMPONENT=2121,-15,21,0
+COMPONENT=2121,-15,20,0
+COMPONENT=2121,-15,19,0
+COMPONENT=2121,-15,18,0
+COMPONENT=2121,-15,17,0
+COMPONENT=2121,-15,16,0
+COMPONENT=2122,15,22,0
+COMPONENT=2121,15,21,0
+COMPONENT=2121,15,20,0
+COMPONENT=2121,15,19,0
+COMPONENT=2121,15,18,0
+COMPONENT=2121,15,17,0
+COMPONENT=2121,15,16,0
+TSPEECH=spk_house_cmds
+TEVENTS=r_house_private
+
+
+
+[MULTIDEF m_multi_shop_blacksmithy_large_fence]
+// minor support diff from 4087
+ID=m_multi_shop_blacksmithy_large
+Name=Large Blacksmithy Shop with Fence
+TYPE=T_MULTI
+VALUE=350000
+CATEGORY=Multis
+SUBSECTION=Houses
+DESCRIPTION=Large Blacksmithy Shop with Fence
+MULTIREGION=-7,-7,7,7
+COMPONENT=i_door_wood,	 4, -1, 7
+COMPONENT=06ad,	 1,  4, 7
+COMPONENT=06ad,	 1, -4, 7
+COMPONENT=06A7,	-3, 6, 7	// Front door 2.
+COMPONENT=i_door_wood,	-4, 6, 7	// Front door 1.
+COMPONENT=i_tile_house_entrance,-3,6,7
+COMPONENT=i_tile_house_entrance,-4,6,7
+COMPONENT=i_tile_house_exit,-2,7,3
+COMPONENT=i_tile_house_exit,-3,7,3
+COMPONENT=i_tile_house_exit,-4,7,3
+COMPONENT=i_tile_house_exit,-5,7,3
+COMPONENT=i_sign_house_2,	 0, 7, 5	// Place the sign.
+COMPONENT=i_fence_wood_2,7,13,0
+COMPONENT=i_fence_wood_2,6,13,0
+COMPONENT=i_fence_wood_2,5,13,0
+COMPONENT=i_fence_wood_2,4,13,0
+COMPONENT=i_fence_wood_2,3,13,0
+COMPONENT=i_fence_wood_2,2,13,0
+COMPONENT=i_fence_wood_2,1,13,0
+COMPONENT=0868,0,13,0
+COMPONENT=i_tile_house_fence_entrance,0,13,0
+COMPONENT=i_gate_wood_3,-1,13,0
+COMPONENT=i_tile_house_fence_entrance,-1,13,0
+COMPONENT=i_fence_wood_2,-2,13,0
+COMPONENT=i_fence_wood_2,-3,13,0
+COMPONENT=i_fence_wood_2,-4,13,0
+COMPONENT=i_fence_wood_2,-5,13,0
+COMPONENT=i_fence_wood_2,-6,13,0
+COMPONENT=088b,-7,13,0
+COMPONENT=088b,-7,12,0
+COMPONENT=088b,-7,11,0
+COMPONENT=088b,-7,10,0
+COMPONENT=088b,-7,9,0
+COMPONENT=088b,-7,8,0
+COMPONENT=088b,-7,7,0
+COMPONENT=088b,7,12,0
+COMPONENT=088b,7,11,0
+COMPONENT=088b,7,10,0
+COMPONENT=088b,7,13,0
+COMPONENT=088b,7,9,0
+COMPONENT=088b,7,8,0
+COMPONENT=088b,7,7,0
+TSPEECH=spk_house_cmds
+TEVENTS=r_house_private
+
+[MULTIDEF m_multi_house_patio_marble_fence]
+ID=m_multi_house_patio_marble
+Name=Large Marble Patio House with Fence
+TYPE=T_MULTI
+VALUE=400000
+CATEGORY=Multis
+SUBSECTION=Houses
+DESCRIPTION=Large Marble Patio House
+MULTIREGION=-7,-7,7,7
+COMPONENT=i_door_metal, -4, 3, 4 // Front Door 1
+COMPONENT=0677, -3, 3, 4 // Front Door 2
+COMPONENT=i_tile_house_entrance,-4,3,4
+COMPONENT=i_tile_house_entrance,-3,3,4
+COMPONENT=i_tile_house_exit,-2,4,4
+COMPONENT=i_tile_house_exit,-3,4,4
+COMPONENT=i_tile_house_exit,-4,4,4
+COMPONENT=i_tile_house_exit,-5,4,4
+COMPONENT=i_sign_house_2, 0, 7, 0
+COMPONENT=0443,7,13,0
+COMPONENT=0443,6,13,0
+COMPONENT=0443,5,13,0
+COMPONENT=0443,4,13,0
+COMPONENT=0443,3,13,0
+COMPONENT=0443,2,13,0
+COMPONENT=0443,1,13,0
+COMPONENT=0868,0,13,0
+COMPONENT=i_tile_house_fence_entrance,0,13,0
+COMPONENT=i_gate_wood_3,-1,13,0
+COMPONENT=i_tile_house_fence_entrance,-1,13,0
+COMPONENT=0443,-2,13,0
+COMPONENT=0443,-3,13,0
+COMPONENT=0443,-4,13,0
+COMPONENT=0443,-5,13,0
+COMPONENT=0443,-6,13,0
+COMPONENT=0444,-7,13,0
+COMPONENT=0444,-7,12,0
+COMPONENT=0444,-7,11,0
+COMPONENT=0444,-7,10,0
+COMPONENT=0444,-7,9,0
+COMPONENT=0444,-7,8,0
+COMPONENT=0444,-7,7,0
+COMPONENT=0444,7,12,0
+COMPONENT=0444,7,11,0
+COMPONENT=0444,7,10,0
+COMPONENT=0444,7,13,0
+COMPONENT=0444,7,9,0
+COMPONENT=0444,7,8,0
+COMPONENT=0444,7,7,0
+COMPONENT=0111,7,13,4
+COMPONENT=0111,6,13,4
+COMPONENT=0111,5,13,4
+COMPONENT=0111,4,13,4
+COMPONENT=0111,3,13,4
+COMPONENT=0111,2,13,4
+COMPONENT=0111,1,13,4
+COMPONENT=0111,-2,13,4
+COMPONENT=0111,-3,13,4
+COMPONENT=0111,-4,13,4
+COMPONENT=0111,-5,13,4
+COMPONENT=0111,-6,13,4
+COMPONENT=0111,-7,13,4
+COMPONENT=0111,-7,12,4
+COMPONENT=0111,-7,11,4
+COMPONENT=0111,-7,10,4
+COMPONENT=0111,-7,9,4
+COMPONENT=0111,-7,8,4
+COMPONENT=0111,-7,7,4
+COMPONENT=0111,7,12,4
+COMPONENT=0111,7,11,4
+COMPONENT=0111,7,10,4
+COMPONENT=0111,7,13,4
+COMPONENT=0111,7,9,4
+COMPONENT=0111,7,8,4
+COMPONENT=0111,7,7,4
+COMPONENT=010f,7,13,7
+COMPONENT=010f,6,13,7
+COMPONENT=010f,5,13,7
+COMPONENT=010f,4,13,7
+COMPONENT=010f,3,13,7
+COMPONENT=010f,2,13,7
+COMPONENT=010f,1,13,7
+COMPONENT=010f,-2,13,7
+COMPONENT=010f,-3,13,7
+COMPONENT=010f,-4,13,7
+COMPONENT=010f,-5,13,7
+COMPONENT=010f,-6,13,7
+COMPONENT=0110,-7,13,7
+COMPONENT=0110,-7,12,7
+COMPONENT=0110,-7,11,7
+COMPONENT=0110,-7,10,7
+COMPONENT=0110,-7,9,7
+COMPONENT=0110,-7,8,7
+COMPONENT=0110,-7,7,7
+COMPONENT=0110,7,12,7
+COMPONENT=0110,7,11,7
+COMPONENT=0110,7,10,7
+COMPONENT=0110,7,13,7
+COMPONENT=0110,7,9,7
+COMPONENT=0110,7,8,7
+COMPONENT=0110,7,7,7
+TSPEECH=spk_house_cmds
+TEVENTS=r_house_private
+
+
+[MULTIDEF m_multi_tower_wizard_fence]
+// Small Tower
+ID=m_multi_tower_wizard
+Name=Wizards Tower with Fence
+TYPE=T_MULTI
+VALUE=200000
+CATEGORY=Multis
+SUBSECTION=Houses
+DESCRIPTION=Wizards Tower
+MULTIREGION=-3,-3,4,4
+COMPONENT=i_door_metal, 3, 3, 5 // Front Door
+COMPONENT=i_tile_house_entrance,3,3,4
+COMPONENT=i_tile_house_exit,2,4,2
+COMPONENT=i_tile_house_exit,3,4,2
+COMPONENT=i_tile_house_exit,4,4,2
+COMPONENT=i_sign_house_2, 1, 4, 5
+COMPONENT=2123,3,7,0
+COMPONENT=2123,2,7,0
+COMPONENT=2123,0,7,0
+COMPONENT=i_gate_iron_2,1,7,0
+COMPONENT=i_tile_house_fence_entrance,1,7,0
+COMPONENT=2123,-1,7,0
+COMPONENT=2123,-2,7,0
+COMPONENT=2121,-3,7,0
+COMPONENT=2121,-3,6,0
+COMPONENT=2121,-3,5,0
+COMPONENT=2121,-3,4,0
+COMPONENT=2121,4,6,0
+COMPONENT=2121,4,5,0
+COMPONENT=2121,4,4,0
+COMPONENT=2122,4,7,0
+TSPEECH=spk_house_cmds
+TEVENTS=r_house_private
+
+
+[MULTIDEF m_multi_cabin_log_2story_fence]
+ID=m_multi_cabin_log_2story
+Name=Two Story Log Cabin with Fence
+TYPE=T_MULTI
+VALUE=295000
+CATEGORY=Multis
+SUBSECTION=Houses
+DESCRIPTION=Two Story Log Cabin
+MULTIREGION=-3,-6,4,7
+COMPONENT=06e5, 1, 4, 8 // Front Door
+COMPONENT=i_tile_house_entrance,1,4,8
+COMPONENT=i_tile_house_exit,1,5,6
+COMPONENT=06e5, 1, 0, 29
+COMPONENT=i_sign_house_2, 4, 7, 9
+COMPONENT=08a4, 3, -3, 8   //temp wood ladder, rope not working
+COMPONENT=08a2, 3, -4, 20  //temp wood ladder, rope not working
+COMPONENT=i_fence_wood_2,3,11,0
+COMPONENT=i_fence_wood_2,2,11,0
+COMPONENT=i_fence_wood_2,0,11,0
+COMPONENT=i_gate_wood_3,1,11,0
+COMPONENT=i_tile_house_fence_entrance,1,11,0
+COMPONENT=i_fence_wood_2,-1,11,0
+COMPONENT=i_fence_wood_2,-2,11,0
+COMPONENT=088b,-3,11,0
+COMPONENT=088b,-3,10,0
+COMPONENT=088b,-3,9,0
+COMPONENT=088b,-3,8,0
+COMPONENT=088b,-3,7,0
+COMPONENT=088b,4,10,0
+COMPONENT=088b,4,9,0
+COMPONENT=088b,4,8,0
+COMPONENT=088b,4,7,0
+COMPONENT=088b,4,11,0
+TSPEECH=spk_house_cmds
+TEVENTS=r_house_private
+TEVENTS=r_house_private
+
+[MULTIDEF m_multi_christmas]
+Name=Christmas Tree
+TYPE=T_MULTI
+
+MULTIREGION=0,0,0,0
+COMPONENT=0cd7,1,1
+COMPONENT=0f11,1,1
+COMPONENT=0f11,1,1,9
+COMPONENT=0f11,1,2,25
+COMPONENT=0f20,1,1,20
+COMPONENT=0f20,1,2,35
+COMPONENT=0f20,1,2,20
+COMPONENT=0f21,0,2,4
+COMPONENT=0f21,1,1,24
+COMPONENT=0f2b,2,1,16
+COMPONENT=0f2b,1,3,25
+COMPONENT=0c4d,1,2,10
+COMPONENT=0c4d,1,1,15
+COMPONENT=i_candle_thin_lit,1,1,15
+COMPONENT=i_candle_thin_lit,1,1,5
+COMPONENT=i_candle_thin_lit,1,2,27
+COMPONENT=i_candle_thin_lit,1,3,25
+COMPONENT=i_candle_thin_lit,1,2,35
+COMPONENT=5429 2 2 16 0
+COMPONENT=5429 2 1 17 0
+COMPONENT=5429 2 2 26 0
+COMPONENT=5429 1 2 15 0
+COMPONENT=5429 2 1 27 0
+COMPONENT=5429 2 2 36 0
+COMPONENT=2778 1 1 0 0
+COMPONENT=2779 2 2 0 0
+COMPONENT=2780 0 0 0 0
+COMPONENT=2781 0 2 0 0
+COMPONENT=2782 2 0 0 0
+COMPONENT=2783 0 1 0 0
+COMPONENT=2784 1 0 0 0
+COMPONENT=2785 2 1 0 0
+COMPONENT=2786 1 2 0 0
+COMPONENT=3288 1 1 1 0
+COMPONENT=3289 1 1 1 0
+COMPONENT=6249 2 1 10 0
+COMPONENT=6251 2 2 18 0
+COMPONENT=6250 1 2 8 0
+COMPONENT=6253 2 2 27 0
+COMPONENT=6254 1 2 17 0
+COMPONENT=6252 2 1 18 0
+COMPONENT=6255 1 2 26 0
+COMPONENT=6256 2 1 28 0
+COMPONENT=6252 2 2 38 0
+
+// ON=@CREATE
+// TIMERF 1,f_makegifts
+
+[EOF]

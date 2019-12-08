@@ -1,0 +1,127 @@
+[itemdef i_tile_nomonster]
+id=i_floor_marble
+type=t_normal
+name=a tile
+
+on=@create
+attr=00010
+color=088
+
+on=@step
+if (<src.NPC> == brain_undead) || (<src.NPC> == brain_monster) || (<src.NPC> == brain_dragon)
+src.move 0,2
+
+enfif
+
+
+[itemdef i_tile_nomonster2]
+id=i_floor_marble
+type=t_normal
+name=a tile
+
+on=@create
+attr=00010
+color=088
+
+on=@step
+if (<src.NPC> == brain_dragon)
+src.move 3,0
+
+enfif
+
+
+[ITEMDEF I_FLOOR_GUILDA]
+NAME Evento Guilda
+ID=0514
+NAME=1
+WEIGHT=30000
+
+ON=@CREATE
+TAG.GUILDA=0
+ATTR 012
+
+ON=@STEP
+
+
+IF !(<SRC.ISPLAYER>)
+SRC.MOVE 1 1 
+RETURN 1
+ENDIF
+
+IF (<SRC.FLAGS>&02)
+SRC.MOVE 1 1 
+RETURN 1
+ENDIF
+
+IF !(<SRC.GUILD>)
+SRC.MOVE 1 1 
+RETURN 1
+ENDIF
+
+
+
+FORCHARS 0
+LOCAL.COUNTER +=1
+ENDFOR
+IF <LOCAL.COUNTER> > 1
+SRC.MOVE 1 1 
+RETURN 1
+ENDIF
+
+
+
+
+IF !(<TAG0.DOMINADO>==<SRC.GUILD.UID>)
+	TAG.DOMAINTIME 60
+	TAG.DOMINADO <SRC.GUILD>
+ENDIF
+IF !(<dTAG0.DOMINAnDO>==<SRC.GUILD.uid>)
+SAY <dTAG0.DOMAINTIME>
+TAG.DOMAINTIME -=1
+TIMERD 3
+endif
+
+IF <TAG0.DOMAINTIME> == 0
+    SERV.B <SRC.NAME> estabelece o dominio para a guild <src.guild.ABBREV>
+    TAG.DOMINANDO <SRC.GUILD>
+    TAG.DOMAINTIME 60
+    MORE1 1
+    TIMERD 3
+ENDIF
+
+
+
+
+
+on=@TIMER
+LOCAL.COUNT
+REF69 <UID>
+FORCHARS 0
+	LOCAL.COUNT +=1
+ENDFOR
+IF !(<LOCAL.COUNT>)
+	REF69.TAG.DOMAINTIME 60
+ENDIF
+
+MORE1 +=1
+IF <MORE1>==2000
+SERV.B GUILDA <TAG0.DOMINANDO> dominando ha 10 minutos.
+ELIF <MORE1>==4000
+SERV.B GUILDA <TAG0.DOMINANDO> dominando ha 20 minutos.
+ELIF <MORE1>==6000
+SERV.B GUILDA <TAG0.DOMINANDO> dominando ha 30 minutos.
+ELIF <MORE1>==8000
+SERV.B GUILDA <TAG0.DOMINANDO> dominando ha 40 minutos.
+ELIF <MORE1>==10000
+SERV.B GUILDA <TAG0.DOMINANDO> dominando ha 50 minutos.
+ELIF <MORE1>==12000
+SERV.B GUILDA <UID.<TAG0.DOMINANDO>.ABBREV> GANHOU O EVENTO
+REMOVE
+RETURN 0
+ENDIF
+TIMERD 3
+RETURN 1
+
+
+
+[eof]

@@ -1,0 +1,101 @@
+[FUNCTION GETINFOOF]
+TARGETFG GTFO
+
+[FUNCTION GTFO]
+SRC.SYSMESSAGE <ARGO.ARGN1>
+
+
+[function RemoveItem]
+// args = id
+IF <SRC.ACCOUNT.PLEVEL> < 6
+ RETURN 1
+ENDIF
+local.am = 0
+forinstances <args>
+	remove
+	local.am ++
+endfor
+src.sysmessage <dlocal.am> removed.
+
+[function contaItens]
+// args = id
+local.am = 0
+local.am1 = 0
+forinstances <args>
+local.am ++
+local.am1 += <amount>
+//src.sysmessage <topobj.p> <topobj.uid>
+endfor
+src.sysmessage <dlocal.am> achados. amount de <dlocal.am1>
+
+[function contacheques]
+// args = id
+local.am = 0
+local.soma = 0
+local.am1 = 0
+forinstances i_deed_cheque
+local.am ++
+local.am1 += <amount>
+local.soma += <dtag0.valor>
+src.sysmessage @,,1 <topobj.name> <topobj.uid> <dtag0.valor> 
+endfor
+src.sysmessage <dlocal.am> achados. amount de <dlocal.am1>. Soma de <dlocal.soma>
+
+[FUNCTION achardyes]
+FORITEMS 6500
+	IF (<SERIAL>==0400699be)
+		LOCAL.AMOUNT +=1
+	ENDIF
+ENDFOR
+SRC.SYSMESSAGE Encontrados <dLOCAL.AMOUNT> dyes
+
+[FUNCTION removedyes]
+FORITEMS 6500
+	IF (<baseid>==i_bandage_bloody)
+		LOCAL.AMOUNT +=1
+                REMOVE
+	ENDIF
+ENDFOR
+SRC.SYSMESSAGE Encontrados <dLOCAL.AMOUNT> dyes
+
+[FUNCTION cr]
+FORCONT <findlayer.21.uid> 15 //<findlayer.21.uid> - UID of a container, 10 - how many subcontainers the function goes through, if set 0, it affects only items in container with UID
+FORCONT <findlayer.29.uid> 20
+
+
+If (<baseid>==i_rune_marker)
+LOCAL.AMOUNT +=1
+
+Endif
+
+ENDFOR
+ENDFOR
+SRC.SYSMESSAGE <dLOCAL.AMOUNT> runas
+
+
+[FUNCTION acharcabt]
+FORITEMS 6500
+	IF (<baseid>==i_flesh_head) && (<attr==00010>)
+		LOCAL.AMOUNT +=1
+	ENDIF
+ENDFOR
+SRC.SYSMESSAGE Encontradas <dLOCAL.AMOUNT> cabecas
+
+[FUNCTION acharcab]
+FORITEMS 6500
+	IF (<baseid>==i_flesh_head)
+		LOCAL.AMOUNT +=1
+	ENDIF
+ENDFOR
+SRC.SYSMESSAGE Encontradas <dLOCAL.AMOUNT> cabecas
+
+[FUNCTION removecab]
+FORITEMS 6500
+	IF (<baseid>==i_flesh_head)  
+		LOCAL.AMOUNT +=1
+                REMOVE
+	ENDIF
+ENDFOR
+SRC.SYSMESSAGE Encontrados <dLOCAL.AMOUNT> dyes
+
+[EOF]

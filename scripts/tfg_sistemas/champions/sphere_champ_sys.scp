@@ -1,0 +1,2400 @@
+// ****************************************************************************
+// SPHERE by : Menasoft 1997-2005
+// www.sphereserver.com
+// All SPHERE script files and formats are copyright Menasoft & Partners.
+// This file may be freely edited for personal use, but may not be distributed
+// in whole or in part, in any format without express written permission from
+// Menasoft & Partners.  All donations and contributions
+// become the property of Menasoft & Partners.
+// ****************************************************************************
+// FILE LAST UPDATED: Wednesday, Mar 08, 2017
+// by ClouD_BR
+// Updated to 0.56d by s0ckz
+
+// TODO: identar
+// TODO: revisar neira. ela deve ter limite de spawns e ver pra ela summonar melhor.. talvez no gethit (ver o original)
+// TODO: champ spot ta ativando so
+// TODO: ver harrower
+// TODO: revisar todos fixme de champions
+// TODO: champions e monstros revisados: abyss, arachnid, coldblood, verminhorde
+
+VERSION=0.56d
+
+[DEFNAME champions_settings]
+CHAMPS_USE_POWER_SCROLLS 0 ///(1=ON, 0=OFF) Sets wheter the champions should give power scrolls or not
+CHAMPS_STARTING_MONSTERSNUM 64 ///Sets the amount of starting monsters for each level
+MIN_PLAYERS_TO_ACTIVATE 4
+
+//Loot items
+CHAMP_LOOT_LOW {RANDOM_WEAPON_RUIN 1 RANDOM_PLATEMAIL_DEFENSE 1}
+CHAMP_LOOT_MED {RANDOM_WEAPON_FORCE 1 RANDOM_WEAPON_MIGHT 1 RANDOM_PLATEMAIL_GUARDING 1 RANDOM_PLATEMAIL_HARDENING 1}
+CHAMP_LOOT_HIGH {RANDOM_WEAPON_POWER 1 RANDOM_PLATEMAIL_FORTIFICATION 1}
+CHAMP_LOOT_VERY_HIGH {RANDOM_PLATEMAIL_INVULNERABILITY 1 RANDOM_WEAPON_VANQ 1}
+
+[DEFNAME champions_monstergroups]
+champ_Abyss_1 {c_m_mongbat_arboreal 1 c_m_imp 1}
+champ_Abyss_2 {c_gargoyle 1 c_harpy 1}
+champ_Abyss_3 {c_m_gargoyle_stone 1 c_gargoyle_fire 1}
+champ_Abyss_4 {c_m_scorpion_thrall 1 c_daemon 1}
+champ_Abyss_champion c_semidar
+
+champ_Arachnid_1 {c_gargoyle_fire 1 c_spider_giant 1}
+champ_Arachnid_2 {c_terathan_drone 1 c_terathan_warrior 1}
+champ_Arachnid_3 {c_dread_spider 1 c_terathan_matriarch 1}
+champ_Arachnid_4 {c_m_elem_poison 1 c_terathan_avenger 1}
+champ_Arachnid_champion c_mephitis
+
+champ_ColdBlood_1 {c_lizardman 1 c_dread_spider 1}
+champ_ColdBlood_2 {c_spider_giant 1 c_ophidian_warrior 1 c_ophidian_mage 1}
+champ_ColdBlood_3 {c_dragon_small_black 1 c_dragon_red 1 c_ophidian_mage 1 c_ophidian_warrior 1}
+champ_ColdBlood_4 {c_dragon_red 1 c_dragon_green 1 c_m_ophidian_knight 1}
+champ_ColdBlood_champion c_rikktor
+
+champ_ForestLord_1 {c_pixie 1 c_wisp 1}
+champ_ForestLord_2 {c_patchwork_skeleton 1 c_wisp 1}
+champ_ForestLord_3 {c_centaur 1 c_dread_horn 1}
+champ_ForestLord_4 {c_serpentine_dragon 1 c_ethereal_warrior 1}
+champ_ForestLord_champion c_Lord_Oaks
+
+champ_VerminHorde_1 {c_slime 1 c_rat_giant 1}
+champ_VerminHorde_2 {c_ratman_archer 1 c_ratman 1 c_a_direwolf 1}
+champ_VerminHorde_3 {c_ratman_archer 1 c_ratman 1 c_ratman_w_sword 1 c_a_direwolf 1}
+champ_VerminHorde_4 {c_ratman_archer 1 c_m_silver_serpent 1}
+champ_VerminHorde_champion c_barracoon
+
+champ_UnholyTerror_1 {c_spectre 1 c_ghoul 1 c_m_wraith 1 c_m_ghost 1}
+champ_UnholyTerror_2 {c_m_skeleton_mage 1 c_mummy 1 c_m_wraith 1}
+champ_UnholyTerror_3 {c_liche 2 c_m_skeleton_knight 4 c_m_liche_lord 1}
+champ_UnholyTerror_4 {c_m_liche_lord 1 c_rotting_corpse 3}
+champ_UnholyTerror_champion c_Neira
+
+champ_SleepingDragon_1 {c_deathwatch_beetle 1 c_lizardman 1}
+champ_SleepingDragon_2 {c_deathwatch_beetle 1 c_kappa 1}
+champ_SleepingDragon_3 c_revenant_lion
+champ_SleepingDragon_4 c_oni
+champ_SleepingDragon_champion c_Serado
+
+[ITEMDEF i_champion_idol]
+ID=01f18
+TYPE=T_NORMAL
+DEFNAME=i_champion_idol
+NAME=Champion Idol
+
+ON=@Create
+ATTR=ATTR_MOVE_NEVER
+
+ON=@Dclick
+	IF (<SRC>)
+		IF (<SRC.ISPLAYER>)
+			IF (<SRC.ISGM>)
+				SDIALOG D_CUSTOM_CHAMP
+				RETURN 1
+			ENDIF
+		ENDIF
+	ENDIF
+
+	IF !(<TAG0.ACTIVE>)
+		IF !(<TAG0.ACTIVATABLE>)
+			SAY @058,3,1 Champion spawn not activatable at the moment. Come back later and try again.
+			RETURN 1
+		ENDIF
+
+		LOCAL.PLAYERSONALTAR = 0
+
+		FORCLIENTS 12
+			LOCAL.PLAYERSONALTAR += 1
+		ENDFOR
+
+		IF (<LOCAL.PLAYERSONALTAR> >= <DEF.MIN_PLAYERS_TO_ACTIVATE>)
+			TAG.ACTIVATABLE
+			TIMER
+		ELSE
+			SAY @058,3,1 At least <EVAL <DEF.MIN_PLAYERS_TO_ACTIVATE>> players near the altar are needed to activate it.
+		ENDIF
+	ELIF (<TIMER> > -1)
+		IF (<TAG0.HITS_<SRC.UID>>)
+			SAY @058,3,1 Hits for <SRC.NAME>: <DTAG.HITS_<SRC.UID>>
+		ELSE
+			SAY @058,3,1 Champion already activated.
+		ENDIF
+	ELSE
+		TIMER=<EVAL 60*15>
+		MORE1=0
+		MORE2=<TAG0.MAXSPAWNS>
+		MOREX=0
+		TAG.MONSTROSATUAIS = 0
+
+		FORCLIENTS 25
+			IF (STRLEN(<LOCAL.PLAYERSNEARALTAR>) > 1)
+				LOCAL.PLAYERSNEARALTAR = <LOCAL.PLAYERSNEARALTAR>, <NAME>
+			ELSE
+				LOCAL.PLAYERSNEARALTAR = <NAME>
+			ENDIF
+		ENDFOR
+
+		LOCAL.LIST_COUNT <EVAL <SERV.LIST.players_<UID>.COUNT> - 1>
+
+		IF (<LOCAL.LIST_COUNT> >= 0)
+			FOR 0 <LOCAL.LIST_COUNT>
+				SERV.LOG Cleaning hit stats for <UID.<SERV.LIST.players_<UID>.<LOCAL._FOR>>.NAME> - <TAG0.MONSTERGROUP>
+				TAG.HITS_<SERV.LIST.players_<UID>.<LOCAL._FOR>>
+			ENDFOR
+		ENDIF
+
+		SERV.LIST.players_<UID>.CLEAR
+
+		SERV.LOG Starting Champion Spawn - <TAG0.MONSTERGROUP> - players: <LOCAL.PLAYERSNEARALTAR>
+
+		FOR <DEF.CHAMPS_STARTING_MONSTERSNUM>
+			TAG0.MONSTROSATUAIS += 1
+			SERV.NEWNPC <HVAL <DEF.champ_<TAG0.MONSTERGROUP>_1>>
+			NEW.P=<P>
+			NEW.MOVE <EVAL {-<TAG0.RANGE> <TAG0.RANGE>}> <EVAL {-<TAG0.RANGE> <TAG0.RANGE>}>
+
+			WHILE (<NEW.ISSTUCK>)
+				NEW.P=<P>
+				NEW.MOVE <EVAL {-<TAG0.RANGE> <TAG0.RANGE>}> <EVAL {-<TAG0.RANGE> <TAG0.RANGE>}>
+			ENDWHILE
+
+			NEW.HOME=<NEW.P>
+			NEW.HOMEDIST=6
+			NEW.EVENTS +e_champion_minion
+			NEW.TAG.CHAMPIONIDOL=<UID>
+			NEW.UPDATE
+		ENDFOR
+
+		TAG.PORCENTAGEMATUAL
+		UPDATE
+	ENDIF
+
+	RETURN 1
+
+ON=@Timer
+	IF (<TAG0.CHAMPION.UID>==1)
+		IF (<TAG0.RANDOM>)
+			RANDOMMONSTERGROUP
+		ENDIF
+
+		TAG.CHAMPION.UID
+		TAG.ACTIVE=1
+		TRIGGER @DCLICK
+	ELSE
+		SAY @058,3,1 Time's up!
+		TAG.CHAMPION.UID=1
+		TAG.ACTIVE
+		TIMER=-1
+
+		FORCLIENTS 25
+			IF (STRLEN(<LOCAL.PLAYERSNEARALTAR>) > 1)
+				LOCAL.PLAYERSNEARALTAR = <LOCAL.PLAYERSNEARALTAR>, <NAME>
+			ELSE
+				LOCAL.PLAYERSNEARALTAR = <NAME>
+			ENDIF
+		ENDFOR
+
+		SERV.LOG Time's up for Champion Spawn - <TAG0.MONSTERGROUP> - players: <LOCAL.PLAYERSNEARALTAR> - level <MOREX>
+
+		FOR <TAG0.CANDLES>
+			TRY UID.<TAG0.CANDLE.<EVAL <LOCAL._FOR>>>.REMOVE
+			TRY TAG.CANDLE.<EVAL <LOCAL._FOR>>
+			TAG0.CANDLES -= 1
+		ENDFOR
+
+		TAG.CANDLES
+		REMOVEWHITECANDLES
+		TAG.PORCENTAGEMATUAL
+		TAG.MONSTROSATUAIS
+
+		FORCHARS 200
+			IF (<TAG0.CHAMPIONIDOL>)
+				REMOVE
+			ENDIF
+		ENDFOR
+
+		UPDATE
+	ENDIF
+
+	MORE1
+	MORE2=<TAG0.MAXSPAWNS>
+	MOREX=0
+
+	RETURN 1
+
+ON=@ClientToolTip
+IF (<TAG0.ACTIVE>)
+SRC.ADDCLILOC 1070722,Complete: <fval ((<MORE1>*1000)/<MORE2>)>% (<EVAL <MORE1>> / <EVAL <MORE2>>)
+IF (<MOREX> <= <MOREY>)
+SRC.ADDCLILOC 1042971,Level: <EVAL <MOREX>> / <EVAL <MOREY>>
+ELSE
+SRC.ADDCLILOC 1042971,Level: Champion
+ENDIF
+SRC.ADDCLILOC 1060742
+ELSE
+SRC.ADDCLILOC 1060743
+ENDIF
+SRC.ADDCLILOC 1053099,Type:,<TAG0.MONSTERGROUP>
+
+[EVENTS e_champion_minion]
+ON=@GetHit
+	REF1 <TAG0.CHAMPIONIDOL>
+
+	IF (!<REF1.TAG0.HITS_<SRC.UID>>)
+		SERV.LOG Adding hit stats for <SRC.NAME> - <REF1.TAG0.MONSTERGROUP>
+
+		SERV.LIST.players_<TAG0.CHAMPIONIDOL>.ADD <SRC.UID>
+	ENDIF
+
+	REF1.TAG0.HITS_<SRC.UID> += <ARGN1>
+
+ON=@Death
+IF (<UID.<TAG0.CHAMPIONIDOL>.TIMER>!=-1) && (<UID.<TAG0.CHAMPIONIDOL>.TAG0.ACTIVE>)
+	LOCAL.TMP=<OBJ>
+	OBJ=<TAG0.CHAMPIONIDOL>
+	OBJ.MORE1 += 1
+
+	IF (<OBJ.MORE1> >= <OBJ.MORE2>)
+		OBJ.MOREX += 1
+		OBJ.TAG.PORCENTAGEMATUAL
+		OBJ.REMOVEWHITECANDLES
+
+		IF (<OBJ.MOREX> > <OBJ.MOREY>)
+			IF !(<OBJ.TAG0.CHAMPION.UID>)
+				SERV.NEWNPC <DEF.champ_<OBJ.TAG0.MONSTERGROUP>_champion>
+				NEW.P=<OBJ.P>
+				NEW.HOME=<NEW.P>
+				NEW.HOMEDIST=30
+				NEW.TAG.CHAMPIONIDOL=<OBJ>
+				NEW.EVENTS +e_champion
+				NEW.EVENTS +e_poison_immune
+				OBJ.TAG.CHAMPION.UID=<NEW>
+				OBJ.TIMER=<EVAL 60*40>
+				NEW.UPDATE
+
+				FORCLIENTS 25
+					IF (STRLEN(<LOCAL.PLAYERSNEARALTAR>) > 1)
+						LOCAL.PLAYERSNEARALTAR = <LOCAL.PLAYERSNEARALTAR>, <NAME>
+					ELSE
+						LOCAL.PLAYERSNEARALTAR = <NAME>
+					ENDIF
+				ENDFOR
+
+				SERV.LOG Boss created for Champion Spawn - <OBJ.TAG0.MONSTERGROUP> - players: <LOCAL.PLAYERSNEARALTAR>
+			ENDIF
+		ELSE
+			FORCLIENTS 25
+				IF (STRLEN(<LOCAL.PLAYERSNEARALTAR>) > 1)
+					LOCAL.PLAYERSNEARALTAR = <LOCAL.PLAYERSNEARALTAR>, <NAME>
+				ELSE
+					LOCAL.PLAYERSNEARALTAR = <NAME>
+				ENDIF
+			ENDFOR
+
+			SERV.LOG Level completed for Champion Spawn - <OBJ.TAG0.MONSTERGROUP> - players: <LOCAL.PLAYERSNEARALTAR> - new level <OBJ.MOREX>
+
+
+			OBJ.TAG.MONSTROSATUAIS
+
+			IF (<OBJ.MOREX> == 6) || (<OBJ.MOREX> == 10) || (<OBJ.MOREX> == 14)
+				OBJ.MORE2 /= 2
+			ENDIF
+
+			IF (<OBJ.MORE2> < <EVAL <DEF.CHAMPS_STARTING_MONSTERSNUM> - 2>)
+				OBJ.MORE2 = <EVAL <DEF.CHAMPS_STARTING_MONSTERSNUM> - 2>
+			ENDIF
+
+			OBJ.MORE1=0
+
+			FOR <DEF.CHAMPS_STARTING_MONSTERSNUM>
+				OBJ.TAG0.MONSTROSATUAIS += 1
+
+				IF (<OBJ.MOREX> <= 5)
+					SERV.NEWNPC <HVAL <DEF.champ_<OBJ.TAG0.MONSTERGROUP>_1>>
+				ELIF (<OBJ.MOREX> <= 9)
+					SERV.NEWNPC <HVAL <DEF.champ_<OBJ.TAG0.MONSTERGROUP>_2>>
+				ELIF (<OBJ.MOREX> <= 13)
+					SERV.NEWNPC <HVAL <DEF.champ_<OBJ.TAG0.MONSTERGROUP>_3>>
+				ELIF (<OBJ.MOREX> <= 16)
+					SERV.NEWNPC <HVAL <DEF.champ_<OBJ.TAG0.MONSTERGROUP>_4>>
+				ENDIF
+
+				NEW.P=<OBJ.P>
+				NEW.MOVE <EVAL {-<OBJ.TAG0.RANGE> <OBJ.TAG0.RANGE>}> <EVAL {-<OBJ.TAG0.RANGE> <OBJ.TAG0.RANGE>}>
+
+				WHILE (<NEW.ISSTUCK>)
+					NEW.P=<OBJ.P>
+					NEW.MOVE <EVAL {-<OBJ.TAG0.RANGE> <OBJ.TAG0.RANGE>}> <EVAL {-<OBJ.TAG0.RANGE> <OBJ.TAG0.RANGE>}>
+				ENDWHILE
+
+				NEW.EVENTS +e_champion_minion
+				NEW.TAG.CHAMPIONIDOL=<OBJ>
+				NEW.HOME=<NEW.P>
+				NEW.HOMEDIST=6
+				NEW.UPDATE
+			ENDFOR
+
+			SERV.NEWITEM i_skull_candle
+			NEW.COLOR=33
+			NEW.TIMER -1
+			NEW.ATTR=ATTR_MOVE_NEVER
+			OBJ.TAG0.CANDLES += 1
+			TRY OBJ.TAG0.CANDLE.<EVAL <OBJ.TAG0.CANDLES>>=<NEW>
+			NEW.P=<OBJ.P>
+			NEW.CANDLEP=<OBJ.TAG0.CANDLES>
+		ENDIF
+
+		OBJ.UPDATE
+		OBJ.TIMER=<EVAL 60*15>
+	ELSE
+		IF !(<EVAL <OBJ.TAG0.MONSTROSATUAIS>+1> > <OBJ.MORE2>)
+			OBJ.TAG0.MONSTROSATUAIS += 1
+
+			IF (<OBJ.MOREX> <= 5)
+				SERV.NEWNPC <HVAL <DEF.champ_<OBJ.TAG0.MONSTERGROUP>_1>>
+			ELIF (<OBJ.MOREX> <= 9)
+				SERV.NEWNPC <HVAL <DEF.champ_<OBJ.TAG0.MONSTERGROUP>_2>>
+			ELIF (<OBJ.MOREX> <= 13)
+				SERV.NEWNPC <HVAL <DEF.champ_<OBJ.TAG0.MONSTERGROUP>_3>>
+			ELIF (<OBJ.MOREX> <= 16)
+				SERV.NEWNPC <HVAL <DEF.champ_<OBJ.TAG0.MONSTERGROUP>_4>>
+			ENDIF
+
+			NEW.P=<OBJ.P>
+			NEW.MOVE <EVAL {-<OBJ.TAG0.RANGE> <OBJ.TAG0.RANGE>}> <EVAL {-<OBJ.TAG0.RANGE> <OBJ.TAG0.RANGE>}>
+
+			WHILE (<NEW.ISSTUCK>)
+				NEW.P=<OBJ.P>
+				NEW.MOVE <EVAL {-<OBJ.TAG0.RANGE> <OBJ.TAG0.RANGE>}> <EVAL {-<OBJ.TAG0.RANGE> <OBJ.TAG0.RANGE>}>
+			ENDWHILE
+
+			NEW.EVENTS +e_champion_minion
+			NEW.TAG.CHAMPIONIDOL=<OBJ>
+			NEW.HOME=<NEW.P>
+			NEW.HOMEDIST=6
+			NEW.UPDATE
+		ENDIF
+
+		OBJ.TAG0.PORCENTAGEMATUAL += 1
+
+		IF !(<OBJ.TAG0.WHITESKULLS> >= 4)
+			IF (<Eval ((<OBJ.TAG0.PORCENTAGEMATUAL>*100)/<OBJ.MORE2>)> >= 20)
+				SERV.NEWITEM i_skull_candle
+				NEW.COLOR=0481
+				NEW.P=<OBJ.P>
+				NEW.ATTR=ATTR_MOVE_NEVER
+				OBJ.TAG0.WHITESKULLS += 1
+				TRY OBJ.TAG.WHITESKULLS.<EVAL <OBJ.TAG0.WHITESKULLS>>=<NEW>
+				NEW.WHITESKULLLOC <OBJ.TAG0.WHITESKULLS>
+				OBJ.TAG.PORCENTAGEMATUAL
+			ENDIF
+		ENDIF
+
+		OBJ.UPDATE
+
+	ENDIF
+
+	OBJ=<LOCAL.TMP>
+
+ENDIF
+
+ON=@EnvironChange
+IF (<UID.<TAG0.CHAMPIONIDOL>.TIMER>==-1)
+REMOVE
+ENDIF
+
+ON=@DeathCorpse
+TRY UID.<ARGO.UID>.TIMER=15
+
+[EVENTS e_champion]
+ON=@GetHit
+	REF1 <TAG0.CHAMPIONIDOL>
+
+	IF (!<REF1.TAG0.HITS_<SRC.UID>>)
+		SERV.LOG Adding hit stats for <SRC.NAME> - <REF1.TAG0.MONSTERGROUP>
+
+		SERV.LIST.players_<TAG0.CHAMPIONIDOL>.ADD <SRC.UID>
+	ENDIF
+
+	REF1.TAG0.HITS_<SRC.UID> += <ARGN1>
+
+	if (<flags>&080)
+	Spelleffect s_cure,1000
+	return 1
+	endif
+	if (<src.flags>&statf_conjured)
+	src.spelleffect s_dispel,1000
+	return 1
+	endif
+
+ON=@DEATHCORPSE
+	FOR 6
+		serv.newitem=i_fire_column
+		new.p=<p>
+		new.move <R5>,<R5>
+		new.attr=attr_move_never|attr_decay
+		new.timer=20
+	ENDFOR
+
+	serv.newitem=i_gold_champion
+	new.p=<p>
+	new.timer=1
+
+ON=@Death
+	LOCAL.TMP=<OBJ>
+	OBJ=<TAG0.CHAMPIONIDOL>
+
+	FOR <OBJ.TAG0.CANDLES>
+		TRY UID.<OBJ.TAG0.CANDLE.<EVAL <LOCAL._FOR>>>.REMOVE
+		TRY OBJ.TAG.CANDLE.<EVAL <LOCAL._FOR>>
+		OBJ.TAG0.CANDLES -= 1
+	ENDFOR
+
+	FORCLIENTS 25
+		IF (STRLEN(<LOCAL.PLAYERSNEARALTAR>) > 1)
+			LOCAL.PLAYERSNEARALTAR = <LOCAL.PLAYERSNEARALTAR>, <NAME>
+		ELSE
+			LOCAL.PLAYERSNEARALTAR = <NAME>
+		ENDIF
+	ENDFOR
+
+	SERV.LOG Boss dead for Champion Spawn - <OBJ.TAG0.MONSTERGROUP> - players: <LOCAL.PLAYERSNEARALTAR>
+
+
+	OBJ.TAG.CANDLES
+	OBJ.REMOVEWHITECANDLES
+	OBJ.TAG.ACTIVE
+	OBJ.MORE2=<OBJ.TAG0.MAXSPAWNS>
+	OBJ.MORE1=0
+	OBJ.MOREX=0
+	IF (<UID.<TAG0.CHAMPIONIDOL>.TIMER>!=-1)
+		LOCAL.COUNT <SERV.LIST.players_<TAG0.CHAMPIONIDOL>.COUNT>
+
+		FOR X 0 <LOCAL.COUNT>
+			LOCAL.POSITION <LOCAL.X>
+			LOCAL.MAX_HITS 0
+			LOCAL.CURRENT 0
+
+			FORCLIENTS 32
+				IF (<OBJ.TAG0.HITS_<UID>> > <LOCAL.MAX_HITS>) && !(<FLAGS> & statf_dead) && (!<REGION.GUARDED>)
+					LOCAL.MAX_HITS <OBJ.TAG0.HITS_<UID>>
+					LOCAL.CURRENT <UID>
+				ENDIF
+			ENDFOR
+
+			IF (<LOCAL.CURRENT>)
+				IF (<LOCAL.POSITION> == 0)
+					f_create_powerscroll <r<def.work_min>,<def.work_max>>,10,<UID.<LOCAL.CURRENT>.FINDLAYER.layer_pack>
+				ENDIF
+
+				LOCAL.COMMON_CHANCE <EVAL <LOCAL.POSITION> + 1>
+
+				IF !(<R<LOCAL.COMMON_CHANCE>>)
+					SERV.NEWITEM <EVAL {i_bow_sup 1 i_except_War_fork 1 i_except_kryss 1 i_except_axe_exec 1 i_except_sword_Viking 1 i_except_halberd 1 i_except_bardiche 1 i_except_mace_war 1 i_except_war_hammer 1}>
+					f_make_pvm_weapon <NEW.UID>,<EVAL {s_paralyze 1 s_flamestrike 1 s_lightning 1}>
+
+					NEW.CONT <UID.<LOCAL.CURRENT>.FINDLAYER.layer_pack>
+				ENDIF
+
+				IF !(<R<LOCAL.COMMON_CHANCE>>)
+					SERV.NEWITEM i_buffer_scroll
+					NEW.AMOUNT <R1,2>
+
+					NEW.CONT <UID.<LOCAL.CURRENT>.FINDLAYER.layer_pack>
+				ENDIF
+
+				IF !(<R<LOCAL.COMMON_CHANCE>>)
+					SERV.NEWITEM random_deco
+
+					NEW.CONT <UID.<LOCAL.CURRENT>.FINDLAYER.layer_pack>
+				ENDIF
+
+				IF !(<R<LOCAL.COMMON_CHANCE>>)
+					SERV.NEWITEM random_deco
+
+					NEW.CONT <UID.<LOCAL.CURRENT>.FINDLAYER.layer_pack>
+				ENDIF
+
+				f_create_powerscroll <r<def.work_min>,<def.work_max>>,10,<UID.<LOCAL.CURRENT>.FINDLAYER.layer_pack>
+
+				SERV.LOG Position: <DLOCAL.POSITION>. Player: <UID.<DLOCAL.CURRENT>.ACCOUNT> / <UID.<DLOCAL.CURRENT>.NAME>. Hits: <DLOCAL.MAX_HITS> - <OBJ.TAG0.MONSTERGROUP>
+				OBJ.TAG0.HITS_<LOCAL.CURRENT>
+			ENDIF
+		ENDFOR
+	ENDIF
+
+	OBJ.TIMER -1
+//	OBJ.TIMER <EVAL 60*60*24>
+	OBJ.TAG.CHAMPION.UID=1
+
+//	IF !(<MAP>)
+//		IF (<ACT.ISPLAYER>)
+//			SERV.NEWITEM i_moongate_blue
+//			NEW.P=<P>
+//			NEW.MOREP=5146,1759
+//			NEW.COLOR=038b
+//			NEW.TIMER 60
+//			NEW.ATTR=ATTR_MOVE_NEVER|ATTR_DECAY|ATTR_CAN_DECAY
+//			SERV.NEWITEM i_champion_skull
+//			NEW.NAME=Skull of <NAME>
+//			BOUNCE <NEW>
+//		ENDIF
+//	ENDIF
+
+	OBJ=<LOCAL.TMP>
+
+ON=@EnvironChange
+IF (<UID.<TAG0.CHAMPIONIDOL>.TIMER>==-1)
+KILL
+ENDIF
+
+/////////////////////////////
+[FUNCTION f_create_powerscroll]
+ref1 <uid.<argv[2]>> //cont
+serv.newitem i_power_scroll
+local.skill <def.work<argv[0]>>
+new.tag.skill <dlocal.skill>
+new.tag.level <argv[1]>
+new.name <serv.skill.<dlocal.skill>.name> Power Scroll
+new.timerf 1, f_create_powerscroll_1
+new.cont <ref1>
+
+[FUNCTION f_create_powerscroll_1]
+more1 = <dtag0.skill>
+tag.skill
+more2 = <tag0.level>
+tag.level
+
+[FUNCTION f_shuffle_power_scrolls]
+IF (<ARGV> != 1)
+	RETURN 1
+ENDIF
+
+FORCONT <ARGV[0]> 0
+	IF (<BASEID> == i_power_scroll)
+		LOCAL.RAND <R<def.work_min>,<def.work_max>>
+		MORE1=<def.work<dlocal.rand>>
+		NAME=<SERV.SKILL.<MORE1>.NAME> Power Scroll
+	ENDIF
+ENDFOR
+
+[FUNCTION update_stealing_power_scrolls]
+LOCAL.COUNT 0
+
+FORINSTANCES i_power_scroll
+	IF <MORE1> == 33
+		LOCAL.COUNT += <AMOUNT>
+
+		FOR 1 <EVAL <AMOUNT> - 1>
+			SERV.NEWITEM i_power_scroll
+			NEW.CONT <CONT>
+		ENDFOR
+
+		IF (<ISEVENT.t_vendor_sell>)
+			TAG.PRICE 1000000
+		ENDIF
+
+		LOCAL.RAND <R<def.work_min>,<def.work_max>>
+		MORE1=<def.work<dlocal.rand>>
+		NAME=<SERV.SKILL.<MORE1>.NAME> Power Scroll
+		AMOUNT=1
+	ENDIF
+
+ENDFOR
+
+SERV.LOG <dLOCAL.COUNT> scrolls has turned into another skill!
+
+[itemdef i_power_scroll]
+ID=i_scroll_heal
+NAME=Power Scroll
+TYPE=t_normal
+VALUE=10000
+
+ON=@create
+local.rand <R<def.work_min>,<def.work_max>>
+more1=<def.work<dlocal.rand>>
+more2=<EVAL {0.5 15 1.0 1}>
+name=<SERV.SKILL.<MORE1>.NAME> Power Scroll
+color=084d
+
+SERV.LOG <NAME> <strsub 0 3 <floatval <eval <more2>>/10>> criado.
+
+on=@click
+	if !(<tag0.value>)
+		tag.value <strsub 0 3 <floatval <eval <more2>>/10>>
+	endif
+	message @,,1 [+<tag0.value>]
+
+	IF (<AMOUNT> > 1)
+		message @084d,,1 <AMOUNT> <name>s
+	ELSE
+		message @084d,,1 <name>
+	ENDIF
+	return 1
+
+on=@dclick
+if (<src.tag0.braceletequiped>)
+	src.sysmessage Unequip your bracelets before doing that.
+	return 1
+endif
+if (<src.tag0.tailorscroll>) || (<src.tag0.cartoscroll>) || (<src.tag0.miningscroll>)
+	src.sysmessage You are still under the effect of a Scroll.
+	return 1
+endif
+IF (<src.<more1>> < 700) || (<src.<more1>> > 949)
+	SERV.LOG <SRC.NAME> is unable to use PS on skill <DMORE1>: <SRC.<MORE1>>
+	src.sysmessage @084d You can't use that scroll with that level on that skill.
+else
+	LOCAL.OLD_MORE1 <SRC.<MORE1>>
+
+	if (<eval <src.<more1>>+<more2>> > 95.0)
+		try src.<more1> = 95.0
+	else
+		try src.<more1>=<eval <src.<more1>>+<more2>>
+	endif
+	src.effect 1,i_gold,99,45
+	src.effect 3,i_fx_heal_effect, 0,20,1
+	src.sound snd_special_agility
+	src.message @084d Power Scroll!
+
+	SRC.SYSMESSAGE @084d Your <SERV.SKILL.<MORE1>.NAME> Skill is now <FVAL <LOCAL.OLD_MORE1>>% + <FVAL <MORE2>>% = <FVAL <SRC.<MORE1>>>%!
+	SERV.LOG <SRC.NAME> <SERV.SKILL.<MORE1>.NAME> Skill is now <FVAL <LOCAL.OLD_MORE1>>% + <FVAL <MORE2>>% = <FVAL <SRC.<MORE1>>>%.
+	consume 1
+endif
+return 1
+
+///////////////////////////
+/////////Gold Champion////
+
+[itemdef i_gold_champion]
+NAME=champion gold
+ID=i_worldgem_bit
+TYPE=t_script
+
+ON=@create
+color=084d
+attr=attr_invis|attr_move_never|attr_decay
+
+on=@timer
+IF (<LINK> == 04fffffff)
+	SERV.NEWNPC c_dog
+	NEW.FLAGS = statf_invul|statf_insubstantial
+	LINK <NEW.UID>
+ENDIF
+
+serv.newitem=i_gold
+new.amount=<R2000,3000>
+new.p=<p>
+new.timer=100
+new.move <R25>, <R25>
+new.fix
+
+LINK.P <NEW.P>
+
+if (<LINK.ISSTUCK>)
+	NEW.REMOVE
+else
+	MORE1 += 1
+endif
+
+IF (<MORE1>==80)
+LINK.REMOVE
+REMOVE
+ELSE
+timerd 5
+ENDIF
+return 1
+
+////////////////////////
+
+[ITEMDEF i_champion_skull]
+ID=i_daemon_skull
+DEFNAME=i_champion_skull
+NAME=Champion Skull
+TAG.NOVENDOR=1
+
+ON=@Create
+ATTR=ATTR_NEWBIE
+COLOR=084d
+
+///////////////////////
+
+[FUNCTION CANDLEP]
+DOSWITCH <EVAL <ARGN1>-1>
+BEGIN
+MOVE NW
+MOVE NW
+END
+BEGIN
+MOVE N
+MOVE N
+MOVE W
+END
+BEGIN
+MOVE N
+MOVE N
+END
+BEGIN
+MOVE N
+MOVE N
+MOVE E
+END
+BEGIN
+MOVE E
+MOVE E
+MOVE N
+MOVE N
+END
+BEGIN
+MOVE E
+MOVE E
+MOVE N
+END
+BEGIN
+MOVE E
+MOVE E
+END
+BEGIN
+MOVE E
+MOVE E
+MOVE S
+END
+BEGIN
+MOVE E
+MOVE E
+MOVE S
+MOVE S
+END
+BEGIN
+MOVE S
+MOVE S
+MOVE E
+END
+BEGIN
+MOVE S
+MOVE S
+END
+BEGIN
+MOVE S
+MOVE S
+MOVE W
+END
+BEGIN
+MOVE S
+MOVE S
+MOVE W
+MOVE W
+END
+BEGIN
+MOVE S
+MOVE W
+MOVE W
+END
+BEGIN
+MOVE W
+MOVE W
+END
+BEGIN
+MOVE N
+MOVE W
+MOVE W
+END
+ENDDO
+FIX
+NUDGEUP 1
+
+[FUNCTION WHITESKULLLOC]
+DOSWITCH <EVAL <ARGN1>-1>
+BEGIN
+MOVE S
+MOVE S
+MOVE S
+MOVE W
+MOVE W
+END
+BEGIN
+MOVE S
+MOVE S
+MOVE S
+MOVE W
+END
+BEGIN
+MOVE S
+MOVE S
+MOVE S
+END
+BEGIN
+MOVE S
+MOVE S
+MOVE S
+MOVE E
+END
+BEGIN
+MOVE S
+MOVE S
+MOVE S
+MOVE E
+MOVE E
+END
+ENDDO
+FIX
+
+[FUNCTION REMOVEWHITECANDLES]
+FOR <TAG0.WHITESKULLS>
+TRY UID.<TAG0.WHITESKULLS.<EVAL <LOCAL._FOR>>>.REMOVE
+TAG.WHITESKULLS
+TRY TAG.WHITESKULLS.<EVAL <LOCAL._FOR>>
+ENDFOR
+
+//////////////////////////////
+
+[CHARDEF 146]
+DEFNAME=c_CHAMP_Harrower
+NAME=Harrower
+CAN=MT_WALK|MT_USEHANDS|MT_EQUIP
+DAM=65,80
+ARMOR=35
+MOVERATE=80
+RESLEVEL=2
+DESIRES=i_gold,e_notoriety,e_horses,c_man,c_woman,t_corpse
+CATEGORY=Addon
+SUBSECTION=Champs
+DESCRIPTION=Harrower
+
+ON=@Create
+NPC=brain_monster
+KARMA=-9000
+FAME=9000
+STR={400 500}
+DEX={110 130}
+INT={1000 1200}
+MAXHITS=4000
+MAXMANA=5000
+WRESTLING=90.0
+TACTICS=90.0
+MAGICRESISTANCE={120.0 160.0}
+ANATOMY=100.0
+MAGERY=120.0
+EVALUATINGINTEL=100.0
+MEDITATION=1000
+ITEMNEWBIE=i_spellbook
+ADDCIRCLE 8,1
+
+ON=@NPCLookAtChar
+IF (<SRC.ISPLAYER>)
+IF !(<R10>)
+SRC.GO <P>
+ENDIF
+ENDIF
+
+ON=@DeathCorpse
+SERV.NEWNPC C_TRUE_Harrower
+NEW.P=<P>
+NEW.TAG.HarrowerSPAWN=<TAG0.HarrowerSPAWN>
+LOCAL.Harrower=<NEW>
+TRY UID.<ARGO.UID>.REMOVE
+FOR 10
+SERV.NEWNPC C_CHAMP_TENTACLES_Harrower
+NEW.P=<P>
+FACE <LOCAL.Harrower>
+NEW.MOVE <EVAL {-6 6}> <EVAL {-6 6}>
+ENDFOR
+
+[CHARDEF C_CHAMP_TENTACLES_Harrower]
+ID=C_CORPSER
+NAME=Tentacles of the Harrower
+CAN=MT_NONMOVER|MT_USEHANDS
+RANGE=9
+DAM=47,90
+ARMOR=45
+CATEGORY=Addon
+SUBSECTION=Champs
+DESCRIPTION=Tentacles of the Harrower
+
+ON=@Create
+NPC=brain_monster
+KARMA=-9000
+FAME=5000
+STR={300 400}
+DEX={110 130}
+INT={1000 1200}
+MAXHITS=660
+MAXMANA=1000
+WRESTLING=90.0
+TACTICS=90.0
+MAGICRESISTANCE={120.0 140.0}
+ANATOMY=100.0
+
+ON=@NPCREstock
+ITEM=i_gold,{900 1300}
+
+// ON=@Death
+// RANDMAGICITEM
+
+ON=@Hit
+HITS += <EVAL <ARGN1>/3>
+IF (<HITS> > <MAXHITS>)
+HITS=<MAXHITS>
+ENDIF
+
+[CHARDEF C_TRUE_Harrower]
+ID=c_bog_thing
+DEFNAME=C_TRUE_Harrower
+CAN=MT_NONMOVER|MT_USEHANDS
+NAME=True Harrower
+DAM=120,160
+ARMOR=70
+CATEGORY=Addon
+SUBSECTION=Champs
+DESCRIPTION=True Harrower
+
+ON=@Create
+COLOR=38b
+NPC=brain_monster
+KARMA=-9000
+FAME=9000
+STR={900 1000}
+DEX={110 130}
+INT={1000 1200}
+MAXHITS=40000
+MAXMANA=5000
+WRESTLING=100.0
+TACTICS=100.0
+MAGICRESISTANCE={140.0 160.0}
+ANATOMY=100.0
+MAGERY=130.0
+EVALUATINGINTEL=120.0
+MEDITATION=1200
+ITEMNEWBIE=i_spellbook
+ADDCIRCLE 8,1
+
+ON=@NPCLookAtChar
+IF (<SRC.ISPLAYER>)
+IF !(<R10>)
+SRC.GO <P>
+ATTACK <SRC>
+ENDIF
+ENDIF
+
+ON=@GetHit
+IF (<SRC.ISPLAYER>)
+IF !(<R5>)
+SRC.GO <P>
+ATTACK <SRC>
+ENDIF
+ENDIF
+
+ON=@Hit
+HITS += <EVAL <ARGN1>/3>
+IF (<HITS> > <MAXHITS>)
+HITS=<MAXHITS>
+ENDIF
+
+ON=@Death
+TRY UID.<TAG0.HarrowerSPAWN>.MORE2
+TRY UID.<TAG0.HarrowerSPAWN>.TIMER=<EVAL 60*60*24*2>
+TRY UID.<TAG0.HarrowerSPAWN>.MOREX=1
+TRY UID.<TAG0.HarrowerSPAWN>.COLOR=36
+// RANDMAGICITEM
+// RANDMAGICITEM
+// RANDMAGICITEM
+// RANDMAGICITEM
+// RANDMAGICITEM
+// RANDMAGICITEM
+// RANDMAGICITEM
+
+ON=@DeathCorpse
+	FOR 6
+		serv.newitem=i_fire_column
+		new.p=<p>
+		new.move <R5>,<R5>
+		new.attr=attr_move_never|attr_decay
+		new.timer=20
+	ENDFOR
+
+	serv.newitem=i_gold_champion
+	new.p=<p>
+	new.timer=1
+
+[TYPEDEF T_Harrower_OFFER]
+ON=@Dropon_Self
+IF (<TIMER>!=-1) && (<MOREX>)
+	RETURN 1
+ENDIF
+IF (<MORE2>)
+	RETURN 1
+ENDIF
+IF (<ARGO.BASEID>!=i_champion_skull)
+	RETURN 1
+ENDIF
+IF (STRMATCH(*<ARGO.NAME>*,<TAG0.SKULLNAMES>))
+	RETURN 1
+ENDIF
+TAG.SKULLNAMES .= <ARGO.NAME>,
+TRY UID.<ARGO.UID>.TAG.PREVCONT=<SRC>
+MORE1 += 1
+TIMER=30
+IF (<MORE1> >= 6)
+	MORE1
+	TAG.SKULLNAMES
+	SERV.NEWNPC C_CHAMP_Harrower
+	DORAND 7
+		NEW.P=5579,1858
+		NEW.P=5267,669
+		NEW.P=5583,895,30
+		NEW.P=5250,776
+		NEW.P=6103,33,27
+		NEW.P=5477,189
+		NEW.P=5692,536
+	ENDDO
+	MORE2=<NEW>
+	NEW.TAG.HarrowerSPAWN=<UID>
+	SERV.NEWITEM i_moongate_blue
+	NEW.P=5138,1767
+	NEW.TYPE=T_Harrower_GATE
+	NEW.TAG.LOCAL=<STRARG <UID.<MORE2>.REGION.NAME>>
+	NEW.COLOR=038b
+	NEW.TIMER 180
+	NEW.ATTR=ATTR_MOVE_NEVER|ATTR_DECAY|ATTR_CAN_DECAY
+	EMPTY
+	TIMER -1
+ELSE
+	SRC.SYSMESSAGE @55 Put all the skulls quickly, or they'll be banked into your bank!
+ENDIF
+
+ON=@Dclick
+RETURN 1
+
+ON=@Timer
+IF (<MOREX>)
+MOREX
+COLOR=038b
+ELSE
+FORCONTID i_champion_skull
+CONT=<UID.<TAG0.PREVCONT>.FINDLAYER.layer_bankbox>
+TRY UID.<TAG0.PREVCONT>.SYSMESSAGE @048,3,1 Champion Skull sent to your bank box.
+TAG.PREVCONT
+ENDFOR
+MORE1
+TAG.SKULLNAMES
+ENDIF
+RETURN 1
+
+[TYPEDEF T_Harrower_GATE]
+ON=@Step
+SRC.GO <TAG0.LOCAL>
+
+//////////////////////////
+
+[ITEMDEF i_champion_spawn]
+NAME=Champion Spawn
+ID=i_stairs_stone
+TYPE=t_multi
+CATEGORY=Addon
+SUBSECTION=Champs
+DESCRIPTION=Champion Spawn
+MULTIREGION=0,0,0,0
+COMPONENT=i_stairs_stone 1 0 0 0
+COMPONENT=i_stairs_stone -1 0 0 0
+COMPONENT=i_stairs_stone 0 1 0 0
+COMPONENT=i_stairs_stone 1 1 0 0
+COMPONENT=i_stairs_stone -1 1 0 0
+COMPONENT=i_stairs_stone 0 -1 0 0
+COMPONENT=i_stairs_stone 1 -1 0 0
+COMPONENT=i_stairs_stone -1 -1 0 0
+COMPONENT=03ef 0 2 0 0
+COMPONENT=03ef -1 2 0 0
+COMPONENT=03ef 1 2 0 0
+COMPONENT=03f8 2 2 0 0
+COMPONENT=03f6 -2 2 0 0
+COMPONENT=03f2 -2 1 0 0
+COMPONENT=03f2 -2 0 0 0
+COMPONENT=03f2 -2 -1 0 0
+COMPONENT=03f3 -2 -2 0 0
+COMPONENT=03f1 -1 -2 0 0
+COMPONENT=03f1 0 -2 0 0
+COMPONENT=03f1 1 -2 0 0
+COMPONENT=03f5 2 -2 0 0
+COMPONENT=03f0 2 -1 0 0
+COMPONENT=03f0 2 0 0 0
+COMPONENT=03f0 2 1 0 0
+COMPONENT=0fea 0 0 5 0
+COMPONENT=0fee 1 0 5 0
+COMPONENT=i_pentagram -1 0 5 0
+COMPONENT=0fec 0 1 5 0
+COMPONENT=0fed 1 1 5 0
+COMPONENT=0fe9 -1 1 5 0
+COMPONENT=0fe8 0 -1 5 0
+COMPONENT=0feb 1 -1 5 0
+COMPONENT=0fe7 -1 -1 5 0
+
+ON=@Create
+ATTR=attr_move_never
+TIMER -1
+
+[PLEVEL 4]
+GENERATECHAMPS
+CREATEALTAR
+
+[FUNCTION GENERATECHAMPS]
+IF !(<VAR0.CHAMPSJAGERADOS>)
+FOR 20
+SERV.NEWITEM i_champion_spawn
+DOSWITCH <EVAL <LOCAL._FOR>-1>
+NEW.P=382,328,-51,2
+NEW.P=446,914,-83,2
+NEW.P=1659,1117,-5,2
+NEW.P=5179,718
+NEW.P=5558,824,45
+NEW.P=5252,819,11
+NEW.P=5814,1351,-21
+NEW.P=5181,1595,-15
+NEW.P=5511, 2360,24
+NEW.P=6038, 2400,30
+NEW.P=5549, 2640
+NEW.P=5636, 2916,18
+NEW.P=6035, 2943,32
+NEW.P=5265, 3171,87
+NEW.P=5286,3369,32
+NEW.P=5954, 3475,8
+NEW.P=5207, 3637
+NEW.P=5559, 3757
+NEW.P=5982, 3882
+NEW.P=5724, 3991,19
+ENDDO
+LOCAL.ALTAR=<NEW>
+NEW.MULTICREATE
+NEW.SETSPAWNCOLOR
+SERV.NEWITEM i_champion_idol
+NEW.P=<UID.<LOCAL.ALTAR>.P>
+NEW.MOREY=<R14,17>
+NEW.TAG.MAXSPAWNS=<R260,291>
+DOSWITCH <EVAL <LOCAL._FOR>-1>
+BEGIN
+NEW.RANDOMMONSTERGROUP
+NEW.TAG.RANGE=30
+END
+BEGIN
+NEW.RANDOMMONSTERGROUP
+NEW.TAG.RANGE=30
+END
+BEGIN
+NEW.TAG.MONSTERGROUP=ForestLord
+NEW.TAG.RANGE=25
+END
+BEGIN
+NEW.TAG.MONSTERGROUP=UnholyTerror
+NEW.TAG.RANGE=22
+END
+BEGIN
+NEW.TAG.MONSTERGROUP=VerminHorde
+NEW.TAG.RANGE=25
+END
+BEGIN
+NEW.TAG.MONSTERGROUP=ColdBlood
+NEW.TAG.RANGE=25
+END
+BEGIN
+NEW.TAG.MONSTERGROUP=Abyss
+NEW.TAG.RANGE=23
+END
+BEGIN
+NEW.TAG.MONSTERGROUP=Arachnid
+NEW.TAG.RANGE=26
+END
+BEGIN
+NEW.RANDOMMONSTERGROUP
+NEW.TAG.RANGE=26
+END
+BEGIN
+NEW.RANDOMMONSTERGROUP
+NEW.TAG.RANGE=26
+END
+BEGIN
+NEW.RANDOMMONSTERGROUP
+NEW.TAG.RANGE=26
+END
+BEGIN
+NEW.RANDOMMONSTERGROUP
+NEW.TAG.RANGE=26
+END
+BEGIN
+NEW.RANDOMMONSTERGROUP
+NEW.TAG.RANGE=26
+END
+BEGIN
+NEW.RANDOMMONSTERGROUP
+NEW.TAG.RANGE=26
+END
+BEGIN
+NEW.RANDOMMONSTERGROUP
+NEW.TAG.RANGE=26
+END
+BEGIN
+NEW.RANDOMMONSTERGROUP
+NEW.TAG.RANGE=26
+END
+BEGIN
+NEW.RANDOMMONSTERGROUP
+NEW.TAG.RANGE=26
+END
+BEGIN
+NEW.RANDOMMONSTERGROUP
+NEW.TAG.RANGE=26
+END
+BEGIN
+NEW.RANDOMMONSTERGROUP
+NEW.TAG.RANGE=26
+END
+BEGIN
+NEW.RANDOMMONSTERGROUP
+NEW.TAG.RANGE=26
+END
+ENDDO
+NEW.ATTR=ATTR_MOVE_NEVER
+NEW.TAG.CHAMPION.UID=1
+NEW.TIMER
+NEW.FIX
+ENDFOR
+SRC.SYSMESSAGE @55,3,1 Champs: Champions Created!
+SERV.LOG @Champs: Champions Created!
+SERV.NEWITEM i_stairs_marble
+NEW.P=5140,1762
+NEW.COLOR=03df
+NEW.ATTR=ATTR_MOVE_NEVER
+SERV.NEWITEM i_stairs_marble
+NEW.P=5139,1762
+NEW.COLOR=03df
+NEW.ATTR=ATTR_MOVE_NEVER
+SERV.NEWITEM i_stairs_marble
+NEW.P=5139,1761
+NEW.COLOR=03df
+NEW.ATTR=ATTR_MOVE_NEVER
+SERV.NEWITEM i_stairs_marble
+NEW.P=5140,1761
+NEW.COLOR=03df
+NEW.ATTR=ATTR_MOVE_NEVER
+SERV.NEWITEM i_stairs_marble
+NEW.P=5141,1761
+NEW.COLOR=03df
+NEW.ATTR=ATTR_MOVE_NEVER
+SERV.NEWITEM i_stairs_marble
+NEW.P=5140,1760
+NEW.COLOR=03df
+NEW.ATTR=ATTR_MOVE_NEVER
+SERV.NEWITEM i_stairs_marble
+NEW.P=5141,1760
+NEW.COLOR=03df
+NEW.ATTR=ATTR_MOVE_NEVER
+SERV.NEWITEM 077e
+NEW.P=5141,1762
+NEW.COLOR=03df
+NEW.ATTR=ATTR_MOVE_NEVER
+SERV.NEWITEM 077d
+NEW.P=5139,1760
+NEW.COLOR=03df
+NEW.ATTR=ATTR_MOVE_NEVER
+SERV.NEWITEM i_bag
+NEW.COLOR=038b
+NEW.ATTR=ATTR_MOVE_NEVER
+NEW.P=5141,1761,5
+NEW.EVENTS +T_Harrower_OFFER
+SERV.NEWITEM i_pet_corpser
+NEW.COLOR=color_rock
+NEW.P=5140,1761,5
+NEW.ATTR=ATTR_MOVE_NEVER
+SERV.NEWITEM i_gate_maps
+NEW.P=5153,1760,1
+NEW.ATTR=ATTR_MOVE_NEVER
+SRC.SYSMESSAGE @55,3,1 Champs: Star Chamber created!
+SERV.LOG @Champs: Star Chamber created!
+SERV.LOG @Champs: All set.
+SRC.SYSMESSAGE @55,3,1 All set.
+VAR.CHAMPSJAGERADOS=1
+ELSE
+SYSMESSAGE @55 Champs have already been created.
+ENDIF
+
+[FUNCTION RANDOMMONSTERGROUP]
+TAG.RANDOM=1
+DORAND 6
+TAG.MONSTERGROUP=Abyss
+TAG.MONSTERGROUP=ColdBlood
+TAG.MONSTERGROUP=ForestLord
+TAG.MONSTERGROUP=UnholyTerror
+TAG.MONSTERGROUP=VerminHorde
+TAG.MONSTERGROUP=Arachnid
+ENDDO
+
+[FUNCTION SETSPAWNCOLOR]
+FORITEMS 6
+IF (<BASEID>==i_stairs_stone)
+COLOR=1106
+ENDIF
+ENDFOR
+
+//////////////////////////
+
+[FUNCTION f_NPCRemovalTimer]
+SERV.NEWITEM i_removetimer_mem
+EQUIP <NEW>
+NEW.TIMER=<ARGN1>
+
+[ITEMDEF i_removetimer_mem]
+ID=i_memory
+NAME=remove timer
+TYPE=t_eq_script
+ON=@Timer
+   CONT.REMOVE
+   RETURN 1
+
+//////////////////////////
+
+[TEMPLATE random_weapon_sword_normal]
+CATEGORY=Item Templates
+SUBSECTION=Weapon Templates
+DESCRIPTION=Swords Normal
+ITEM={ i_bardiche 1 i_sword_broad 1 i_sword_long 1 i_scimitar 1 i_sword_long_b 1 i_sword_viking 1 i_katana 1 i_halberd 1 i_cutlass 1 }
+
+[TEMPLATE random_weapon_axe_normal]
+CATEGORY=Item Templates
+SUBSECTION=Weapon Templates
+DESCRIPTION=Axes Normal
+ITEM={ i_hatchet 1 i_axe_exec 1 i_axe_battle 1 i_axe 1 i_axe_double 1 i_axe_war 1 i_axe_battle_large 1 i_axe_two_hand 1 }
+
+[TEMPLATE random_weapon_archer_normal]
+CATEGORY=Item Templates
+SUBSECTION=Weapon Templates
+DESCRIPTION=Archer
+ITEM={ i_bow 1 i_bow_composite 1 i_crossbow 1 i_crossbow_heavy 1 }
+
+[TEMPLATE random_weapon_fencing_normal]
+CATEGORY=Item Templates
+SUBSECTION=Weapon Templates
+DESCRIPTION=Fencing Normal
+ITEM={ i_pitchfork 1 i_cleaver_meat 1 i_knife_skinning 1 i_dagger 1 i_spear 1 i_knife_butcher 1 i_kryss 1 i_spear_short 1 i_war_fork 1 i_scythe 1 i_pike 1 i_lance 1 }
+
+[TEMPLATE random_weapon_mace_normal]
+CATEGORY=Item Templates
+SUBSECTION=Weapon Templates
+DESCRIPTION=Mace Normal
+ITEM={ i_staff_black 1 i_crook_thin 1 i_pickaxe 1 i_staff_quarter 1 i_mace 1 i_hammer_sledge 1 i_club 1 i_hammer_smith 1 i_shepherds_crook 1 i_staff_gnarled 1 i_mace_war 1 i_hammer_war 1 i_maul 1 i_hammer_pick 1 i_scepter 1 }
+
+[TEMPLATE random_weapon_all_normal]
+CATEGORY=Item Templates
+SUBSECTION=Weapon Templates
+DESCRIPTION=Weapons Normal
+ITEM={ random_weapon_sword_normal 1 random_weapon_axe_normal 1 random_weapon_archer_normal 1 random_weapon_fencing_normal 1 random_weapon_mace_normal 1 random_weapon_staff_normal 1 }
+
+[TEMPLATE random_weapon_staff_normal]
+CATEGORY=Item Templates
+SUBSECTION=Weapon Templates
+DESCRIPTION=Staves Normal
+ITEM={ i_staff_gnarled 1 i_staff_quarter 1 i_staff_black 1 }
+
+[TEMPLATE random_armor_shield_european]
+CATEGORY=Item Templates
+SUBSECTION=Armor Templates
+DESCRIPTION=Shield European
+ITEM={ i_shield_round_bronze 1 i_shield_buckler 1 i_shield_kite_metal 1 i_shield_heater 1 i_shield_kite_wood 1 i_shield_wood 1 i_shield_round_metal 1 }
+
+[TEMPLATE loot_ai_hard]
+CATEGORY=Item Templates
+SUBSECTION=AI Templates
+DESCRIPTION=Monster AI Hard
+ITEMNEWBIE=i_potion_heal,{6 9}
+ITEMNEWBIE=i_potion_cure,{6 9}
+ITEM=i_bandage,{25 40}
+ITEMNEWBIE=random_weapon_archer_normal
+ITEMNEWBIE=random_weapon_all_normal
+ITEMNEWBIE=random_armor_shield_european
+ITEM=i_arrow,{25 35}
+ITEM=i_xbolt,{25 35}
+
+[TEMPLATE loot_ai_healer]
+CATEGORY=Item Templates
+SUBSECTION=AI Templates
+DESCRIPTION=Monster AI Healer
+ITEMNEWBIE=i_potion_heal,{6 9}
+ITEMNEWBIE=i_potion_cure,{6 9}
+ITEMNEWBIE=i_bandage,{25 35}
+
+[TEMPLATE loot_champion_default]
+CATEGORY=Item Templates
+SUBSECTION=Champion Templates
+DESCRIPTION=Default Champion Template
+ITEM=i_treasure_map_lvl_3
+ITEM=i_treasure_map_lvl_3
+ITEM=i_treasure_map_lvl_3
+ITEM=i_arrow,{900 1100}
+ITEM=i_xbolt,{900 1100}
+ITEM={i_keg_glb1 1 i_keg_gmb1 1 i_keg_grf1 1},R2
+ITEM={t_vanquish_weapon 1 t_power_weapon 1},R2
+ITEM={t_vanquish_weapon 1 t_power_weapon 1},R3
+
+[TEMPLATE loot_champion_easy]
+CATEGORY=Item Templates
+SUBSECTION=Champion Templates
+DESCRIPTION=Easy Champion Template
+ITEM=i_treasure_map_lvl_3
+ITEM=i_arrow,{270 330}
+ITEM=i_arrow,{270 330}
+
+[TEMPLATE loot_champion_medium]
+CATEGORY=Item Templates
+SUBSECTION=Champion Templates
+DESCRIPTION=Medium Champion Template
+ITEM=i_treasure_map_lvl_4
+ITEM=i_arrow,{325 375}
+ITEM=i_arrow,{325 375}
+
+[TEMPLATE loot_champion_hard]
+CATEGORY=Item Templates
+SUBSECTION=Champion Templates
+DESCRIPTION=Hard Champion Template
+ITEM=i_treasure_map_lvl_4
+ITEM=i_treasure_map_lvl_4
+ITEM=i_arrow,{390 450}
+ITEM=i_arrow,{390 450}
+
+//////////////////////////
+
+// SEMIDAR - ABYSS
+
+[CHARDEF 0ae]
+//FIXME: Reflect magic damage back at male spellcasters
+DEFNAME=c_semidar
+NAME=Semidar
+SOUND=snd_succubus1
+CAN=MT_WALK|MT_FLY|MT_USEHANDS|MT_EQUIP|MT_FEMALE
+DAM=60,70
+RANGE=2
+ARMOR=20
+DESIRES=r_dungeon_fire,t_coin,t_gold,t_gem,t_wand,t_potion,t_scroll,t_reagent
+AVERSIONS=t_trap,r_civilization
+FOODTYPE=t_meat_raw
+MAXFOOD=35
+RESOURCES=1 i_ribs_raw,2 i_reag_daemon_bone
+BLOODCOLOR=colors_white
+MOVERATE=120
+TAG.Barding.Diff=160.0
+DamFire=25
+RegenValMana=30
+TAG.SlayerGroup=DEMON
+TEVENTS=e_carnivores3
+CATEGORY=Monsters
+SUBSECTION=Champions
+DESCRIPTION=Succubus (Semidar)
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	NPC=brain_monster
+	FAME={9500 9999}
+	KARMA={-9500 -9999}
+	STR={502 600}
+	MAXHITS={15000 16000}
+	DEX={152 200}
+	MAXSTAM={103 250}
+	INT={175 210}
+	MAXMANA={601 750}
+	EVALUATINGINTEL={95.0 100.0}
+	MAGERY={90.0 105.0}
+	MAGICRESISTANCE={120.0 140.0}
+	MEDITATION={95.0 100.0}
+	TACTICS={90.0 105.0}
+	WRESTLING={90.0 105.0}
+	MODAR={0 10}
+	RESCOLD={20 30}
+	RESENERGY={10 20}
+	RESFIRE={50 60}
+	RESPOISON={20 30}
+	for 1 <r4,5>
+		timerf 1, f_create_powerscroll <r<def.work_min>,<def.work_max>>,5,<uid>
+	endfor
+
+ON=@NPCRestock
+//	ITEM=loot_ai_healer
+	ITEM=loot_champion_default
+//	ITEM=loot_champion_medium
+
+ON=@Hit
+	HITS += <EVAL <ARGN1>/5>
+
+	IF (<HITS> > <MAXHITS>)
+		HITS=<MAXHITS>
+	ENDIF
+
+ON=@GetHit
+//Life Drain Aura Attack
+IF !(<R3>)
+	REF11=<UID>
+
+	FORCHARS 3
+		IF (<ISPLAYER>) || (<FLAGS>&statf_pet)
+			LOCAL.DAM=<R10,20>
+			DAMAGE <LOCAL.DAM> <DEF.dam_physical> <REF11>
+
+			REF11.HITS += <LOCAL.DAM>
+			IF (<REF11.HITS> > <REF11.MAXHITS>)
+				REF11.HITS=<REF11.MAXHITS>
+			ENDIF
+
+			SRC.SYSMESSAGE The evil aura of the succubus drains life from you
+		ENDIF
+	ENDFOR
+ENDIF
+
+[CHARDEF 0ad]
+//FIXME: "Shoots paralyzing webs and pulls players in."
+DEFNAME=c_mephitis
+NAME=Mephitis
+ICON=i_pet_spider_lord
+SOUND=snd_monster_gispidr1
+CAN=MT_WALK|MT_RUN|MT_NONHUM
+DAM=68,154
+RANGE=2
+ARMOR=75
+DESIRES=r_dungeon_terathan_keep,t_coin,t_gold,t_gem
+AVERSIONS=t_trap,r_civilization
+FOODTYPE=t_meat_raw
+MAXFOOD=60
+RESOURCES=2 i_ribs_raw, 4 i_reag_spider_silk
+BLOODCOLOR=colors_blood
+MOVERATE=120
+TAG.Barding.Diff=160.0
+DamPoison=50
+TAG.HitPoison=5//Lethal
+TAG.OVERRIDE.SPIDERWEB=1
+TAG.SlayerGroup=SPIDER,ARACHNID
+TEVENTS=e_carnivores3
+CATEGORY=Monsters
+SUBSECTION=Champions
+DESCRIPTION=Spider (Mephitis)
+RESLEVEL=2
+RESDISPDNID=c_spider_giant
+RESDISPDNHUE=0ad
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	NPC=brain_monster
+	FAME={9500 9999}
+	KARMA={-9500 -9999}
+	STR={505 1000}
+	MAXHITS={15000 16100}
+	DEX={202 300}
+	MAXSTAM={305 600}
+	INT={202 300}
+	MAXMANA={202 300}
+	ANATOMY={90.0 105.0}
+	MAGICRESISTANCE={70.0 140.0}
+	//POISONING={100.0 120.0}
+	TACTICS={97.0 100.0}
+	WRESTLING={97.0 100.0}
+	MODAR={0 10}
+	RESCOLD={60 70}
+	RESENERGY={60 70}
+	RESFIRE={60 70}
+	RESPOISON=100
+	for 1 <r4,5>
+		timerf 1, f_create_powerscroll <r<def.work_min>,<def.work_max>>,5,<uid>
+	endfor
+
+ON=@NPCRestock
+//	ITEM=loot_ai_healer
+	ITEM=loot_champion_default
+//	ITEM=loot_champion_medium
+ON=@Hit
+	SRC.SPELLEFFECT s_poison,1000
+ON=@GetHit
+	//Spawn Creatures Attack (dread spiders)
+	IF !(<R25>)
+		SERV.NEWNPC c_spider_dread
+		NEW.P=<SRC.P>
+		NEW.HOME=<SRC.P>
+		NEW.HOMEDIST=7
+		NEW.ATTACK <SRC>
+		NEW.f_NPCRemovalTimer 1200
+	ENDIF
+
+[CHARDEF 0ac]
+//FIXME: Earthquake Attack that damages all nearby characters.
+DEFNAME=c_rikktor
+NAME=Rikktor
+ICON=i_pet_dragon
+SOUND=snd_monster_dragon1
+CAN=MT_WALK|MT_FLY|MT_NONHUM
+DAM=124,272
+RANGE=2
+ARMOR=80
+DESIRES=r_dungeon_destard,t_coin,t_gold,t_gem,t_wand,t_potion,t_scroll,t_reagent
+AVERSIONS=t_trap,r_civilization
+FOODTYPE=t_meat_raw
+MAXFOOD=80
+BLOODCOLOR=colors_blood
+MOVERATE=100
+TAG.Barding.Diff=160.0
+DamEnergy=25
+DamFire=50
+TAG.SlayerGroup=DRAGON,REPTILE
+TEVENTS=e_carnivores3
+CATEGORY=Monsters
+SUBSECTION=Champions
+DESCRIPTION=Wyrm (Rikktor)
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	NPC=brain_monster
+	FAME={9500 9999}
+	KARMA={-9500 -9999}
+	STR={701 900}
+	MAXHITS={16000 16100}
+	DEX={201 350}
+	MAXSTAM={201 350}
+	INT={51 100}
+	MAXMANA={51 100}
+	ANATOMY={95.0 105.0}
+	MAGICRESISTANCE={140.0 160.0}
+	TACTICS={98.0 100.0}
+	MODAR={0 10}
+	RESCOLD={30 40}
+	RESENERGY={80 90}
+	RESFIRE={80 90}
+	RESPOISON={80 90}
+
+ON=@NPCRestock
+//	ITEM=loot_ai_healer
+	ITEM=loot_champion_default
+//	ITEM=loot_champion_hard
+
+ON=@Hit
+	LOCAL.RIK=<UID>
+	FORCLIENTS 5
+		DAMAGE 10 02 <LOCAL.RIK>
+	ENDFOR
+
+[CHARDEF c_Lord_Oaks]
+ID=c_ethereal_warrior
+NAME=Lord Oaks
+CAN=MT_WALK|MT_RUN|MT_USEHANDS|MT_EQUIP
+DAM=71,157
+ARMOR=40
+CATEGORY=Addon
+SUBSECTION=Champs
+DESCRIPTION=Lord Oaks
+
+ON=@Create
+NPC=BRAIN_MONSTER
+KARMA=-7000
+FAME=8000
+STR={400 800}
+MAXHITS=3000
+DEX={100 150}
+INT={500 800}
+TACTICS={95.0 105.0}
+MAGICRESISTANCE={100.0 150.0}
+WRESTLING=100.0
+MAGERY=100.0
+ITEMNEWBIE=i_spellbook
+ADDCIRCLE 8,1
+
+ON=@Hit
+HITS += <EVAL <ARGN1>/5>
+IF (<HITS> > <MAXHITS>)
+HITS=<MAXHITS>
+ENDIF
+MANA += <EVAL <ARGN1>/5>
+IF (<MANA> > <MAXMANA>)
+MANA=<MAXMANA>
+ENDIF
+STAM += <EVAL <ARGN1>/5>
+IF (<STAM> > <MAXSTAM>)
+STAM=<MAXSTAM>
+ENDIF
+
+ON=@GetHit
+IF (<TAG0.QUEEN> > 1)
+	ARGN1 -= 20
+	IF !(<R10>)
+		FOR <R4,7>
+			SERV.NEWNPC C_PIXIE
+			NEW.P <SRC>
+			NEW.ATTACK <SRC>
+		ENDFOR
+	ENDIF
+ELIF !(<TAG0.QUEEN>)
+	SAY @0ad Come forth my Queen
+	SERV.NEWNPC C_Silvani
+	NEW.P=<P>
+	NEW.MOVE <EVAL {-6 6}> <EVAL {-6 6}>
+	TAG.QUEEN=<NEW>
+	NEW.TAG.KING=<UID>
+ENDIF
+
+ON=@Death
+IF (<TAG0.QUEEN> > 1)
+TRY UID.<TAG0.QUEEN>.KILL
+ENDIF
+
+ON=@NPCRestock
+ITEM=i_gold,{5000 6000}
+
+[CHARDEF c_Silvani]
+ID=c_champ_silvani
+NAME=Silvani
+CAN=MT_WALK|MT_RUN|MT_USEHANDS|MT_EQUIP
+DAM=37,79
+MOVERATE=50
+ARMOR=40
+CATEGORY=Addon
+SUBSECTION=Champs
+DESCRIPTION=Silvani
+
+ON=@Create
+NPC=BRAIN_MONSTER
+KARMA=-7000
+FAME=8000
+STR={200 400}
+MAXHITS=600
+DEX={150 850}
+INT={500 800}
+TACTICS={95.0 105.0}
+MAGICRESISTANCE={100.0 150.0}
+WRESTLING=100.0
+MAGERY=100.0
+ITEMNEWBIE=i_spellbook
+ADDCIRCLE 8,1
+
+ON=@GetHit
+IF !(<R10>)
+	FOR <R4,7>
+		SERV.NEWNPC C_PIXIE
+		NEW.P <SRC>
+		NEW.ATTACK <SRC>
+	ENDFOR
+ENDIF
+
+ON=@Death
+TRY UID.<TAG0.KING>.TAG.QUEEN=1
+// RANDMAGICITEM
+// RANDMAGICITEM
+
+ON=@NPCRestock
+ITEM=i_gold,{5000 6000}
+
+[CHARDEF c_Neira]
+ID=c_woman
+NAME=Neira the Necromancer
+CAN=MT_WALK|MT_RUN|MT_USEHANDS|MT_EQUIP
+DAM=37,79
+MOVERATE=60
+ARMOR=40
+CATEGORY=Addon
+SUBSECTION=Champs
+DESCRIPTION=Neira
+
+ON=@Create
+NPC=brain_monster
+KARMA=-7000
+FAME=8000
+STR={300 425}
+MAXHITS={16000 16100}
+DEX={72 150}
+INT={500 750}
+TACTICS={95.0 105.0}
+MAGICRESISTANCE=150.0
+WRESTLING=100.0
+SWORDSMANSHIP=80.0
+MAGERY=100.0
+ITEMNEWBIE=i_spellbook
+ADDCIRCLE 8,1
+ITEMNEWBIE=i_robe
+DISPID=i_deathshroud
+COLOR=038b
+ITEMNEWBIE=i_scimitar
+COLOR=33
+
+ON=@NPCActFollow
+	IF !(<R15>) && (<TAG0.TOTAL_SUMMONED> < 64)
+		TAG0.TOTAL_SUMMONED += 1
+		SERV.NEWITEM i_unholy_bone
+		NEW.P=<P>
+		NEW.TIMER=20
+	ENDIF
+
+ON=@NPCLookAtChar
+	IF (<SRC.ISPLAYER>) && !(<R15>)
+		IF (<TAG0.TOTAL_SUMMONED> < 64)
+			TAG0.TOTAL_SUMMONED += 1
+			SERV.NEWITEM i_unholy_bone
+			NEW.P=<SRC.P>
+			NEW.TIMER=20
+		ENDIF
+
+		SRC.DAMAGE 15 02 <UID>
+	ENDIF
+
+ON=@NPCRestock
+	ITEM=loot_champion_default
+
+[ITEMDEF i_unholy_bone]
+ID=i_reag_daemon_bone
+NAME=Unholy Bone
+TYPE=T_NORMAL
+
+ON=@Create
+ATTR=ATTR_MOVE_NEVER
+COLOR=038b
+
+ON=@Timer
+SERV.NEWNPC {c_skeleton 1 c_skeleton_w_sword 1 c_skeleton_w_axe 1 c_patchwork_skeleton 1 c_liche 1 c_m_skeletonarcher 1 c_m_liche_lord 1 c_mummy 1 c_spectre 1 c_m_wraith 1}
+NEW.P=<P>
+NEW.UPDATE
+NEW.f_NPCRemovalTimer <EVAL 60*5>
+REMOVE
+RETURN 1
+
+ON=@Damage
+REMOVE
+
+ON=@Step
+IF (<SRC.ISPLAYER>)
+REMOVE
+ENDIF
+
+[CHARDEF c_barracoon]
+ID=c_man
+NAME=Barracoon the Piper
+CAN=MT_WALK|MT_RUN|MT_USEHANDS|MT_EQUIP
+DAM=66,104
+MOVERATE=70
+ARMOR=40
+CATEGORY=Addon
+SUBSECTION=Champs
+DESCRIPTION=Barracoon
+
+ON=@Create
+	TAG.LOOTPROPRIO 1
+	NPC=BRAIN_MONSTER
+	KARMA=-7000
+	FAME=8000
+	STR={300 425}
+	MAXHITS={15000 16000}
+	DEX={72 150}
+	INT={500 750}
+	TACTICS={95.0 105.0}
+	MAGICRESISTANCE=100.0
+	WRESTLING=100.0
+	MAGERY=100.0
+	ITEMNEWBIE=i_cape
+	COLOR=30
+	ITEMNEWBIE=i_hat_jester
+	COLOR=30
+	ITEMNEWBIE=i_shirt_fancy
+	COLOR=0242
+	ITEMNEWBIE=i_pants_long
+	COLOR=color_o_bronze
+	ITEMNEWBIE=i_sandals
+
+ON=@NPCRestock
+//	ITEM=loot_ai_healer
+	ITEM=loot_champion_default
+//	ITEM=loot_champion_easy
+
+ON=@GetHit
+	if !(<tag0.summondelay>)
+		FORCLIENTS 12
+			local.client_<eval <dlocal._for>+1> <uid>
+			local.clientcount ++
+		ENDFOR
+		FOR 1 <dlocal.clientcount>
+			ref1 <local.client_<dlocal._for>>
+			SERV.NEWNPC {C_ARCHER_RATMAN 1 C_RATMAN 1 C_ARCHER_RATMAN 1 C_RATMAN_W_SWORD 1 C_RATMAN_W_MACE 1}
+			new.p <ref1.p>
+			new.fix
+			new.updatex
+			NEW.ATTACK <ref1>
+		ENDFOR
+		tag0.summondelay 1
+		i.timerf 60, tag0.summondelay
+	endif
+
+
+[CHARDEF c_Serado]
+ID=c_Yamandon
+NAME=Serado the Awakened
+CAN=MT_WALK|MT_RUN|MT_USEHANDS|MT_EQUIP
+DAM=140,170
+ARMOR=50
+CATEGORY=Addon
+SUBSECTION=Champs
+DESCRIPTION=Serado
+
+ON=@Create
+NPC=BRAIN_MONSTER
+COLOR=colors_gray
+KARMA=-7000
+FAME=8000
+STR=1000
+MAXHITS=9000
+DEX=80
+INT=300
+TACTICS=1200
+MAGICRESISTANCE=100.0
+WRESTLING=70.0
+
+ON=@NPCRestock
+ITEM=i_gold,{5000 6000}
+
+////////////////////////////////
+//////New Maps Gate//////////
+
+[ITEMDEF i_gate_maps]
+ID=i_moongate_blue
+NAME=Moongate
+DEFNAME=i_gate_maps
+TYPE=t_normal
+
+ON=@Create
+attr=attr_move_never
+
+ON=@Step
+IF !(<REGION.FLAGS>&REGION_FLAG_SAFE)
+IF (<src.hits>!=<src.maxhits>)
+src.sysmessage You can't use that gate withou being with full health.
+LOCAL.NAOPODE=1
+ENDIF
+ENDIF
+IF !(<LOCAL.NAOPODE>)
+SDIALOG d_travel_sys 1
+ELSE
+SRC.DIALOGCLOSE d_travel_sys
+SRC.MOVEBACK
+ENDIF
+
+[DIALOG d_travel_sys]
+300,200
+src.closealldialogs
+PAGE 0
+resizepic 20 20 5054 400 340
+resizepic 180 40 5054 230 300
+dhtmlgump 60 50 100 50 0 0 <def.BFONT_SIZE7><def.BFONT_WHITE>Maps:<DEF.BFONTE><DEF.BFONTE>
+button 30 90 210 211 0 1 1
+dtext 50 88 88 Felluca
+button 30 120 210 211 0 2 1
+dtext 50 118 88 Illshenar
+button 30 150 210 211 0 3 1
+dtext 50 148 88 Malas
+button 30 180 210 211 0 6 1
+dtext 50 178 88 Tokuno
+dhtmlgump 270 50 100 50 0 0 <def.BFONT_SIZE7><def.BFONT_WHITE>Gates:<DEF.BFONTE><DEF.BFONTE>
+button 50 320 249 248 1 0 4
+button 30 210 210 211 0 4 1
+dtext 50 208 88 Dungeons
+button 30 240 210 211 0 5 1
+dtext 50 238 88 T2A
+
+PAGE 1
+gumppic 30 90 211
+radio 190 90 210 211 0 1
+dtext 210 88 54 Britain
+radio 190 115 210 211 0 2
+dtext 210 113 54 Jhelom
+radio 190 140 210 211 0 3
+dtext 210 138 54 Magincia
+radio 190 165 210 211 0 4
+dtext 210 163 54 Minoc & Vesper
+radio 190 190 210 211 0 5
+dtext 210 188 54 Moonglow
+radio 190 215 210 211 0 6
+dtext 210 213 54 Skara Brae
+radio 190 240 210 211 0 7
+dtext 210 238 54 Trinsic
+radio 190 265 210 211 0 8
+dtext 210 263 54 Yew
+radio 190 290 210 211 0 9
+dtext 210 288 54 Serpent's Hold
+radio 190 315 210 211 0 10
+dtext 210 313 54 Occlo
+
+PAGE 2
+gumppic 30 120 211
+radio 190 90 210 211 0 11
+dtext 210 88 54 Mistas
+radio 190 115 210 211 0 12
+dtext 210 113 54 Shrine of Justice
+radio 190 140 210 211 0 13
+dtext 210 138 54 Shrine of Honor
+radio 190 165 210 211 0 14
+dtext 210 163 54 Shrine of Chaos
+radio 190 190 210 211 0 15
+dtext 210 188 54 Shrine of Valor
+radio 190 215 210 211 0 16
+dtext 210 213 54 Shrine of Sacrifice
+radio 190 240 210 211 0 17
+dtext 210 238 54 Shrine of Honesty
+radio 190 265 210 211 0 18
+dtext 210 263 54 Shrine of Compassion
+radio 190 290 210 211 0 19
+dtext 210 288 54 Shrine of Spirituality
+radio 190 315 210 211 0 20
+dtext 210 313 54 Shrine of Humility
+
+PAGE 3
+gumppic 30 150 211
+radio 190 90 210 211 0 21
+dtext 210 88 54 Luna
+radio 190 115 210 211 0 22
+dtext 210 113 54 Umbra
+
+PAGE 4
+gumppic 30 210 211
+radio 190 90 210 211 0 23
+dtext 210 88 54 Covetous
+radio 190 115 210 211 0 24
+dtext 210 113 54 Deceit
+radio 190 140 210 211 0 25
+dtext 210 138 54 Despise
+radio 190 165 210 211 0 26
+dtext 210 163 54 Destard
+radio 190 190 210 211 0 27
+dtext 210 188 54 Hythloth
+radio 190 215 210 211 0 28
+dtext 210 213 54 Shame
+radio 190 240 210 211 0 29
+dtext 210 238 54 Wrong
+radio 190 265 210 211 0 30
+dtext 210 263 54 Fire Dungeon
+radio 190 290 210 211 0 31
+dtext 210 288 54 Ice Dungeon
+
+PAGE 5
+gumppic 30 240 211
+radio 190 90 210 211 0 32
+dtext 210 88 54 Papua
+radio 190 115 210 211 0 33
+dtext 210 113 54 Delucia
+
+PAGE 6
+gumppic 30 180 211
+
+[DIALOG d_travel_sys BUTTON]
+ON=0
+IF !(<DISTANCE>)
+SRC.MOVEBACK
+ENDIF
+
+ON=4
+IF !(<DISTANCE>)
+IF (<ARGCHK[1]>)
+SRC.GO 1336,1997,5,0
+ELIF (<ARGCHK[2]>)
+SRC.GO 1498,3772,5,0
+ELIF (<ARGCHK[3]>)
+SRC.GO 3564,2140,34,0
+ELIF (<ARGCHK[4]>)
+SRC.GO 2702,692,5,0
+ELIF (<ARGCHK[5]>)
+SRC.GO 4467,1283,5,0
+ELIF (<ARGCHK[6]>)
+SRC.GO 643,2067,5,0
+ELIF (<ARGCHK[7]>)
+SRC.GO 1828,2948,-20,0
+ELIF (<ARGCHK[8]>)
+SRC.GO 771,751,5,0
+ELIF (<ARGCHK[9]>)
+SRC.GO serpent's hold
+ELIF (<ARGCHK[10]>)
+SRC.GO OCCLO
+ELIF (<ARGCHK[11]>)
+SRC.GO 809,1207,-70,2
+ELIF (<ARGCHK[12]>)
+SRC.GO 987,1011,-32,2
+ELIF (<ARGCHK[13]>)
+SRC.GO 747,726,-28,2
+ELIF (<ARGCHK[14]>)
+SRC.GO 1748,236,56,2
+ELIF (<ARGCHK[15]>)
+SRC.GO 539,221,-36,2
+ELIF (<ARGCHK[16]>)
+SRC.GO 1196,1290,-25,2
+ELIF (<ARGCHK[17]>)
+SRC.GO 725,1355,-61,2
+ELIF (<ARGCHK[18]>)
+SRC.GO 1223,475,-16,2
+ELIF (<ARGCHK[19]>)
+SRC.GO 1531,1341,-3,2
+ELIF (<ARGCHK[20]>)
+SRC.GO 284,1016,0,2
+ELIF (<ARGCHK[21]>)
+SRC.GO 1015,527,-65,3
+ELIF (<ARGCHK[22]>)
+SRC.GO 1997,1386,-85,3
+ELIF (<ARGCHK[23]>)
+SRC.GO COVETOUS
+ELIF (<ARGCHK[24]>)
+SRC.GO DECEIT
+ELIF (<ARGCHK[25]>)
+SRC.GO DESPISE ENTRYWAY
+ELIF (<ARGCHK[26]>)
+SRC.GO DESTARD
+ELIF (<ARGCHK[27]>)
+SRC.GO HYTHLOTH
+ELIF (<ARGCHK[28]>)
+SRC.GO SHAME
+ELIF (<ARGCHK[29]>)
+SRC.GO 5825,630
+ELIF (<ARGCHK[30]>)
+SRC.GO 5758,2908,16
+ELIF (<ARGCHK[31]>)
+SRC.GO 5208,2322,32
+ELIF (<ARGCHK[32]>)
+SRC.GO 5684,3368,2
+ELIF (<ARGCHK[33]>)
+SRC.GO DELUCIA
+ENDIF
+IF !(<SRC.ISGM>)
+COLOR {0480 048d}
+ENDIF
+SRC.MOVEBACK
+ENDIF
+
+[FUNCTION moveback]
+DOSWITCH <DIR>
+BEGIN
+IF (<CANMOVE S>)
+MOVE S
+ENDIF
+END
+BEGIN
+IF (<CANMOVE SW>)
+MOVE SW
+ENDIF
+END
+BEGIN
+IF (<CANMOVE W>)
+MOVE W
+ENDIF
+END
+BEGIN
+IF (<CANMOVE NW>)
+MOVE NW
+ENDIF
+END
+BEGIN
+IF (<CANMOVE N>)
+MOVE N
+ENDIF
+END
+BEGIN
+IF (<CANMOVE NE>)
+MOVE NE
+ENDIF
+END
+BEGIN
+IF (<CANMOVE E>)
+MOVE E
+ENDIF
+END
+BEGIN
+IF (<CANMOVE SE>)
+MOVE SE
+ENDIF
+END
+BEGIN
+IF (<CANMOVE S>)
+MOVE S
+ENDIF
+END
+ENDDO
+
+////////////////////////////////
+
+[CHARDEF 08e]
+DEFNAME=c_ratman_archer
+NAME=ratman archer
+ICON=i_pet_ratman
+SOUND=snd_monster_ratman1
+CAN=MT_WALK|MT_USEHANDS|MT_EQUIP
+DAM=36,42
+ARMOR=40
+DESIRES=r_jungle,t_coin,t_gold,t_gem,t_potion
+AVERSIONS=t_trap,r_civilization
+FOODTYPE=t_meat_raw
+MAXFOOD=25
+RESOURCES=1 i_ribs_raw
+BLOODCOLOR=colors_blood
+MOVERATE=150
+TAG.Barding.Diff=73.5
+TAG.SlayerGroup=REPOND
+TEVENTS=e_carnivores2
+CATEGORY=Monsters
+SUBSECTION=Ratmen
+DESCRIPTION=Ratman (archer)
+ON=@Create
+   NAME=#NAMES_RATMAN
+   TITLE=the ratman archer
+   COLOR=08000|RAND(COLOR_DYE_HIGH)
+   NPC=brain_monster
+   FAME={2000 2499}
+   KARMA={-2000 -2499}
+   STR={146 180}
+   HITPOINTS={88 108}
+   DEX={101 130}
+   MAXSTAM={101 130}
+   INT={116 140}
+   MAXMANA={116 140}
+   ANATOMY={60.0 100.0}
+   ARCHERY={50.0 75.0}
+   FENCING={50.0 75.0}
+   MAGICRESISTANCE={65.0 90.0}
+   TACTICS={50.0 75.0}
+   WRESTLING={50.0 75.0}
+   MODAR={0 15}
+   RESCOLD={10 20}
+   RESENERGY={10 20}
+   RESFIRE={10 20}
+   RESPOISON={10 20}
+
+///////////////////////////
+
+[FUNCTION RANDMAGICITEM]
+DORAND 4
+SERV.NEWITEM CHAMP_LOOT_LOW
+SERV.NEWITEM CHAMP_LOOT_MED
+SERV.NEWITEM CHAMP_LOOT_HIGH
+SERV.NEWITEM CHAMP_LOOT_VERY_HIGH
+ENDDO
+BOUNCE <NEW>
+
+////////////////////////
+
+[DIALOG D_CUSTOM_CHAMP]
+220,150
+PAGE 1
+resizepic 20 20 5054 280 240
+resizepic 30 30 5120 260 220
+checkertrans 30 30 260 220
+dtext 110 30 33 Champion Spawn
+dtext 40 60 88 MonsterGroup:
+dtext 130 60 55 <TAG0.MONSTERGROUP>
+button 260 65 015e1 015e5 0 2 0
+dtext 40 90 88 MaxLevels:
+dtextentry 130 90 100 20 55 1 <MOREY>
+button 260 95 015e1 015e5 1 0 11
+dtext 40 120 88 SpawnRange:
+dtextentry 130 120 100 20 55 2 <EVAL <TAG0.RANGE>>
+button 260 125 015e1 015e5 1 0 12
+dtext 40 150 88 MaxMonsters:
+dtextentry 130 150 100 20 55 3 <EVAL <TAG0.MAXSPAWNS>>
+button 260 155 015e1 015e5 1 0 13
+dtext 40 180 88 Active:
+dtext 130 180 55 <QVAL <TAG0.ACTIVE> ? Yes:No>
+button 260 185 015e1 015e5 1 0 14
+
+PAGE 2
+resizepic 20 20 5054 280 220
+resizepic 30 30 5120 260 200
+checkertrans 30 30 260 200
+dtext 110 30 33 Champion Spawn
+dtext 60 60 55 Abyss
+dtext 60 80 55 VerminHorde
+dtext 60 100 55 UnholyTerror
+dtext 60 120 55 Arachnid
+dtext 60 140 55 ForestLord
+dtext 60 160 55 ColdBlood
+dtext 60 180 55 SleepingDragon
+dtext 60 200 0ad Random
+FOR 0 7
+button 260 <EVAL (<LOCAL._FOR>*20)+65> 015e1 015e5 1 0 <EVAL <LOCAL._FOR>+1>
+ENDFOR
+
+[DIALOG D_CUSTOM_CHAMP BUTTON]
+ON=1 8
+IF (<ARGN>==1)
+TAG.MONSTERGROUP=Abyss
+ELIF (<ARGN>==2)
+TAG.MONSTERGROUP=VerminHorde
+ELIF (<ARGN>==3)
+TAG.MONSTERGROUP=UnholyTerror
+ELIF (<ARGN>==4)
+TAG.MONSTERGROUP=Arachnid
+ELIF (<ARGN>==5)
+TAG.MONSTERGROUP=ForestLord
+ELIF (<ARGN>==6)
+TAG.MONSTERGROUP=ColdBlood
+ELIF (<ARGN>==7)
+TAG.MONSTERGROUP=SleepingDragon
+ELIF (<ARGN>==8)
+TAG.RANDOM=1
+RANDOMMONSTERGROUP
+ENDIF
+UPDATE
+SDIALOG D_CUSTOM_CHAMP
+
+ON=11
+MOREY=<ARGTXT[1]>
+SDIALOG D_CUSTOM_CHAMP
+UPDATE
+
+ON=12
+TAG.RANGE=<ARGTXT[2]>
+SDIALOG D_CUSTOM_CHAMP
+UPDATE
+
+ON=13
+TAG.MAXSPAWNS=<ARGTXT[3]>
+SDIALOG D_CUSTOM_CHAMP
+UPDATE
+
+ON=14
+MOREY=<ARGTXT[1]>
+TAG.RANGE=<ARGTXT[2]>
+TAG.MAXSPAWNS=<ARGTXT[3]>
+IF !(<TAG0.ACTIVE>)
+TAG.CHAMPION.UID=1
+ENDIF
+TIMER
+
+[FUNCTION CREATEALTAR]
+TARGETFG F_CREATEALTAR
+SYSMESSAGE @88 Where do you want to create the altar?
+
+[FUNCTION F_CREATEALTAR]
+SERV.NEWITEM i_champion_spawn
+NEW.P=<TARGP>
+NEW.MULTICREATE
+NEW.SETSPAWNCOLOR
+SERV.NEWITEM i_champion_idol
+NEW.P=<TARGP>
+NEW.FIX
+NEW.SDIALOG D_CUSTOM_CHAMP
+
+////////////////////////
+
+[CHARDEF c_rotting_corpse]
+ID=C_ZOMBIE
+NAME=Rotting Corpse
+CAN=MT_WALK|MT_USEHANDS
+MOVERATE=40
+DAM=21,26
+CATEGORY=Monsters
+SUBSECTION=Undeads
+DESCRIPTION=Rotting Corpse
+ARMOR=40
+
+ON=@Create
+COLOR=02fc
+NPC=brain_monster
+FAME=10000
+KARMA=-10000
+POISONING=120.0
+STR={301 350}
+MAXHITS=1200
+DEX=75
+INT={151 200}
+WRESTLING={90.0 100.0}
+TACTICS=100.0
+MAGICRESISTANCE=250.0
+
+ON=@Hit
+SRC.SPELLEFFECT S_POISON,<POISONING>,<UID>
+
+ON=@NpcRestock
+ITEM=i_gold,{1000 1250}
+
+[EOF]

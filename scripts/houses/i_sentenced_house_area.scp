@@ -1,0 +1,25 @@
+[ITEMDEF i_sentenced_house_area]
+ID = i_floor_marble
+DEFNAME = i_sentenced_house_area
+NAME = Area de Casa Condenada
+
+ON=@CREATE
+COLOR = 31
+ATTR = 04010
+TIMER = 3600*24*7 
+
+ON=@CLICK
+MESSAGE @32,,1 Area de Casa Demolida
+MESSAGE @31,,1 Interditada por: <timeformat 0,<TIMER>>
+return 1
+
+ON=@TIMER
+REMOVE
+RETURN 1
+
+
+[FUNCTION fixsentencedhouseareas]
+forinstances i_sentenced_house_area
+	remove
+endfor
+return 1

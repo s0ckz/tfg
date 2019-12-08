@@ -1,0 +1,588 @@
+/====Timer do Mandrake
+
+[ITEMDEF i_seed_mandrake]
+ID=0181d
+NAME=Timer Mandrake Root
+TYPE=t_script
+LAYER=-60
+
+on=@equip
+timer=600
+
+on=@timer
+cont.sysmessage Os seus mandrake roots estao prontos para ser colhidos!
+return=0
+
+/====Semente do Mandrake
+
+[ITEMDEF i_scale_seed_mandrake]
+ID=0f7f
+DEFNAME=i_scale_seed_mandrake
+NAME=Semente de Mandrake Root
+TYPE=t_script
+VALUE=280
+WEIGHT=.1
+
+on=@create
+tag.removed=00
+tag.planted=00
+
+on=@dclick
+
+IF (<tag.removed>==01)
+src.sysmessage Isso eh uma raiz
+RETURN=1
+remove
+endif
+
+IF ! <CONT.TYPE>=0
+SRC.SYSMESSAGE Voce nao pode usar isso aqui.
+RETURN=1
+endif
+
+if <amount> < 10
+src.sysmessage Voce precisa de mais sementes, no minimo 10, voce so tem <amount>!
+return=1
+endif
+
+if <amount> > 600
+src.sysmessage Voce nao pode plantar mais de 600 sementes ao mesmo tempo!
+return=1
+endif
+
+if <src.findlayer(-60).timer> >= 1
+src.sysmessage Voce precisa esperar suas sementes crescerem para colhe-las.
+return=1
+endif
+
+if !<src.findlayer(-60).timer> < 1
+src.findlayer(132).remove
+return=1
+endif
+
+if <src.region.safe> = 1
+src.sysmessage Voce nao pode plantar as sementes em uma area safe.
+return=1
+endif
+
+if <src.region.guarded> = 1
+src.sysmessage Voce nao pode plantar as sementes em uma area com guardas.
+return=1
+endif
+
+if <src.distance> > 3
+src.sysmessage Voce esta muito longe.
+return=1
+endif
+
+if <link>=<src.uid>
+SRC.ANIM 9
+SRC.NEWITEM={ 0F86 }
+SRC.ACT.AMOUNT=<amount>*100
+SRC.ACT.P=<SRC.P>
+SRC.SYSMESSAGE Voce colheu os mandrake roots.
+tag.removed=1
+REMOVE
+RETURN=1
+endif
+
+IF (<tag.planted>=01)
+src.sysmessage Voce nao pode colher isso.
+RETURN=1
+endif
+
+if <link>=04fffffff
+src.sysmessage Voce plantou <amount> sementes de mandrake root.
+dispid=018df
+timer=-1
+name=Sementes plantadas de mandrake root
+link=<src.uid>
+attr=010
+tag.planted=01
+src.newitem=i_seed_mandrake
+src.act.equip
+src.resend
+return=1
+else
+return=1
+endif
+
+on=@timer
+return=0
+
+CATEGORY=Items by Professions
+SUBSECTION=Farmer
+DESCRIPTION=Semente de MR
+/============================================================================================================================
+
+/====Timer do Nightshade
+
+[ITEMDEF i_seed_nightshade]
+ID=0181d
+NAME=Timer Nightshade
+TYPE=t_script
+LAYER=-61
+
+on=@equip
+timer=600
+
+on=@timer
+cont.sysmessage Os seus nightshades estao prontos para ser colhidos!
+return=0
+
+/====Semente de Nighshade
+
+[ITEMDEF i_scale_seed_nightshade]
+ID=0f7f
+NAME=Semente de Nightshade
+DEFNAME=i_scale_seed_nightshade
+TYPE=t_script
+VALUE=280
+WEIGHT=.1
+
+on=@create
+tag.removed=00
+tag.planted=00
+
+on=@dclick
+
+IF (<tag.removed>==01)
+src.sysmessage Isso eh uma raiz
+RETURN=1
+remove
+endif
+
+IF ! <CONT.TYPE>=0
+SRC.SYSMESSAGE Voce nao pode usar isso aqui!
+RETURN=1
+endif
+
+if <amount> < 10
+src.sysmessage Voce precisa de mais sementes, no minimo 10, voce so tem <amount>!
+return=1
+endif
+
+if <amount> > 600
+src.sysmessage Voce nao pode plantar mais de 600 sementes ao mesmo tempo!
+return=1
+endif
+
+if <src.findlayer(-61).timer>>=1
+src.sysmessage Voce precisa esperar suas sementes crescerem para colhe-las.
+return=1
+endif
+
+if !<src.findlayer(-61).timer><1
+src.findlayer(132).remove
+return=1
+endif
+
+if <src.region.safe>=1
+src.sysmessage Voce nao pode plantar as sementes em uma area safe.
+return=1
+endif
+
+if <src.region.guarded>=1
+src.sysmessage Voce nao pode plantar as sementes em uma area com guardas.
+return=1
+endif
+
+if <src.distance>>3
+src.sysmessage Voce esta muito longe.
+return=1
+endif
+
+if <link>=<src.uid>
+SRC.ANIM 9
+SRC.NEWITEM={ 0F88 }
+SRC.ACT.AMOUNT=<amount>*100
+SRC.ACT.P=<SRC.P>
+SRC.SYSMESSAGE Voce colheu os nightshades.
+tag.removed=1
+REMOVE
+RETURN=1
+endif
+
+IF (<tag.planted>==01)
+src.sysmessage Voce nao pode colher isso.
+RETURN=1
+endif
+
+if <link>=04fffffff
+src.sysmessage Voce plantou <amount> sementes de nightshade.
+dispid=018e5
+timer=-1
+name=Sementes plantadas de nightshade
+link=<src.uid>
+attr=010
+tag.planted=01
+src.newitem=i_seed_nightshade
+src.act.equip
+src.resend
+return=1
+else
+return=1
+endif
+
+on=@timer
+return=0
+
+CATEGORY=Items by Professions
+SUBSECTION=Farmer
+DESCRIPTION=Semente de NS
+
+/============================================================================================================================
+
+/====Timer do Garlic
+
+[ITEMDEF i_seed_garlic]
+ID=0181d
+NAME=Timer Garlic
+TYPE=t_script
+LAYER=-62
+
+on=@equip
+timer=600
+
+on=@timer
+cont.sysmessage Os seus garlics estao prontos para ser colhidos!
+return=0
+
+/====Semente do Garlic
+
+[ITEMDEF i_scale_seed_garlic]
+ID=0f7f
+NAME=Garlic seed
+DEFNAME=i_scale_seed_garlic
+TYPE=t_script
+VALUE=280
+WEIGHT=.1
+
+on=@create
+tag.removed=00
+tag.planted=00
+
+on=@dclick
+
+IF (<tag.removed>==01)
+src.sysmessage Isso eh uma raiz
+RETURN=1
+remove
+endif
+
+IF ! <CONT.TYPE>=0
+SRC.SYSMESSAGE Voce nao pode usar isso aqui!
+RETURN=1
+endif
+
+if <amount> < 10
+src.sysmessage Voce precisa de mais sementes, no minimo 10, voce so tem <amount>!
+return=1
+endif
+
+if <amount> > 600
+src.sysmessage Voce nao pode plantar mais de 600 sementes ao mesmo tempo!
+return=1
+endif
+
+if <src.findlayer(-62).timer> >= 1
+src.sysmessage Voce precisa esperar suas sementes crescerem para colhe-las.
+return=1
+endif
+
+if !<src.findlayer(-62).timer> < 1
+src.findlayer(132).remove
+return=1
+endif
+
+if <src.region.safe>=1
+src.sysmessage Voce nao pode plantar as sementes em uma area safe.
+return=1
+endif
+
+if <src.region.guarded>=1
+src.sysmessage Voce nao pode plantar as sementes em uma area com guardas.
+return=1
+endif
+
+if <src.distance>>3
+src.sysmessage Voce esta muito longe.
+return=1
+endif
+
+if <link>=<src.uid>
+SRC.ANIM 9
+SRC.NEWITEM={ 0F84 }
+SRC.ACT.AMOUNT=<amount>*100
+SRC.ACT.P=<SRC.P>
+SRC.SYSMESSAGE Voce colheu os garlics.
+tag.removed=1
+REMOVE
+RETURN=1
+endif
+
+IF (<tag.planted>==01)
+src.sysmessage Voce nao pode colher isso.
+RETURN=1
+endif
+
+if <link>=04fffffff
+src.sysmessage Voce plantou <amount> sementes de garlic.
+dispid=018e1
+timer=-1
+name=Sementes plantadas de garlic
+link=<src.uid>
+attr=010
+tag.planted=01
+src.newitem=i_seed_garlic
+src.act.equip
+src.resend
+return=1
+else
+return=1
+endif
+
+on=@timer
+return=0
+
+CATEGORY=Items by Professions
+SUBSECTION=Farmer
+DESCRIPTION=Semente GA
+
+/============================================================================================================================
+
+/====Timer do Ginseng
+
+[ITEMDEF i_seed_ginseng]
+ID=0181d
+NAME=Timer Ginseng
+TYPE=t_script
+LAYER=-63
+
+on=@equip
+timer=600
+
+on=@timer
+cont.sysmessage Os seus ginsengs estao prontos para ser colhidos!
+return=0
+
+/====Semente do Ginseng
+
+[ITEMDEF i_scale_seed_ginseng]
+ID=0f7f
+Name=Ginseng seed
+DEFNAME=i_scale_seed_ginseng
+TYPE=t_script
+VALUE=280
+WEIGHT=.1
+
+on=@create
+tag.removed=00
+tag.planted=00
+
+on=@dclick
+
+IF (<tag.removed>==01)
+src.sysmessage Isso eh uma raiz
+RETURN=1
+remove
+endif
+
+IF ! <CONT.TYPE>=0
+SRC.SYSMESSAGE Voce nao pode usar isso aqui!
+RETURN=1
+endif
+
+if <amount> < 10
+src.sysmessage Voce precisa de mais sementes, no minimo 10, voce so tem <amount>!
+return=1
+endif
+
+if <amount> > 600
+src.sysmessage Voce nao pode plantar mais de 600 sementes ao mesmo tempo!
+return=1
+endif
+
+if <src.findlayer(-63).timer>>=1
+src.sysmessage Voce precisa esperar suas sementes crescerem para colhe-las.
+return=1
+endif
+
+if !<src.findlayer(-63).timer><1
+src.findlayer(132).remove
+return=1
+endif
+
+if <src.region.safe>=1
+src.sysmessage Voce nao pode plantar as sementes em uma area safe.
+return=1
+endif
+
+if <src.region.guarded>=1
+src.sysmessage Voce nao pode plantar as sementes em uma area com guardas.
+return=1
+endif
+
+if <src.distance>>3
+src.sysmessage Voce esta muito longe.
+return=1
+endif
+
+if <link>=<src.uid>
+SRC.ANIM 9
+SRC.NEWITEM={ 0F85 }
+SRC.ACT.AMOUNT=<amount>*100
+SRC.ACT.P=<SRC.P>
+SRC.SYSMESSAGE Voce colheu os ginsengs.
+tag.removed=1
+REMOVE
+RETURN=1
+endif
+
+IF (<tag.planted>==01)
+src.sysmessage Voce nao pode colher isso.
+RETURN=1
+endif
+
+if <link>=04fffffff
+src.sysmessage Voce plantou <amount> sementes de ginseng.
+dispid=018e9
+timer=-1
+name=Sementes plantadas de ginseng
+link=<src.uid>
+attr=010
+tag.planted=01
+src.newitem=i_seed_ginseng
+src.act.equip
+src.resend
+return=1
+else
+return=1
+endif
+
+on=@timer
+return=0
+
+CATEGORY=Items by Professions
+SUBSECTION=Farmer
+DESCRIPTION=Semente GS
+
+/============================================================================================================================
+
+/====Timer do algodao
+
+[ITEMDEF i_seed_cotton]
+ID=0181d
+NAME=Timer Cotton
+TYPE=t_script
+LAYER=-64
+
+on=@equip
+timer=900
+
+on=@timer
+cont.sysmessage Os seus algodoes estao prontos para serem colhi-dos!
+return=0
+
+/====Semente de algodao
+
+[ITEMDEF i_scale_seed_cotton]
+ID=0f7f
+NAME=Cotton seed
+DEFNAME=i_scale_seed_cotton
+TYPE=T_NORMAL
+TYPE=t_script
+VALUE=2100
+WEIGHT=.1
+
+on=@create
+tag.removed=00
+tag.planted=00
+
+on=@dclick
+
+IF (<tag.removed>==01)
+src.sysmessage Isso eh uma raiz
+RETURN=1
+remove
+endif
+
+IF ! <CONT.TYPE>=0
+SRC.SYSMESSAGE Voce nao pode usar isso aqui.
+RETURN=1
+endif
+
+if <amount> < 2
+src.sysmessage Voce precisa de mais sementes, no minimo 2, voce so tem <amount>!
+return=1
+endif
+
+if <amount> > 600
+src.sysmessage Voce nao pode plantar mais de 600 sementes ao mesmo tempo!
+return=1
+endif
+
+if <src.findlayer(-64).timer>>=1
+src.sysmessage Voce precisa esperar suas sementes crescerem para colhe-las.
+return=1
+endif
+
+if !<src.findlayer(-64).timer><1
+src.findlayer(132).remove
+return=1
+endif
+
+if <src.region.safe>=1
+src.sysmessage Voce nao pode plantar as sementes em uma area safe.
+return=1
+endif
+
+if <src.region.guarded>=1
+src.sysmessage Voce nao pode plantar as sementes em uma area com guardas.
+return=1
+endif
+
+if <src.distance>>3
+src.sysmessage Voce esta muito longe.
+return=1
+endif
+
+if <link>=<src.uid>
+SRC.ANIM 9
+SRC.NEWITEM={ 0DF9 }
+SRC.ACT.AMOUNT=<amount>*30
+SRC.ACT.P=<SRC.P>
+SRC.SYSMESSAGE Voce colheu os algodoes.
+tag.removed=1
+REMOVE
+RETURN=1
+endif
+
+IF (<tag.planted>=01)
+src.sysmessage Voce nao pode colher isso
+RETURN=1
+endif
+
+if <link>=04fffffff
+src.sysmessage Voce plantou <amount> sementes de algodao. Colha em 15minutos
+dispid=0c4f
+timer=-1
+name=Sementes plantadas de algodao
+link=<src.uid>
+attr=010
+tag.planted=01
+src.newitem=i_seed_cotton
+src.act.equip
+src.resend
+return=1
+else
+return=1
+endif
+
+on=@timer
+return=0
+
+CATEGORY=Items by Professions
+SUBSECTION=Farmer
+DESCRIPTION=Semente de Algodao
+/============================================================FIM=============================================================

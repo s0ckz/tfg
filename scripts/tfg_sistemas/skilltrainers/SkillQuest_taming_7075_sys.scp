@@ -1,0 +1,50 @@
+[comment taming7075]
+taming quest 70->75
+todo (logica):
+- finalizar quest qnd acabar timer
+
+[defname tame_7075_configs]
+quest_tame1_time_to_finish      4 //dias
+quest_taming_7075_ogrelords     150 //quantos ogre lords precisam ser mortos para Hal Treddo
+quest_taming_7075_liche_remains 300 //quantos restos de liche precisa pegar
+quest_taming_7075_lizard_tail   175 //caudas de lizard e6
+quest_taming_7075_dragon_heart  50 // dragon hearts e6
+
+
+[events e_quest_taming_7075]
+on=@UserQuestButton
+    src.tamequest
+
+On=@Hit
+    if !(<src.isplayer>)
+        if (strmatch(*Ogre Lord*,<src.name>)) && !(<src.isevent.e_quest_taming_7075_ogre_target>) && (<tag0.tam75e2> == 1)
+            
+            src.events +e_quest_taming_7075_ogre_target
+
+        elif (strmatch(*Liche*,<src.name>)) && !(<src.isevent.e_quest_taming_7075_liche_target>) && (<tag0.tam75e3> == 1)
+            
+            src.events +e_quest_taming_7075_liche_target
+
+        elif (strmatch(*Lizard*,<src.name>)) && !(<src.isevent.e_quest_taming_7075_liche_target>) && (<tag0.tam75e6> == 2)
+
+            src.events +e_quest_taming_7075_lizard_target
+        
+        elif ( (strmatch(*Drake*,<src.name>)) || (strmatch(*Dragon*,<src.name>)) ) && !(<src.isevent.e_quest_taming_7075_liche_target>) && (<tag0.tam75e6> == 2)
+
+            src.events +e_quest_taming_7075_dragon_target
+
+        endif
+    endif
+
+   
+[FUNCTION tamequest]
+src.sysmessage @,,1 You have killed <src.dtag0.quest_taming_7075_ogrelords>, you still have to kill <eval <def.quest_taming_7075_ogrelords> - <src.tag0.quest_taming_7075_ogrelords>>.
+local.temporestante_s <eval (<src.dtag0.quest_taming_7075_timer>-<serv.time>)>
+if (<dlocal.temporestante> < 3600)
+    local.unidade minutes
+    local.temporestante <eval <local.temporestante_s>/60>
+elif (<dlocal.temporestante> >= 3600)
+    local.unidade hours
+    local.temporestante <eval <local.temporestante_s>/3600>
+endif
+src.sysmessage @,,1 You have <dlocal.temporestante><local.unidade> left to complete your task. 

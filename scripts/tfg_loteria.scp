@@ -1,0 +1,99 @@
+[itemdef i_loteria]
+id=i_grave_stone_4
+name=Maquina de Loteria
+type=t_normal
+
+category=Vendor Stones 
+subsection=Gambling
+description=Slot Machine
+
+on=@create
+color=0825
+attr=010
+
+on=@click
+src.sysmessage A Loteria atual eh de <dVAR0.smallmoneypot>, Voce precisa de 600 gp para tentar ganhar.
+
+on=@dclick
+if !<var.smallmoneypot>
+	var.smallmoneypot={1000 3000}
+endif
+if !(<src.restest 1 i_gambled>)
+	if (<src.restest 600 i_gold>)
+		src.consume 600 i_gold
+		if (rand(1750)==5)
+                        SERV.ALLCLIENTS SYSMESSAGE @0825 GANHARAM NA LOTERIA!!! O VALOR FOI DE <eval <var.smallmoneypot>> gp
+			src.message Voce ganhou na Loteria !
+			serv.newitem i_deed_gold
+			new.more  <dVAR0.smallmoneypot>
+			new.name <NAME> (<eval <NEW.MORE>> gp)
+			new.cont <SRC.UID>
+			var.smallmoneypot=100
+		elseif (rand(350)==5)
+			src.Say @0825 Ganhei 6000gp na Loteria!
+			serv.newitem i_gold
+			new.amount 6000
+			new.cont <SRC.UID>
+			var.smallmoneypot += 76
+			src.message Voce ganhou 6000gp ! A Loteria atual e de <eval <var.smallmoneypot>>
+
+		elseif (rand(40)==5)
+			src.Say @0825 Ganhei 3000gp na Loteria!
+			serv.newitem i_gold
+			new.amount 3000
+			new.cont <SRC.UID>
+			var.smallmoneypot += 76
+			src.message Voce ganhou 3000 gold! A Loteria atual e de <eval <var.smallmoneypot>>
+
+		elseif (rand(12)==5)
+			src.Say @0825 Ganhei 600gp na Loteria!
+			serv.newitem i_gold
+			new.amount 600
+			new.cont <SRC.UID>
+			var.smallmoneypot += 76
+			src.message Voce ganhou 600 gold! A Loteria atual e de <eval <var.smallmoneypot>>
+
+		elseif (rand(500)==5)
+			src.Say @0825 Ganhei 10000gp na Loteria!
+			serv.newitem i_gold
+			new.amount 10000
+			new.cont <SRC.UID>
+			var.smallmoneypot += 76
+			src.message Voce ganhou 10000gp! A Loteria atual e de <eval <var.smallmoneypot>>
+
+		else
+			src.message Voce perdeu! A Loteria atual e de <eval <var.smallmoneypot>>
+			var.smallmoneypot += 400
+			src.newitem=i_gambled
+			src.act.link=<src.uid> 
+			src.act.equip 
+			src.act.timer 2
+		endif
+	else
+		src.sysmessage Voce nao tem dinheiro suficiente.
+	endif
+else
+	src.sysmessage Voce nao se sente bem para apostar de novo.
+endif
+return 1
+
+
+[ITEMDEF i_gambled]
+NAME=Memory of Gambling
+id=i_handr_1 
+weight=0 
+layer=layer_special 
+type=t_eq_script 
+
+category=Memory Items 
+subsection=Server Memory 
+description=Memory of Gambling
+
+on=@create
+attr=attr_decay|attr_newbie|attr_move_never
+
+on=@timer
+remove
+return 1
+
+[EOF]

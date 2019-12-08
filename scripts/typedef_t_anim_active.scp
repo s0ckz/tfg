@@ -1,0 +1,52 @@
+[TYPEDEF t_anim_active]
+On=@DCLICK
+if <timer> == -1 
+	src.sysmessage @,,1 Voce ajustou seu <name>.
+	timerd = 1
+	return 1
+endif
+
+[FUNCTION looms]
+FORINSTANCES i_loom_upright
+	if <type> != t_loom
+		s baseid <baseid> uid <uid> nome <name> bag <cont.name> <topobj.name> <p>
+	endif
+ENDFOR
+
+[ITEMDEF i_gate_teste]
+ID=0f6c
+WEIGHT=1
+TYPE=t_normal
+NAME=Teste
+
+ON=@STEP
+f_teste_gate
+
+[FUNCTION f_teste_gate]
+sysmessage @,,1 <name>
+sysmessage @,,1 <src.name>
+
+
+[FUNCTION menoshallu]
+FLAGS = <flags> &~ statf_hallucinating
+
+[FUNCTION workersonde]
+FORINSTANCES i_worker_robe
+	s <topobj.name> <uid>
+ENDFOR
+
+[FUNCTION da_mask]
+FORPLAYERS 30
+	dorand 2
+		local.color = 07AC
+		local.color = 07AD
+	enddo
+	SERV.NEWITEM i_magic_mask_bear
+	NEW.COLOR = <local.color>
+	NEW.NAME @61,,1 Copa TFG - Lembranca da Abertura
+	NEW.CONT = <findlayer.21.uid>
+ENDFOR
+RETURN 1
+
+[EOF]
+

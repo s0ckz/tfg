@@ -1,0 +1,304 @@
+// [PLEVEL 1]
+// sairevento
+
+[FUNCTION sairevento]
+if <tag0.onevent>
+	if (<hits> < 1)
+		resurrect
+	endif
+	go commerce room
+endif
+return 1
+
+[FUNCTION nametrofeu]
+NAME @<src.tag.trofeu_color>,,1 <src.tag.trofeu_nome> - <src.tag.trofeu_evento> - <src.tag.trofeu_data>
+return 1
+
+[ITEMDEF i_gate_evento]
+ID=0f6c
+WEIGHT=1
+TYPE=t_normal
+NAME=Boxe
+
+ON=@Create
+  attr 08000
+  color 079d
+  tag.contagem 0
+  tag.maximo 16
+  return 0
+
+ON=@Click
+  message @0790 <name>
+  return 1
+
+ON=@DCLICK
+if <src.isgm>
+	if <tag0.itenspvp>
+		tag.itenspvp =
+		message @,,1 Loot PvP Desativado.
+	else
+		tag.itenspvp = 1
+		message @,,1 Loot PvP Ativado.
+	endif
+endif
+
+ON=@Step
+tag.cortemp = <color>
+//if (<tag.contagem> >= <tag.maximo>) && (<tag.maximo> > 0)
+//    src.message @0790,,1 Evento Lotado!
+//   return 1
+//endif
+  src.shrinklayer25_save
+  tag.contagem += 1
+SRC.CANCELLHELPROOM
+src.tag.askills=<src.kills>
+src.tag.askarma=<src.karma>
+src.tag.asfame=<src.fame>
+src.tag.asdeaths=<src.deaths>
+  src.findlayer.31.bounce //layer dragging
+  src.tag.lastbackpack <src.findlayer.21.uid>
+  src.stripsave
+  ref199=<more2>
+  src.tag.onevent 1
+  src.findlayer.21.attr 0
+  ref1=<src.findlayer.21.uid>
+  src.findlayer.21.cont <src.findlayer.29.uid>
+  REF1.updatex
+  src.newitem i_backpack
+  src.act.equip
+
+//items
+if <tag0.itenspvp>
+  src.newitem i_bow_bloodrock
+  src.act.name TFG Shard Evento
+  src.act.color <tag.cortemp>
+  src.act.equip
+
+  src.newitem i_except_War_fork
+  src.act.name TFG Shard Evento (Poisoned)
+  src.act.tag.poisonlevel 4
+  src.act.tag.poisontimer 3
+  src.act.color <tag.cortemp>
+  src.act.equip
+
+    src.newitem i_except_kryss
+  src.act.name TFG Shard Evento (Poisoned)
+  src.act.tag.poisonlevel 4
+  src.act.tag.poisontimer 3
+  src.act.color <tag.cortemp>
+  src.act.equip
+
+    src.newitem i_force_katana
+  src.act.name TFG Shard Evento (of Force)
+  //src.act.color <tag.cortemp>
+  src.act.equip
+
+  src.newitem i_bloodrock_closed_helm
+  //src.act.attr 010
+  src.act.name TFG Shard Evento
+  src.act.color <tag.cortemp>
+  src.act.equip
+
+  src.newitem i_bloodrock_female_platemail
+  //src.act.attr 010
+  src.act.name TFG Shard Evento
+  src.act.color <tag.cortemp>
+  src.act.equip
+
+  src.newitem i_bloodrock_platemail_arms
+  //src.act.attr 010
+  src.act.name TFG Shard Evento
+  src.act.color <tag.cortemp>
+  src.act.equip
+
+  src.newitem i_bloodrock_platemail_gauntlets
+  //src.act.attr 010
+  src.act.name TFG Shard Evento
+  src.act.color <tag.cortemp>
+  src.act.equip
+
+  src.newitem i_bloodrock_platemail_gorget
+  //src.act.attr 010
+  src.act.name TFG Shard Evento
+  src.act.color <tag.cortemp>
+  src.act.equip
+
+  src.newitem i_bloodrock_platemail_leggings
+  //src.act.attr 010
+  src.act.name TFG Shard Evento
+  src.act.color <tag.cortemp>
+  src.act.equip
+
+  src.newitem i_llama_evento // animal
+  src.act.name TFG Shard Evento
+  src.act.color <tag.cortemp>
+  src.act.attr 010
+  src.act.equip
+
+  src.newitem i_spellbook_full
+  src.act.color 07B5
+  src.act.bounce
+
+  if (<src.memoryfindtype.memory_guild.link.align>==2)
+	  src.newitem i_chaos_shield
+	  //src.act.attr 010
+	  src.act.name TFG Shard Evento
+	  src.act.color <tag.cortemp>
+	  src.act.equip
+  elif (<src.memoryfindtype.memory_guild.link.align>==1)
+	  src.newitem i_order_shield
+	  //src.act.attr 010
+	  src.act.name TFG Shard Evento
+	  src.act.color <tag.cortemp>
+	  src.act.equip
+  else
+      src.newitem i_bloodrock_heater_shield
+	  //src.act.attr 010
+	  src.act.name TFG Shard Evento
+	  src.act.color <tag.cortemp>
+	  src.act.equip
+  endif
+
+  	  src.newitem i_bless_robe
+	  //src.act.attr 010
+	  src.act.name TFG Shard Evento
+	  src.act.color <tag.cortemp>
+	  src.act.equip
+
+	  src.newitem i_leather_leggings_wyrm
+	  //src.act.attr 010
+	  src.act.name TFG Shard Evento
+	  src.act.color <tag.cortemp>
+	  src.act.equip
+
+	  src.newitem i_leather_tunic_wyrm
+	  //src.act.attr 010
+	  src.act.name TFG Shard Evento
+	  src.act.color <tag.cortemp>
+	  src.act.equip
+
+	  src.newitem i_leather_sleeves_wyrm
+	  //src.act.attr 010
+	  src.act.name TFG Shard Evento
+	  src.act.color <tag.cortemp>
+	  src.act.equip
+
+	  src.newitem i_leather_gorget_wyrm
+	  //src.act.attr 010
+	  src.act.name TFG Shard Evento
+	  src.act.color <tag.cortemp>
+	  src.act.equip
+
+	  src.newitem i_leather_gloves_wyrm
+	  //src.act.attr 010
+	  src.act.name TFG Shard Evento
+	  src.act.color <tag.cortemp>
+	  src.act.equip
+
+	  src.newitem i_color_orc_helm_12
+	  //src.act.attr 010
+	  src.act.name TFG Shard Evento
+	  src.act.color <tag.cortemp>
+	  src.act.equip
+
+  src.campmine_renew_resources
+endif
+
+if <tag0.questanimais>
+  src.newitem i_potion_shrink
+  src.act.amount 10
+  src.act.bounce
+  src.newitem i_potion_mana_boost_great
+  src.act.amount 10
+  src.act.bounce
+  src.newitem i_spellbook_full
+  src.act.color 07B5
+  src.act.bounce
+  src.newitem i_shepherds_crook
+  src.act.color 07B5
+  src.act.bounce
+  SRC.TAG.PT_ANIMAIS = 0
+  SRC.EVENTS +e_questanimais
+endif
+
+  //GO
+  src.f_go <morep>
+
+  SRC.RESENDALL
+  src.events +e_evento_geral
+
+//IF (<tag.contagem> == <tag.maximo>)
+  //REMOVE
+//ENDIF
+return 1
+
+
+[EVENTS e_evento_geral]
+ON=@CLICK
+	MESSAGE @31,,1 [EVENTO]
+
+ON=@Logout
+  message @32,,1 [Logout!]
+
+ON=@Login
+  message @478,,1 [Login!]
+
+
+
+ON=@EnvironChange
+// SH 2832,3327,-5,1  // 3130,3657,-5,1
+if !(<p.map> == 1)
+	if (<hits> < 1)
+		resurrect
+	endif
+    stripremove
+  src.kills=<tag.askills>
+  src.karma=<tag.askarma>
+  src.fame=<tag.asfame>
+  src.deaths=<tag.asdeaths>
+  src.memoryfindtype.memory_harmedby.remove
+  src.memoryfindtype.memory_iaggressor.remove
+  src.memoryfindtype.memory_fight.remove
+  src.memoryfindtype.memory_sawcrime.remove
+  src.memoryfindtype.memory_aggreived.remove
+  src.memoryfindtype.memory_war_targ.remove
+  src.memoryfindtype.memory_harmedby.remove
+  src.memoryfindtype.memory_iaggressor.remove
+  src.memoryfindtype.memory_fight.remove
+  src.memoryfindtype.memory_sawcrime.remove
+  src.memoryfindtype.memory_aggreived.remove
+  src.memoryfindtype.memory_war_targ.remove
+  tag.askills=
+  tag.askarma=
+  tag.asfame=
+  tag.asdeaths=
+  src.criminal 0
+    findlayer.21.remove
+    findlayer.25.remove
+    findlayer.31.remove
+    newitem i_gold
+    act.link 0<tag.lastbackpack>
+    act.link.cont <uid>
+    act.remove
+    events -e_evento_geral
+	EVENTS -e_questanimais
+    if (<findlayer.21> = 0)
+      SERV.ALLCLIENTS MSTAFF2 @0790 [SYSTEM]: Err... <name> saiu do evento e nao foi possivel recuperar sua backpack!
+      SERV.ALLCLIENTS MSTAFF2 @0790 [SYSTEM]: Root: <uid> - Act: <act.uid> - Src: <src.uid> - Action: <action> - Backpack: <tag.lastbackpack>
+    endif
+BODY=<OBODY>
+INVIS 0
+RESENDALL
+REEQUIPALL
+   tag.lastbackpack=
+   tag.onevent=
+   endif
+  return 0
+
+[FUNCTION novoeventogate]
+  serv.newitem i_gate_evento
+  new.tag.maximo <argv[0]>
+  new.morep <argv[1]>,<argv[2]>,<argv[3]>,<argv[4]>
+  new.bounce
+
+[EOF]

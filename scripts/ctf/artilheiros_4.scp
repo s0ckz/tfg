@@ -1,0 +1,38 @@
+﻿
+[CHARDEF c_baggio]
+NAME=Roberto Baggio
+ID=C_MAN
+DESIRES=i_gold,e_notoriety
+AVERSIONS=t_TRAP,t_eerie_stuff
+
+//TSPEECH=spk_copa_baggio
+
+TEVENTS=e_Human_Needs
+TEVENTS=e_Human_Refuse
+TEVENTS=e_Human_Environ
+TEVENTS=e_congela_hit
+
+ON=@Create
+NPC=brain_vendor
+FLAGS=04
+COLOR=083ea
+STR={61 75}
+DEX={66 80}
+INT={51 68}
+HITS=100
+
+//ITEMNEWBIE=i_hair_2_pigtails
+//COLOR=01
+
+ON=@NPCRestock
+ITEM=i_shirt_fancy
+COLOR=93
+ITEM=i_pants_short
+COLOR=0481
+ITEM=i_boots_calf
+COLOR=93
+
+ON=@CLICK
+MESSAGE @91,,1 (Artilheiro da Copa)
+MESSAGE @61,,1 Roberto Baggio
+return 1

@@ -1,0 +1,91 @@
+// Cooking SKILLMENU
+
+[SKILLMENU sm_cooking]
+Cooking
+
+ON=i_dough Ingredients
+SKILLMENU=sm_cook_ingredients
+
+ON=i_bread_loaf Baking
+SKILLMENU=sm_cook_baking
+
+ON=i_ribs_cooked Barbecue
+SKILLMENU=sm_cook_barbecue
+
+on=i_kettle Magical Food
+SKILLMENU=sm_cook_magical
+
+[SKILLMENU sm_cook_ingredients]
+Ingredients
+
+ON=i_dough <name> (<resmake>)
+MAKEITEM=i_dough
+
+[SKILLMENU sm_cook_baking]
+Baking
+
+ON=i_bread_loaf <name> (<resmake>)
+MAKEITEM=i_bread_loaf
+
+ON=i_bread_french <name> (<resmake>)
+MAKEITEM=i_bread_french
+
+ON=i_pan_cookies <name> (<resmake>)
+MAKEITEM=i_pan_cookies
+
+ON=i_cake <name> (<resmake>)
+MAKEITEM=i_cake
+
+ON=i_muffin_3 <name> (<resmake>)
+MAKEITEM=i_muffin_3
+
+ON=i_pie_baked <name> (<resmake>)
+MAKEITEM=i_pie_baked
+
+ON=i_pizza <name> (<resmake>)
+MAKEITEM=i_pizza
+
+[SKILLMENU sm_cook_barbecue]
+Barbecue
+
+ON=i_bird_cooked <name> (<resmake>)
+MAKEITEM=i_bird_cooked
+
+ON=i_chicken_leg <name> (<resmake>)
+MAKEITEM=i_chicken_leg
+
+ON=i_fish_cut_cooked <name> (<resmake>)
+MAKEITEM=i_fish_cut_cooked
+
+ON=i_eggs_fried <name> (<resmake>)
+MAKEITEM=i_eggs_fried
+
+ON=i_lamb_leg <name> (<resmake>)
+MAKEITEM=i_lamb_leg
+
+ON=i_ribs_cooked <name> (<resmake>)
+MAKEITEM=i_ribs_cooked
+
+on=i_delicious_pork <name> (<resmake>)
+MAKEITEM i_delicious_pork
+
+on=i_delicious_fish_steak_cooked <name> (<resmake>)
+MAKEITEM i_delicious_fish_steak_cooked
+
+[SKILLMENU sm_cook_magical]
+Magical Stuff
+
+on=i_misterious_bait <name> (<resmake>)
+MAKEITEM i_misterious_bait
+
+on=i_magical_cut_cooked <name> (<resmake>)
+MAKEITEM i_magical_cut_cooked
+
+on=i_golden_cut_cooked <name> (<resmake>)
+MAKEITEM i_golden_cut_cooked
+
+on=i_Large_cut_cooked <name> (<resmake>)
+MAKEITEM i_Large_cut_cooked
+
+on=i_tuna_cut_cooked <name> (<resmake>)
+MAKEITEM i_tuna_cut_cooked

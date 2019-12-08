@@ -1,0 +1,31 @@
+// Deletar chars criados (momento da criaçao) em contas nao criadas pelo Painel Global.
+
+[FUNCTION f_CHECKCADASTROGLOBAL]
+	IF !(<SRC.ACCOUNT.TAG0.GLOBAL>)
+		DIALOG d_dcadastro
+		CTAG.BLOCK 1
+		TIMERF 1, BYECHAR 1
+		RETURN 1
+	ENDIF
+
+
+[DIALOG d_dcadastro]
+0,0
+nomove
+noclose
+nodispose
+
+page 0
+resizepic 147 102 9300 406 129
+text 299 116 132 0
+htmlgump 165 145 377 72 1 0 0
+
+[DIALOG d_dcadastro text]
+Conta sem cadastro
+Desculpe, mas esta conta nao foi registrada atraves do nosso Painel de Controle e por isso voce nao pode criar um novo char com ela. Acesse www.tfg.com.br, menu Minha Conta, e crie uma nova conta.
+Equipe TFG Shard.
+
+[DIALOG d_dcadastro button]
+
+
+

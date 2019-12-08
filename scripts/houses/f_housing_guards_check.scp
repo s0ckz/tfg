@@ -1,0 +1,37 @@
+[FUNCTION f_housing_guards_check]
+LOCAL.DIST=<eval <ARGS> - 1>
+ARGS=<MULTIREGION>
+LOCAL.L1_MIN = <ARGV[1]>
+LOCAL.L1_MAX = <ARGV[3]>
+LOCAL.L1_EIXO = <ARGV[0]>
+LOCAL.L2_MIN = <eval <ARGV[0]> - 1>
+LOCAL.L2_MAX = <eval <ARGV[2]> + 1>
+LOCAL.L2_EIXO = <ARGV[3]>
+LOCAL.L3_EIXO = <ARGV[2]>
+LOCAL.L4_EIXO = <ARGV[1]>
+//
+FOR a 1 4
+LOCAL.BASE=0
+     IF (<eval <LOCAL.A> % 2> != 0)
+     FOR b 0 <LOCAL.DIST>
+      LOCAL.BASE ++
+      LOCAL.EIXO = <QVAL (2 < <LOCAL.A>)? <eval <LOCAL.L<dLOCAL.A>_EIXO> + <LOCAL.BASE>>: <eval <LOCAL.L<dLOCAL.A>_EIXO> - <LOCAL.BASE>>>
+         FOR c <eval <LOCAL.L1_MIN> - <LOCAL.B>> <eval <LOCAL.L1_MAX> + <LOCAL.B>>
+               IF (<SERV.MAP(<eval <P.X> + <LOCAL.EIXO>>,<eval <P.Y> + <LOCAL.C>>,<MAP>).REGION.GUARDED> == 1)
+               RETURN 1
+               ENDIF
+         ENDFOR
+      ENDFOR
+      ELSE
+      FOR b 0 <LOCAL.DIST>
+      LOCAL.BASE ++
+      LOCAL.EIXO = <QVAL (2 < <LOCAL.A>)? <eval <LOCAL.L<dLOCAL.A>_EIXO> - <LOCAL.BASE>>: <eval <LOCAL.L<dLOCAL.A>_EIXO> + <LOCAL.BASE>>>
+         FOR c <eval <LOCAL.L2_MIN> - <LOCAL.B>> <eval <LOCAL.L2_MAX> + <LOCAL.B>>
+               IF (<SERV.MAP(<eval <P.X> + <LOCAL.C>>,<eval <P.Y> + <LOCAL.EIXO>>,<MAP>).REGION.GUARDED> == 1)
+               RETURN 1
+               ENDIF
+         ENDFOR
+      ENDFOR
+      ENDIF
+ENDFOR
+RETURN 0

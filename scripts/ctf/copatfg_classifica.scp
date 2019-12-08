@@ -1,0 +1,15 @@
+[FUNCTION classificar]
+TARGETF classifica_copa
+SYSMESSAGE "@,,1 Quem você deseja classificar?"
+
+[FUNCTION classifica_copa]
+if <argo.isplayer>
+	argo.events +e_classificado_copa
+	argo.say @91,,1 Eu estou classificado para a #CopaTFG!
+	argo.effect = 3,i_fx_bless_effect,6,16,0
+	serv.b @31 <argo.name> foi classificado para a #CopaTFG!
+	src.fireworks
+else
+	src.sysmessage "@,,1 Isto nao é um jogador."
+endif
+return 1

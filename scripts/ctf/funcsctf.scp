@@ -1,0 +1,168 @@
+[FUNCTION offabrev]
+REF1=<GUILD>
+IF (<REF1.MEMBERFROMUID.<UID>.SHOWABBREV>)
+TAG.PREABBREV 1
+REF1.MEMBERFROMUID.<UID>.SHOWABBREV 0
+ENDIF
+RETURN 0
+
+
+[FUNCTION STRIP]
+IF (<FLAGS> & statf_freeze) || (<f_is_in_event <UID>>)
+  RETURN 0
+ENDIF
+
+FOR 1 31
+  IF ((<dLOCAL._FOR> > 0) && (<dLOCAL._FOR> < 11)) || ((<dLOCAL._FOR> > 11) && (<dLOCAL._FOR> < 15)) || ((<dLOCAL._FOR> > 16) && (<dLOCAL._FOR> < 21)) || ((<dLOCAL._FOR> > 21) && (<dLOCAL._FOR> < 25)) || (<dLOCAL._FOR> == 31)
+    IF (<FINDLAYER.<dLOCAL._FOR>.UID>)
+      REF1=<FINDLAYER.<dLOCAL._FOR>.UID>
+      REF1.UNEQUIP
+      REF1.UPDATEX
+    ENDIF
+  ENDIF
+ENDFOR
+
+RETURN 0
+
+[FUNCTION STRIPREMOVE]
+FOR 1 31
+If ((<dLOCAL._FOR> > 0) && (<dLOCAL._FOR> < 9)) || ((<dLOCAL._FOR> > 9) && (<dLOCAL._FOR> < 11)) || ((<dLOCAL._FOR> > 11) && (<dLOCAL._FOR> < 15)) || ((<dLOCAL._FOR> > 16) && (<dLOCAL._FOR> < 21)) || ((<dLOCAL._FOR> > 21) && (<dLOCAL._FOR> < 25)) || (<dLOCAL._FOR> == 31)
+if <FINDLAYER.<dLOCAL._FOR>.UID>
+	REF1=<FINDLAYER.<dLOCAL._FOR>.UID>
+	REF1.REMOVE
+endif
+ENDIF
+ENDFOR
+RETURN 0
+
+[FUNCTION STRIPSAVE]
+FOR 1 31
+If ((<dLOCAL._FOR> > 0) && (<dLOCAL._FOR> < 11)) || ((<dLOCAL._FOR> > 11) && (<dLOCAL._FOR> < 15)) || ((<dLOCAL._FOR> > 16) && (<dLOCAL._FOR> < 21)) || ((<dLOCAL._FOR> > 21) && (<dLOCAL._FOR> < 25)) || (<dLOCAL._FOR> == 31)
+	if <FINDLAYER.<dLOCAL._FOR>.UID>
+		REF1=<FINDLAYER.<dLOCAL._FOR>.UID>
+		TAG.LAYEVENTO<dLOCAL._fOR>=<REF1.UID>
+		REF1.CONT=<TAG.LASTBACKPACK>
+		REF1.UPDATEX
+	else
+		TAG.LAYEVENTO<dLOCAL._fOR>=
+	endif
+ENDIF
+ENDFOR
+RETURN 0
+
+[FUNCTION shrinklayer25_save]
+IF (<findlayer(25)>)
+    obj = <findlayer(25).more2>
+    IF (<OBJ.TAG0.UNSHRINKABLE>)
+      OBJ.REMOVE
+    ELSE
+      TAG.LAYEVENTO25_2 = <findlayer(25).more2>
+      args = <uid>
+      dclick
+      obj.shrink
+      foritems 2
+          IF (<more2> == <obj>)
+              bounce <args>
+              local.save=<UID>
+          ENDIF
+      endfor
+    ENDIF
+ENDIF
+TAG.LAYEVENTO25=<Local.save>
+
+[FUNCTION REEQUIPALL]
+FOR 1 31
+If ((<dLOCAL._FOR> > 0) && (<dLOCAL._FOR> < 9)) || ((<dLOCAL._FOR> > 9) && (<dLOCAL._FOR> < 15)) || ((<dLOCAL._FOR> > 16) && (<dLOCAL._FOR> < 21)) || ((<dLOCAL._FOR> > 21) && (<dLOCAL._FOR> < 25)) || (<dLOCAL._FOR> == 31)
+IF !(<TAG0.LAYEVENTO<dLOCAL._FOR>>==0)
+REF1=<TAG.LAYEVENTO<dLOCAL._FOR>>
+REF1.EQUIP
+REF1.UPDATEX
+TAG.LAYEVENTO<dLOCAL._fOR>=
+ENDIF
+ENDIF
+ENDFOR
+IF !(<TAG0.LAYEVENTO25>==00)
+REF1=<TAG.LAYEVENTO25>
+REF2=<REF1.MORE2>
+REF1.DCLICK
+REF1.UPDATEX
+REF2.DCLICK
+ENDIF
+TAG.LAYEVENTO25=
+TAG.LAYEVENTO25_2=
+UPDATE
+
+[FUNCTION evento_renew_resources]
+  consume 65535 i_potion_refresh
+  consume 65535 i_potion_manatotal
+  consume 65535 i_potion_healgreat
+  consume 65535 i_scroll_flamestrike
+  consume 65535 i_potion_explosionless
+  consume 65535 i_bandage
+  consume 65535 i_bag
+  consume 65535 i_arrow
+  consume 65535 i_potion_mana_boost_great
+  consume 65535 i_potion_life_boost_great
+  consume 65636 i_reag_black_pearl
+  consume 65636 i_reag_nightshade
+  consume 65636 i_reag_spider_silk
+  consume 65636 i_reag_sulfur_ash
+  consume 65636 i_reag_mandrake_root
+  consume 65636 i_reag_garlic
+  consume 65636 i_reag_ginseng
+  consume 65636 i_reag_blood_moss
+
+  newitem tm_bag_o_regs
+  act.bounce
+
+  newitem i_potion_refresh
+  act.amount 10
+  act.bounce
+
+  newitem i_potion_mana_boost_great
+  act.amount 50
+  act.bounce
+
+  newitem i_potion_life_boost_great
+  act.amount 50
+  act.bounce
+
+  newitem i_scroll_flamestrike
+  act.amount 50
+  act.bounce
+
+  newitem i_potion_explosionless
+  act.bounce
+
+  newitem i_potion_explosionless
+  act.bounce
+
+  newitem i_potion_explosionless
+  act.bounce
+
+  newitem i_potion_explosionless
+  act.bounce
+
+  newitem i_bandage
+  act.amount 100
+  act.bounce
+
+  newitem i_arrow
+  act.amount 100
+  act.bounce
+  return 0
+
+[FUNCTION shrinklayer25]
+IF (<findlayer(25)>)
+    obj = <findlayer(25).more2>
+    args = <uid>
+    dclick
+    obj.shrink
+    foritems 2
+        IF (<more2> == <obj>)
+            bounce <args>
+        ENDIF
+    endfor
+ENDIF
+
+[EOF]

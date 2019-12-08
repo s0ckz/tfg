@@ -1,0 +1,26 @@
+[CHARDEF c_tfg_trainer]
+NAME=#NAMES_HUMANMALE
+ID=C_MAN
+
+TSPEECH=spk_tfg_trainer
+
+ON=@Create
+	NAME=#NAMES_HUMANMALE
+    FLAGS=000000005
+    COLOR=colors_skin
+    STR={61 75}
+    DEX={71 85}
+    INT={86 100}
+
+    NPC=brain_human
+    ITEMNEWBIE=random_male_hair
+    COLOR=colors_hair
+    ITEMNEWBIE=random_facial_hair
+    COLOR=match_hair
+    ITEMNEWBIE=i_hat_wizards
+    ITEMNEWBIE=i_robe
+    ITEMNEWBIE=i_staff_black
+    color=0026
+
+[eof]
+

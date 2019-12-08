@@ -1,0 +1,544 @@
+[PLEVEL 3]
+PODECOPA
+COPA_A1
+
+[function podecopa]
+TARGETF podecopa_1
+SRC.SYSMESSAGE Selecione o player que deseja permitir participar da fase atual...
+
+[function podecopa_1]
+ARGO.TAG0.PODECOPA 1
+
+[DEFNAME COPACOLORS]
+DEF_COPA_COR_1  0233
+DEF_COPA_COR_2  04
+DEF_COPA_COR_3  0481
+DEF_COPA_COR_4  035
+
+[ITEMDEF i_gate_copa]
+ID=0f6c
+WEIGHT=1
+TYPE=t_normal
+NAME=Copa TFG
+
+ON=@Create
+  attr 08000
+  color 079d
+  tag.contagem 0
+  tag.maximo 32
+  return 0
+
+ON=@Click
+  message @0790 <name>
+  return 1
+
+ON=@Step
+
+IF (<SRC.TAG0.PODECOPA> == 1)
+
+  IF !(<SRC.ISEVENT.e_classificado_copa>)
+    SRC.SYSMESSAGE @,,1 Voce nao esta classificado para a copa...
+    SRC.F_GO COMMERCE ROOM
+    RETURN 1
+  ENDIF
+
+    src.shrinklayer25_save
+    tag.contagem += 1
+    SRC.CANCELLHELPROOM
+    src.tag.askills=<src.kills> 
+    src.tag.askarma=<src.karma> 
+    src.tag.asfame=<src.fame>  
+    src.tag.asdeaths=<src.deaths> 
+    src.tag.copa_kills=
+    src.findlayer.31.bounce //layer dragging 
+    src.tag.lastbackpack <src.findlayer.21.uid>
+    src.stripsave
+    ref199=<more2>
+    tag.cortemp=<DEF.DEF_COPA_COR_<R1,4>>
+    SRC.tag.name.hue=<tag.cortemp>
+    src.tag.onevent 1
+    src.findlayer.21.attr 0
+    ref1=<src.findlayer.21.uid>
+    src.findlayer.21.cont <src.findlayer.29.uid>
+    REF1.updatex
+    src.newitem i_backpack
+    src.act.color <tag.cortemp>
+    src.act.equip
+
+  	// itens 
+    src.newitem i_bow_bloodrock  
+    src.act.name TFG Shard Evento
+    src.act.color <tag.cortemp>
+    src.act.equip
+
+    src.newitem i_except_War_fork  
+    src.act.name TFG Shard Evento (Poisoned)
+    src.act.tag.poisonlevel 4
+    src.act.tag.poisontimer 3
+    src.act.color <tag.cortemp>
+    src.act.equip
+    
+      src.newitem i_except_kryss
+    src.act.name TFG Shard Evento (Poisoned)
+    src.act.tag.poisonlevel 4
+    src.act.tag.poisontimer 3
+    src.act.color <tag.cortemp>
+    src.act.equip
+    
+      src.newitem i_except_axe_exec
+    src.act.name TFG Shard Evento (Poisoned)
+    src.act.tag.poisonlevel 4
+    src.act.tag.poisontimer 3
+    src.act.color <tag.cortemp>
+    src.act.equip
+
+    src.newitem i_bloodrock_closed_helm
+    //src.act.attr 010
+    src.act.name TFG Shard Evento
+    src.act.color <tag.cortemp>
+    src.act.equip
+    
+    src.newitem i_bloodrock_female_platemail
+    //src.act.attr 010
+    src.act.name TFG Shard Evento
+    src.act.color <tag.cortemp>
+    src.act.equip
+    
+    src.newitem i_bloodrock_platemail_arms
+    //src.act.attr 010
+    src.act.name TFG Shard Evento
+    src.act.color <tag.cortemp>
+    src.act.equip
+    
+    src.newitem i_bloodrock_platemail_gauntlets
+    //src.act.attr 010
+    src.act.name TFG Shard Evento
+    src.act.color <tag.cortemp>
+    src.act.equip
+    
+    src.newitem i_bloodrock_platemail_gorget
+    //src.act.attr 010
+    src.act.name TFG Shard Evento
+    src.act.color <tag.cortemp>
+    src.act.equip
+    
+    src.newitem i_bloodrock_platemail_leggings
+    //src.act.attr 010
+    src.act.name TFG Shard Evento
+    src.act.color <tag.cortemp>
+    src.act.equip
+    
+    src.newitem i_llama_evento // animal
+    src.act.name TFG Shard Evento
+    src.act.color <tag.cortemp>
+    src.act.attr 010
+    src.act.equip
+    
+    src.newitem i_spellbook_full
+    src.act.color 07B5
+    src.act.bounce
+    
+    if (<src.memoryfindtype.memory_guild.link.align>==2)
+  	  src.newitem i_chaos_shield
+  	  //src.act.attr 010
+  	  src.act.name TFG Shard Evento
+  	  src.act.color <tag.cortemp>
+  	  src.act.equip
+    elif (<src.memoryfindtype.memory_guild.link.align>==1)
+  	  src.newitem i_order_shield 
+  	  //src.act.attr 010
+  	  src.act.name TFG Shard Evento
+  	  src.act.color <tag.cortemp>
+  	  src.act.equip
+    else
+        src.newitem i_bloodrock_heater_shield
+  	  //src.act.attr 010
+  	  src.act.name TFG Shard Evento
+  	  src.act.color <tag.cortemp>
+  	  src.act.equip
+    endif 
+    
+    	  src.newitem i_bless_robe
+  	  //src.act.attr 010
+  	  src.act.name TFG Shard Evento
+  	  src.act.color <tag.cortemp>
+  	  src.act.equip
+  	  
+  	  src.newitem i_leather_leggings_wyrm
+  	  //src.act.attr 010
+  	  src.act.name TFG Shard Evento
+  	  src.act.color <tag.cortemp>
+  	  src.act.equip
+  	  
+  	  src.newitem i_leather_tunic_wyrm
+  	  //src.act.attr 010
+  	  src.act.name TFG Shard Evento
+  	  src.act.color <tag.cortemp>
+  	  src.act.equip
+  	  
+  	  src.newitem i_leather_sleeves_wyrm
+  	  //src.act.attr 010
+  	  src.act.name TFG Shard Evento
+  	  src.act.color <tag.cortemp>
+  	  src.act.equip
+  	  
+  	  src.newitem i_leather_gorget_wyrm
+  	  //src.act.attr 010
+  	  src.act.name TFG Shard Evento
+  	  src.act.color <tag.cortemp>
+  	  src.act.equip
+  	  
+  	  src.newitem i_leather_gloves_wyrm
+  	  //src.act.attr 010
+  	  src.act.name TFG Shard Evento
+  	  src.act.color <tag.cortemp>
+  	  src.act.equip
+  	  
+  	  src.newitem i_color_orc_helm_12
+  	  //src.act.attr 010
+  	  src.act.name TFG Shard Evento
+  	  src.act.color <tag.cortemp>
+  	  src.act.equip
+  	  
+    src.campmine_renew_resources
+  	 
+
+    // body 
+    SRC.BODY c_woman
+
+    
+  src.go 5377,1084,0,1
+  SRC.FIX
+
+    SRC.RESENDALL
+    src.events +e_evento_copa_espera
+    
+  IF (<tag.contagem> == <tag.maximo>)
+    FORINSTANCES i_anuncia_copa
+  	REMOVE
+    ENDFOR
+    SERV.B @55 Evento Completo!
+      REMOVE
+  ENDIF
+  return 1
+
+ENDIF
+
+
+[EVENTS e_evento_copa_espera]
+On=@GetHit
+return 1
+
+On=@HIT
+return 1
+
+On=@HitTry
+return 1
+
+On=@SpellCast
+return 1
+
+[ITEMDEF i_gate_copa_torcida_ENTRADA]
+ID=0f6c
+WEIGHT=1
+TYPE=t_normal
+NAME=Telespectador Copa TFG
+
+ON=@Create
+  attr 010
+  color 035
+
+ON=@Click
+  message @0790 <name>
+  return 1
+
+ON=@Step
+IF !(<SRC.ISGM>)
+SRC.INVIS 1
+SRC.INVUL 1
+SRC.TAG.MUTE 1
+src.EVENTS +e_evento_copa_torcida
+ENDIF
+SRC.GO <MOREP>
+
+[ITEMDEF i_gate_copa_torcida_SAIDA]
+ID=0f6c
+WEIGHT=1
+TYPE=t_normal
+NAME=Saida Copa TFG
+
+ON=@Create
+  attr 010
+  color 035
+
+ON=@Click
+  message @0790 <name>
+  return 1
+
+ON=@Step
+IF !(<SRC.ISGM>)
+SRC.TAG.MUTE 0
+SRC.INVIS 0
+SRC.INVUL 0
+src.EVENTS -e_evento_copa_torcida
+ENDIF
+SRC.GO COMMERCE ROOM
+
+[FUNCTION F_COPA_TELE]
+FORPLAYERS 100
+
+IF <ISEVENT.e_evento_copa_torcida>
+
+GO 3642,2598,0,1
+
+ENDIF
+
+ENDFOR
+
+[events e_evento_copa_torcida]
+on=@Click
+MESSAGE @,,1 [Telespectador Copa TFG]
+
+On=@GetHit
+return 1
+
+On=@HIT
+return 1
+
+On=@HitTry
+return 1
+
+On=@SpellCast
+return 1
+
+ON=@Dismount
+RETURN 1
+
+ON=@ItemClick
+RETURN 1
+
+on=@ItemDClick
+return 1
+
+ON=@ItemDropOn_Char
+RETURN 1
+
+ON=@ItemDropOn_Ground
+RETURN 1
+
+ON=@ItemDropOn_Item
+RETURN 1
+
+ON=@ItemDropOn_Self
+RETURN 1
+
+ON=@ItemPickUp_Ground
+RETURN 1
+
+ON=@ItemPickUp_Pack
+RETURN 1
+
+ON=@ItemPickUp_Self
+RETURN 1
+
+
+[EVENTS e_evento_copa]
+ON=@CLICK
+  MESSAGE @<TAG.NAME.HUE>,,1 K: <dTAG.Copa_KILLS>
+
+ON=@KILLMINE
+  //if <argo.tag0.onevent>
+      CTF_DEATH_FIX
+      INVIS 
+      TAG0.copa_KILLS += 1
+      events +e_evento_copa_espera
+      say @33,,1 <name> ganhou a disputa!
+      S <NAME> GANHOU A LUTA!
+      HITS = <STR>
+      MANA = <INT>
+      STAM = <DEX>
+      go 5377,1084,0,1
+      stop_cscheck
+     //trysrc <uid> campmine_renew_resources
+      action -1
+      GO HELP ROOM
+  //endif
+
+ON=@Death
+if (<var.finais_copa>==1)
+  CTF_DEATH_FIX
+  INVIS
+  HITS = <STR>
+  MANA = <INT>
+  STAM = <DEX>
+  events +e_evento_copa_espera
+  trysrc <uid> campmine_renew_resources
+  action -1
+  go 5377,1084,0,1
+  stop_cscheck
+  message @0790 Voce morreu!
+  IF <ATTACKER>
+    REF1=<ATTACKER.LAST>
+    if (<ref1.uid> == <uid>)
+      ref1=<attacker.max>
+    endif
+    REF1.TRIGGER @KILLMINE
+  ENDIF
+  return 1
+else
+  message @0790 Voce morreu!
+  IF <ATTACKER>
+    REF1=<ATTACKER.LAST>
+    if (<ref1.uid> == <uid>)
+      ref1=<attacker.max>
+    endif
+    REF1.TRIGGER @KILLMINE
+  ENDIF
+  timerf 3,f_death_COPA
+endif
+
+ON=@Logout
+  message @32,,1 [Logout!]
+
+ON=@Login
+  message @478,,1 [Login!]
+
+ON=@DeathCorpse
+ARGO.REMOVE
+
+ON=@EnvironChange
+if (<map> != 1)
+  if (<hits> < 1)
+    resurrect
+  endif
+  stripremove
+  src.kills=<tag.askills>   
+  src.karma=<tag.askarma>   
+  src.fame=<tag.asfame>     
+  src.deaths=<tag.asdeaths> 
+  TAG.PODECOPA  
+  src.memoryfindtype.memory_harmedby.remove
+  src.memoryfindtype.memory_iaggressor.remove
+  src.memoryfindtype.memory_fight.remove
+  src.memoryfindtype.memory_sawcrime.remove
+  src.memoryfindtype.memory_aggreived.remove
+  src.memoryfindtype.memory_war_targ.remove
+  src.memoryfindtype.memory_harmedby.remove
+  src.memoryfindtype.memory_iaggressor.remove
+  src.memoryfindtype.memory_fight.remove
+  src.memoryfindtype.memory_sawcrime.remove
+  src.memoryfindtype.memory_aggreived.remove
+  src.memoryfindtype.memory_war_targ.remove
+  tag.askills=
+  tag.askarma=
+  tag.asfame=
+  tag.asdeaths=
+  src.criminal 0
+  invis 0
+    findlayer.21.remove
+    findlayer.25.remove
+    findlayer.31.remove
+    newitem i_gold
+    act.link 0<tag.lastbackpack>
+    act.link.cont <uid>
+    act.remove
+  events -e_evento_COPA_espera
+    events -e_evento_COPA
+    tag.team
+    if (<findlayer.21> = 0)
+      SERV.ALLCLIENTS MSTAFF2 @0790 [SYSTEM]: Err... <name> saiu do evento e nao foi possivel recuperar sua backpack!
+      SERV.ALLCLIENTS MSTAFF2 @0790 [SYSTEM]: Root: <uid> - Act: <act.uid> - Src: <src.uid> - Action: <action> - Backpack: <tag.lastbackpack>
+    endif
+BODY=<OBODY>
+RESENDALL
+REEQUIPALL 
+   tag.lastbackpack=
+   tag.onevent=
+   TAG.NOPREMIO=   // pra que eu sirvo?
+   TAG.NAME.HUE=
+   TAG.cOPA_KILLS=
+   endif  
+  return 0
+
+[FUNCTION COPA_A1]
+SRC.SYSMESSAGE @,,1 Quem voce deseja mover para arena?
+TARGETF F_COPA_A1_1
+
+[FUNCTION F_COPA_A1_1]
+SRC.SYSMESSAGE @,,1 Para onde voce deseja mover esse player?
+ARGO.EVENTS -e_evento_COPA_espera
+ARGO.EVENTS +e_evento_COPA
+TARGETFG F_copa_a1_2 <ARGO.UID>
+
+[FUNCTION F_COPA_A1_2]
+REF1 <UID.<ARGS>>
+REF1.F_GO <TARGP>
+
+[FUNCTION TIRARDACOPA]
+SRC.SYSMESSAGE @,,1 Quem voce deseja tirar da copa? Voce ira remover o player do evento!
+TARGETF F_TIRARDACOPA
+
+
+[FUNCTION F_TIRARDACOPA]
+
+if (<ARGO.hits> < 1)
+    ARGO.resurrect
+  endif
+  ARGO.stripremove
+  ARGO.kills=<tag.askills>   
+  ARGO.karma=<tag.askarma>   
+  ARGO.fame=<tag.asfame>     
+  ARGO.deaths=<tag.asdeaths> 
+  ARGO.TAG.PODECOPA  
+  ARGO.memoryfindtype.memory_harmedby.remove
+  ARGO.memoryfindtype.memory_iaggressor.remove
+  ARGO.memoryfindtype.memory_fight.remove
+  ARGO.memoryfindtype.memory_sawcrime.remove
+  ARGO.memoryfindtype.memory_aggreived.remove
+  ARGO.memoryfindtype.memory_war_targ.remove
+  ARGO.memoryfindtype.memory_harmedby.remove
+  ARGO.memoryfindtype.memory_iaggressor.remove
+  ARGO.memoryfindtype.memory_fight.remove
+  ARGO.memoryfindtype.memory_sawcrime.remove
+  ARGO.memoryfindtype.memory_aggreived.remove
+  ARGO.memoryfindtype.memory_war_targ.remove
+  ARGO.tag.askills=
+  ARGO.tag.askarma=
+  ARGO.tag.asfame=
+  ARGO.tag.asdeaths=
+  ARGO.criminal 0
+  ARGO.invis 0
+    ARGO.findlayer.21.remove
+    ARGO.findlayer.25.remove
+    ARGO.findlayer.31.remove
+    SERV.newitem i_gold
+    NEW.link 0<ARGO.tag.lastbackpack>
+    NEW.link.cont <ARGO.uid>
+    NEW.remove
+  ARGO.events -e_evento_COPA_espera
+    ARGO.events -e_evento_COPA
+    ARGO.tag.team
+    if (<ARGO.findlayer.21> = 0)
+      SERV.ALLCLIENTS MSTAFF2 @0790 [SYSTEM]: Err... <ARGO.name> saiu do evento e nao foi possivel recuperar sua backpack!
+      SERV.ALLCLIENTS MSTAFF2 @0790 [SYSTEM]: Root: <ARGO.uid> - Act: <ARGO.act.uid> - Src: <src.uid> - Action: <action> - Backpack: <tag.lastbackpack>
+    endif
+ARGO.BODY=<OBODY>
+ARGO.RESENDALL
+ARGO.F_GO COMMERCE ROOM
+ARGO.REEQUIPALL 
+   ARGO.tag.lastbackpack=
+   ARGO.tag.onevent=
+   ARGO.TAG.NOPREMIO=   // pra que eu sirvo?
+   ARGO.TAG.NAME.HUE=
+   ARGO.TAG.cOPA_KILLS= 
+
+[FUNCTION f_death_COPA]
+CTF_DEATH_FIX
+events +e_evento_cOPA_espera
+action -1
+stop_cscheck
+resurrect
+hits <str>
+go HELP ROOM
+S <NAME> PERDEU A LUTA!
+return 1 

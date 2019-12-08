@@ -1,0 +1,691 @@
+//Chests
+
+[ITEMDEF i_chest_Mahogany]
+ID=i_chest_wooden_brass
+TYPE=T_CONTAINER
+WEIGHT=10
+NAME=Mahogany Chest
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=20 i_mahogany_log
+
+ON=@CREATE
+COLOR color_o_mahogany
+
+[ITEMDEF i_chest_elven]
+ID=i_chest_wooden_brass
+TYPE=T_CONTAINER
+WEIGHT=10
+NAME=Elven Chest
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=20 i_elven_log
+ON=@CREATE
+COLOR 025
+
+[ITEMDEF i_chest_cedar]
+ID=i_chest_wooden_brass
+TYPE=T_CONTAINER
+WEIGHT=10
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=20 i_cedar_log
+NAME=Cedar Chest
+ON=@CREATE
+COLOR color_o_cedar
+
+[ITEMDEF i_chest_dark]
+ID=i_chest_wooden_brass
+TYPE=T_CONTAINER
+WEIGHT=10
+NAME=Dark Chest
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=20 i_dark_log
+ON=@CREATE
+COLOR 0455
+
+//Itens Decorativos Dark
+
+[ITEMDEF i_chair_throne_dark]
+ID=i_chair_throne
+NAME=Dark Throne
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=40 i_dark_log
+ON=@CREATE
+COLOR 0455
+
+[ITEMDEF i_flower_potted_small_dark]
+ID=i_flower_potted_small
+NAME=Dark Flowerpot
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=50 i_dark_log
+ON=@CREATE
+COLOR 0455
+
+[ITEMDEF i_tree_small_potted_dark]
+ID=i_tree_small_potted
+NAME=Dark Potted Tree
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=50 i_dark_log
+ON=@CREATE
+COLOR 0455
+
+[ITEMDEF i_plant_potted_small_dark]
+ID=i_plant_potted_small
+NAME=Dark Flowerpot
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=50 i_dark_log
+ON=@CREATE
+COLOR 0455
+
+[ITEMDEF i_tree_small_potted_2_dark]
+ID=i_tree_small_potted_2
+NAME=Dark Flowerpot
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=50 i_dark_log
+ON=@CREATE
+COLOR 0455
+
+[ITEMDEF i_serpent_dark]
+DEFNAME=i_serpent_dark
+ID=i_serpent_crest
+NAME=Dark Serpent Crest
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=60 i_dark_log
+ON=@CREATE
+COLOR=0455
+
+[ITEMDEF i_portrait_big_dark]
+ID=i_portrait_big
+NAME=Dark Painting
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=70 i_dark_log
+ON=@CREATE
+COLOR 0455
+
+[ITEMDEF i_decorative_armor_dark]
+ID=i_decorative_armor
+NAME=Dark Decorative Armor
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=100 i_dark_log
+ON=@CREATE
+COLOR 0455
+
+[ITEMDEF i_decorative_armor2_dark]
+ID=i_decorative_armor2
+NAME=Dark Decorative Armor
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=100 i_dark_log
+ON=@CREATE
+COLOR 0455
+
+[ITEMDEF i_painting_ruined_dark]
+ID=i_painting_ruined
+NAME=Dark Ruined Painting
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=45 i_dark_log
+ON=@CREATE
+COLOR 0455
+
+[ITEMDEF i_trophy_deerhead_dark]
+ID=i_trophy_deerhead
+NAME=Dark Trophy Deer Head
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=60 i_dark_log
+ON=@CREATE
+COLOR 0455
+
+[ITEMDEF i_trophy_bearhead_dark]
+ID=i_trophy_bearhead
+NAME=Dark Trophy Bear Head
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=60 i_dark_log
+ON=@CREATE
+COLOR 0455
+
+[ITEMDEF i_trophy_polarbearhead_dark]
+ID=i_trophy_polarbearhead
+NAME=Dark Trophy Polar Bear Head
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=60 i_dark_log
+ON=@CREATE
+COLOR 0455
+
+[ITEMDEF i_portrait_1_dark]
+ID=i_portrait_1
+NAME=Dark Portrait
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=40 i_dark_log
+ON=@CREATE
+COLOR 0455
+
+[ITEMDEF i_candleabra_dark]
+ID=i_candleabra
+NAME=Dark Candlabra
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=30 i_dark_log
+ON=@CREATE
+COLOR 0455
+
+[ITEMDEF i_dresser_dark]
+ID=i_dresser
+NAME=Dark Dresser
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=60 i_dark_log
+ON=@CREATE
+COLOR 0455
+
+[ITEMDEF i_lamppost1_dark]
+ID=i_lamppost1
+NAME=Dark Lamp Post
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=40 i_dark_log
+ON=@CREATE
+COLOR 0455
+
+[ITEMDEF i_lamppost2_dark]
+ID=i_lamppost2
+NAME=Dark Lamp Post
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=40 i_dark_log
+ON=@CREATE
+COLOR 0455
+
+[ITEMDEF i_lamppost3_dark]
+ID=i_lamppost3
+NAME=Dark Lamp Post
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=40 i_dark_log
+ON=@CREATE
+COLOR 0455
+
+[ITEMDEF i_trophy_fish_dark]
+ID=i_trophy_fish
+NAME=Dark Trophy Fish
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=60 i_dark_log
+ON=@CREATE
+COLOR 0455
+
+// Itens Decorativos Mahogany
+
+[ITEMDEF i_chair_throne_Mahogany]
+ID=i_chair_throne
+NAME=Mahogany Throne
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=40 i_mahogany_log
+ON=@CREATE
+COLOR color_o_mahogany
+
+[ITEMDEF i_flower_potted_small_Mahogany]
+ID=i_flower_potted_small
+NAME=Mahogany Flowerpot
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=50 i_mahogany_log
+ON=@CREATE
+COLOR color_o_mahogany
+
+[ITEMDEF i_tree_small_potted_Mahogany]
+ID=i_tree_small_potted
+NAME=Mahogany Potted Tree
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=50 i_mahogany_log
+ON=@CREATE
+COLOR color_o_mahogany
+
+[ITEMDEF i_plant_potted_small_Mahogany]
+ID=i_plant_potted_small
+NAME=Mahogany Flowerpot
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=50 i_mahogany_log
+ON=@CREATE
+COLOR color_o_mahogany
+
+[ITEMDEF i_tree_small_potted_2_Mahogany]
+ID=i_tree_small_potted_2
+NAME=Mahogany Flowerpot
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=50 i_mahogany_log
+ON=@CREATE
+COLOR color_o_mahogany
+
+[ITEMDEF i_serpent_crest_Mahogany]
+ID=i_serpent_crest
+NAME=Mahogany Serpent Crest
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=60 i_mahogany_log
+ON=@CREATE
+COLOR color_o_mahogany
+
+[ITEMDEF i_portrait_big_Mahogany]
+ID=i_portrait_big
+NAME=Mahogany Painting
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=70 i_mahogany_log
+ON=@CREATE
+COLOR color_o_mahogany
+
+[ITEMDEF i_decorative_armor_Mahogany]
+ID=i_decorative_armor
+NAME=Mahogany Decorative Armor
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=100 i_mahogany_log
+ON=@CREATE
+COLOR color_o_mahogany
+
+[ITEMDEF i_decorative_armor2_Mahogany]
+ID=i_decorative_armor2
+NAME=Mahogany Decorative Armor
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=100 i_mahogany_log
+ON=@CREATE
+COLOR color_o_mahogany
+
+[ITEMDEF i_painting_ruined_Mahogany]
+ID=i_painting_ruined
+NAME=Mahogany Ruined Painting
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=45 i_mahogany_log
+ON=@CREATE
+COLOR color_o_mahogany
+
+[ITEMDEF i_trophy_deerhead_Mahogany]
+ID=i_trophy_deerhead
+NAME=Mahogany Trophy Deer Head
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=60 i_mahogany_log
+ON=@CREATE
+COLOR color_o_mahogany
+
+[ITEMDEF i_trophy_bearhead_Mahogany]
+ID=i_trophy_bearhead
+NAME=Mahogany Trophy Bear Head
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=60 i_mahogany_log
+ON=@CREATE
+COLOR color_o_mahogany
+
+[ITEMDEF i_trophy_polarbearhead_Mahogany]
+ID=i_trophy_polarbearhead
+NAME=Mahogany Trophy Polar Bear Head
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=60 i_mahogany_log
+ON=@CREATE
+COLOR color_o_mahogany
+
+[ITEMDEF i_portrait_1_Mahogany]
+ID=i_portrait_1
+NAME=Mahogany Portrait
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=40 i_mahogany_log
+ON=@CREATE
+COLOR color_o_mahogany
+
+[ITEMDEF i_candleabra_Mahogany]
+ID=i_candleabra
+NAME=Mahogany Candlabra
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=30 i_mahogany_log
+ON=@CREATE
+COLOR color_o_mahogany
+
+[ITEMDEF i_dresser_Mahogany]
+ID=i_dresser
+NAME=Mahogany Dresser
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=60 i_mahogany_log
+ON=@CREATE
+COLOR color_o_mahogany
+
+[ITEMDEF i_lamppost1_Mahogany]
+ID=i_lamppost1
+NAME=Mahogany Lamp Post
+ON=@CREATE
+COLOR color_o_mahogany
+
+[ITEMDEF i_lamppost2_Mahogany]
+ID=i_lamppost2
+NAME=Mahogany Lamp Post
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=40 i_mahogany_log
+ON=@CREATE
+COLOR color_o_mahogany
+
+[ITEMDEF i_lamppost3_Mahogany]
+ID=i_lamppost3
+NAME=Mahogany Lamp Post
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=40 i_mahogany_log
+ON=@CREATE
+COLOR color_o_mahogany
+
+[ITEMDEF i_trophy_fish_Mahogany]
+ID=i_trophy_fish
+NAME=Mahogany Trophy Fish
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=60 i_mahogany_log
+ON=@CREATE
+COLOR color_o_mahogany
+
+// Itens Decorativos Elven
+
+[ITEMDEF i_chair_throne_elven]
+ID=i_chair_throne
+NAME=Elven Throne
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=40 i_elven_log
+ON=@CREATE
+COLOR 025
+
+[ITEMDEF i_flower_potted_small_elven]
+ID=i_flower_potted_small
+NAME=Elven Flowerpot
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=50 i_elven_log
+ON=@CREATE
+COLOR 025
+
+[ITEMDEF i_tree_small_potted_elven]
+ID=i_tree_small_potted
+NAME=Elven Potted Tree
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=50 i_elven_log
+ON=@CREATE
+COLOR 025
+
+[ITEMDEF i_plant_potted_small_elven]
+ID=i_plant_potted_small
+NAME=Elven Flowerpot
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=50 i_elven_log
+ON=@CREATE
+COLOR 025
+
+[ITEMDEF i_tree_small_potted_2_elven]
+ID=i_tree_small_potted_2
+NAME=Elven Flowerpot
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=50 i_elven_log
+ON=@CREATE
+COLOR 025
+
+[ITEMDEF i_serpent_crest_elven]
+ID=i_serpent_crest
+NAME=Elven Serpent Crest
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=60 i_elven_log
+ON=@CREATE
+COLOR 025
+
+[ITEMDEF i_portrait_big_elven]
+ID=i_portrait_big
+NAME=Elven Painting
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=70 i_elven_log
+ON=@CREATE
+COLOR 025
+
+[ITEMDEF i_decorative_armor_elven]
+ID=i_decorative_armor
+NAME=Elven Decorative Armor
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=100 i_elven_log
+ON=@CREATE
+COLOR 025
+
+[ITEMDEF i_decorative_armor2_elven]
+ID=i_decorative_armor2
+NAME=Elven Decorative Armor
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=100 i_elven_log
+ON=@CREATE
+COLOR 025
+
+[ITEMDEF i_painting_ruined_elven]
+ID=i_painting_ruined
+NAME=Elven Ruined Painting
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=45 i_elven_log
+ON=@CREATE
+COLOR 025
+
+[ITEMDEF i_trophy_deerhead_elven]
+ID=i_trophy_deerhead
+NAME=Elven Trophy Deer Head
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=60 i_elven_log
+ON=@CREATE
+COLOR 025
+
+[ITEMDEF i_trophy_bearhead_elven]
+ID=i_trophy_bearhead
+NAME=Elven Trophy Bear Head
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=60 i_elven_log
+ON=@CREATE
+COLOR 025
+
+[ITEMDEF i_trophy_polarbearhead_elven]
+ID=i_trophy_polarbearhead
+NAME=Elven Trophy Polar Bear Head
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=60 i_elven_log
+ON=@CREATE
+COLOR 025
+
+[ITEMDEF i_portrait_1_elven]
+ID=i_portrait_1
+NAME=Elven Portrait
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=40 i_elven_log
+ON=@CREATE
+COLOR 025
+
+[ITEMDEF i_candleabra_elven]
+ID=i_candleabra
+NAME=Elven Candlabra
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=30 i_elven_log
+ON=@CREATE
+COLOR 025
+
+[ITEMDEF i_dresser_elven]
+ID=i_dresser
+NAME=Elven Dresser
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=60 i_elven_log
+ON=@CREATE
+COLOR 025
+
+[ITEMDEF i_lamppost1_elven]
+ID=i_lamppost1
+NAME=Elven Lamp Post
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=40 i_elven_log
+ON=@CREATE
+COLOR 025
+
+[ITEMDEF i_lamppost2_elven]
+ID=i_lamppost2
+NAME=Elven Lamp Post
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=40 i_elven_log
+ON=@CREATE
+COLOR 025
+
+[ITEMDEF i_lamppost3_elven]
+ID=i_lamppost3
+NAME=Elven Lamp Post
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=40 i_elven_log
+ON=@CREATE
+COLOR 025
+
+[ITEMDEF i_trophy_fish_elven]
+ID=i_trophy_fish
+NAME=Elven Trophy Fish
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=60 i_elven_log
+ON=@CREATE
+COLOR 025
+
+// Itens Decorativos Cedar
+
+[ITEMDEF i_chair_throne_cedar]
+ID=i_chair_throne
+NAME=Cedar Throne
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=40 i_cedar_log
+ON=@CREATE
+COLOR color_o_cedar
+
+[ITEMDEF i_flower_potted_small_cedar]
+ID=i_flower_potted_small
+NAME=Cedar Flowerpot
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=50 i_cedar_log
+ON=@CREATE
+COLOR color_o_cedar
+
+[ITEMDEF i_tree_small_potted_cedar]
+ID=i_tree_small_potted
+NAME=Cedar Potted Tree
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=50 i_cedar_log
+ON=@CREATE
+COLOR color_o_cedar
+
+[ITEMDEF i_plant_potted_small_cedar]
+ID=i_plant_potted_small
+NAME=Cedar Flowerpot
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=50 i_cedar_log
+ON=@CREATE
+COLOR color_o_cedar
+
+[ITEMDEF i_tree_small_potted_2_cedar]
+ID=i_tree_small_potted_2
+NAME=Cedar Flowerpot
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=50 i_cedar_log
+ON=@CREATE
+COLOR color_o_cedar
+
+[ITEMDEF i_serpent_crest_cedar]
+ID=i_serpent_crest
+NAME=Cedar Serpent Crest
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=60 i_cedar_log
+
+ON=@CREATE
+COLOR color_o_cedar
+
+[ITEMDEF i_portrait_big_cedar]
+ID=i_portrait_big
+NAME=Cedar Painting
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=70 i_cedar_log
+ON=@CREATE
+COLOR color_o_cedar
+
+[ITEMDEF i_decorative_armor_cedar]
+ID=i_decorative_armor
+NAME=Cedar Decorative Armor
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=100 i_cedar_log
+ON=@CREATE
+COLOR color_o_cedar
+
+[ITEMDEF i_decorative_armor2_cedar]
+ID=i_decorative_armor2
+NAME=Cedar Decorative Armor
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=100 i_cedar_log
+ON=@CREATE
+COLOR color_o_cedar
+
+[ITEMDEF i_painting_ruined_cedar]
+ID=i_painting_ruined
+NAME=Cedar Ruined Painting
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=45 i_cedar_log
+ON=@CREATE
+COLOR color_o_cedar
+
+[ITEMDEF i_trophy_deerhead_cedar]
+ID=i_trophy_deerhead
+NAME=Cedar Trophy Deer Head
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=60 i_cedar_log
+ON=@CREATE
+COLOR color_o_cedar
+
+[ITEMDEF i_trophy_bearhead_cedar]
+ID=i_trophy_bearhead
+NAME=Cedar Trophy Bear Head
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=60 i_cedar_log
+ON=@CREATE
+COLOR color_o_cedar
+
+[ITEMDEF i_trophy_polarbearhead_cedar]
+ID=i_trophy_polarbearhead
+NAME=Cedar Trophy Polar Bear Head
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=60 i_cedar_log
+ON=@CREATE
+COLOR color_o_cedar
+
+[ITEMDEF i_portrait_1_cedar]
+ID=i_portrait_1
+NAME=Cedar Portrait
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=40 i_cedar_log
+ON=@CREATE
+COLOR color_o_cedar
+
+[ITEMDEF i_candleabra_cedar]
+ID=i_candleabra
+NAME=Cedar Candlabra
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=30 i_cedar_log
+ON=@CREATE
+COLOR color_o_cedar
+
+[ITEMDEF i_dresser_cedar]
+ID=i_dresser
+NAME=Cedar Dresser
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=30 i_cedar_log
+ON=@CREATE
+COLOR color_o_cedar
+
+[ITEMDEF i_lamppost1_cedar]
+ID=i_lamppost1
+NAME=Cedar Lamp Post
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=40 i_cedar_log
+ON=@CREATE
+COLOR color_o_cedar
+
+[ITEMDEF i_lamppost2_cedar]
+ID=i_lamppost2
+NAME=Cedar Lamp Post
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=40 i_cedar_log
+ON=@CREATE
+COLOR color_o_cedar
+
+[ITEMDEF i_lamppost3_cedar]
+ID=i_lamppost3
+NAME=Cedar Lamp Post
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=40 i_cedar_log
+ON=@CREATE
+COLOR color_o_cedar
+
+[ITEMDEF i_trophy_fish_cedar]
+ID=i_trophy_fish
+NAME=Cedar Trophy Fish
+SKILLMAKE=CARPENTRY 80.0, t_carpentry
+RESOURCES=60 i_cedar_log
+ON=@CREATE
+COLOR color_o_cedar
+

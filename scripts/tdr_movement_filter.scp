@@ -1,0 +1,249 @@
+﻿[FUNCTION f_movement_packet_filter]
+if (<argn1> != 02) || (!<local.char>)
+	return 0
+endif
+ref1 = <local.char>
+//ref1.f_closenomovedialogs <local.1>
+if (<serv.time> >= <ref1.ctag0.movement.penalitytime>) && !(<isempty <ref1.ctag.movement.penalityapply>>)
+	ref1.speedmode = 0
+	serv.allclients f_notifica <ref1>,"[ANTI CS] <ref1.name> : velocidade regularizada."
+	ref1.ctag0.movement.penalityapply =
+endif
+if !(<ref1.findid.i_timer_movement>) && !(<ref1.region.isevent.r_monitora_cs>)
+	return 0
+elseif !<ref1.f_canbeginmove>
+	return 0
+elseif !<ref1.f_canmove <local.1>>
+	return 0
+elseif <ref1.ctag0.movement.clearance> > <serv.rticks>
+	return 0
+endif
+//if (<serv.rticks> > <ref1.ctag0.movement.last>)
+if (<serv.time> > <ref1.ctag0.movement.last>)
+	local.steps = <ref1.ctag0.movement.steps>
+//serv.allclients f_staff_notify, <ref1.name>: <dlocal.steps> packet mov / segundo
+	if (<local.steps> >= <eval 12>)
+			ref1.ctag0.movement.extra ++
+		//if (<eval <serv.time> - <ref1.ctag0.movement.occ>> > 10)
+			//ref1.ctag0.movement.occ = <serv.time>
+			local.penality = <eval <local.steps> - 11>
+			ref1.ctag0.movement.occurrences += <eval <local.steps> - 11>
+			if <local.penality> > 2
+				serv.allclients f_staff_notify,<ref1>,<eval <local.steps> - 11>
+			endif
+		//endif
+	endif
+	ref1.ctag0.movement.steps = 0
+	ref1.ctag0.movement.last = <eval <serv.time> + 10>
+else
+	ref1.ctag0.movement.steps ++
+endif
+return 0
+
+
+// Se o cara der mais de 8 pontos em sequencia, 2 segundos de always walk
+
+
+[REGIONTYPE r_monitora_cs]
+ON=@Enter
+if <src.isplayer> && <src.isonline>
+if <src.findid.i_timer_movement>
+	src.findid.i_timer_movement.timerd 1
+else
+	src.ctag.movement.occurrences = 0
+	src.ctag.movement.extra = 0
+	src.ctag.movement.sequency =
+endif
+endif
+
+ON=@Exit
+if <src.isplayer> && <src.isonline>
+	src.ctag.movement.occurrences = 0
+	src.ctag.movement.extra = 0
+	src.ctag.movement.sequency =
+endif
+
+[FUNCTION f_movement_clearance]
+ctag0.movement.clearance = <eval <serv.rticks> + 3>
+
+[FUNCTION f_go]
+if (<isplayer>)
+	if (<isonline>)
+		f_movement_clearance
+	endif
+endif
+go <args>
+
+[FUNCTION f_p]
+if (<isplayer>)
+	if (<isonline>)
+		f_movement_clearance
+	endif
+endif
+p = <args>
+
+[FUNCTION f_canbeginmove]
+if (<stam> == 0) || (<speedmode> == 4) || (<flags> & statf_freeze) || (<flags> & statf_stone)
+	return 0
+endif
+return 1
+
+[FUNCTION f_canmove]
+local.dir = <args>
+if (<local.dir> & 080)
+	local.dir &= ~080
+endif
+return <canmove <dlocal.dir>>
+
+
+///////////////////////////////
+// [PLEVEL 1]
+// n_cs
+
+[FUNCTION n_cs]
+ncs
+
+[FUNCTION ncs]
+if ((<account.plevel> > 1) || (<TAG.CANUSENCS> == 1>))
+	IF (<ARGV>==0)
+		targetf f_t_cscheck
+		SRC.SYSMESSAGE @,,1 Escolha o jogador no qual deseja iniciar a analise de Change-Speed.
+	RETURN 1
+	ENDIF
+		FORCLIENTS 6144
+			IF !(STRCMPI("<ARGS>","<NAME>")
+				LOCAL.CT ++
+				REF<dLOCAL.CT>=<UID>
+			ENDIF
+		ENDFOR
+		IF <dLOCAL.CT> < 1
+			SRC.SYSMESSAGE @,,1 Nao ha nenhum player com este nick online.
+			RETURN 1
+		ELIF <dLOCAL.CT> > 1
+			SRC.SYSMESSAGE @,,1 Existe mais de um player com este nick online, por gentileza informe um GM.
+			RETURN 1
+		ELIF (<REF1.UID>==<SRC.UID>)
+			SRC.SYSMESSAGE @,,1 Voce nao pode verificar a si mesmo.
+			RETURN 1
+		ELSE
+				if <ref1.findid.i_timer_movement> || <ref1.region.isevent.r_monitora_cs>
+					sysmessage @,,1 Este jogador '<ref1.name>' já está sendo monitorado.
+					return 0
+				endif
+			serv.newitem i_timer_movement
+			new.timer = 60
+			new.tag.demand = <uid>
+			new.cont  = <ref1>
+			ref1.ctag0.movement.occurrences = 0
+			ref1.ctag0.movement.extra = 0
+			ref1.ctag0.movement.sequency =
+			sysmessage @,,1 Monitoramento iniciado no jogador <ref1.name>!
+		ENDIF
+else
+sysmessage @,,1 Sem plevel.
+endif
+
+[FUNCTION f_t_cscheck]
+if !<argo.isplayer>
+	sysmessage @,,1 Isto não é um jogador.
+	return 0
+endif
+if <argo.findid.i_timer_movement> || <argo.region.isevent.r_monitora_cs>
+	sysmessage @,,1 Este jogador '<argo.name>' já está sendo monitorado.
+	return 0
+endif
+serv.newitem i_timer_movement
+new.timer = 60
+new.tag.demand = <uid>
+new.cont  = <argo>
+argo.ctag0.movement.occurrences = 0
+argo.ctag0.movement.extra = 0
+argo.ctag0.movement.sequency =
+sysmessage @,,1 Monitoramento iniciado no jogador <argo.name>!
+
+[ITEMDEF i_timer_movement]
+NAME  = "Movement Timer"
+ID    = i_memory
+TYPE  = t_eq_script
+LAYER = layer_special
+
+on=@Create
+	attr = attr_decay|attr_invis|attr_newbie
+
+on=@Timer
+	ref1 = <cont>
+	serv.allclients f_notifica <cont>,"<ref1.name> : Total: + <eval <ref1.ctag0.movement.occurrences>> pts <dref1.ctag0.movement.extra> ocorrencias. /  Avg: + <floatval <ref1.ctag0.movement.occurrences> / <ref1.ctag0.movement.extra>>. Indice: + <floatval <ref1.ctag0.movement.occurrences> / 60> / seg."
+	cont.ctag0.movement.occurrences = 0
+	cont.ctag0.movement.extra = 0
+	cont.ctag0.movement.sequency =
+	remove
+	return 1
+
+[FUNCTION f_staff_notify]
+ref1 = <argv[0]>
+if <account.plevel> > 1
+ref1 = <argv[0]>
+	if <argn2> < 3
+		local.color = 90
+	elif <argn2> < 5
+		local.color = 55
+	else
+		local.color = 32
+	endif
+		//Local.time = <eval 60 - <ref1.findid.i_timer_movement.timer>>
+		if !<tag0.ncs_mute>
+		sysmessage @<dlocal.color>,,1 [CS] <ref1.name> : + <dargv[1]>! Total: + <eval <ref1.ctag0.movement.occurrences>> pts <dref1.ctag0.movement.extra> ocorrencias. /  Avg: + <floatval <ref1.ctag0.movement.occurrences> / <ref1.ctag0.movement.extra>>.
+		endif
+elif (<ref1.findid.i_timer_movement.tag.demand>==<uid>)
+ref1 = <argv[0]>
+	if <argn2> < 3
+		local.color = 90
+	elif <argn2> < 5
+		local.color = 55
+	else
+		local.color = 32
+	endif
+		//Local.time = <eval 60 - <ref1.findid.i_timer_movement.timer>>
+		sysmessage @<dlocal.color>,,1 [CS] <ref1.name> : + <dargv[1]>! Total: + <eval <ref1.ctag0.movement.occurrences>> pts <dref1.ctag0.movement.extra> ocorrencias. /  Avg: + <floatval <ref1.ctag0.movement.occurrences> / <ref1.ctag0.movement.extra>>.
+endif
+
+[FUNCTION f_notifica]
+ref1 = <argv[0]>
+if <account.plevel> > 1
+		sysmessage @,,1 [CS RESULT] <argv[1]>
+elif (<ref1.findid.i_timer_movement.tag.demand>==<uid>)
+		sysmessage @,,1 [CS RESULT] <argv[1]>
+endif
+
+[FUNCTION start_cscheck]
+serv.newitem i_timer_movement
+new.cont  = <uid>
+new.timer = 60
+ctag0.movement.occurrences = 0
+serv.allclients f_staff_notify, Monitoramento iniciado no jogador <name>!
+
+[FUNCTION stop_cscheck]
+findid.i_timer_movement.timer = 1
+
+[FUNCTION TEMPOS]
+VAR.RTICKS <SERV.RTICKS>
+VAR.TIMing <SERV.TIME>
+TIMERF <args>,RESULTTEMPOS
+
+[FUNCTION RESULTTEMPOS]
+local.rticks = <eval <serv.rticks> - <var.rticks>>
+local.timing = <eval <serv.time> - <var.timing>>
+s ticks: <dlocal.rticks> timing: <dlocal.timing>
+
+[FUNCTION ncsmute]
+if <tag0.ncs_mute>
+	tag.ncs_mute =
+	src.sysmessage @,,1 Unmuted.
+else
+	tag.ncs_mute = 1
+	src.sysmessage @,,1 Muted.
+endif
+return 1
+
+
+[EOF]

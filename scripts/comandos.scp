@@ -1,0 +1,162 @@
+﻿// [PLEVEL 1]
+// showsig
+
+[FUNCTION showsig]
+local.sig = <findid.i_cadastro.tag0.sig>
+if <isnum <local.sig>>
+	SYSMESSAGE @,,1 Seu SIG: <eval <findid.i_cadastro.tag0.sig>>
+	SYSMESSAGE @,,1 Seu SIG: <findid.i_cadastro.tag0.sig>
+else
+	SYSMESSAGE @,,1 Seu SIG: <findid.i_cadastro.tag0.sig>
+endif
+return 1
+
+
+[function remacc]
+TARGETF remacc_1
+SYSMESSAGE @04a3 Quem voce quer remover?
+
+[function remacc_1]
+TARGETFG remacc_2 <ARGO.UID>
+SYSMESSAGE Clique em qq local para confirmar, caso contrario de esc
+
+[function remacc_2]
+IF (<ARGO.ISPLAYER>)
+TARGETFG remacc_2 <ARGO.UID>
+SYSMESSAGE Clique em qq local para confirmar, caso contrario de esc
+ELSE
+TRY UID.<ARGN1>.ACCOUNT.DELETE
+
+[FUNCTION f_harmedby]
+IF (<ARGV> != 1)
+	RETURN 1
+ENDIF
+
+REF1 <UID> // victim
+REF2 <ARGV[0]> // attacker
+
+FOR 0 <EVAL <REF1.ATTACKER> - 1>
+	REF3 <REF1.ATTACKER.<DLOCAL._FOR>>
+	IF (<REF3.UID> == <REF2.UID>) && (<REF1.ATTACKER.<DLOCAL._FOR>.DAMAGE> >= 1)
+		RETURN 1
+	ENDIF
+ENDFOR
+
+IF (<REF2.NOTOGETFLAG <REF1.UID>> == noto_good)
+	FORCHARMEMORYTYPE memory_irritatedby
+		IF (<LINK> == <REF2.UID>)
+			REMOVE
+		ENDIF
+	ENDFOR
+
+	SERV.NEWITEM i_memory
+	NEW.COLOR memory_sawcrime|memory_fight|memory_harmedby|memory_irritatedby
+	NEW.MOREP 0,0,30
+	NEW.TIMER 1200
+	NEW.LINK <REF2.UID>
+	NEW.CONT <REF1.UID>
+ENDIF
+
+REF1.ATTACKER.ADD <REF2.UID>
+
+FOR 0 <EVAL <REF1.ATTACKER> - 1>
+	REF3 <REF1.ATTACKER.<DLOCAL._FOR>>
+	IF (<REF3.UID> == <REF2.UID>)
+		REF1.ATTACKER.<DLOCAL._FOR>.DAMAGE 1
+	ENDIF
+ENDFOR
+
+[FUNCTION f_sawcrime]
+FORCHARMEMORYTYPE MEMORY_SAWCRIME
+	IF (<LINK> == <SRC.UID>)
+		RETURN 0
+	ENDIF
+ENDFOR
+
+NEWITEM i_memory
+NEW.COLOR MEMORY_SAWCRIME
+NEW.MORE2 <SERV.TIME>
+NEW.MOREP <SRC.P>
+NEW.LINK <SRC.UID>
+NEW.CONT <UID>
+
+SRC.SYSMESSAGE Voce ficou criminoso para <NAME>.
+
+[FUNCTION comandos]
+SRC.SYSMESSAGE Voce esta sendo direcionado para nosso wiki com a lista de comandos.
+SRC.TIMERF 2,WEBLINK https:\\goo.gl/Yru73e
+
+[PLEVEL 1]
+comandos
+
+[DIALOG d_oldschool]
+0,0
+page 0
+gumppic 358 89 12
+resizepic 42 67 9200 364 315
+dtext 44 102 940 #.bandage
+dtext 44 127 940 #.totalmana
+dtext 44 151 940 #.gheal
+dtext 44 173 940 #.refresh
+dtext 44 195 940 #.gcure
+dtext 44 216 940 #.runename
+dtext 44 236 940 #.fs
+dtext 44 258 940 #.cl
+dtext 44 282 940 #.lifeboost
+dtext 44 304 940 #.manaboost
+dtext 44 325 940 #.refilling
+gumppic 127 237 9396
+gumppic 286 237 9398
+gumppic 286 71 9392
+gumppic 128 71 9390
+gumppic 128 201 9393
+gumppic 286 209 9395
+gumppic 358 89 60987
+gumppic 241 237 9397
+dtext 440 219 940 TFG
+dtext 428 239 940 Shard
+gumppic 242 71 9391
+dtext 255 77 940 Guia
+gumppic 240 206 9394
+dtext 148 306 940 Toma Manaboost
+dtext 148 327 940 Toma Refiling
+dtext 149 284 940 Toma Lifeboost
+dtext 149 262 940 Scroll de CL com target livre
+dtext 149 240 940 Scroll de FS com target livre
+dtext 149 219 940 Renomeia runa
+dtext 149 197 940 Toma a poção Greater Cure
+dtext 150 175 940 Toma a poção Refresh
+dtext 150 151 940 Toma a poção Greater Heal
+dtext 149 126 940 Toma a poção Total Mana
+dtext 150 103 940 Bandagens com target livre
+
+[DIALOG d_oldschool text] // useless
+#.bandage
+#.totalmana
+#.gheal
+#.refresh
+#.gcure
+#.runename
+#.fs
+#.cl
+#.lifeboost
+#.manaboost
+#.refilling
+Renomeia runa
+Toma Manaboost
+Toma Refiling
+TFG
+Shard
+Toma Lifeboost
+Scroll de CL com target livre
+Guia
+Bandagens com target livre
+Toma a poção Total Mana
+Toma a poção Greater Heal
+Toma a poção Refresh
+Toma a poção Greater Cure
+Scroll de FS com target livre
+
+[DIALOG d_oldschool button]
+
+[EOF]
